@@ -1,0 +1,44 @@
+﻿@model NSSERP.Areas.Masters.Models.CityMaster
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>Create New District</h2>
+        </div>
+        <div class="card-body">
+            <a href="/Masters/DistrictMaster/Index" class="btn btn-warning"><i class="fa fa-arrow-left"></i> Back</a>
+
+            <form asp-action="SavrForm" method="post" class="mt-3">
+             
+               
+                 <div class="form-group">
+                <label for="CityID">City:</label>
+                <select id="CityID" class="form-control" required name="CityID">
+                <option value="" selected disabled>Select City</option>
+                @foreach (var city in Model.Countries)
+                {
+                <option value="@city.CountryId">@city.CountryName</option>
+                }
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="IsActive">Is Active:</label>
+                    <select class="form-control" name="IsActive">
+                        <option value="Y">Active</option>
+                        <option value="N">Inactive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+</div>

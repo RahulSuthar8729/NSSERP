@@ -1,0 +1,349 @@
+﻿@{
+    ViewData["Title"] = "Inventory Modules";
+}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory</title>
+
+    <!-- Include necessary CSS files, for example, Bootstrap for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="...">
+    <!-- Include FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle tab click event
+            $('.nav-link').on('click', function () {
+                // Remove 'active' class from all tabs
+                $('.nav-link').removeClass('active');
+                // Add 'active' class to the clicked tab
+                $(this).addClass('active');
+            });
+        });
+    </script>
+    <style>
+        /* Add your custom styles here */
+        body {
+            padding: 20px;
+        }
+
+        .transaction-form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .form-header {
+            text-align: left;
+            color: #28166f;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+            .form-header span {
+                color: #1cb8a1;
+            }
+
+        .nav-tabs {
+            border: none;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            width: calc(100% / 5);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .nav-link {
+            color: #000000;
+            border: none;
+            border-radius: 0;
+            padding: 15px;
+            font-size: 16px;
+            position: relative; /* Position relative for tooltip positioning */
+        }
+
+            
+
+        .tab-content {
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+        }
+
+            .tab-content h4 {
+                color: #1cb8a1;
+            }
+
+        /* Custom tooltip styles */
+        .custom-tooltip {
+            position: absolute;
+            background-color: #1cb8a1;
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+            visibility: hidden;
+        }
+
+        .nav-link:hover .custom-tooltip {
+            visibility: visible;
+            opacity: 1.10;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.08); /* Adjust the scale factor as needed */
+        }
+    </style>
+
+</head>
+<body>
+    <form>
+    <div class="container">
+        <div class="transaction-form">
+
+            <div class="form-header">
+                TRANSACTION <span>FORMS</span> INVENTORY
+            </div>
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" id="tab1" data-toggle="tab">
+                        <i class="fas fa-building"></i>
+                        @*   <span class="custom-tooltip">Maintain Item Consumption Previously Issued in our Department</span>
+                        *@   Department Stock
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a class="nav-link text-dark" id="tab2" data-toggle="tab" data-action="/Home/Privacy">
+                        <i class="fas fa-user-injured"></i>
+                        Patient RSS (MIDP)
+                    </a>
+                 
+                    @* <a class="nav-link" id="tab2" data-toggle="tab" href="#content2">
+                        <i class="fas fa-user-injured"></i>
+                        <span class="custom-tooltip">Fill Medicine RSS and Issue Medicine to Discharge the Patient</span>
+                        Patient RSS (MIDP)
+                    </a> *@
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab3" data-toggle="tab" href="#content3">
+                            <i class="fas fa-utensils"></i>
+                        <span class="custom-tooltip">Fill Ration RSS and Issue</span>
+                        Ration RSS
+                    </a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link" id="tab4" data-toggle="tab" data-action="/RRSView/RRSView">
+                        <i class="fas fa-clock"></i>
+                        <span class="custom-tooltip">Fill Item Requirement Slip</span>
+                        RRS
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab5" data-toggle="tab" href="#content5">
+                        <i class="fas fa-list-alt"></i>
+                        <span class="custom-tooltip">Approve Shadhak RRS for Issue from Store and Modify Quantity for Particular Item</span>
+                        RRS Approval
+                    </a>
+                </li>
+            </ul>
+            <br />
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="custom-tooltip">See the short items in store.</span>
+                        Item need to Pur.
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                        <i class="fas fa-clock"></i>
+                        <span class="custom-tooltip">See the Pending Items needed to be purchase and pending for quotation.</span>
+                        Pending Quotation
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                        <i class="fas fa-sticky-note"></i>
+                        <span class="custom-tooltip">Approve items quotation and forword to purchase.</span>
+                        Quotation Approval
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab9" data-toggle="tab" href="#content4">
+                        <i class="fas fa-file-invoice"></i>
+                        <span class="custom-tooltip">See the list of previously created POs</span>
+                        Purchase Order
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                        <i class="fas fa-download"></i>
+                        <span class="custom-tooltip">Gatekeeper provisionally inwards the PO items.</span>
+                        Pending Inward
+                    </a>
+                </li>
+            </ul>
+            <br />
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                        <i class="fas fa-warehouse"></i>
+                        <span class="custom-tooltip">See the short items in store.</span>
+                        Material Store Inward
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                        <i class="fas fa-exclamation-circle" style="color: orange;"></i>
+                        <span class="custom-tooltip">See the Pending Items needed to be purchased and pending for quotation.</span>
+                        Pending Issue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                        <i class="fas fa-check-circle" style="color: green;"></i>
+                        <span class="custom-tooltip">Approve items quotation and forward to purchase.</span>
+                        Material Issued
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab9" data-toggle="tab" href="#content4">
+                        <i class="fas fa-exclamation-triangle" style="color: orange;"></i>
+
+                        <span class="custom-tooltip">See the list of previously created POs</span>
+                        Pending Deposit
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                        <i class="fas fa-check-circle" style="color: green;"></i>
+
+                        <span class="custom-tooltip">Gatekeeper provisionally inwards the PO items.</span>
+                        Material Deposited
+                    </a>
+                </li>
+            </ul>
+            <br />
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                        <i class="fas fa-tools"></i>
+                        <span class="custom-tooltip">See the short items in store.</span>
+                        Scrap-Repair-Refill
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span class="custom-tooltip">See the Pending Items needed to be purchased and pending for quotation.</span>
+                        Stock Transfer
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                        <i class="fas fa-balance-scale"></i>
+                        <span class="custom-tooltip">Approve items quotation and forward to purchase.</span>
+                        User
+                        Audit Stock Adjust
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab9" data-toggle="tab" href="#content4">
+                        <i class="fas fa-search"></i>
+                        <span class="custom-tooltip">See the list of previously created POs</span>
+                        Searching
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span class="custom-tooltip">Gatekeeper provisionally inwards the PO items.</span>
+                        My Issue Deposit
+                    </a>
+                </li>
+            </ul>
+            <br />
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                        <i class="fas fa-sign-out-alt" style="color:blue"></i>
+
+                        <span class="custom-tooltip">See the short items in store.</span>
+                        Outward Gate Pass
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                        <i class="fas fa-sign-out-alt" style="color:blue"></i>
+                        <span class="custom-tooltip">See the Pending Items needed to be purchased and pending for quotation.</span>
+                        Outward G.P. Check
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                        <i class="fas fa-sign-out-alt" style="color:blue"></i>
+
+                        <span class="custom-tooltip">Approve items quotation and forward to purchase.</span>
+                        Inv. Trans. Search.(ITS)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab9" data-toggle="tab" href="#content4">
+                        <i class="fas fa-check" style="color: green;"></i> <i class="fas fa-sticky-note"></i>
+
+                        <span class="custom-tooltip">See the list of previously created POs</span>
+                        Issue Util. Verif(IUV)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span class="custom-tooltip">Gatekeeper provisionally inwards the PO items.</span>
+                        Pay Terms Verification
+                    </a>
+                </li>
+            </ul>
+
+
+        </div>
+    </div>
+    </form>   
+    <script>
+        $(document).ready(function () {
+            // Handle form tab click event
+            $('.transaction-form .nav-link').on('click', function (e) {
+                // Prevent the default behavior of the link
+                e.preventDefault();
+
+                // Get the data-action attribute value
+                var action = $(this).data('action');
+
+                // Redirect to the specified URL
+                if (action) {
+                    window.location.href = action;
+                }
+            });
+        });
+    </script>
+
+    <!-- Include necessary JavaScript files, for example, Bootstrap and jQuery -->
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</body>
+</html>

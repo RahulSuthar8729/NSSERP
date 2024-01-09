@@ -1,0 +1,30 @@
+﻿@model NSSERP.Models.NSSLogin
+
+@{
+    ViewData["Title"] = "RRSView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdn.stimulsoft.com/reports-js/2023.2.4/stimulsoft.reports.js"></script>
+<script src="https://cdn.stimulsoft.com/reports-js/2023.2.4/stimulsoft.viewer.js"></script>
+<div id="reportViewer">
+<h1>Rahul Suthar</h1>
+</div>
+<form asp-controller="RRSVIEW" asp-action="GeneratePdf" method="post">
+    <label for="FirstName">First Name:</label>
+    <input type="text" asp-for="Username" />
+
+    <label for="LastName">Last Name:</label>
+    <input type="text" asp-for="Password" />
+
+    <!-- Add other input fields as needed -->
+
+    <button type="submit">Generate PDF</button>
+</form>
+
+<script>
+    // Add this script to initialize the Stimulsoft report viewer
+    var viewer = new Stimulsoft.Viewer.StiViewer(null, 'StiViewer', false);
+    viewer.renderHtml('reportViewer');
+</script>
+<!-- ReportViewer control -->

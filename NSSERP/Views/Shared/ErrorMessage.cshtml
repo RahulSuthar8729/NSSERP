@@ -1,0 +1,26 @@
+﻿@{
+    string errorMessage = ViewBag.ErrorMessage as string;
+    string msg = ViewBag.emsg as string;
+    if (!string.IsNullOrEmpty(msg))
+    {
+        errorMessage = msg;
+    }
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Display error message using Toastr -->
+  @*   <script>
+        toastr.error('@errorMessage');
+    </script> *@
+
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @errorMessage
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}

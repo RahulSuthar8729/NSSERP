@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewData["Title"] = "VirtualPerakList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+   
+</head>
+<body>
+    <div class="card">
+     
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <h5 class="mb-0">
+                        <span style="color:#1cb8a1">VIRTUAL PERAK </span>
+                        <span style="color:#28166f">LIST</span>
+                    </h5>
+                </div>
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <h5 class="mb-0">
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-12 col-md-3 text-md-right">
+                    <a  title="Add New" href="/NationalGangotri/VirtualPrerak/VirtualPrerakMaster" class="btn btn-outline-primary ml-2"><i class="fas fa-plus"></i> Add</a>
+                   
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning ml-2"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+       
+
+        <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Prerak ID</label>
+                            <input type="text" class="form-control" id="Receive ID" name="Receive ID">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Mobile No.</label>
+                            <input type="text" class="form-control" id="Receive ID" name="Receive ID">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Prerak Name</label>
+                            <input type="text" class="form-control" id="Receive ID" name="Receive ID">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">City</label>
+                            <input type="text" class="form-control" id="Receive ID" name="Receive ID">
+                        </div>
+                    </div>
+                </td>          
+
+                <td>
+                    <div class="form-group">
+                         <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning">Back</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>       
+
+        </table>
+    </div>
+
+    <br />
+
+    <div class="row col-lg-12">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>PRERAK ID</th>
+                            <th>PRERAK NAME</th>
+                            <th>ADDRESS</th>
+                            <th>CITY</th>
+                            <th>MOBILE NO.</th>                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Property1</td>
+                                    <td>@item.Property2</td>
+                                    <!-- ... your table data ... -->
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+   
+
+</body>
+</html>

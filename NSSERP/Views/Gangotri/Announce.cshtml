@@ -1,0 +1,482 @@
+﻿@{
+    ViewData["Title"] = "Announce";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Announce Master Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">ANNOUNCE </span>
+                        <span style="color:#28166f">MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form class="row-cols-lg-12">
+                <!-- Announce Master Fields -->
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        <label for="AnnounceId">Announce ID</label>
+                        <input type="text" class="form-control" id="AnnounceId" name="AnnounceId">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="AnnounceDate">Announce Date</label>
+                        <input type="date" class="form-control" id="AnnounceDate" name="AnnounceDate" pattern="\d{2}/\d{2}/\d{4}" placeholder="dd/mm/yyyy">
+                    </div>
+                </div>
+
+                <!-- Nested Form (Announcer Personal Details) -->
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Announcer Personal Details</legend>
+
+                    <div class="nested-form-container">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="DonorId">Donor ID</label>
+                                <input type="text" class="form-control" id="DonorId" name="DonorId">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="DaanPatraNo">Daan Patra No.</label>
+                                <input type="text" class="form-control" id="DaanPatraNo" name="DaanPatraNo">
+
+                            </div>
+
+                            <div class="form-group col-lg-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="UrgentFollowUp" name="UrgentFollowUp">
+                                <label class="form-check-label" for="UrgentFollowUp">Urgent Follow up Need</label><br />
+                                <input type="checkbox" class="form-check-input" id="FutureDonor" name="FutureDonor">
+                                <label class="form-check-label" for="FutureDonor">Future Donor</label><br />
+                                <input type="checkbox" class="form-check-input" id="DonateButNotRequire" name="DonateButNotRequire">
+                                <label class="form-check-label" for="DonateButNotRequire">Donor but followup not require</label>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Announcer Name">Announcer Name</label>
+                                <input type="text" class="form-control" id="Announcer Name" name="Announcer Name">
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="announcementinname">Announcement in the name of</label>
+                                <input type="text" class="form-control" id="ANNOUNCEMENT IN THE NAME OF" name="ANNOUNCEMENT IN THE NAME OF">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1</label>
+                                <textarea class="form-control" id="Address1" name="Address1" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address2">Address2</label>
+                                <textarea class="form-control" id="Address2" name="Address2" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address3">Address3</label>
+                                <textarea class="form-control" id="Address3" name="Address3" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Country">Country</label>
+                                @Html.DropDownList("Country", ViewBag.Countries as SelectList, "Select Country", new { @class = "form-control" })
+
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="State">State</label>
+                                @Html.DropDownList("State", ViewBag.State as SelectList, "Select State", new { @class = "form-control" })
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="District">District</label>
+                                @Html.DropDownList("District", ViewBag.City as SelectList, "Select District", new { @class = "form-control" })
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="City">City</label>
+                                @Html.DropDownList("City", ViewBag.City as SelectList, "Select City", new { @class = "form-control" })
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Mobile No.1">Mobile No.1</label>
+                                <input type="text" class="form-control" id="Mobile1" name="Mobile1"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Mobile No.2">Mobile No.2</label>
+                                <input type="text" class="form-control" id="Mobile2" name="Mobile2"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="WhatsApp No1">WhatsApp No1</label>
+                                <input type="text" class="form-control" id="WhatsAppNo1" name="WhatsAppNo1"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="WhatsApp No2">WhatsApp No2</label>
+                                <input type="text" class="form-control" id="WhatsAppNo2" name="WhatsAppNo2"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="STD Code">STD Code</label>
+                                <input type="text" class="form-control" id="STDCode" name="StdCode"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Phone No(R)">Phone No.(R)</label>
+                                <input type="text" class="form-control" id="PhoneNo(R)" name="PhoneNo(R)"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Phone No(O)">Phone No.(O)</label>
+                                <input type="text" class="form-control" id="PhoneNo(O)" name="PhoneNo(O)"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Emaill ID">Email ID</label>
+                                <input type="text" class="form-control" id="Email ID" name="Email ID"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Adhar No">Adhar No</label>
+                                <input type="text" class="form-control" id="Adhar No" name="Adhar No"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="PAN No">PAN No</label>
+                                <input type="text" class="form-control" id="PAN No" name="PAN No"></input>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="CallingSadhakName">Calling Sadhak Name</label>
+                                <select class="form-control" id="CallingSadhakName" name="CallingSadhakName">
+                                    <option value="Sadhak1">Sadhak 1</option>
+                                    <option value="Sadhak2">Sadhak 2</option>
+                                    <option value="Sadhak3">Sadhak 3</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Announce Event</legend>
+                    <div class="nested-form-container">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label>Event Type</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="eventType" id="live" value="live">
+                                    <label class="form-check-label" for="live">Live</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="eventType" id="nonLive" value="nonLive">
+                                    <label class="form-check-label" for="nonLive">Non-Live</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Eventname">Event Name</label>
+                                <select class="form-control" id="CallingSadhakName" name="CallingSadhakName">
+                                    <option value="Select">Select</option>
+                                    <option value="Sadhak2">Sadhak 2</option>
+                                    <option value="Sadhak3">Sadhak 3</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Cause">Cause</label>
+                                <select class="form-control" id="CallingSadhakName" name="CallingSadhakName">
+                                    <option value="Select">Select</option>
+                                    <option value="Sadhak2">Sadhak 2</option>
+                                    <option value="Sadhak3">Sadhak 3</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Announce Details</legend>
+
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="AnnounceChannel">Announce Channel</label>
+                                <select class="form-control" id="AnnounceChannel">
+                                    <option value="Select">Select</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="InMemoryOccasion">In Memory/Occasion</label>
+                                <select class="form-control" id="InMemoryOccasion">
+                                    <option value="Select">Select</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="InMemoryOccasionDate">In Memory/Occasion Date</label>
+                                <input type="date" class="form-control" id="InMemoryOccasionDate">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="Currency">Currency</label>
+                                <select class="form-control" id="Currency">
+                                    <option value="Select">Select</option>
+                                    <option value="Rupees">Rupees</option>
+                                    <option value="Dollar">Dollar</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="CauseHead">Cause Head</label>
+                                <select class="form-control" id="CauseHead">
+                                    <option value="Select">Select</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="CauseHeadSub">Cause Sub Head</label>
+                                <select class="form-control" id="CauseHeadSub">
+                                    <option value="Select">Select</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="Quantity">Quantity</label>
+                                <select class="form-control" id="Quantity">
+                                    <option value="Select">Select</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <br />
+                            <button id="btn_add" type="button" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-12">
+                            <table id="announcedetailstable" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Announce Channel</th>
+                                        <th>In Memory/Occasion</th>
+                                        <th>In Memory/Occasion Date</th>
+                                        <th>Currency</th>
+                                        <th>Cause Head</th>
+                                        <th>Cause Sub Head</th>
+                                        <th>Quantity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemTableBody">
+                                    <!-- The added items will be displayed here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <!-- Add this line to include the full version of jQuery -->
+                    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+                    <!-- Update the integrity and crossorigin attributes for Bootstrap JS -->
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></script>
+
+                    <script>
+                        $(document).ready(function () {
+                            var items = [];
+                            var table = $("#announcedetailstable");
+                            table.hide();
+
+                            $('#btn_add').on('click', function () {
+                                var announceChannel = $('#AnnounceChannel').val();
+                                var inMemoryOccasion = $('#InMemoryOccasion').val();
+                                var inMemoryOccasionDate = $('#InMemoryOccasionDate').val();
+                                var currency = $('#Currency').val();
+                                var causeHead = $('#CauseHead').val();
+                                var causeHeadSub = $('#CauseHeadSub').val();
+                                var quantity = $('#Quantity').val();
+
+                                var item = {
+                                    AnnounceChannel: announceChannel,
+                                    InMemoryOccasion: inMemoryOccasion,
+                                    InMemoryOccasionDate: inMemoryOccasionDate,
+                                    Currency: currency,
+                                    CauseHead: causeHead,
+                                    CauseHeadSub: causeHeadSub,
+                                    Quantity: quantity
+                                };
+
+                                items.push(item);
+                                refreshTable();
+                                clearFormFields();
+                            });
+
+                            function refreshTable() {
+                                var tableBody = $('#itemTableBody');
+                                tableBody.empty();
+
+                                items.forEach(function (item, index) {
+                                    var row = `<tr>
+                                                                                  <td>${item.AnnounceChannel}</td>
+                                                                                  <td>${item.InMemoryOccasion}</td>
+                                                                                  <td>${item.InMemoryOccasionDate}</td>
+                                                                                  <td>${item.Currency}</td>
+                                                                                  <td>${item.CauseHead}</td>
+                                                                                  <td>${item.CauseHeadSub}</td>
+                                                                                  <td>${item.Quantity}</td>
+                                                                                  <td><button class="btn btn-danger btn-sm" onclick="deleteItem(${index})">Delete</button></td>
+                                                                               </tr>`;
+                                    tableBody.append(row);
+                                });
+
+                                // Show or hide the table based on the number of rows
+                                if (items.length > 0) {
+                                    table.show();
+                                } else {
+                                    table.hide();
+                                }
+                            }
+
+                            function clearFormFields() {
+                                $('#AnnounceChannel, #InMemoryOccasion, #InMemoryOccasionDate, #Currency, #CauseHead, #CauseHeadSub, #Quantity').val('Select');
+                            }
+
+                            window.deleteItem = function (index) {
+                                items.splice(index, 1);
+                                refreshTable();
+                            };
+                        });
+                    </script>
+
+
+                    <div class="row">
+
+                        <div class="form-group col-lg-3">
+                            <label for="Amount">Amount</label>
+                            <input type="text" class="form-control" id="Amount" name="Amount">
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Payment Mode">Payment Mode</label>
+                            <select class="form-control" id="Payment Mode" name="Payment Mode">
+                                <option value="Select">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="How to Donate">How to Donate</label>
+                            <select class="form-control" id="How to Donate" name="How to Donate">
+                                <option value="Select">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Expected Don. Date">Expected Don. Date</label>
+                            <input type="date" class="form-control" id="Expected Don. Date" name="Expected Don. Date" pattern="\d{2}/\d{2}/\d{4}" placeholder="dd/mm/yyyy">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form-group col-lg-3">
+                            <label for="Send Sadhak AWB No.">Send Sadhak AWB No.</label>
+                            <input type="text" class="form-control" id="Send Sadhak AWB No." name="Send Sadhak AWB No.">
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Send Sadhak Token No.">Send Sadhak Token No.</label>
+                            <input type="text" class="form-control" id="Send Sadhak Token No." name="Send Sadhak Token No.">
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Send Sadhak Route No.">Send Sadhak Route No.</label>
+                            <input type="text" class="form-control" id="Send Sadhak Route No." name="Send Sadhak Route No.">
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="eventType" id="Motivated" value="Motivated">
+                                <label class="form-check-label" for="Motivated">Motivated</label>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Motivated Amt.">Motivated Amt.</label>
+                            <input type="text" class="form-control" id="Motivated Amt." name="Motivated Amt.">
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Name Plate Name">Name Plate Name</label>
+                            <input type="text" class="form-control" id="Name Plate Name" name="Name Plate Name">
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Donor Instructions">Donor Instructions</label>
+                            <textarea class="form-control" id="donorinstructions" name="donorinstructions" rows="1"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="reset" class="btn btn-warning">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+
+</body>
+</html>
+

@@ -1,0 +1,52 @@
+﻿@model NSSERP.Areas.Masters.Models.PaymentModeMaster
+@{
+    ViewData["Title"] = "Create Payment Mode";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Create Payment Mode</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="form-row">
+                    
+                    <div class="form-group col-md-6">
+                        <label for="PaymentModeName">Donation Mode Name:</label>
+                        <input name="PaymentModeName" oninput="this.value = this.value.toUpperCase()" id="PaymentModeName" asp-for="PaymentModeName" placeholder="Enter payment mode name" required class="form-control" />
+                        <span asp-validation-for="PaymentModeName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description:</label>
+                    <textarea name="Description" id="Description" asp-for="Description" placeholder="Enter description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="IsActive">Is Active:</label>
+                    <select class="form-control" name="IsActive" required>
+                        <option value="Y">Active</option>
+                        <option value="N">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+
+            <div class="form-group">
+                <br />
+                <a href="/Masters/PaymentModeMaster/Index" class="btn btn-warning btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>

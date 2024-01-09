@@ -1,0 +1,343 @@
+﻿@{
+    ViewData["Title"] = "ForwardToPostReceive";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">DONATION RECEIVE FORWORD TO</span>
+                        <span style="color:#28166f"> POST RECEIVE</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="form-group col-lg-2">
+                    <label for="">Receive ID</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Amount ></label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Amount <</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Prov.No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Date From</label>
+                    <input type="date" class="form-control" id="DateOfEntry" name="DateOfEntry">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Date To</label>
+                    <input type="date" class="form-control" id="DateOfEntry" name="DateOfEntry">
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">Chq No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Order Type</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">Type</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Order No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Receive Head</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Receive Sadhak</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Material</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Pay Mode</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">Net Banking</option>
+                        <option value="2">Cash</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="payMode">PDC</label>
+                    <div class="d-flex">
+                        <div class="custom-control custom-radio mr-3">
+                            <input type="radio" id="allOption" name="payMode" class="custom-control-input" value="all">
+                            <label class="custom-control-label" for="allOption">ALL</label>
+                        </div>
+                        <div class="custom-control custom-radio mr-3">
+                            <input type="radio" id="yesOption" name="payMode" class="custom-control-input" value="yes">
+                            <label class="custom-control-label" for="yesOption">YES</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="noOption" name="payMode" class="custom-control-input" value="no">
+                            <label class="custom-control-label" for="noOption">NO</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="checkboxList">Select Options</label>
+                    <div class="d-flex flex-column">
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="pendingCheckbox" name="pending" value="3_days_pending">
+                            <label class="custom-control-label" for="pendingCheckbox">3 days pending</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="payInSlipCheckbox" name="payInSlip" value="pay_in_slip">
+                            <label class="custom-control-label" for="payInSlipCheckbox">Pay-in-slip</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="checkboxList">Select Options</label>
+                    <div class="d-flex flex-column">
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="depositDateCheckbox" name="depositDate" value="deposit_date">
+                            <label class="custom-control-label" for="depositDateCheckbox">Deposit Date</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="reviewDateCheckbox" name="reviewDate" value="review_date">
+                            <label class="custom-control-label" for="reviewDateCheckbox">Review Date</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="remarkDateCheckbox" name="remarkDate" value="remark_date">
+                            <label class="custom-control-label" for="remarkDateCheckbox">Remark Date</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Donor Name</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Deposite Bank</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Currency</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">INR</option>
+                        <option value="2">Doller</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Remark</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">All</option>
+                        <option value="2"></option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="radioOptions">Select Option</label>
+                    <div class="d-flex flex-column">
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" class="custom-control-input" id="allOption" name="options" value="all" checked>
+                            <label class="custom-control-label" for="allOption">All</label>
+                        </div>
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" class="custom-control-input" id="appOption" name="options" value="app">
+                            <label class="custom-control-label" for="appOption">App</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="withoutAppOption" name="options" value="without_app">
+                            <label class="custom-control-label" for="withoutAppOption">Without App</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">Post Type</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">All</option>
+                        <option value="2"></option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="radioOptions">Select Option</label>
+                    <div class="d-flex flex-column">
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" class="custom-control-input" id="allOption" name="options" value="all" checked>
+                            <label class="custom-control-label" for="allOption">All</label>
+                        </div>
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" class="custom-control-input" id="letterAttachOption" name="options" value="letter_attach">
+                            <label class="custom-control-label" for="letterAttachOption">Letter Attach</label>
+                        </div>
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" class="custom-control-input" id="letterNotAttachOption" name="options" value="letter_not_attach">
+                            <label class="custom-control-label" for="letterNotAttachOption">Letter Not Attach</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="callDonorCheckbox" name="callDonor" value="call_donor">
+                            <label class="custom-control-label" for="callDonorCheckbox">Call Donor Check</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">City</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">All</option>
+                        <option value="2"></option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">State</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">All</option>
+                        <option value="2"></option>
+                    </select>
+                </div>
+
+
+                <div class="form-group col-lg-2">
+                    <label for="checkboxList">Select Options</label>
+                    <div class="d-flex flex-column">
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="detailsNotCompleteCheckbox" name="detailsNotComplete" value="details_not_complete">
+                            <label class="custom-control-label" for="detailsNotCompleteCheckbox">Details Not Complete</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="sendBySadhakCheckbox" name="sendBySadhak" value="send_by_sadhak">
+                            <label class="custom-control-label" for="sendBySadhakCheckbox">Send by Sadhak</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Event </label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">All</option>
+                        <option value="2"></option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row text-center">
+                <div class="col-lg-12">
+                     <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button>
+                    <a asp-action="SankalpSiddhiMaster" title="" asp-controller="Donation" class="btn btn-outline-secondary">Forword</a>
+                    <button type="submit" class="btn btn-secondary">Order by Same NGCode</button>
+                    <button type="submit" class="btn btn-secondary">Order by Same Mobile</button>
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning">Back</a>
+
+                </div>
+            </div>
+
+            <br />
+            <div class="row col-lg-12">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>AUDIT REMARK</th>
+                                    <th></th>
+                                    <th>FORWORD</th>
+                                    <th>BANK DETAIL</th>
+                                    <th>RECEIVE ID</th>
+                                    <th>LETTER ID</th>
+                                    <th>RECEIVE BY</th>
+                                    <th>PROV.NO.</th>
+                                    <th>DONOR NAME</th>
+                                    <th>TYPE</th>
+                                    <th>PAYMENT MODE/ORDERNO.</th>
+                                    <th>CHQ NO</th>
+                                    <th>AMOUNT</th>
+                                    <th>PENDING REMARK</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Property1</td>
+                                            <td>@item.Property2</td>
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</body>
+</html>
+

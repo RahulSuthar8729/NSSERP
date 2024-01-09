@@ -1,0 +1,51 @@
+﻿@model NSSERP.Areas.Masters.Models.StateMaster
+
+@{
+    ViewData["Title"] = "Edit State";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<div class="container mt-4">
+    <h2>Edit State</h2>
+    <a href="/Masters/StateMaster/Index" class="btn btn-warning"><i class="fa fa-arrow-left"></i>Back</a>
+    <form asp-action="Edit" method="post" onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="StateName">State Name:</label>
+            <input type="hidden" name="StateID" value="@Model.StateID" />
+            <input type="text" class="form-control" name="StateName" value="@Model.StateName" required />
+        </div><input type="hidden" asp-for="PincodeID" />
+
+        <div class="form-group">
+            <label for="CountryID">Country:</label>
+            <select class="form-control" name="CountryID" required>
+                <option value="" selected disabled>Select Country</option>
+                @foreach (var country in ViewBag.Countries)
+                {
+                    <option value="@country.CountryId" @(country.CountryId == Model.CountryId ? "selected" : "")>@country.CountryName</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="IsActive">Is Active:</label>
+            <select class="form-control" name="IsActive" required>
+                <option value="Y" @(Model.IsActive == 'Y' ? "selected" : "")>Active</option>
+                <option value="N" @(Model.IsActive == 'N' ? "selected" : "")>Inactive</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Update</button>
+    </form>
+</div>
+
+<script>
+    function validateForm() {
+        // Implement validation logic if needed
+        return true;
+    }
+</script>

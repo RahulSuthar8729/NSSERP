@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewData["Title"] = "BasicSearch";
+   
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">Basic </span>
+                        <span style="color:#28166f">Search</span>
+                    </h5>
+                </div>
+                <div class="col text-left" style="margin-right: 200px;">
+
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="card-body">
+            <form method="post" action="" class="row-cols-lg-12">        
+              <div class="nested-form-container">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="Code">Code</label>
+                                <input type="text" class="form-control" id="Code" name="Code">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Company">Company</label>
+                                <input type="text" class="form-control" id="Company" name="Company">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="FirstName">FirstName</label>
+                                <input type="text" class="form-control" id="FirstName" name="FirstName">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="LastName">LastName</label>
+                                <input type="text" class="form-control" id="LastName" name="LastName">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="S/OD/OW/O">S/OD/OW/O</label>
+                                <input type="text" class="form-control" id="S/OD/OW/O" name="S/OD/OW/O">
+                            </div> 
+                            <div class="form-group col-lg-3">
+                                <label for="Email">Email</label>
+                                <input type="text" class="form-control" id="Email" name="Email">
+                            </div> <div class="form-group col-lg-3">
+                                <label for="Mobile">Mobile</label>
+                                <input type="text" class="form-control" id="Mobile" name="Mobile">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Phone">Phone</label>
+                                <input type="text" class="form-control" id="Phone" name="Phone">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Pan">PAN NO.</label>
+                                <input type="text" class="form-control" id="pan" name="pan">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Adhhar">Aadhar No.</label>
+                                <input type="text" class="form-control" id="aadhar" name="aadhar">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="C/O">C/O</label>
+                                <input type="text" class="form-control" id="C/O" name="C/O">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1</label>
+                                <textarea type="text" class="form-control" id="Address1" name="Address1" rows="1"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address2">Address2</label>
+                                <textarea type="text" class="form-control" id="Address2" name="Address2" rows="1"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address3">Address3</label>
+                                <textarea type="text" class="form-control" id="Address3" name="Address3" rows="1"></textarea>
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="PinCode">PinCode</label>
+                                <input type="text" class="form-control" id="PinCode" name="PinCode"></input>
+
+                            </div>
+                        <div class="form-group col-lg-3">
+                            <label for="City">City</label>
+                            @Html.DropDownList("City", ViewBag.City as SelectList, "Select City", new { @class = "form-control" })
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label for="Country">Country</label>
+                            @Html.DropDownList("Country", ViewBag.Countries as SelectList, "Select Country", new { @class = "form-control" })
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label for="State">State</label>
+                            @Html.DropDownList("State", ViewBag.State as SelectList, "Select State", new { @class = "form-control" })
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="District">District</label>
+                            @Html.DropDownList("District", ViewBag.City as SelectList, "Select District", new { @class = "form-control" })
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label for="Tehsil">Tehshil</label>
+                            @Html.DropDownList("Tehsil", ViewBag.Tehsil as SelectList, "Select Tehsil", new { @class = "form-control" })
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label for="InspiryName">Inspiry Name</label>
+                            <input type="text" class="form-control" id="InspiryName" name="InspiryName"></input>
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label for="Inspiryaddress">Inspiry Address</label>
+                            <textarea type="text" class="form-control" id="Inspiryaddress" name="Inspiryaddress" rows="1"></textarea>
+
+                        </div>
+
+                        <div class="form-group col-lg-3">
+                            <label for="Inspiryphone">Inspiry Phone(0)</label>
+                            <input type="text" class="form-control" id="Inspiryphone" name="InspiryPhone"></input>
+
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="Inspirymobile">Inspiry Mobile</label>
+                            <input type="text" class="form-control" id="InspiryMobile" name="InspiryMobile"></input>
+
+                        </div>
+                        </div> 
+                        </div>                     
+                 
+               <div class="text-center">
+                    <button type="submit" class="btn btn-success">Go....</button>  
+                    <button  asp-action="Home" asp-controller="Gangotri" class="btn btn-warning">Back</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    
+
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+</body>
+</html>

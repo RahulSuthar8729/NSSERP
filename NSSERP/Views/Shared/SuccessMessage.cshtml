@@ -1,0 +1,26 @@
+﻿@{
+    string successMessage = ViewBag.SuccessMessage as string;
+    string msg = ViewBag.msg as string;
+    if (!string.IsNullOrEmpty(msg))
+    {
+        successMessage = msg;
+    }
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>    
+       
+ @*    <script>
+        toastr.success('@successMessage');
+    </script> *@
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @successMessage
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+}

@@ -1,0 +1,221 @@
+﻿@{
+    ViewData["Title"] = "ReceiptDispatchMaster";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">RECEIPT DISPATCH </span>
+                        <span style="color:#28166f">MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <label for="">Dispatch ID</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="DateOfEntry">Entry Date</label>
+                    <input type="date" class="form-control" id="DateOfEntry" name="DateOfEntry">
+                </div>
+
+                <div class="form-group col-lg-3">
+                    <label for="">Address Code</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="DateOfEntry">Dispatch Date</label>
+                    <input type="date" class="form-control" id="DateOfEntry" name="DateOfEntry">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <label for="responsefrom">Dispatch Category</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Receipt Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Receipt No.</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Receipt</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Weight In(Gm.)</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Post Type Name</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Org Rec No</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Ref NGCode For Address</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Charges(Rs.)</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Courier Name</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Courier</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Docket No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Length</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Breadth</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Height</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Count</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Route Code</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Return Docket No</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Subject</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Dispatch No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Dox-1/Duts2</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">No.of Pcs</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="" >Remarks</label>
+                    <textarea class="form-control" id="" rows="2" name=""></textarea>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Name</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Contact Details (City/State)</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Ref NGCode Address</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Remark</label>
+                    <textarea class="form-control" id="" rows="2" name=""></textarea>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Return Call Remark</label>
+                    <input type="checkbox" id="chkretuncall" />
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                    <textarea class="form-control" id="" rows="2" name=""></textarea>
+                </div>
+                <div class="col-lg-12 text-center">
+                    <span>Top 5 Previous Receipts Dispatch Details</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container mt-5 text-center">
+            <!-- Save Button -->
+             <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button><i class="fas fa-save"></i>Save</button>
+            <!-- Add Button -->
+            <button type="button" class="btn btn-info"><i class="fas fa-plus"></i>Add</button>
+            <!-- Back Button -->
+            <button asp-controller="Gangotri" asp-action="Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i>Back</button>
+         </div>
+    </div>
+</body>
+</html>

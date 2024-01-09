@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Administrator";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="CountryMaster" asp-action="Index">
+                            Add/Edit Country
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="StateMaster" asp-action="Index">
+                            Add/Edit State
+                        </a>
+                    </li>                   
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="DistrictMaster" asp-action="Index">
+                            Add/Edit District
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="CityMaster" asp-action="Index">
+                            Add/Edit City
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="PinCodeMaster" asp-action="Index">
+                            Add/Edit PinCodes
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="CurrencyMaster" asp-action="Index">
+                            Add/Edit Currency
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="PaymentModeMaster" asp-action="Index">
+                            Add/Edit PaymentMode
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="BankMaster" asp-action="Index">
+                            Add/Edit Banks Details
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="DonorInstructionMaster" asp-action="Index">
+                            Add/Edit Donor Instructions
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="Masters" asp-controller="CampaignMaster" asp-action="Index">
+                            Add/Edit Campaigns
+                        </a>
+
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <!-- Main Content -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h2">Administrator</h1>
+                <div class="btn-toolbar">
+                    <a title="Go Back Home" href="/Home/Index" class="btn btn-warning ml-auto"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+
+            <p>Select Item from List TO add/delete/edit in Masters</p>
+        </main>
+
+    </div>
+</div>

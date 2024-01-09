@@ -1,0 +1,68 @@
+﻿@model NSSERP.Areas.Masters.Models.CurrencyMaster
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Create Currency</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="create" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="CountryID">Country:</label>
+                        <select class="form-control" name="CountryID" required>
+                            <option value="" selected disabled>Select Country</option>
+                            @foreach (var country in ViewBag.Countries)
+                            {
+                                <option value="@country.CountryId">@country.CountryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="CurrencyCode">Currency Code:</label>
+                        <input name="CurrencyCode" id="CurrencyCode" asp-for="CurrencyCode" oninput="this.value = this.value.toUpperCase()" placeholder="eg.INR" required class="form-control" />
+                        <span asp-validation-for="CurrencyCode" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="CurrencyName">Currency Name:</label>
+                        <input name="CurrencyName" id="CurrencyName" asp-for="CurrencyName" oninput="this.value = this.value.toUpperCase()" placeholder="eg.rupee" required class="form-control" />
+                        <span asp-validation-for="CurrencyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="Symbol">Symbol:</label>
+                        <input id="Symbol" name="Symbol" asp-for="Symbol" placeholder="eg.₹" required class="form-control" />
+                        <span asp-validation-for="Symbol" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="IsActive">Is Active:</label>
+                    <select class="form-control" name="IsActive" required>
+                        <option value="Y">Active</option>
+                        <option value="N">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+
+            <div class="form-group">
+                <br />
+                <a href="/Masters/CurrencyMaster/Index" class="btn btn-warning btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>

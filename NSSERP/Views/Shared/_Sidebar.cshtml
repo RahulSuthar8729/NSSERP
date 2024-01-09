@@ -1,0 +1,322 @@
+﻿@{
+    ViewData["Title"] = "Sidebar";
+
+}
+<style>
+    .nav-item {
+        background-color: #f8f9fa;
+        color: #495057;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .nav-item:hover {
+            background-color: #e2e6ea;
+            color: #28166f;
+        }
+
+        .nav-item.blur {
+            filter: blur(2px);
+        }
+
+        .nav-item:not(.dropdown) {
+            margin-top: 8px;
+        }
+
+        .nav-item.dropdown {
+            position: relative;
+        }
+
+            .nav-item.dropdown:hover .dropdown-menu {
+                display: block;
+            }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #f8f9fa; /* Set to the same background color as main menu */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        padding: 8px;
+        margin-top: 8px;
+        z-index: 1;
+    }
+
+        .dropdown-menu a {
+            color: #495057; /* Set to the same text color as main menu */
+            text-decoration: none;
+            display: block;
+            padding: 8px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            .dropdown-menu a:hover {
+                background-color: #e2e6ea; /* Set to the same hover background color as main menu */
+                color: #28166f; /* Set to the same hover text color as main menu */
+            }
+
+    .main-content {
+        padding: 15px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+        $('.nav-item.dropdown').on('click', function (e) {
+            if ($(e.target).hasClass('nav-link')) {
+                // If the target is a nav-link, prevent the click event and handle visibility
+                e.preventDefault();
+                $(this).toggleClass('show');
+            } else if ($(e.target).hasClass('dropdown-toggle')) {
+                // If the target is a dropdown-toggle, toggle the dropdown
+                $(this).toggleClass('show');
+            }
+        });
+
+        $('.nav-item.dropdown > .nav-link').on('click', function (e) {
+            if (!$(this).parent().hasClass('show')) {
+                e.preventDefault();
+                window.location.href = $(this).attr('href');
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.nav-item.dropdown').length) {
+                $('.nav-item.dropdown').removeClass('show');
+            }
+        });
+    });
+</script>
+
+<button class="btn btn-light d-block d-md-none" id="sidebarCollapse">
+    <i class="fas fa-bars"></i>
+</button>
+<div id="sidebar" class="col-md-4 col-lg-3 d-md-block bg-light sidebar">
+    <div class="position-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-cogs"></i> Admin Setup
+                </div>
+                <ul class="dropdown-menu ml-3" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="AdminSetup" asp-controller="SendMessageToDonor" asp-action="SendMsgandMail">Send Message To Donor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="AdminSetup" asp-controller="BankStatement" asp-action="Index">Bank Statement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Reports</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-box"></i> Donation Receive
+                </div>
+                <ul class="dropdown-menu ml-3" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="NationalGangotri" asp-controller="DonationReceiveMaterDetails" asp-action="Index">Donation Receive List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="NationalGangotri" asp-controller="DonationReceiveMaster" asp-action="Home">Donation Receive Master</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-receipt"></i> Post Receive
+                </div>
+                <ul class="dropdown-menu ml-3" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Account Verification</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Account Forward Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Post Receive</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="PostReceive" asp-controller="HeadMaster" asp-action="HeadMaster">Head Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Import Bank Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Import BP Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="" asp-action="">Reports</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-box"></i> Searching
+                </div>
+                <ul class="dropdown-menu ml-3" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="BasicSearch">Donor Personal Info Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="DetailSearch">Donor Donation Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Searching" asp-controller="AdvanceSearching" asp-action="advsearch">Advanced Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Searching" asp-controller="TransactionSearching" asp-action="TnxSearch">Donation Transaction Searching</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="DetailSearch">Searching Forword Addressing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="Home">Dispatch Calling List</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-box"></i> Gangotri
+                </div>
+                <ul class="dropdown-menu ml-3" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="DispatchPendingDetails">Dispatch Pending Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Donation" asp-action="DonationMaster">Donation Form Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="NationalGangotri" asp-controller="VirtualPrerak" asp-action="VirtualPrerakList">Virtual Preak Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Donation" asp-action="ForwordAddressingToDonation">Addressing Forword Donation</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="DonationPendingDetails">Donation Pending Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Donation" asp-action="DonationList">Donation Entry</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="ForwordCardPrintingToDispatch">Photo Printing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="Home">Photo Writing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="ForwordCheckingToPrinting">Cheking Forword Printing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="AppShreeKaPurnVivran">Purn Vivran</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="ForwordCardPrintingToDispatch">Card Printing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="ForwordRelation">Forword Relation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="ManavFormulaToDispatch">Upload Manav Formula</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="Home">Mistake Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="Home">Send Receipt Mail</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-box"></i>Address Master
+                </div>
+
+                <ul class="dropdown-menu ml-3" aria-labelledby="">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Donation" asp-action="ForwordAddressingToDonation">Donor List</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-box"></i> Receipt Dispatch
+                </div>
+
+                <ul class="dropdown-menu ml-3" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="DispatchPendingDetails">Dispatch Pending Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="PrintEnvelope">Envelope</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>General Dispatch
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>Call Center
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Gangotri" asp-action="Announce">
+                    <i class="fas fa-box"></i>Announce
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>Recipet Book
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>OutBond
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>Bhojan Miti
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>Dan Parta
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>Ration Card
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Module" asp-action="">
+                    <i class="fas fa-box"></i>Social Media
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+

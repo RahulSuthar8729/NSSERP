@@ -1,0 +1,1167 @@
+﻿
+@{
+    ViewData["Title"] = "DonationMaster";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">DONATOR</span>
+                        <span style="color:#28166f">MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left" style="margin-right: 200px;">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                   
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <form class="row-cols-lg-12">         
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Personal Details</legend>
+                    <div class="card-header text-left">
+
+                        <!-- Checkbox for Anonymous Donor -->
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="sameasabove" name="sameasabove">
+                            <label class="form-check-label font-weight-bold fs-5" for="sameasabove">Anonymous Donor</label>
+                        </div>
+
+
+                        <!-- Label for Group NgCode -->
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="groupNgCode">Group NgCode:</label>
+                        </div>
+
+                        <!-- Online CustId Input -->
+                        <div class="form-check form-check-inline">
+                            <label for="onlineCustId">Online CustId:</label>
+                            <input type="text" class="form-control" id="onlineCustId" name="onlineCustId">
+                        </div>
+
+                        <!-- UPI ID Input -->
+                        <div class="form-check form-check-inline">
+                            <label for="upiId">UPI ID:</label>
+                            <input type="text" readonly class="form-control" id="upiId" name="upiId">
+                        </div>
+
+                    </div>
+
+
+                    <div class="nested-form-container">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="mailingNo">Mailing No.</label>
+                                <input type="text" class="form-control" id="mailingNo" name="mailingNo">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="referenceNo">Reference No.</label>
+                                <input type="text" class="form-control" id="referenceNo" name="referenceNo">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dateOfEntry">Date of Entry</label>
+                                <input type="date" class="form-control" id="dateOfEntry" name="dateOfEntry">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="category">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="donor">Donor</option>
+                                    <option value="sample">Sample</option>
+                                </select>
+                            </div>
+                            <div class="row">
+
+                                <div class="form-group col-lg-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="appShree" name="appShree">
+                                        <label class="form-check-label fs-5" for="appShree">App Shree ka Purn Vivran Received</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="Surname" class="mr-2">First Name</label>
+                                    <div class="d-flex">
+                                        <select class="form-control col-lg-3 mr-1" id="surnameSelect" name="surnameSelect">
+                                            <option value="0"><></></option>
+                                            <option value="Mr">Mr</option>
+                                            <option value="Mrs">Mrs</option>
+                                        </select>
+                                        <input type="text" class="form-control col-lg-9" id="firstName" name="firstName">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="middleName">Middle Name</label>
+                                    <input type="text" class="form-control" id="middleName" name="middleName">
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Date Of Birth</label>
+                                    <input type="date" class="form-control" id="" name="">
+                                </div>                              
+                                <div class="form-group col-lg-3">
+                                    <label for="" class="mr-2">S/oD/oW/o</label>
+                                    <div class="d-flex">
+                                        <select class="form-control col-lg-3 mr-1" id="surnameSelect" name="surnameSelect">
+                                            <option value="0"><></></option>
+                                            <option value="Mr">Mr</option>
+                                            <option value="Mrs">Mrs</option>
+                                        </select>
+                                        <input type="text" class="form-control col-lg-9" id="firstName" name="firstName">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Date Of Anniversary</label>
+                                    <input type="date" class="form-control" id="" name="">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Company</label>
+                                    <input type="text" class="form-control" id="" name="">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Your Company</label>
+                                    <input type="text" class="form-control" id="" name="">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Bussiness/Job Type</label>
+                                    <select class="form-control" id="event" name="event">
+                                        <option value="0">select</option>
+                                        <option value="event">event 2</option>
+                                        <option value="event">event 3</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <label class="d-block">Profession</label>
+
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input" id="naOption" name="profession" value="na">
+                                        <label class="form-check-label" for="naOption">N/A</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input" id="serviceOption" name="profession" value="service">
+                                        <label class="form-check-label" for="serviceOption">Service</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input" id="businessOption" name="profession" value="business">
+                                        <label class="form-check-label" for="businessOption">Business</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Working In</label>
+                                    <input type="text" class="form-control" id="" name="">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Your Designation</label>
+                                    <input type="text" class="form-control" id="" name="">
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="">C/O</label>
+                                    <input type="text" class="form-control" id="" name="">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Toatl Donation</label>
+                                    <input type="text" class="form-control" id="" name="">
+                                </div>
+
+
+
+
+                            </div>                           
+
+                        </div>
+                       
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Letter Communication Address Details</legend>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+                         
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1 (House No./Bldg/Apt.)</label>
+                                <textarea class="form-control" id="Address1" name="Address1" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address2">Address2 (Street/Road/Lane)</label>
+                                <textarea class="form-control" id="Address2" name="Address2" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address3">Address3 (Area/Locality/Sector)</label>
+                                <textarea class="form-control" id="Address3" name="Address3" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Country</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="pincode">PinCode</label>
+                                <input type="text" class="form-control" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">State</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">District</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">City</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>                          
+                            <div class="form-group col-lg-3">
+                                <label for="">Tehshil</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Gram panchayat</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Village</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">
+                        Permanent Address Details
+                    </legend>
+                    <div class="card-header text-center">
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="sameasabove" name="sameasabove">
+                            <label class="form-check-label" for="sameasabove">Same As Communication Address</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="updation" name="updation">
+                            <label class="form-check-label" for="updation">Updation in Addressing Please Check</label>
+                        </div>
+                    </div>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1 (House No./Bldg/Apt.)</label>
+                                <textarea class="form-control" id="Address1" name="Address1" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address2">Address2 (Street/Road/Lane)</label>
+                                <textarea class="form-control" id="Address2" name="Address2" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address3">Address3 (Area/Locality/Sector)</label>
+                                <textarea class="form-control" id="Address3" name="Address3" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Country</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="pincode">PinCode</label>
+                                <input type="text" class="form-control" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">State</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">District</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">City</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Tehshil</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Gram panchayat</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Village</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Contact Details</legend>
+                    <div class="card-header text">
+                        <div class="container">
+                            <div class="row">
+                                <!-- Call -->
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-check-label d-block">
+                                        Call:
+                                    </label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="call" value="no"> No
+                                    </div>
+                                </div>
+
+                                <!-- Messages -->
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-check-label d-block">
+                                        Messages:
+                                    </label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="messages" value="yes"> Yes
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="messages" value="no"> No
+                                    </div>
+                                </div>
+
+                                <!-- WhatsApp -->
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-check-label d-block">
+                                        WhatsApp:
+                                    </label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="whatsapp" value="yes"> Yes
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="whatsapp" value="no"> No
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-check-label d-block">
+                                        Email:
+                                    </label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="email" value="yes"> Yes
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="email" value="no"> No
+                                    </div>
+                                </div>
+
+                                <!-- Letter Communication -->
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-check-label d-block">
+                                        Letter Communication:
+                                    </label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="letter" value="yes"> Yes
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="letter" value="no"> No
+                                    </div>
+                                </div>
+
+                                <!-- Send Operation Photo -->
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-check-label d-block">
+                                        Send Operation Photo:
+                                    </label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="sendPhoto" value="yes"> Yes
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="sendPhoto" value="no"> No
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="">SD Code</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="STD CODE">STD Code</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <!-- Phone (Resi.) Form Group -->
+                            <div class="form-group col-lg-3">
+                                <label for="residentialPhone">Phone (Resi.)</label>
+
+                                <input class="form-control mt-3" id="resiPhoneText" type="text" name="resiPhoneText" />
+                                <div class="d-flex mt-3">
+                                   
+                                    <div class="form-check mr-3">
+                                        <input type="radio" class="form-check-input" id="resiActive" name="resiPhoneStatus" value="yes" checked>
+                                        <label class="form-check-label" for="resiActive">Active</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="resiInactive" name="resiPhoneStatus" value="no">
+                                        <label class="form-check-label" for="resiInactive">Inactive</label>
+                                    </div>
+                                </div>                              
+                               
+                            </div>
+
+                            <!-- Phone (Office) Form Group -->
+                            <div class="form-group col-lg-3">
+                                <label for="officePhone">Phone (Office)</label>
+
+                                <input class="form-control mt-3" id="officePhoneText" type="text" name="officePhoneText" />
+                                <div class="d-flex mt-3">
+                                    <div class="form-check mr-3">
+                                        <input type="radio" class="form-check-input" id="officeActive" name="officePhoneStatus" value="yes" checked>
+                                        <label class="form-check-label" for="officeActive">Active</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="officeInactive" name="officePhoneStatus" value="no">
+                                        <label class="form-check-label" for="officeInactive">Inactive</label>
+                                    </div>
+                                </div>                             
+                               
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label for="" class="mr-2">Mobile No.1</label>
+                                <div class="d-flex">
+                                    <select class="form-control col-lg-2 mr-2" id="" name="">
+                                        <option value="0"><></></option>
+                                        <option value="+91">+91</option>
+                                        <option value=""></option>
+                                    </select>
+                                    <input type="text" class="form-control col-lg-9" id="" name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label for="" class="mr-2">Mobile No.2</label>
+                                <div class="d-flex">
+                                    <select class="form-control col-lg-2 mr-2" id="" name="">
+                                        <option value="0"><></></option>
+                                        <option value="+91">+91</option>
+                                        <option value=""></option>
+                                    </select>
+                                    <input type="text" class="form-control col-lg-9" id="" name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label for="" class="mr-2">Mobile No.3</label>
+                                <div class="d-flex">
+                                    <select class="form-control col-lg-2 mr-2" id="" name="">
+                                        <option value="0"><></></option>
+                                        <option value="+91">+91</option>
+                                        <option value=""></option>
+                                    </select>
+                                    <input type="text" class="form-control col-lg-9" id="" name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label for="" class="mr-2">Mobile No.4</label>
+                                <div class="d-flex">
+                                    <select class="form-control col-lg-2 mr-2" id="" name="">
+                                        <option value="0"><></></option>
+                                        <option value="+91">+91</option>
+                                        <option value=""></option>
+                                    </select>
+                                    <input type="text" class="form-control col-lg-9" id="" name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-lg-4">
+                                <label for="" class="mr-2">Mobile No.(WhatsApp-1)</label>
+                                <div class="d-flex">
+                                    <select class="form-control col-lg-2 mr-2" id="" name="">
+                                        <option value="0"><></></option>
+                                        <option value="+91">+91</option>
+                                        <option value=""></option>
+                                    </select>
+                                    <input type="text" class="form-control col-lg-9" id="" name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-lg-4">
+                                <label for="" class="mr-2">Mobile No.(WhatsApp-2)</label>
+                                <div class="d-flex">
+                                    <select class="form-control col-lg-2 mr-2" id="" name="">
+                                        <option value="0"><></></option>
+                                        <option value="+91">+91</option>
+                                        <option value=""></option>
+                                    </select>
+                                    <input type="text" class="form-control col-lg-9" id="" name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="call" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="messages" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block font-weight-bold">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="active"> Active
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="whatsapp" value="inactive"> Inactive
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="officePhone">Mobile No.(Not Call)</label>
+
+                                <input class="form-control mt-3" id="officePhoneText" type="text" name="officePhoneText" />
+                                <div class="d-flex mt-3">
+                                    <div class="form-check mr-3">
+                                        <input type="radio" class="form-check-input" id="officeActive" name="officePhoneStatus" value="yes" checked>
+                                        <label class="form-check-label" for="officeActive">Active</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="officeInactive" name="officePhoneStatus" value="no">
+                                        <label class="form-check-label" for="officeInactive">Inactive</label>
+                                    </div>
+                                </div>
+
+                            </div>                           
+
+                            <div class="form-group col-lg-3">
+                                <label for="officePhone">Email ID-1</label>
+                                <input class="form-control mt-3" id="officePhoneText" type="text" name="officePhoneText" />
+                                <div class="d-flex mt-3">
+                                    <div class="form-check mr-3">
+                                        <input type="radio" class="form-check-input" id="officeActive" name="officePhoneStatus" value="yes" checked>
+                                        <label class="form-check-label" for="officeActive">Active</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="officeInactive" name="officePhoneStatus" value="no">
+                                        <label class="form-check-label" for="officeInactive">Inactive</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="officePhone">Email ID-2</label>
+                                <input class="form-control mt-3" id="officePhoneText" type="text" name="officePhoneText" />
+                                <div class="d-flex mt-3">
+                                    <div class="form-check mr-3">
+                                        <input type="radio" class="form-check-input" id="officeActive" name="officePhoneStatus" value="yes" checked>
+                                        <label class="form-check-label" for="officeActive">Active</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="officeInactive" name="officePhoneStatus" value="no">
+                                        <label class="form-check-label" for="officeInactive">Inactive</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                           
+                            <div class="form-group col-lg-3">
+                                <label for="">Website</label>
+                                <input class="form-control" type="email" id="" name="" />
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="category">Suggested Dispatch Mode</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Time Frequency of Call</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Contact day</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Contact Time From-To</label>
+                                <div class="d-flex">
+                                    <input class="form-control col-lg-6 mr-2" type="datetime" placeholder="From" />
+                                    <input class="form-control col-lg-6" type="datetime" placeholder="To" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Other Details</legend>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+
+                            <div class="col-lg-3">
+                                <label class="form-check-label d-block">
+                                    Send Sandipan
+                                </label>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="no"> No
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9">
+                                <label for="language">Select Language(s)</label>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="hindi" name="language" value="hindi">
+                                    <label class="form-check-label" for="hindi">Hindi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="english" name="language" value="english">
+                                    <label class="form-check-label" for="english">English</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="gujarati" name="language" value="gujarati">
+                                    <label class="form-check-label" for="gujarati">Gujarati</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="punjabi" name="language" value="punjabi">
+                                    <label class="form-check-label" for="punjabi">Punjabi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="marathi" name="language" value="marathi">
+                                    <label class="form-check-label" for="marathi">Marathi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="oriya" name="language" value="oriya">
+                                    <label class="form-check-label" for="oriya">Oriya</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Sandipan</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Sandipan Remarks</label>
+                               <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Receipt Copy Require</label>
+                                <select class="form-control" id="" name="">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-check-label fw-bolder d-lg-flex">
+                                    Visit
+                                </label>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="no"> No
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Visit Year</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Forgin NgCode Refrence</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">If Changes then enter Reason </label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Remarks</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Inspiry Details</legend>
+
+                    <div class="nested-form-container">
+                        <div class="row">                          
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Name</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Address</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">STD Code</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Phone No.(Resi)</label>
+                                <select class="form-control" id="" name="">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Phone No.(Office)</label>
+                                <select class="form-control" id="" name="">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                           
+                            <div class="form-group col-lg-3">
+                                <label for="">Mobile No.</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Fax No.</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Email Id</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>                          
+
+                        </div>
+                        <div class="container mt-2">
+                            <h3>Documents</h3>
+                            <div class="row">
+                                <!-- Photograph Uploader -->
+                                <div class="col-md-6">
+                                    <div class="form-group mt-4">
+                                        <label for="photograph">Documents</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="photograph" name="photograph" onchange="viewFile('photograph')">
+                                            <label class="custom-file-label" for="photograph">Choose file</label>
+                                        </div>
+                                        <img id="viewPhotograph" class="img-fluid mt-2" style="display: none;" alt="Photograph">
+                                        <a id="downloadPhotograph" class="btn btn-success mt-2" style="display: none" download>Download Photograph</a>
+                                    </div>
+                                </div>
+
+                                <!-- Visiting Card Uploader -->
+                                <div class="col-md-6">
+                                    <div class="form-group mt-4">
+                                        <label for="visitingCard">Visiting Card</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="visitingCard" name="visitingCard" onchange="viewFile('visitingCard')">
+                                            <label class="custom-file-label" for="visitingCard">Choose file</label>
+                                        </div>
+                                        <img id="viewVisitingCard" class="img-fluid mt-2" style="display: none;" alt="Visiting Card">
+                                        <a id="downloadVisitingCard" class="btn btn-success mt-2" style="display: none" download>Download Visiting Card</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+                <script>
+                    function viewFile(inputId) {
+                        const input = document.getElementById(inputId);
+                        const file = input.files[0];
+                        const viewImage = document.getElementById("view" + inputId.charAt(0).toUpperCase() + inputId.slice(1));
+                        const downloadLink = document.getElementById("download" + inputId.charAt(0).toUpperCase() + inputId.slice(1));
+
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                viewImage.src = e.target.result;
+                                viewImage.style.display = "block";
+                                downloadLink.href = e.target.result;
+                                downloadLink.style.display = "block";
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert("No file selected");
+                            viewImage.style.display = "none";
+                            downloadLink.style.display = "none";
+                        }
+                    }
+                </script>
+
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="container mt-5 text-center">
+        <!-- Save Button -->
+         <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button><i class="fas fa-save"></i> Save</button>
+
+        <!-- Back Button -->
+        <button type="reset" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</button>
+
+        <!-- Add Button -->
+        <button type="submit" class="btn btn-info"><i class="fas fa-plus"></i> Add</button>
+
+        <!-- Add Reference Button -->
+        <button type="submit" class="btn btn-success"><i class="fas fa-book"></i> Add Reference</button>
+
+        <!-- Add Family Member Button -->
+        <button type="submit" class="btn btn-danger"><i class="fas fa-users"></i> Add Family Member</button>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
+</body>
+</html>
+
+
+

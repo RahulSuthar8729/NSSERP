@@ -1,0 +1,292 @@
+﻿@{
+    ViewData["Title"] = "SendMsgandMail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        /* Add your custom styles here */
+        body {
+            padding: 20px;
+            background-color: #f8f9fa; /* Set a background color */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Add horizontal scroll for small screens */
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%; /* Adjust the width as needed */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            background-color: #fff; /* Set a white background */
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #fff;
+                background-color: #28166f;
+            }
+
+            /* Add custom zoom-in effect on hover for tabs */
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #1cb8a1, #008081);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            .nav-link:hover::before {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card-mb-0">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col text-left">
+                        <h5>
+                            <span style="color:#1cb8a1">SEND MESSAGES</span>
+                            <span style="color:#28166f">AND MAIL</span>
+                        </h5>
+                    </div>
+                    <div class="col text-left">
+                        <h5>
+                            <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                        </h5>
+                    </div>
+                    <div class="col-2 text-right">
+                        <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label style="font-weight:bold">Preferred Communication:</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="communicationMethod" id="sms" value="sms">
+                                <label class="form-check-label" for="sms">SMS</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="communicationMethod" id="whatsapp" value="whatsapp">
+                                <label class="form-check-label" for="whatsapp">WhatsApp</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="communicationMethod" id="sendmail" value="sendmail">
+                                <label class="form-check-label" for="sendmail">SendMail</label>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label style="font-weight:bold">Message Type:</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="messageType" id="single" value="single">
+                                <label class="form-check-label" for="single">Single</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="messageType" id="bulk" value="bulk">
+                                <label class="form-check-label" for="bulk">Bulk</label>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label style="font-weight:bold">Message Options:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="textMessage" value="textMessage">
+                            <label class="form-check-label" for="textMessage">Text Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="bankMessage" value="bankMessage">
+                            <label class="form-check-label" for="bankMessage">Bank Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="eventMessage" value="eventMessage">
+                            <label class="form-check-label" for="eventMessage">Event Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="aashramAddress" value="aashramAddress">
+                            <label class="form-check-label" for="aashramAddress">Aashram Address Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="shansthanAddress" value="shansthanAddress">
+                            <label class="form-check-label" for="shansthanAddress">Shansthan Address Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="branchAddress" value="branchAddress">
+                            <label class="form-check-label" for="branchAddress">Branch Address Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="physiotherapyAddress" value="physiotherapyAddress">
+                            <label class="form-check-label" for="physiotherapyAddress">Physiotherapy Address Message</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="websitePaytemDetails" value="websitePaytemDetails">
+                            <label class="form-check-label" for="websitePaytemDetails">Website/Paytem Details</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="messageOption" id="email" value="email">
+                            <label class="form-check-label" for="email">Email</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Mobile No.</label>
+                            <input type="text" class="form-control" id="" name="">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Country</label>
+                            <select class="form-control" id="" name="">
+                                <option value="Select">Select</option>
+                                <option value="">India</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Send To Name</label>
+                            <input type="text" class="form-control" id="" name="">
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Sms Type</label>
+                            <select class="form-control" id="" name="">
+                                <option value="Select">Select</option>
+                                <option value="">1</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="scheduleDateTime">Schedule Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="scheduleDateTime" name="scheduleDateTime">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="scheduleCheckbox" name="scheduleCheckbox">
+                            <label class="form-check-label" for="scheduleCheckbox">Schedule this message</label>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button>
+                    </div><div class="row">
+                        <div class="form-group">
+                            <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div class="row col-lg-12">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>BANK NAME</th>
+                            <th>ACCOUNT NO.</th>
+                            <th>ACCOUNT TYPE</th>
+                            <th>IFSC CODE</th>
+                            <th>BRANCH CODE</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Property1</td>
+                                    <td>@item.Property2</td>
+                                    <!-- ... your table data ... -->
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

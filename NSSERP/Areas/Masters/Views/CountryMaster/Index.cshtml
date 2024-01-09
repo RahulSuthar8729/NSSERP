@@ -1,0 +1,91 @@
+﻿@model IEnumerable<NSSERP.Areas.Masters.Models.Countrys>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#countryTable').DataTable();
+    });
+
+    function confirmDelete(CountryId) {
+        var result = confirm("Are you sure you want to delete this country?");
+        if (result) {
+            window.location.href = "/Masters/CountryMaster/Delete?countryId=" + CountryId;
+        }
+    }
+</script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="..." crossorigin="anonymous" />
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col text-left">
+                <h5>
+                    <span style="color:#1cb8a1">COUNTRY</span>
+                    <span style="color:#28166f">MASTER</span>
+                </h5>
+            </div>
+            <div class="col text-left">
+                <h5>
+                    <span style="color:#1cb8a1"></span>
+                </h5>
+            </div>
+            <div class="col-3 text-right">
+                <a href="/Masters/CountryMaster/Create" class="btn btn-primary">Add Country</a>
+                <a title="Go Back Home" href="/Administrator/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered" id="countryTable">
+            <thead class="thead-dark">
+                <tr>
+
+                    <th>Country Name</th>
+                    <th>Country Code</th>
+                    <th>Is Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var country in Model)
+                {
+                    <tr>
+
+                        <td>@country.CountryName</td>
+                        <td>@country.CountryCode</td>
+                        <td>@(country.IsActive == 'Y' ? "Active" : "Inactive")</td>
+                        <td>
+                            <a href="/Masters/CountryMaster/Edit?countryId=@country.CountryId" title="Edit" asp-route-countryCode="@country.CountryId">
+                                <i class="fas fa-edit btn btn-primary"></i>
+                            </a>
+                            <a onclick="confirmDelete('@country.CountryId')"  title="Delete">
+                                <i class="fas fa-trash-alt btn btn-danger"></i>
+                            </a>
+
+                            <script>
+                                function confirmDelete(countryId) {
+                                    var result = confirm("Are you sure you want to delete this country?");
+                                    if (result) {
+                                        // Change the location to a GET request
+                                        window.location.href = "/Masters/CountryMaster/Delete?countryId=" + countryId;
+                                    }
+                                }
+                            </script>
+
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@model NSSERP.Areas.Masters.Models.CampaignMaster
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Create Campaign</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="CampaignMaster" asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="CampaignName" class="control-label">Campaign Name</label>
+                            <input asp-for="CampaignName" type="text" id="CampaignName" name="CampaignName" class="form-control" required />
+                            <span asp-validation-for="CampaignName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="IsActive" class="control-label">Is Active</label>
+                            <select asp-for="IsActive" id="IsActive" name="IsActive" class="form-control" required>
+                                <option value="Y">Active</option>
+                                <option value="N">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Create</button>
+                            <a href="/Masters/CampaignMaster/Index" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

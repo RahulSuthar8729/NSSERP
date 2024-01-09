@@ -1,0 +1,263 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module Selection</title>
+
+    <!-- Include necessary CSS files, for example, Bootstrap for styling -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="..." crossorigin="anonymous" />
+ <style>
+        /* Add your custom styles here */
+        body {
+            padding: 20px;
+            background-color: #f8f9fa; /* Set a background color */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Add horizontal scroll for small screens */
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%; /* Adjust the width as needed */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            background-color: #fff; /* Set a white background */
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #fff;
+                background-color: #28166f;
+            }
+
+            /* Add custom zoom-in effect on hover for tabs */
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #1cb8a1, #008081);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            .nav-link:hover::before {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+ </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <span style="color:#28166f;font-weight:bold">   SELECT </span><span style="color:#1cb8a1;font-weight:bold">MODULE</span>
+        </div><br />
+        <div class="user-info">
+            Shadhak: <span>@User.Identity.Name</span>
+        </div>
+        <div class="table-responsive-lg">            
+            <table class="table-responsive-lg">
+                <tr>
+                    <td onclick="location.href='@Url.Action("Home", "Administrator")'">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" data-toggle="tab">
+                            <i class="fas fa-cogs"></i> Administrator
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link" data-toggle="tab" data-action="/Home/Privacy">
+                            <i class="fas fa-home"></i>
+                            Ashram
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link" id="tab3" data-toggle="tab" href="#content3">
+                            <i class="fas fa-dollar-sign"></i>
+                            Billing
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link" id="tab4" data-toggle="tab" href="#content4">
+                            <i class="fas fa-birthday-cake"></i>
+                            Birthday & Aniversury
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link" id="tab5" data-toggle="tab" href="#content5">
+                            <i class="fas fa-building"></i>
+                            Building Managemnet
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                            <i class="fas fa-paper-plane"></i>
+                            Crosspondance
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                            <i class="fas fa-camera"></i>
+                            Document and Photo Mnagemnet
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Index", "Home")'">
+                        <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                            <i class="fas fa-pencil-alt"></i>
+                            Editing
+                        </a>
+                    </td>
+                </tr>
+                <!-- Add more rows if needed -->
+                <tr>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab9" data-toggle="tab" href="#content4">
+                            <i class="far fa-calendar-check"></i>
+                            Event Mangement
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                            <i class="fas fa-flag"></i>
+                            Flag Event
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                            <i class="fas fa-bed"></i>
+                            Guest House
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                            <i class="fas fa-desktop"></i>
+                            Hardware & Networking
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                            <i class="fas fa-users" style="color: green;"></i>
+                            HR
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab9" data-toggle="tab" href="#content4">
+                            <i class="fas fa-map-marker"></i>
+
+                            Indian Branches
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                            <i class="fas fa-clipboard-check"></i>
+
+                            Internal Audit
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Module", "Inventory")'">
+                        <a class="nav-link" id="tab6" data-toggle="tab" data-action="/Inventory/Module">
+                            <i class="fas fa-archive"></i>
+
+                            Inventory
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                            <i class="fas fa-book-open"></i>
+                            Katha
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                            <i class="fas fa-chart-bar"></i>
+
+                            MIS
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("Home", "Gangotri")'">
+                        <a class="nav-link" id="tab9" data-action="/Gangotri/Home">
+                            <i class="fas fa-rupee-sign"></i>
+                            <span style="color: goldenrod;">National Gangotri</span>
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab10" data-toggle="tab" href="#content5">
+                            <i class="fas fa-exchange-alt"></i>
+                            Project System
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link " id="tab6" data-toggle="tab" href="#content1">
+                            <i class="fas fa-file-alt"></i>
+
+                            Reports
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                            <i class="fas fa-donate"></i>
+                            Tapovan & MID System
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab8" data-toggle="tab" href="#content3">
+                            <i class="fas fa-car"></i>
+
+                            Yatayat System
+                        </a>
+                    </td>
+                    <td onclick="location.href='@Url.Action("YourAction", "YourController")'">
+                        <a class="nav-link" id="tab7" data-toggle="tab" href="#content2">
+                            <i class="fas fa-book-open"></i>
+                            Test
+                        </a>
+                    </td>
+                </tr>
+            </table>
+      
+     </div>
+
+        <!-- Include necessary JavaScript files, for example, Bootstrap and jQuery -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+
+    </div>
+</body>
+</html>
+

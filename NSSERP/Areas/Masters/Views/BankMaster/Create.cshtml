@@ -1,0 +1,69 @@
+﻿@model NSSERP.Areas.Masters.Models.BankMaster
+
+@{
+    ViewData["Title"] = "Create Bank";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Create Bank</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="CountryID">Country:</label>
+                        <select class="form-control" name="CountryID" asp-for="CountryID" required>
+                            <option value="" selected disabled>Select Country</option>
+                            @foreach (var country in ViewBag.Countries)
+                            {
+                                <option value="@country.CountryId">@country.CountryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="BankName">Bank Name:</label>
+                        <input name="BankName" id="BankName" oninput="this.value = this.value.toUpperCase()" asp-for="BankName" placeholder="Enter bank name" required class="form-control" />
+                        <span asp-validation-for="BankName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="BranchName">Branch Name:</label>
+                        <input name="BranchName" id="BranchName" oninput="this.value = this.value.toUpperCase()" asp-for="BranchName" placeholder="Enter branch name" required class="form-control" />
+                        <span asp-validation-for="BranchName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="IFSCCode">IFSC Code:</label>
+                        <input name="IFSCCode" id="IFSCCode" oninput="this.value = this.value.toUpperCase()" asp-for="IFSCCode" placeholder="Enter IFSC code" required class="form-control" />
+                        <span asp-validation-for="IFSCCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="IsActive">Is Active:</label>
+                    <select name="IsActive" class="form-control" asp-for="IsActive" required>
+                        <option value="Y">Active</option>
+                        <option value="N">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+
+            <div class="form-group">
+                <br />
+                <a href="/Masters/BankMaster/Index" class="btn btn-warning btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+

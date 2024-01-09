@@ -1,0 +1,425 @@
+﻿@{
+    ViewData["Title"] = "DonationEntry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">DONATION </span>
+                        <span style="color:#28166f">ENTRY</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        <label for="DateOfEntry">Date Of Entry</label>
+                        <input type="date" class="form-control" id="DateOfEntry" name="DateOfEntry">
+                    </div>
+
+                    <div class="form-group col-lg-1">
+                        <br />
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gender" id="maleRadio" value="C">
+                            <label class="form-check-label" for="maleRadio">
+                                C
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gender" id="femaleRadio" value="M">
+                            <label class="form-check-label" for="femaleRadio">
+                                M
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-2">
+                        <label for=""></label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for=""></label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        <label for="">Donation No.</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Mailing No.</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Last Donation 80G</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="responsefrom">Person</label>
+                        <select class="form-control" id="event" name="event">
+                            <option value="">select</option>
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <label for="responsefrom">Rupees/Material</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="currency" id="rupeesRadio" value="Rupees">
+                            <label class="form-check-label" for="rupeesRadio">
+                                Rupees
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="currency" id="materialRadio" value="Material">
+                            <label class="form-check-label" for="materialRadio">
+                                Material
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Material</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Amount</label>
+                        <input type="text" class="form-control" id="purposeamount" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Amount in Words</label>
+                        <input type="text" readonly class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <br />
+                        <label for="taxMode">Tax Mode</label>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="taxMode" id="mode80G" value="80G">
+                            <label class="form-check-label" for="mode80G">
+                                80G
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="taxMode" id="mode35C" value="35C">
+                            <label class="form-check-label" for="mode35C">
+                                35C
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <br />
+                        <label for="tax80G">80G Required</label>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tax80G" id="yes80G" value="Yes">
+                            <label class="form-check-label" for="yes80G">
+                                Yes
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tax80G" id="no80G" value="No">
+                            <label class="form-check-label" for="no80G">
+                                No
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-2">
+                        <label for="">Provisional</label>
+                        <select class="form-control" id="event" name="event">
+                            <option value="">select</option>
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="">Provisional No.</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="">Provisional Date</label>
+                        <input type="date" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="">Order No.</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="">No.of Photo</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="checkboxList">Select Options</label>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="provIndianCheckbox" name="options[]" value="Provident Indian">
+                            <label class="form-check-label" for="provIndianCheckbox">
+                                Provident Indian
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chequeBounceCheckbox" name="options[]" value="Cheque Bounce">
+                            <label class="form-check-label" for="chequeBounceCheckbox">
+                                Cheque Bounce
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label" style="font-weight:bold" for="paymentMode">Payment Mode:</label>
+
+                        <div class="col-lg-10">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="cashRadio" value="Cash">
+                                <label class="form-check-label" for="cashRadio">Cash</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="chequeRadio" value="Cheque">
+                                <label class="form-check-label" for="chequeRadio">Cheque</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="ddRadio" value="DD">
+                                <label class="form-check-label" for="ddRadio">DD</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="moRadio" value="MO">
+                                <label class="form-check-label" for="moRadio">MO</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="onlineRadio" value="Online">
+                                <label class="form-check-label" for="onlineRadio">Online</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="payInSlipRadio" value="Pay-in-Slip">
+                                <label class="form-check-label" for="payInSlipRadio">Pay-in-Slip</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMode" id="materialRadio" value="Material">
+                                <label class="form-check-label" for="materialRadio">Material</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label" for="businessReply">Business Reply:</label>
+
+                        <div class="col-lg-3">
+
+                            <select class="form-control" id="businessReply" name="businessReply">
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="2">No</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <!-- ... (Previous code for banks) ... -->
+                    <!-- Add Purpose Section -->
+                    <div class="col-lg-3">
+                        <label for="purposeName">Purpose Name</label>
+                        <select class="form-control" id="purposeName" name="purposeName">
+                            <option value="">Select</option>
+                            <option value="Purpose1">Purpose 1</option>
+                            <option value="Purpose2">Purpose 2</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="">Yojna Name</label>
+
+                        <select class="form-control" id="" name="">
+                            <option value="">Select</option>
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="" class="mr-2">Quantity</label>
+                        <div class="d-flex">
+                            <input type="text" placeholder="Quantity" class="form-control col-lg-7" id="quantity" name="">
+                            <select class="form-control col-lg-2 mr-1" id="unit" name="">
+                                <option value="0"><></></option>
+                                <option value="">KG</option>
+                                <option value="">GM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <br />
+                        <button type="button" id="addBtn" class="btn btn-primary"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="PurposeDetailsTable">
+                            <thead>
+                                <tr>
+                                    <th>Purpose Name</th>
+                                    <th>Quantity</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#PurposeDetailsTable").hide();
+
+                        $("#addBtn").click(function (event) {
+                            event.preventDefault();
+
+                            var purposeName = $("#purposeName option:selected").text();
+                            var quantity = $("#quantity").val();
+                            var amount = $("#purposeamount").val();
+
+                            if (purposeName && quantity && amount) {
+                                var newRow = "<tr>" +
+                                    "<td>" + purposeName + "</td>" +
+                                    "<td>" + quantity + "</td>" +
+                                    "<td>" + amount + "</td>" +
+                                    "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                    "</tr>";
+
+                                $("#PurposeDetailsTable tbody").append(newRow);
+
+                                $("#purposeName").val("");
+                                $("#quantity").val("");
+                                $("#purposeamount").val("");
+
+                                $("#PurposeDetailsTable").show();
+                            } else {
+                                alert("Please fill in all fields before adding.");
+                            }
+                        });
+
+                        $("#PurposeDetailsTable").on("click", ".delete-row", function () {
+                            $(this).closest("tr").remove();
+
+                            if ($("#PurposeDetailsTable tbody tr").length === 0) {
+                                $("#PurposeDetailsTable").hide();
+                            }
+                        });
+                    });
+                </script>
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        <label for="">Sankalp Siddhi ID</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">WOH Ref Mailing No.</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Rec. ID</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Head</label>
+                        <select class="form-control" id="businessReply" name="businessReply">
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Kalash</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Kalash Open By</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">If any Changes then Enter Reason</label>
+                        <textarea id="reason" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Status</label>
+                        <select class="form-control" id="businessReply" name="businessReply">
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Due Payment Remarks</label>
+                        <textarea id="reason" class="form-control" rows="1"></textarea>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Announce ID</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Cancel Remaks</label>
+                        <textarea id="cancelremarks" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="">Instructions</label>
+                        <textarea id="instruction" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="container mt-5 text-center">
+                    <!-- Save Button -->
+                     <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button><i class="fas fa-save"></i>Save</button>                  
+                    <!-- Add Button -->
+                    <button type="button" class="btn btn-info"><i class="fas fa-plus"></i>Add</button>
+                    <!-- Back Button -->
+                    <button  asp-controller="Gangotri" asp-action="Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i>Back</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+

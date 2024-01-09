@@ -1,0 +1,234 @@
+﻿@model NSSERP.Models.NSSLogin;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NSSERP.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FontSome/css/all.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script>
+        toastr.options = {
+            "closeButton": true,  // Add closeButton option
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "320",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+    <style>
+        .tab-container {
+            overflow: auto;
+            white-space: nowrap;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .nav-link {
+            color: white;
+            background-color: #28166f;
+            padding: 10px 0; /* Adjusted padding to create square tabs */
+            font-size: 16px;
+            border: 1px solid #1cb8a1;
+            border-radius: 0; /* Remove border-radius to make tabs square */
+            cursor: pointer;
+            display: inline-block;
+            margin: 0; /* Remove margin between tabs */
+        }
+
+
+
+            /* Style adjustments for the active tab */
+            .nav-link.active {
+                background-color: #1cb8a1;
+                color: white;
+                border: 1px solid #1cb8a1;
+                border-bottom: 2px solid #1cb8a1;
+            }
+
+        /* Adjusted styles for better responsiveness */
+        .media (max-width: 767px) {
+            .tab-container
+
+      
+        }
+
+        .nav-link {
+            padding: 10px 6px; /* Adjusted padding for small screens */
+            font-size: 14px; /* Slightly smaller font size for small screens */
+            margin-bottom: 4px; /* Add margin to separate tabs on small screens */
+        }
+
+        /* Modern styles for textboxes and labels */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-control {
+            flex: 1;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+        /* Add icon styles for Font Awesome icons */
+        .input-group-icon {
+            margin-right: 0.75rem;
+            color: #495057;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-4">
+                <div class="text-center mb-4">
+                    <img src="~/logo.png" alt="Logo" class="img-fluid" />
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="font-family: Lucida Calligraphy; color: #28166f;">Login</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-container">
+                            <button class="nav-link active" onclick="showTab('NSS')">NSS</button>
+                            <button class="nav-link" onclick="showTab('SPD')">SPD</button>
+                            <button class="nav-link" onclick="showTab('ForeignNSS')">Foreign NSS</button>
+                            <button class="nav-link" onclick="showTab('ForeignSPD')">Foreign SPD</button>
+                            <button class="nav-link" onclick="showTab('Hospital')">Hospital</button>
+                            <button class="nav-link" onclick="showTab('DS')">DS</button>
+                        </div>
+
+                        <!-- Add tab content with unique IDs -->
+                        <div id="NSS" class="tab-content active">
+                        </div>
+                        <div id="SPD" class="tab-content active">
+                        </div>
+                        <div id="ForeignNSS" class="tab-content active">
+                        </div>
+                        <div id="ForeignSPD" class="tab-content active">
+                        </div>
+                        <div id="Hospital" class="tab-content active">
+                        </div>
+                        <div id="DS" class="tab-content active">
+                        </div>
+                        <form asp-controller="Access" asp-action="Login" method="post" class="mt-3">
+
+                            <div class="form-group">
+                                <label for="Username">Username:</label>
+                                <div class="input-group">
+                                    <i class="fas fa-user input-group-icon"></i>
+                                    <input type="text" class="form-control" id="Username" name="Username" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Password">Password:</label>
+                                <div class="input-group">
+                                    <i class="fas fa-key input-group-icon"></i>
+                                    <input type="password" class="form-control" id="Password" name="Password" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="checkbox" class="form-check-input" id="KeepLoggedIn" asp-for="KeepLoggedIn" />
+                                        <label class="form-check-label" for="KeepLoggedIn">Stay Signed In</label>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <button type="submit" class="btn btn-primary" style="background-color: #1cb8a1;">
+                                            Login
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (ViewData["validatemsg"] != null)
+                            {
+                                <script>
+                                    toastr.error('@Html.Raw(ViewData["validatemsg"])');
+                                </script>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+        function showTab(tabId) {
+            var tabContents = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+
+            var selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            var navLinks = document.getElementsByClassName('nav-link');
+            for (var i = 0; i < navLinks.length; i++) {
+                navLinks[i].classList.remove('active');
+            }
+
+            var selectedNavLink = document.querySelector('.nav-link[onclick="showTab(\'' + tabId + '\')"]');
+            if (selectedNavLink) {
+                selectedNavLink.classList.add('active');
+            }
+        }
+
+        document.getElementById('Username').addEventListener('input', function () {
+            // Change the color of the selected tab to #1cb8a1
+            var selectedNavLink = document.querySelector('.nav-link.active');
+            if (selectedNavLink) {
+                selectedNavLink.style.backgroundColor = '#1cb8a1';
+            }
+        });
+    </script>
+</body>
+
+</html>

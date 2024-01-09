@@ -1,0 +1,90 @@
+﻿@model IEnumerable<NSSERP.Areas.Masters.Models.PaymentModeMaster>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="..." crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#paymentModeTable').DataTable();
+        });
+    </script>
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col text-left">
+                <h5>
+                    <span style="color:#1cb8a1">DONATIONMODE</span>
+                    <span style="color:#28166f">MASTER</span>
+                </h5>
+            </div>
+            <div class="col text-left">
+                <h5>
+                    <span style="color:#1cb8a1"></span>
+                </h5>
+            </div>
+            <div class="col-3 text-right">
+                <a href="/Masters/PaymentModeMaster/Create" class="btn btn-primary">Add DonationMode</a>
+                <a title="Go Back Home" href="/Administrator/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card-body">
+        
+            <table id="paymentModeTable" class="table table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Donation Mode Name</th>
+                        <th>Description</th>
+                        <th>Is Active</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var paymentMode in Model)
+                    {
+                        <tr>
+                            <td>@paymentMode.PaymentModeName</td>
+                            <td>@paymentMode.Description</td>
+                            <td>
+                                @if (paymentMode.IsActive == "Y")
+                                {
+                                    <span class="text-success">Active</span>
+                                }
+                                else if (paymentMode.IsActive == "N")
+                                {
+                                    <span class="text-danger">Inactive</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/Masters/PaymentModeMaster/Edit/@paymentMode.PaymentModeID" title="Edit">
+                                    <i class="fas fa-edit btn btn-primary"></i>
+                                </a>|
+                                <a href="/Masters/PaymentModeMaster/Delete?id=@paymentMode.PaymentModeID" title="Delete">
+                                    <i class="fas fa-trash-alt btn btn-danger"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+       
+    </div>
+</div>

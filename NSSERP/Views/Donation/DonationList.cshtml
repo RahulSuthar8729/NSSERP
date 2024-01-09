@@ -1,0 +1,257 @@
+﻿
+@{
+    ViewData["Title"] = "DonationList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        /* Add your custom styles here */
+        body {
+            padding: 20px;
+            background-color: #f8f9fa; /* Set a background color */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Add horizontal scroll for small screens */
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%; /* Adjust the width as needed */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            background-color: #fff; /* Set a white background */
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #fff;
+                background-color: #28166f;
+            }
+
+            /* Add custom zoom-in effect on hover for tabs */
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #1cb8a1, #008081);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            .nav-link:hover::before {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card-mb-0">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col text-left">
+                        <h5>
+                            <span style="color:#1cb8a1">DONATION</span>
+                            <span style="color:#28166f"> LIST</span>
+                        </h5>
+                    </div>
+                    <div class="col text-left">
+                        <h5>
+                            <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                        </h5>
+                    </div>
+                    <div class="col-12 col-md-3 text-md-right">
+                        <a asp-action="DonationEntry" asp-controller="Donation" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a>
+                        <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning ml-2"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Post ID">Post ID</label>
+                            <input type="text" class="form-control" id="Post ID" name="Post ID">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Receipet No.">Receipet No.</label>
+                            <input type="text" class="form-control" id="Receipet No." name="Receipet No.">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Mailing No.">Mailing No.</label>
+                            <input type="text" class="form-control" id="Mailing No." name="Mailing No.">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Prov. No.">Prov. No.</label>
+                            <input type="text" class="form-control" id="Prov. No." name="Prov. No.">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Status">Status</label>
+                            <select class="form-control" id="" name="">
+                                <option value="Select">Select</option>
+                                <option value="All">Active</option>
+                                <option value="Sadhak3">Inactive</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                    </div>
+                </td>            
+               
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Cheque NO">Cheque No.</label>
+                            <input type="text" class="form-control" id="" name="">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Care Of</label>
+                            <input type="text" class="form-control" id="" name="">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Purpose</label>
+                            <select class="form-control" id="" name="">
+                                <option value="Select">Select</option>
+                                <option value="All">All</option>
+                                <option value="Sadhak3">Sadhak 3</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-group">
+                         <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="form-group">
+                            <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning">Back</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <br />
+    <div class="row col-lg-12">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>VISIT YEAR</th>
+                            <th>DONATION NO</th>
+                            <th>NGCODE</th>
+                            <th>NAME</th>
+                            <th>COMPANY</th>
+                            <th>DATE</th>                          
+                            <th>REC NO.</th>
+                            <th>PROV.REC.NO.</th>
+                            <th>POST ID</th>
+                            <th>CHEQUE NO</th>
+                            <th>REC ID</th>
+                            <th>REC HEAD</th>
+                            <th>AMOUNT</th>
+                            <th>PAYMODE</th>
+                            <th>STATUS</th>
+                            <th>CANCEL REMARK</th>
+                            <th>UPDATE BY</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Property1</td>
+                                    <td>@item.Property2</td>
+                                    <!-- ... your table data ... -->
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+﻿@model List<NSSERP.Areas.Masters.Models.DonorInstructionMaster>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="..." crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#donorinstruct').DataTable();
+        });
+    </script>
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col text-left">
+                <h5>
+                    <span style="color:#1cb8a1">DONOR INSTRUCTION</span>
+                    <span style="color:#28166f">MASTER</span>
+                </h5>
+            </div>
+            <div class="col text-left">
+                <h5>
+                    <span style="color:#1cb8a1"></span>
+                </h5>
+            </div>
+            <div class="col-3 text-right">
+                <a href="/Masters/DonorInstructionMaster/Create" class="btn btn-primary">Add Donor Instruction</a>
+                <a title="Go Back Home" href="/Administrator/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table id="donorinstruct" class="table table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Instruction Name</th>                    
+                    <th>Is Active</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var mod in Model)
+                {
+                    <tr>
+                        <td>@mod.InstructionName</td>                        
+                        <td>
+                            @if (mod.IsActive.ToString()=="Y")
+                            {
+                                <span class="text-success">Active</span>
+                            }
+                            else if (mod.IsActive.ToString() == "N")
+                            {
+                                <span class="text-danger">Inactive</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="/Masters/DonorInstructionMaster/Edit/@mod.REF_ID" title="Edit"><i class="fas fa-edit btn btn-primary"></i></a> |
+                            <a href="/Masters/DonorInstructionMaster/Delete?refId=@mod.REF_ID" title="Delete">
+                                <i class="fas fa-trash-alt btn btn-danger"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,373 @@
+﻿@{
+    ViewData["Title"] = "SankalpSiddhiMaster";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">SANKALP SIDDHI (INCOME) </span>
+                        <span style="color:#28166f">MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a asp-action="Home" title="Go Back Home" asp-controller="Gangotri" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="form-group col-lg-2">
+                    <label for="">Post ID</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">NGCode</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Receive Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Letter ID</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="provEntryCheckbox">Select Options</label>
+                    <div class="d-flex flex-column">
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="provEntryCheckbox" name="ProvEntry" value="ProvEntry">
+                            <label class="custom-control-label" for="provEntryCheckbox">Prov. Entry</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="provForeignCheckbox" name="ProvForeign" value="ProvForeign">
+                            <label class="custom-control-label" for="provForeignCheckbox">Prov. Foreign</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">Prov. Type</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Prov.No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Prov.Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">Person Name</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Donor First Name</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Donor Middle Name</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Donor Last Name</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Mobile No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Phone No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">City</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">Udaipur</option>
+                        <option value="2">Jaipur</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">State</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">Rajasthan</option>
+                        <option value="2">Gujrat</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Address</label>
+                    <textarea class="form-control" id="textareaField" rows="2" name="TextareaName"></textarea>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Courier Name</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">Net Banking</option>
+                        <option value="2">Cash</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Docket No.</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Inspiry Name</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Inspiry Mobile</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Type</label>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="generalType" name="Type" value="General">
+                        <label class="form-check-label" for="generalType">General</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="otherType" name="Type" value="donation">
+                        <label class="form-check-label" for="otherType">Donation</label>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">Announce ID</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Rec. ID</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Rec. Head</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Rec. Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Head</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Payment Mode</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+
+
+
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <label for="">Cheque/DD Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Cheque/DD No</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Deposite Bank</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Deposite Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Cheque/DD Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Cheque/DD No</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Deposite Bank</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Deposite Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Cheque/DD Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Cheque/DD No</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Deposite Bank</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">HDFC</option>
+                        <option value="2">KOTAK</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="">Deposite Date</label>
+                    <input type="date" class="form-control" id="" name="">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-2">
+                    <label for="">Currency</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">INR</option>
+                        <option value="2">DOLLAR</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Amount</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Material</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Bank Charges</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <div class="form-check">
+                        <br />
+                        <input type="checkbox" class="form-check-input" id="onlinePaymentVerification" name="OnlinePaymentVerification" value="true">
+                        <label class="form-check-label" for="onlinePaymentVerification">Online Payment Verification</label>
+                    </div>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="receiptType">Receipt Type</label>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="receiptType80g" name="ReceiptType" value="80g">
+                        <label class="form-check-label" for="receiptType80g">80g</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="receiptType35ac" name="ReceiptType" value="35ac">
+                        <label class="form-check-label" for="receiptType35ac">35ac</label>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-2">
+                    <label for="">PAN No</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Sadhak Name</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Persaon Name</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Sadhak Amount</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Person Amount</label>
+                    <select class="form-control" id="event" name="event">
+                        <option value="">select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Bank Code-1</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Bank Code-2</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label for="">Bank Code-3</label>
+                    <input type="text" class="form-control" id="" name="">
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="">Remarks</label>
+                    <textarea class="form-control" id="" rows="2" name=""></textarea>
+                </div>
+            </div>
+            <div class="container mt-5 text-center">
+                <!-- Save Button -->
+                <a type="submit" class="btn btn-primary"><i class="fas fa-save"></i>Save</a>
+                <!-- Back Button -->
+                <a asp-controller="Gangotri" asp-action="Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i>Back</a>
+            </div>
+        </div>
+
+       
+    </div>
+</body>
+</html>
+
