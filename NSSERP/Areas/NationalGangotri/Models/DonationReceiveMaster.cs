@@ -15,6 +15,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
 
         public int HeadID { get; set; }
         public string HeadName { get; set; }
+         public int Purpose_ID { get; set; }
+        public string Purpose { get; set; }
 
         public int ID { get; set; }
 

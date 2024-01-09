@@ -205,12 +205,74 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetHeadbySubHeadID(string SubHeadID)
+        public async Task<IActionResult> GetSubHeadByHead(string HeadID,string DataFlag)
         {
             try
             {
-                var Heads = _dbFunctions.GetHeadsbySubheadID(Convert.ToInt32(SubHeadID));
-                return Json(Heads);
+                // Construct the API endpoint URL with the pincode parameter
+                string apiUrl = $"api/DonationReceiveMaster/GetSubHeadByHead?HeadID={HeadID}&DataFlag={DataFlag}";
+
+                // Make a GET request to the API endpoint
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the JSON content from the response
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    var subHeadList = JsonConvert.DeserializeObject<List<SubHeadMaster>>(json);
+
+
+                    // Return JsonResult with structured data
+                    return Json(new { data = subHeadList });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Handle the case where the resource was not found
+                    return NotFound();
+                }
+                else
+                {
+                    // Handle other error cases if needed
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID,string DataFlag)
+        {
+            try
+            {
+                // Construct the API endpoint URL with the pincode parameter
+                string apiUrl = $"api/DonationReceiveMaster/GetQtyAmtBySubHead?YojnaID={Convert.ToInt32(YojnaID)}&DataFlag={DataFlag}";
+
+                // Make a GET request to the API endpoint
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the JSON content from the response
+                    var json = await response.Content.ReadAsStringAsync();                    
+
+                    // Return JsonResult with structured data
+                    return Json(new { data = json });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Handle the case where the resource was not found
+                    return NotFound();
+                }
+                else
+                {
+                    // Handle other error cases if needed
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
             }
             catch (Exception ex)
             {
@@ -286,7 +348,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
-
 
         [HttpPost]
         public IActionResult Home(DonationReceiveMaster model)

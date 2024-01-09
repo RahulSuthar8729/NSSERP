@@ -80,7 +80,8 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
-            firstDetail.SubHeadList = _dbFunctions.getSubHeads();
+            firstDetail.HeadList = _dbFunctions.getHeads();
+           // firstDetail.SubHeadList = _dbFunctions.getSubHeads();
             firstDetail.ReceiveHeadList = _dbFunctions.getReceiveHeads();
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
@@ -103,6 +104,50 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             return Ok(firstDetail);
         }
 
+        [HttpGet]
+        public IActionResult GetSubHeadByHead(string HeadID,string DataFlag)
+        {
+            try
+            {
+                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID),DataFlag);
+                return Ok(subheads);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetQtyAmtBySubHead(int YojnaID,string DataFlag)
+        {
+            try
+            {
+                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID,DataFlag);
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error retrieving states.");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetPurposeHead()
+        {
+            try
+            {
+                var Head = _dbFunctions.getHeads();
+
+                return Ok(Head);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error retrieving states.");
+            }
+        }
 
         [HttpGet]
         public IActionResult GetStatesByCountry(int countryId)

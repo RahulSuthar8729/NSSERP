@@ -1937,32 +1937,39 @@
                     <legend style="font-weight: bold;" class="card">Receipt Details</legend>
                     <div class="nested-form-container">
                         <div class="row">
+
                             <script>
                                 $(document).ready(function () {
-                                    $('#subHeadInput').change(function () {
-                                        var selectedSubHead = $(this).val();
+                                    $('#headInput').change(function () {
+                                        var selectedHead = $(this).val();
 
                                         $.ajax({
-                                            url: '/NationalGangotri/DonationReceiveMaster/GetHeadbySubHeadID', // Update URL path as per your routing
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetSubHeadByHead',
                                             type: 'GET',
-                                            data: { SubHeadID: selectedSubHead },
-                                            success: function (data) {
-                                                // Clear and populate head dropdown with retrieved heads
-                                                $('#headInput').empty();
+                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI" },
+                                            success: function (response) {
+                                                var data = response.data; // Extract the 'data' array from the response
+
+                                                // Clear and populate subhead dropdown with retrieved subheads
+                                                $('#subHeadInput').empty();
+                                                $('#subHeadInput').append('<option value="0">Select Purpose</option>');
                                                 $.each(data, function (index, head) {
-                                                    $('#headInput').append('<option value="' + head.headID + '">' + head.headName + '</option>');
+                                                    $('#subHeadInput').append('<option value="' + head.yojna_ID + '">' + head.yojna + '</option>');
                                                 });
 
-                                                // Show the second dropdown
-                                                // $('#headInput').parent().show();
+                                                // Show the second dropdown if needed
+                                                // $('#subHeadInput').parent().show();
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error); // Handle errors if any
+                                                console.log("AJAX error: " + error);
                                             }
                                         });
                                     });
                                 });
+
                             </script>
+
+
 
                             <script>
                                 $(document).ready(function () {
@@ -1976,7 +1983,18 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label for="head">Head</label>
-                                    <select class="form-control" id="headInput" name="HeadID" asp-for="HeadID">
+                                    <select class="form-control" id="headInput" asp-for="Purpose_ID" name="Purpose_ID">
+                                        <option value="0">Select Head</option>
+                                        @if (Model != null)
+                                        {
+                                            @foreach (var heads in Model.HeadList)
+                                            {
+                                                <option value="@heads.Purpose_ID">@heads.Purpose</option>
+                                            }
+
+                                        }
+                                    </select>
+
                                     </select>
                                 </div>
 
@@ -1984,25 +2002,57 @@
                                     <label for="subHead">Purpose</label>
                                     <select class="form-control" id="subHeadInput" name="subHead">
                                         <option value="0">Select Purpose</option>
-                                        @if (Model != null)
-                                        {
-                                            @foreach (var heads in Model.SubHeadList)
-                                            {
-                                                <option value="@heads.SubHeadID">@heads.SubHeadName</option>
-                                            }
+                                    </select>
+                                </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#subHeadInput').change(function () {
+                                            var yojnaid = $(this).val();
 
-                                        }
+                                            $.ajax({
+                                                url: '/NationalGangotri/DonationReceiveMaster/GetQtyAmtBySubHead',
+                                                type: 'GET',
+                                                data: { YojnaID: yojnaid, DataFlag: "GANGOTRI" },
+                                                success: function (response) {
+                                                    // Parse the JSON string in response.data
+                                                    var data = JSON.parse(response.data);
+
+                                                    // Process the parsed data
+                                                    $('#autoQuantityInput').empty(); // Clear existing options
+                                                    $.each(data, function (index, head) {
+                                                        $('#autoQuantityInput').append('<option value="' + head.Yojna_id + '">' + head.Amt + '</option>');
+                                                    });
+
+                                                    // You might need to select a default option or handle selection logic here
+
+                                                    // You can set ReceiptAmount to the first value's Amt
+                                                    if (data.length > 0) {
+                                                        $('#ReceiptAmount').val(data[0].Amt);
+                                                    } else {
+                                                        $('#ReceiptAmount').val(''); // Clear the value if data is not available
+                                                    }
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.log("AJAX error: " + error);
+                                                }
+                                            });
+                                        });
+                                    });
+
+
+                                </script>
+
+
+                                <div class="form-group col-lg-2">
+                                    <label for="autoQuantity">Quantity</label>
+                                    <select class="form-control" id="autoQuantityInput" name="autoQuantity">
+                                        <option value="0">Select Quantity</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-lg-2">
-                                    <label for="autoQuantity">Quantity</label>
-                                    <input class="form-control" id="autoQuantityInput" type="text" name="autoQuantity">
-                                </div>
-
-                                <div class="form-group col-lg-2">
                                     <label for="ReceiptAmount">Amount</label>
-                                    <input class="form-control" id="ReceiptAmount" type="text" name="ReceiptAmount">
+                                    <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
                                 </div>
 
                                 <div class="form-group col-lg-1">

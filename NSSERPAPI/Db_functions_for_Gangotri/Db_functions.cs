@@ -162,13 +162,23 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetEvents", commandType: CommandType.StoredProcedure);
             }
         }
-        public IEnumerable<dynamic> GetHeadsbySubheadID(int subheadid)
+        public IEnumerable<dynamic> GetSubHeadByHead(int HeadID,string DataFlag)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var parameters = new { SubHeadID = subheadid };
-                return connection.Query<dynamic>("GetHeadsbySubHeadid", parameters, commandType: CommandType.StoredProcedure);
+                var parameters = new { Purpose_ID = HeadID, DataFlag=DataFlag };
+                return connection.Query<dynamic>("[GetSubHeadByHeadid]", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+        public IEnumerable<dynamic> GetQtyAmtBySubHead(int yojnaid,string DataFlag)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { YojnaID = yojnaid,DataFlag= DataFlag };
+                return connection.Query<dynamic>("GetQtyAmtBySubHead", parameters, commandType: CommandType.StoredProcedure);
 
             }
         }
