@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using NSSERP.Areas.Masters.Models;
-using System.ComponentModel.DataAnnotations;
-
-namespace NSSERP.Areas.NationalGangotri.Models
+﻿namespace NSSERPAPI.Models.NationalGangotri
 {
     public class DonationReceiveMaster
     {
+        public int UserID { get; set; }
+        public string UserName { get; set; }
+        public string ReceiveDepartment {  get; set; }
         public string msg { get; set; }
         public bool? ischekecked { get; set; }
         public int? PaymentModeID { get; set; }
@@ -16,14 +15,14 @@ namespace NSSERP.Areas.NationalGangotri.Models
 
         public int HeadID { get; set; }
         public string HeadName { get; set; }
-         public int Purpose_ID { get; set; }
+        public int Purpose_ID { get; set; }
         public string Purpose { get; set; }
 
         public int ID { get; set; }
 
-
+        public string FinYear { get; set; }
         public bool? IsReceiveHeadDiffrent { get; set; }
-        
+
         public int? ReceiveID { get; set; }
         public int? ReceiveHeadID { get; set; }
         public string? ReceiveHeadName { get; set; }
@@ -35,9 +34,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public DonationReceiveMaster()
         {
             IsReceiveHeadDiffrent = false;
-            ReceiveDate = DateTime.Now;           
+            ReceiveDate = DateTime.Now;
             IsManavaFormulaRequire = false;
-            IsPatientsPhotoRequire=false;
+            IsPatientsPhotoRequire = false;
         }
         public int CampaignID { get; set; }
         public string CampaignName { get; set; }
@@ -104,28 +103,16 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? SubHeadName { get; set; }
         public string? Instructions { get; set; }
         public string? ReceiptRemarks { get; set; }
-        public bool? IfAnnounceDueInFuture { get; set; }
-        public IFormFile DocProvisonal { get; set; }
-        public IFormFile DocCheque { get; set; }
-        public IFormFile DocPayInSlip { get; set; }
+        public bool? IfAnnounceDueInFuture { get; set; }    
         public string? Doc1 { get; set; }
         public string? Doc2 { get; set; }
         public string? Doc3 { get; set; }
         public string receiptdetailslist { get; set; }
         public string AnnounceDetsilsList { get; set; }
-        public string donorInstructionjsonList {  get; set; }      
-        public List<Countrys> CountryList { get; set; }
-        public IEnumerable<CampaignMaster> campaignlist { get; set; }
-        public IEnumerable<DonorInstructionMaster> donorInstructionList { get; set; }
-        public IEnumerable<PaymentModeMaster> paymentModeList { get; set; }
-        public IEnumerable<CurrencyMaster> currenciesList { get; set; }
-        public IEnumerable<BankMaster> bankmasterlist { get; set; }
-        public IEnumerable<DonationReceiveMaster>? ReceiveHeadList { get; set; }
-        public IEnumerable<DonationReceiveMaster> HeadList { get; set; }
-        public IEnumerable<DonationReceiveMaster> SubHeadList { get; set; }
-        public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }
+        public string donorInstructionjsonList { get; set; }  
+ 
 
-       public string pinCodeMasterList { get; set; }
+        public string pinCodeMasterList { get; set; }
 
         public string DonationDetails { get; set; }
 
@@ -140,7 +127,5 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string DonorInstructionsListJson { get; set; }
 
         public string AnnounceDetailsListJson { get; set; }
-
-
     }
 }

@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NSSERPAPI.Db_functions_for_Gangotri;
+using System.Data.SqlClient;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
-
+using System.Runtime.InteropServices.JavaScript;
+using Newtonsoft.Json.Linq;
+using System.Data;
+using NSSERPAPI.Models.NationalGangotri;
 namespace NSSERPAPI.Controllers.NationalGangotri
 {
     [ApiController]
@@ -11,10 +16,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
     public class DonationReceiveMasterController : Controller
     {
         private readonly Db_functions _dbFunctions;
-
-        public DonationReceiveMasterController(Db_functions dbFunctions)
+        private readonly string _connectionString;
+        public DonationReceiveMasterController(Db_functions dbFunctions, IConfiguration configuration)
         {
             _dbFunctions = dbFunctions ?? throw new ArgumentNullException(nameof(dbFunctions));
+            _connectionString = configuration.GetConnectionString("ConStr");
         }
         [HttpGet]
         public IActionResult Home(int id)
@@ -58,7 +64,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
             return Ok(firstDetail);
         }
-      
+
         [HttpGet]
         public IActionResult ViewDetails(int id)
         {
@@ -74,14 +80,14 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             {
                 firstDetail = new ExpandoObject();
             }
-           
+
             // Set additional properties for firstDetail
             firstDetail.CountryList = _dbFunctions.GetCountries();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
             firstDetail.HeadList = _dbFunctions.getHeads();
-           // firstDetail.SubHeadList = _dbFunctions.getSubHeads();
+            // firstDetail.SubHeadList = _dbFunctions.getSubHeads();
             firstDetail.ReceiveHeadList = _dbFunctions.getReceiveHeads();
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
@@ -105,11 +111,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetSubHeadByHead(string HeadID,string DataFlag)
+        public IActionResult GetSubHeadByHead(string HeadID, string DataFlag)
         {
             try
             {
-                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID),DataFlag);
+                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID), DataFlag);
                 return Ok(subheads);
             }
             catch (Exception ex)
@@ -120,11 +126,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetQtyAmtBySubHead(int YojnaID,string DataFlag)
+        public IActionResult GetQtyAmtBySubHead(int YojnaID, string DataFlag)
         {
             try
             {
-                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID,DataFlag);
+                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID, DataFlag);
 
                 return Ok(data);
             }
@@ -204,7 +210,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             {
                 var Data = _dbFunctions.GetDataByDonorID(DonorID);
                 if (Data.PinCode != null)
-                {               
+                {
 
                     var locationDetails = _dbFunctions.GetLocationDetailsByPinCodeJson(Convert.ToString(Data.PinCode));
                     var mobilelist = _dbFunctions.GetMobileListJsonById(Convert.ToInt32(Data.ReceiveID));
@@ -243,21 +249,247 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
 
         [HttpPost]
-        public IActionResult InsertData([FromBody] dynamic data)
+        public IActionResult InsertData([FromBody] dynamic model)
         {
+            //var model = JsonConvert.DeserializeObject<DonationReceiveMaster>(data.ToString());
+            int maxReceiveID = 0;
+
+            List<MobileDetails> MobileList = string.IsNullOrEmpty(model.MobileList) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(model.MobileList);
+
+            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(model.IdentityList) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(model.IdentityList);
+
+            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
+
+            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(model.receiptdetailslist) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(model.receiptdetailslist);
+
+            List<AnnounceDetails> announcelist = string.IsNullOrEmpty(model.AnnounceDetsilsList) ? new List<AnnounceDetails>() : JsonConvert.DeserializeObject<List<AnnounceDetails>>(model.AnnounceDetsilsList);
+
+            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(model.donorInstructionjsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(model.donorInstructionjsonList);
+
+
             try
-            {              
-                   
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
 
-                    return Ok("Data inserted successfully");
-                
+                    // Start a transaction
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            var parameters = new DynamicParameters();
+                            parameters.Add("@AppStatus", "");
+                            parameters.Add("@FinYear", model.FinYear);
+                            parameters.Add("@ReceiveDate", model.ReceiveDate);
+                            parameters.Add("@IsReceiveHeadDifferent", model.IsReceiveHeadDiffrent);
+                            parameters.Add("@ReceiveHeadID", model.ReceiveHeadID);
+                            parameters.Add("@ReceiveHeadName", model.ReceiveDepartment);
+                            parameters.Add("@UserID", model.UserID);
+                            parameters.Add("@UserName", model.UserName);
+                            parameters.Add("@ReceiveInEventID", model.ID);
+                            parameters.Add("@ReceiveInEvent", model.EventName);
+                            parameters.Add("@InMemory", model.InMemory);
+                            parameters.Add("@DonorID", model.DonorID);
+                            parameters.Add("@NamePrefix", model.NamePrefix);
+                            parameters.Add("@FullName", model.FullName);
+                            parameters.Add("@PrefixToFullName", model.PrefixToFullName);
+                            parameters.Add("@RelationToFullName", model.RelationToFullName);
+                            parameters.Add("@DateOfBirth", model.DateOfBirth);
+                            parameters.Add("@Company", model.Company);
+                            parameters.Add("@FullAddress", model.FullAddress);
+                            parameters.Add("@PinCode", model.PinCode);
+                            parameters.Add("@CountryID", model.CountryId);
+                            parameters.Add("@CountryName", model.CountryName);
+                            parameters.Add("@StateID", model.StateID);
+                            parameters.Add("@StateName", model.StateName);
+                            parameters.Add("@DistrictID", model.DistrictID);
+                            parameters.Add("@DistrictName", model.DistrictName);
+                            parameters.Add("@CityID", model.CityID);
+                            parameters.Add("@CityName", model.CityName);
+                            parameters.Add("@IfUpdationInAddress", model.IfUpdationInAddress);
+                            parameters.Add("@IsPermanentAddressDiff", model.IsPermanentAddressDiff);
+                            parameters.Add("@IfDetailsNotComplete", model.IfDetailsNotComplete);
+                            parameters.Add("@P_FullAddress", model.P_FullAddress);
+                            parameters.Add("@P_PinCode", model.P_PinCode);
+                            parameters.Add("@P_CountryID", model.P_CountryID);
+                            parameters.Add("@P_CountryName", model.P_CountryName);
+                            parameters.Add("@P_StateID", model.P_StateID);
+                            parameters.Add("@P_StateName", model.P_StateName);
+                            parameters.Add("@P_DistrictID", model.P_DistrictID);
+                            parameters.Add("@P_DistrictName", model.P_DistrictName);
+                            parameters.Add("@P_CityID", model.P_CityID);
+                            parameters.Add("@P_CityName", model.P_CityName);
+                            parameters.Add("@EmailID", model.EmailID);
+                            parameters.Add("@StdCode", model.StdCode);
+                            parameters.Add("@PhoneR", model.PhoneR);
+                            parameters.Add("@ProvNo", model.ProvNo);
+                            parameters.Add("@ProvDate", model.ProvDate);
+                            parameters.Add("@DonPersonName", model.PersonName);
+                            parameters.Add("@DonEventID", model.ID);
+                            parameters.Add("@DonEventName", model.EventName);
+                            parameters.Add("@PaymentModeID", model.PaymentModeID);
+                            parameters.Add("@PaymentModeName", model.PaymentModeName);
+                            parameters.Add("@CurrencyID", model.CurrencyID);
+                            parameters.Add("@CurrencyCode", model.CurrencyCode);
+                            parameters.Add("@Amount", model.TotalAmount);
+                            parameters.Add("@MaterialDepositID", model.MaterialDepositID);
+                            parameters.Add("@Material", model.Material);
+                            parameters.Add("@IsManavaFormulaRequire", model.IsManavaFormulaRequire);
+                            parameters.Add("@IsPatientsPhotoRequire", model.IsPatientsPhotoRequire);
+                            parameters.Add("@IfDiffrentAddressForDispatch", model.IfDiffrentAddressForDispatch);
+                            parameters.Add("@DifferentAddressToDispatch", model.DifferentAddressToDispatch);
+                            parameters.Add("@Instructions", model.Instructions);
+                            parameters.Add("@ReceiptRemarks", model.ReceiptRemarks);
+                            parameters.Add("@IfAnnounceDueInFuture", model.IfAnnounceDueInFuture);
+                            parameters.Add("@DocProvisonal", model.Doc1);
+                            parameters.Add("@DocCheque", model.Doc2);
+                            parameters.Add("@DocPayInSlip", model.Doc3);
+                            parameters.Add("@CreatedBy", model.UserName);
+                            parameters.Add("@TotalAmount", model.TotalAmount);
 
+
+                            connection.Execute("InsertDonationReceiveMaster", parameters, transaction, commandType: CommandType.StoredProcedure);
+
+                            maxReceiveID = connection.QueryFirstOrDefault<int>("SelectMaxReceiveID", new { model.UserID, model.FinYear }, transaction, commandType: CommandType.StoredProcedure);
+
+
+                            if (MobileList != null)
+                            {
+                                foreach (var mobileNumber in MobileList)
+                                {
+                                    var mobileParams = new DynamicParameters();
+                                    mobileParams.Add("@REF_NO", maxReceiveID);
+                                    mobileParams.Add("@CountryCode", mobileNumber.CountryCode);
+                                    mobileParams.Add("@MobileNo", mobileNumber.MobileNumber);
+                                    mobileParams.Add("@CreatedBy", model.UserID);
+                                    connection.Execute("InsertMultiMobileInDonationReceiveMaster", mobileParams, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+                            if (IdentityList != null)
+                            {
+                                foreach (var identity in IdentityList)
+                                {
+                                    var identityParams = new DynamicParameters();
+                                    identityParams.Add("@REF_NO", maxReceiveID);
+                                    identityParams.Add("@IdentityType", identity.IdentityType);
+                                    identityParams.Add("@IdentityNumber", identity.IdentityNumber);
+                                    identityParams.Add("@CreatedBy", model.UserID);
+
+                                    connection.Execute("InsertMultiIdentityInDonationReceiveMaster", identityParams, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+                            if (bankDetailslist != null)
+                            {
+                                foreach (var bankDetail in bankDetailslist)
+                                {
+                                    var bankParams = new DynamicParameters();
+                                    bankParams.Add("@REF_NO", maxReceiveID);
+                                    bankParams.Add("@BankID", bankDetail.BankID);
+                                    bankParams.Add("@BankName", bankDetail.BankName);
+                                    bankParams.Add("@ChequeOrDraftDate", bankDetail.ChequeDate);
+                                    bankParams.Add("@ChequeOrDraftNo", bankDetail.ChequeNo);
+                                    bankParams.Add("@DepositeBankID", bankDetail.DepositBankID);
+                                    bankParams.Add("@DepositeBankName", bankDetail.DepositBank);
+                                    bankParams.Add("@DepositeDate", bankDetail.DepositDate);
+                                    bankParams.Add("@IsPdcCheque1", bankDetail.PdcCheque);
+                                    bankParams.Add("@CreatedBy", model.UserID);
+                                    bankParams.Add("@DonationMode", bankDetail.DonationMode);
+                                    bankParams.Add("@CurrencyCode", bankDetail.Currency);
+                                    bankParams.Add("@Amount", bankDetail.Amount);
+
+                                    connection.Execute("InsertBankDetailsInDonationReceiveMultiBank", bankParams, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+
+                            if (Receiptdetailslist != null)
+                            {
+                                foreach (var receiptDetail in Receiptdetailslist)
+                                {
+                                    var rparameters = new DynamicParameters();
+                                    rparameters.Add("@REF_NO", maxReceiveID);
+                                    rparameters.Add("@HeadID", receiptDetail.HeadID);
+                                    rparameters.Add("@Campaign", receiptDetail.Campaign);
+                                    rparameters.Add("@HeadName", receiptDetail.Head);
+                                    rparameters.Add("@SubHeadID", receiptDetail.SubHeadID);
+                                    rparameters.Add("@SubHeadName", receiptDetail.Purpose);
+                                    rparameters.Add("@Purpose", receiptDetail.Purpose);
+                                    rparameters.Add("@Quantity", receiptDetail.Quantity);
+                                    rparameters.Add("@Amount", receiptDetail.Amount);
+                                    rparameters.Add("@CreatedOn", DateTime.Now);
+                                    rparameters.Add("@CreatedBy", model.UserID);
+
+
+                                    connection.Execute("InsertDonationReceiveMultiHead", rparameters, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+                            if (donorInstructionLists != null)
+                            {
+                                foreach (var instruction in donorInstructionLists)
+                                {
+                                    var instructionParams = new DynamicParameters();
+                                    instructionParams.Add("@REF_NO", maxReceiveID);
+                                    instructionParams.Add("@InstructionID", instruction.InstructionId);
+                                    instructionParams.Add("@InstructionName", instruction.InstructionName);
+                                    instructionParams.Add("@Remarks", instruction.Remarks);
+                                    instructionParams.Add("@CreatedBy", model.UserID);
+
+                                    connection.Execute("InsertDonationReceiveMultiDonorInstruc", instructionParams, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+
+
+                            if (announcelist != null)
+                            {
+                                foreach (var announce in announcelist)
+                                {
+                                    var Announcepara = new DynamicParameters();
+                                    Announcepara.Add("@REF_NO", maxReceiveID);
+                                    Announcepara.Add("@TotalPurposeAmount", announce.TotalPurposeAmount);
+                                    Announcepara.Add("@ReceiveAmount", announce.ReceiveAmount);
+                                    Announcepara.Add("@DueAmount", announce.DueAmount);
+                                    Announcepara.Add("@AnnunceID", announce.AnnounceId);
+                                    Announcepara.Add("@Amount", announce.Amount);
+                                    Announcepara.Add("@Date", announce.Date);
+                                    Announcepara.Add("@CreatedBy", model.UserID);
+
+                                    connection.Execute("InsertDonationReceiveAnnunceDue", Announcepara, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+                            transaction.Commit();
+
+                            ViewBag.msg = "Receive ID:" + maxReceiveID + " is Generated Successfully";
+                        }
+
+                        catch (Exception)
+                        {
+                            // If an exception occurs, roll back the transaction
+                            transaction.Rollback();
+                            ViewBag.emsg = "An error occurred during the transaction.";
+
+                            return View();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                // Log or handle exceptions appropriately
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
+            dynamic firstDetail;
+            firstDetail = new ExpandoObject();
+            firstDetail.CountryList = _dbFunctions.GetCountries();
+            firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
+            firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
+            firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
+            firstDetail.SubHeadList = _dbFunctions.getSubHeads();
+            firstDetail.ReceiveHeadList = _dbFunctions.getReceiveHeads();
+            firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
+            firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
+            firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
+            firstDetail.Msg = "Receive ID: " + maxReceiveID + " is Generated Successfully";
+            return Ok(firstDetail);
         }
 
     }

@@ -61,6 +61,10 @@
 </head>
 <body>
     <div class="card">
+        @if(Model.msg!=null|| Model.msg != "")
+        {
+            ViewBag.msg = Model.msg;
+        }
         <div class="card-header">
             <div class="row">
                 <div class="col text-left">
@@ -361,8 +365,31 @@
                                                 // Show the added identities section
                                                 addedIdentities.css("display", "flex");
                                             });
+
+                                            // Update the hidden field value with the current identities after binding
+                                            updateHiddenField();
                                         }
                                     }
+
+                                    // Function to update the hidden field with the current identities displayed in the UI
+                                    function updateHiddenField() {
+                                        var currentIdentities = [];
+
+                                        // Loop through each item in the addedIdentities section
+                                        $("#addedIdentities .form-group").each(function () {
+                                            var identityType = $(this).find("label").text();
+                                            var identityNumber = $(this).find("input").val();
+
+                                            currentIdentities.push({
+                                                IdentityType: identityType,
+                                                IdentityNumber: identityNumber
+                                            });
+                                        });
+
+                                        // Update the hidden field value with the current identities as a JSON string
+                                        $("#identityDetails").val(JSON.stringify(currentIdentities));
+                                    }
+
 
 
                                 });
