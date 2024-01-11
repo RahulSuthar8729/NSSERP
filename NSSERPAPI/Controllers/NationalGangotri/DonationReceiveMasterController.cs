@@ -22,6 +22,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             _dbFunctions = dbFunctions ?? throw new ArgumentNullException(nameof(dbFunctions));
             _connectionString = configuration.GetConnectionString("ConStr");
         }
+
         [HttpGet]
         public IActionResult Home(int id)
         {
@@ -39,10 +40,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 firstDetail = new ExpandoObject();
             }
 
-            var receiveID = ((IDictionary<string, object>)firstDetail).ContainsKey("ReceiveID")
-                ? (int)((IDictionary<string, object>)firstDetail)["ReceiveID"]
-                : 0;
-            receiveID = id;
+            var receiveID = id;
             // Set additional properties for firstDetail
             firstDetail.CountryList = _dbFunctions.GetCountries();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
@@ -248,23 +246,45 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
 
-        [HttpPost]
-        public IActionResult InsertData([FromBody] dynamic model)
+        [HttpGet]
+        public IActionResult GetProvisionalReceipt(string refid)
         {
-            //var model = JsonConvert.DeserializeObject<DonationReceiveMaster>(data.ToString());
+            try
+            {
+                var data = _dbFunctions.GetProvisionalReceiptbyId(Convert.ToInt32(refid));
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving cities.");
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult InsertData([FromBody] DonationReceiveMaster model)
+        {
+            string mobileListJson = HttpContext.Request.Headers["MobileList"];
+            string identityListJson = HttpContext.Request.Headers["IdentityList"];
+            string bankDetailsListJson = HttpContext.Request.Headers["BankDetailsList"];
+            string receiptDetailsListJson = HttpContext.Request.Headers["receiptdetailslist"];
+            string announceDetailsListJson = HttpContext.Request.Headers["AnnounceDetsilsList"];
+            string donorInstructionJsonList = HttpContext.Request.Headers["donorInstructionjsonList"];
+
             int maxReceiveID = 0;
 
-            List<MobileDetails> MobileList = string.IsNullOrEmpty(model.MobileList) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(model.MobileList);
+            List<MobileDetails> MobileList = string.IsNullOrEmpty(mobileListJson) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(mobileListJson);
 
-            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(model.IdentityList) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(model.IdentityList);
+            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(identityListJson) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(identityListJson);
 
-            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
+            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(bankDetailsListJson) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(bankDetailsListJson);
 
-            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(model.receiptdetailslist) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(model.receiptdetailslist);
+            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(receiptDetailsListJson) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(receiptDetailsListJson);
 
-            List<AnnounceDetails> announcelist = string.IsNullOrEmpty(model.AnnounceDetsilsList) ? new List<AnnounceDetails>() : JsonConvert.DeserializeObject<List<AnnounceDetails>>(model.AnnounceDetsilsList);
+            List<AnnounceDetails> announcelist = string.IsNullOrEmpty(announceDetailsListJson) ? new List<AnnounceDetails>() : JsonConvert.DeserializeObject<List<AnnounceDetails>>(announceDetailsListJson);
 
-            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(model.donorInstructionjsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(model.donorInstructionjsonList);
+            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(donorInstructionJsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(donorInstructionJsonList);
 
 
             try
@@ -483,12 +503,13 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
+            firstDetail.HeadList = _dbFunctions.getHeads();
             firstDetail.SubHeadList = _dbFunctions.getSubHeads();
             firstDetail.ReceiveHeadList = _dbFunctions.getReceiveHeads();
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
-            firstDetail.Msg = "Receive ID: " + maxReceiveID + " is Generated Successfully";
+            firstDetail.msg = "Receive ID: " + maxReceiveID + " is Generated Successfully";
             return Ok(firstDetail);
         }
 

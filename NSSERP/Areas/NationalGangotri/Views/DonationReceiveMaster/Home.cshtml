@@ -2021,8 +2021,7 @@
 
                                         }
                                     </select>
-
-                                    </select>
+                                
                                 </div>
 
                                 <div class="form-group col-lg-3">
@@ -2437,7 +2436,7 @@
                     </div>
                     <div class="card-header text-center">
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" id="announcedue" name="IfAnnounceDueInFuture" value="true" @(Model.IfAnnounceDueInFuture.GetValueOrDefault() ? "checked" : "") />
+                            <input type="checkbox" class="form-check-input" id="announcedue" name="IfAnnounceDueInFuture" value="true" @(Model.IfAnnounceDueInFuture ? "checked" : "") />
                             <input type="hidden" name="IfAnnounceDueInFuture" value="false" />
                             <label class="form-check-label" for="announcedue"> If Announce Due For Future Dates</label>
                         </div>
@@ -2543,9 +2542,9 @@
                                 newRow.append("<td>" + item.TotalPurposeAmount + "</td>");
                                 newRow.append("<td>" + item.ReceiveAmount + "</td>");
                                 newRow.append("<td>" + item.DueAmount + "</td>");
-                                newRow.append("<td>" + item.AnnounceId + "</td>");
+                                newRow.append("<td>" + item.AnnunceID + "</td>");
                                 newRow.append("<td>" + item.Amount + "</td>");
-                                newRow.append("<td>" + item.Date + "</td>");
+                                newRow.append("<td>" + new Date(item.date).toLocaleDateString() + "</td>");
                                 newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
                                 tableBody.append(newRow);
                             });

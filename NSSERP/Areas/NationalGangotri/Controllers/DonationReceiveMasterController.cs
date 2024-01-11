@@ -24,7 +24,7 @@ using System.Net;
 using Mono.TextTemplating;
 using System.Text;
 using Azure.Core;
-
+using System.Text.Json;
 namespace NSSERP.Areas.NationalGangotri.Controllers
 {
     [Authorize]
@@ -47,9 +47,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Home()
+        public async Task<IActionResult> Home(int id)
         {
-            int id = Convert.ToInt32(TempData["DonationDetails"]);
+
 
             var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/ViewDetails?id={id}");
 
@@ -77,7 +77,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             return View(detail);
 
         }
-
         public IActionResult List()
         {
             return View();
@@ -207,7 +206,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSubHeadByHead(string HeadID,string DataFlag)
+        public async Task<IActionResult> GetSubHeadByHead(string HeadID, string DataFlag)
         {
             try
             {
@@ -247,7 +246,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID,string DataFlag)
+        public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID, string DataFlag)
         {
             try
             {
@@ -260,7 +259,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     // Read the JSON content from the response
-                    var json = await response.Content.ReadAsStringAsync();                    
+                    var json = await response.Content.ReadAsStringAsync();
 
                     // Return JsonResult with structured data
                     return Json(new { data = json });
@@ -324,23 +323,23 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         public async Task<IActionResult> GetDataByDonorID(string DonorID)
         {
             try
-            {               
+            {
                 string apiUrl = $"api/DonationReceiveMaster/GetDataByDonorID?DonorID={DonorID}";
-            
+
                 var response = await _apiClient.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
-                {                
-                    var json = await response.Content.ReadAsStringAsync();                
+                {
+                    var json = await response.Content.ReadAsStringAsync();
                     return Json(new { data = json });
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
-                {                  
+                {
                     return NotFound();
                 }
                 else
                 {
-                   
+
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
@@ -352,56 +351,20 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpPost]
-        public  async Task<IActionResult> Home(DonationReceiveMaster model)
+        public async Task<IActionResult> Home(DonationReceiveMaster model)
         {
             bool? isDifferent = model.IsReceiveHeadDiffrent;
-            string ReceiveDepartment = string.Empty;
-            if (isDifferent == true)
-            {
-                ReceiveDepartment = model.ReceiveHeadName;
-            }
-            if (isDifferent == false)
-            {
-                ReceiveDepartment = User.FindFirst("Department")?.Value;
-            }
-            decimal Amount = 0;
-            if (model.PaymentModeName == "CASH")
-            {
-                Amount = model.Amount.GetValueOrDefault();
-            }
-            else
-            {
-                Amount = model.TotalAmount.GetValueOrDefault();
-            }
-            DateTime dob = Convert.ToDateTime(model.DateOfBirth);
-            DateTime provdate = model.ProvDate.GetValueOrDefault();
-            string FinYear = User.FindFirst("FinYear")?.Value;
-            string UserID = User.FindFirst("UserID")?.Value;
-            int maxReceiveID = 0;
-            List<MobileDetails> MobileList = string.IsNullOrEmpty(model.MobileList) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(model.MobileList);
-
-            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(model.IdentityList) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(model.IdentityList);
-
-            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
-
-            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(model.receiptdetailslist) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(model.receiptdetailslist);
-
-            List<AnnounceDetails> announcelist = string.IsNullOrEmpty(model.AnnounceDetsilsList) ? new List<AnnounceDetails>() : JsonConvert.DeserializeObject<List<AnnounceDetails>>(model.AnnounceDetsilsList);
-
-            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(model.donorInstructionjsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(model.donorInstructionjsonList);
-
+            string ReceiveDepartment = isDifferent == true ? model.ReceiveHeadName : User.FindFirst("Department")?.Value;
+            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount;
+            DateTime dob = model.DateOfBirth ?? DateTime.MinValue;
+            DateTime provdate = model.ProvDate ?? DateTime.MinValue;
+            string FinYear = User.FindFirst("FinYear")?.Value ?? string.Empty;
+            string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
 
             string Doc1 = string.Empty;
             string Doc2 = string.Empty;
-            string Doc3 = string.Empty;        
+            string Doc3 = string.Empty;
 
-            
-            
-            
-
-
-
-           
             if (model.DocProvisonal != null)
             {
                 var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocProvisonal.FileName);
@@ -454,15 +417,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 }
             }
 
-            // Manually serialize MobileList and IdentityList
-            //var mobileListJson = System.Text.Json.JsonSerializer.Serialize(model.MobileList);
-            //var identityListJson = System.Text.Json.JsonSerializer.Serialize(model.IdentityList);
-            //var BankDetailsList = System.Text.Json.JsonSerializer.Serialize(model.IdentityList);
-            //var receiptdetailslist = System.Text.Json.JsonSerializer.Serialize(model.receiptdetailslist);
-            //var AnnounceDetsilsList = System.Text.Json.JsonSerializer.Serialize(model.AnnounceDetsilsList);
-            //var donorInstructionjsonList = System.Text.Json.JsonSerializer.Serialize(model.donorInstructionjsonList);           
-              
-            // Construct the JSON string for the complete request
             var requestData = new
             {
                 IsDifferent = isDifferent,
@@ -527,37 +481,32 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 Doc1 = Doc1,
                 Doc2 = Doc2,
                 Doc3 = Doc3
-               
+
             };
 
-           
-           
 
             try
             {
                 string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
-
                 string apiUrl = "api/DonationReceiveMaster/InsertData";
-
                 var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
-                // Add the already serialized JSON strings to the request content
                 requestContent.Headers.Add("MobileList", model.MobileList);
                 requestContent.Headers.Add("IdentityList", model.IdentityList);
-                requestContent.Headers.Add("BankDetailsList",model.BankDetailsList);
+                requestContent.Headers.Add("BankDetailsList", model.BankDetailsList);
                 requestContent.Headers.Add("receiptdetailslist", model.receiptdetailslist);
                 requestContent.Headers.Add("AnnounceDetsilsList", model.AnnounceDetsilsList);
                 requestContent.Headers.Add("donorInstructionjsonList", model.donorInstructionjsonList);
-
+                requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                 var response = await _apiClient.PostAsync(apiUrl, requestContent);
-
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var msg = await response.Content.ReadAsStringAsync();
-                    ViewBag.msg = msg;
-                    return View();
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonationReceiveMaster>(modelget) : null;
+                    return View(modeldata);
                 }
+
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return NotFound();
@@ -567,7 +516,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
 
-               
+
             }
             catch (Exception ex)
             {
@@ -575,32 +524,34 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
 
-            var AddressModel = new DonationReceiveMaster
-            {
-                CountryList = _dbFunctions.GetCountries(),
-                paymentModeList = _dbFunctions.GetPaymentModes(),
-                currenciesList = _dbFunctions.GetCurrencyListWithCountry(),
-                bankmasterlist = _dbFunctions.GetAllBankMasters(),
-                SubHeadList = _dbFunctions.getSubHeads(),
-                ReceiveHeadList = _dbFunctions.getReceiveHeads(),
-                ReceiveInEventList = _dbFunctions.GetEvents(),
-                campaignlist = _dbFunctions.GetallCampaigns(),
-                donorInstructionList = _dbFunctions.GetDonorINstructionsMaster()
-
-            };
-
-            return View(AddressModel);
+            return View();
         }
 
-        public async Task<IActionResult> ViewDetails(int id)
+        public async Task<IActionResult> PrintProvisionalReceipt(int refid)
         {
+            var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/GetProvisionalReceipt?refid={refid}");
 
-            TempData["DonationDetails"] = null;
-            TempData["DonationDetails"] = id;
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    // Handle other error cases if needed
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<ProvisionalReceiptModel>(json) : null;
 
-            return RedirectToAction("Home");
+            if (detail == null)
+            {
+                return NotFound();
+            }
+            return View(detail);
+
         }
-
-
     }
 }
