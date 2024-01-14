@@ -12,7 +12,8 @@
         public string? Purpose { get; set; }
         public decimal? Quantity { get; set; }
         public decimal? Amount { get; set; }
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? HeadName { get; set; }
 
     }
 }

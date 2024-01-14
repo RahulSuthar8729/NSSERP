@@ -366,7 +366,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@DocCheque", model.Doc2);
                             parameters.Add("@DocPayInSlip", model.Doc3);
                             parameters.Add("@CreatedBy", model.UserName);
-                            parameters.Add("@TotalAmount", model.TotalAmount);
+                            parameters.Add("@TotalAmount", model.Amount);
+                            parameters.Add("@CampaignID", model.CampaignID);
+                            parameters.Add("@CampaignName", model.CampaignName);
+
 
 
                             connection.Execute("InsertDonationReceiveMaster", parameters, transaction, commandType: CommandType.StoredProcedure);
@@ -430,7 +433,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     rparameters.Add("@REF_NO", maxReceiveID);
                                     rparameters.Add("@HeadID", receiptDetail.HeadID);
                                     rparameters.Add("@Campaign", receiptDetail.Campaign);
-                                    rparameters.Add("@HeadName", receiptDetail.Head);
+                                    rparameters.Add("@HeadName", receiptDetail.HeadName);
                                     rparameters.Add("@SubHeadID", receiptDetail.SubHeadID);
                                     rparameters.Add("@SubHeadName", receiptDetail.Purpose);
                                     rparameters.Add("@Purpose", receiptDetail.Purpose);

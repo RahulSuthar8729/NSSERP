@@ -143,7 +143,7 @@
                 </div>
             </div>
         </div>
-        <form id="detailsform" action="/NationalGangotri/DonationReceiveMaterDetails/SearchDataWithPara" method="post">
+        <form id="detailsform" action="/NationalGangotri/DonationReceiveMaterDetails/Index" method="post">
             <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
                 <tr>
                     <td>
@@ -328,7 +328,7 @@
 
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete ? "checked" : "") />
+                                    <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
 
                                     <label class="form-check-label" for="Detailsnotcomplete">Details Not Complete</label>
                                 </div>
@@ -391,7 +391,7 @@
                                     <td>@item.ReceiveID</td>
                                     <td>@item.ReceiveHeadName</td>
                                     <td>@item.CreatedBy</td>
-                                    <td>@item.ReceiveDate.ToString("dd-MM-yyyy")</td>
+                                    <td>@item.ReceiveDate.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
                                     <td>@item.ProvNo</td>
                                     <td>@item.FullName</td>
                                     <td>@item.FullAddress</td>
@@ -399,7 +399,7 @@
                                     <td>@item.TotalAmount</td>
                                     <td>@item.PaymentModeName</td>
                                     <td>
-                                        @if (item.IfDetailsNotComplete)
+                                        @if (item.IfDetailsNotComplete.GetValueOrDefault())
                                         {
                                             <span class="text-danger">Details Not Complete</span>
                                         }

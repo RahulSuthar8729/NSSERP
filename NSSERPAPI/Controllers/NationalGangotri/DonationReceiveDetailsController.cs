@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSSERPAPI.Db_functions_for_Gangotri;
+using NSSERPAPI.Models.NationalGangotri;
+using System.Dynamic;
 
 namespace NSSERPAPI.Controllers.NationalGangotri
 {
@@ -29,10 +31,16 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpPost]
-        public IActionResult SearchDonationReceiveDataBYPara([FromBody] List<dynamic> modelItems)
+        public IActionResult SearchDonationReceiveDataBYPara([FromBody] DonationReceiveDetailsWithParaModel modelItems)
         {
-            var result = _dbFunctions.SearchDonationReceiveDataBYPara(modelItems);
-            return Ok(result);
+            var modelreult = _dbFunctions.SearchDonationDetailsByPara(modelItems);
+            dynamic firstDetail;
+            firstDetail = new ExpandoObject();
+            firstDetail.masterDetails = modelreult;
+            firstDetail.CityMasterList = _dbFunctions.GetActiveCities();
+            firstDetail.paymentModes = _dbFunctions.GetPaymentModes();
+            firstDetail.statelist = _dbFunctions.GetStates();          
+            return Ok(firstDetail);
         }
     }
 

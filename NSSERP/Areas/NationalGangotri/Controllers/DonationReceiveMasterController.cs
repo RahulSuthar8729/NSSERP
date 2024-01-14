@@ -25,6 +25,7 @@ using Mono.TextTemplating;
 using System.Text;
 using Azure.Core;
 using System.Text.Json;
+using Rotativa.AspNetCore;
 namespace NSSERP.Areas.NationalGangotri.Controllers
 {
     [Authorize]
@@ -49,8 +50,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         [HttpGet]
         public async Task<IActionResult> Home(int id)
         {
-
-
             var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/ViewDetails?id={id}");
 
             if (!response.IsSuccessStatusCode)
@@ -77,15 +76,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             return View(detail);
 
         }
-        public IActionResult List()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Create()
-        {
-            return View();
-        }
+
         [HttpGet]
         public IActionResult GetEvents1(string q)
         {
@@ -419,7 +410,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
             var requestData = new
             {
-                IsDifferent = isDifferent,
+                IsReceiveHeadDiffrent = isDifferent,
                 ReceiveDepartment = ReceiveDepartment,
                 FinYear = FinYear,
                 UserID = UserID,
@@ -477,6 +468,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 IsManavaFormulaRequire = model.IsManavaFormulaRequire,
                 IsPatientsPhotoRequire = model.IsPatientsPhotoRequire,
                 IfDiffrentAddressForDispatch = model.IfDiffrentAddressForDispatch,
+                DifferentAddressToDispatch = model.DifferentAddressToDispatch,
                 IfAnnounceDueInFuture = model.IfAnnounceDueInFuture,
                 Doc1 = Doc1,
                 Doc2 = Doc2,
@@ -543,15 +535,21 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
-            var json = await response.Content.ReadAsStringAsync();
-            var detail = json != null ? JsonConvert.DeserializeObject<ProvisionalReceiptModel>(json) : null;
+
+            var json = response.Content.ReadAsStringAsync().Result;
+            var detail = JsonConvert.DeserializeObject<List<ProvisionalReceiptModel>>(json);
 
             if (detail == null)
             {
                 return NotFound();
             }
-            return View(detail);
 
+            // Return the view as PDF directly
+            return new ViewAsPdf("PrintProvisionalReceipt", detail)
+            {
+                FileName = "ProvisionalReceipt" + refid + ".pdf"
+            };
         }
+
     }
 }

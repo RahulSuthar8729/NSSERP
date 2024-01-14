@@ -8,8 +8,6 @@ using NSSERP.Areas.NationalGangotri.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 
-
-
 namespace NSSERP.DbFunctions
 {
     public class DbClass
@@ -81,14 +79,15 @@ namespace NSSERP.DbFunctions
                 return connection.Query<CityMaster>("GetCitiesByDistrictID", new { DistrictID = districtId }, commandType: CommandType.StoredProcedure);
             }
         }
-        public IEnumerable<PaymentModeMaster> GetPaymentModes()
+        public List<PaymentModeMaster> GetPaymentModes()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.Query<PaymentModeMaster>("GetPaymentModes", commandType: CommandType.StoredProcedure);
+                return connection.Query<PaymentModeMaster>("GetPaymentModes", commandType: CommandType.StoredProcedure).ToList();
             }
         }
+
         public IEnumerable<CurrencyMaster> GetCurrencyListWithCountry()
         {
             using (IDbConnection dbConnection = new SqlConnection(_connectionString))
@@ -222,7 +221,7 @@ namespace NSSERP.DbFunctions
                 return connection.Query<DonationReceiveMasterDetails>("GetDonationReceiveDetails", commandType: CommandType.StoredProcedure);
             }
         }
-        
+
         public IEnumerable<DonationReceiveMaster> GetDonationReceiveMasterByReceiveID(int ref_id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

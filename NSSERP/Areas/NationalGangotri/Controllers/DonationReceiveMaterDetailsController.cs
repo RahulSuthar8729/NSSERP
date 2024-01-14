@@ -34,43 +34,51 @@ public class DonationReceiveMaterDetailsController : Controller
     }
     
     [HttpGet]
+    [HttpPost]
     public async Task<IActionResult> Index(DonationReceiveMasterDetails model)
     {
         try
         {
             if (HttpContext.Request.Method == "POST")
             {
-                var parameters = new
+                try
                 {
-                    model.ReceiveID,
-                    model.PaymentModeName,
-                    model.TotalAmount,
-                    model.CityName,
-                    model.CityID,
-                    model.StateName,
-                    model.StateID,
-                    model.MaterialID,
-                    model.ProvNo,
-                    model.ReceiveDate,
-                    model.FullName,
-                    model.PaymentModeID,
-                    model.IfDetailsNotComplete
-                };
+                    var parameters = new
+                    {
+                        model.ReceiveID,
+                        model.PaymentModeName,
+                        model.TotalAmount,
+                        model.CityName,
+                        model.CityID,
+                        model.StateName,
+                        model.StateID,
+                        model.MaterialID,
+                        model.ProvNo,
+                        model.ReceiveDate,
+                        model.FullName,
+                        model.PaymentModeID,
+                        model.IfDetailsNotComplete
+                    };
 
-                var responsepost = await _httpClientFactory.CreateClient("WebApi").PostAsJsonAsync("api/SearchDonationReceiveDataBYPara/SearchDonationReceiveDataBYPara", parameters);
-                responsepost.EnsureSuccessStatusCode();
+                    //var parameterList = new List<object> { parameters };
 
-                var jsonpost = await responsepost.Content.ReadAsStringAsync();
+                    string requestBody = System.Text.Json.JsonSerializer.Serialize(parameters);
+                    var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
-                var modelWithSearchResults = new DonationReceiveMasterDetails()
+                    var response1 = await _apiClient.PostAsync("api/DonationReceiveDetails/SearchDonationReceiveDataBYPara", content);
+                    response1.EnsureSuccessStatusCode();
+
+                    var jsonResponse = await response1.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<DonationReceiveMasterDetails>(jsonResponse);
+
+                    return View(result);
+                }
+                catch (Exception ex)
                 {
-                    masterDetails = JsonConvert.DeserializeObject<List<DonationReceiveMasterDetails>>(jsonpost),
-                    CityMasterList = _dbFunctions.GetActiveCities(),
-                    paymentModes = _dbFunctions.GetPaymentModes(),
-                    statelist = _dbFunctions.GetStates()
-                };
+                    // Log the exception
 
-                return View(modelWithSearchResults);
+                    return BadRequest($"An error occurred during the search operation: {ex.Message}");
+                }
             }
             var baseAddress = _apiClient.BaseAddress;
 
@@ -99,55 +107,6 @@ public class DonationReceiveMaterDetailsController : Controller
         }
 
         return View(new DonationReceiveMasterDetails());
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> SearchDataWithPara(DonationReceiveMasterDetails model)
-    {
-        try
-        {
-            var parameters = new
-            {
-                model.ReceiveID,
-                model.PaymentModeName,
-                model.TotalAmount,
-                model.CityName,
-                model.CityID,
-                model.StateName,
-                model.StateID,
-                model.MaterialID,
-                model.ProvNo,
-                model.ReceiveDate,
-                model.FullName,
-                model.PaymentModeID,
-                model.IfDetailsNotComplete
-            };
-
-            var parameterList = new List<object> { parameters };
-
-            var response = await _apiClient.PostAsJsonAsync("api/DonationReceiveDetails/SearchDonationReceiveDataBYPara", parameterList);
-            response.EnsureSuccessStatusCode();
-
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var modelWithSearchResults = new DonationReceiveMasterDetails()
-            {
-                masterDetails = JsonConvert.DeserializeObject<List<DonationReceiveMasterDetails>>(jsonResponse),
-                CityMasterList = _dbFunctions.GetActiveCities(),
-                paymentModes = _dbFunctions.GetPaymentModes(),
-                statelist = _dbFunctions.GetStates()
-            };
-
-            return RedirectToAction("Index");
-        }
-        catch (Exception ex)
-        {
-            // Log the exception
-           
-            return BadRequest($"An error occurred during the search operation: {ex.Message}");
-        }
-    }
-
-
+    }   
 
 }

@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-
+using NSSERPAPI.Models.NationalGangotri;
 namespace NSSERPAPI.Db_functions_for_Gangotri
 {
     public class Db_functions
@@ -49,12 +49,14 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query("GetActiveCities", commandType: CommandType.StoredProcedure).AsList();
             }
         }
-        public IEnumerable<dynamic> GetPaymentModes()
+        public List<dynamic> GetPaymentModes()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.Query("GetPaymentModes", commandType: CommandType.StoredProcedure);
+                
+                var result=connection.Query("GetPaymentModes", commandType: CommandType.StoredProcedure);
+            return result.AsList();
             }
         }
         public List<dynamic> GetStates()
@@ -361,39 +363,35 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             }
         }
 
-        public async Task<IEnumerable<dynamic>> SearchDonationReceiveDataBYPara(List<dynamic> modelItems)
+        public  IEnumerable<DonationReceiveDetailsWithParaModel> SearchDonationDetailsByPara(DonationReceiveDetailsWithParaModel model)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
 
                 var parameters = new DynamicParameters();
-
-                foreach (var model in modelItems)
+                parameters.AddDynamicParams(new
                 {
-                    parameters.AddDynamicParams(new
-                    {
-                        ReceiveID = model.receiveID,
-                        PaymentModeName = model.paymentModeName,
-                        TotalAmount = model.totalAmount,
-                        CityName = model.cityName,
-                        CityID = model.cityID,
-                        StateName = model.stateName,
-                        StateID = model.stateID,
-                        MaterialID = model.saterialID,
-                        ProvNo = model.provNo,
-                        ReceiveDate = model.receiveDate,
-                        FullName = model.fullName,
-                        PaymentModeID = model.paymentModeID,
-                        IfDetailsNotComplete = model.ifDetailsNotComplete
-                    });
-                }
+                    model.ReceiveID,
+                    model.PaymentModeName,
+                    model.TotalAmount,
+                    model.CityName,
+                    model.CityID,
+                    model.StateName,
+                    model.StateID,
+                    model.MaterialID,
+                    model.ProvNo,
+                    model.ReceiveDate,
+                    model.FullName,
+                    model.PaymentModeID,
+                    model.IfDetailsNotComplete
+                });
 
-                // Execute stored procedure with parameters
-                return await connection.QueryAsync<dynamic>("SearchDonationReceiveDataBYPara", parameters, commandType: CommandType.StoredProcedure);
+                var result =  connection.Query<DonationReceiveDetailsWithParaModel>("SearchDonationReceiveDataBYPara", parameters, commandType: CommandType.StoredProcedure);
+
+                return result;
             }
         }
-
 
     }
 }

@@ -124,6 +124,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public IEnumerable<DonationReceiveMaster> SubHeadList { get; set; }
         public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }
 
+        public int? ReceiveInEventID { get; set; }
+        public string? ReceiveInEventName { get; set; }
        public string pinCodeMasterList { get; set; } = "";
 
         public string DonationDetails { get; set; } = "";

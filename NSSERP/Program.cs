@@ -7,6 +7,12 @@ using NSSERP;
 using System;
 using NSSERP.DbFunctions;
 using System.Net.Http.Headers;
+using Rotativa.AspNetCore;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +54,8 @@ builder.Services.AddHttpClient("WebApi", client =>
 //builder.Services.AddScoped<IWebApiService, WebApiService>();
 
 
+
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -59,6 +67,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseRotativa();
 app.UseRouting();
 
 app.UseAuthentication();

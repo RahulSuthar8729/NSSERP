@@ -94,7 +94,6 @@
         public bool? IsPatientsPhotoRequire { get; set; }
         public bool? IfDiffrentAddressForDispatch { get; set; }
         public string? DifferentAddressToDispatch { get; set; }
-
         public int? SubHeadID { get; set; }
         public string? SubHeadName { get; set; }
         public string? Instructions { get; set; }
