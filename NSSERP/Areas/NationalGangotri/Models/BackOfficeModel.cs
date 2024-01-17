@@ -1,0 +1,43 @@
+﻿using Microsoft.Extensions.Primitives;
+using NSSERP.Areas.Masters.Models;
+
+namespace NSSERP.Areas.NationalGangotri.Models
+{
+    public class BackOfficeModel
+    {
+        public string? msg { get; set; }
+        public int? ReceiveID { get; set; }
+        public string ? ReceieveDate { get; set; }
+        public int? ReceiveHeadID { get; set; }
+        public string? ReceiveHeadName { get; set; } = "";
+        public string? NamePrefix { get; set; } = "";
+        public string? FullName { get; set; }
+        public int? ProvNo { get; set; }
+        public string? ProvDate { get; set; }
+        public string? PersonName { get; set; } = "";
+        public int? PaymentModeID { get; set; }
+        public string? PaymentModeName { get; set; } = "";
+        public int? CurrencyID { get; set; }
+        public string? CurrencyCode { get; set; } = "";
+        public decimal? TotalAmount { get; set; }       
+
+        public IFormFile? DocProvisonal {  get; set; } 
+        public string? Doc1 { get; set; }
+        public string? TotalAmountInWords { get; set; }
+        public List<PaymentModeMaster> paymentModeList { get; set; }
+        public IEnumerable<CurrencyMaster> currenciesList { get; set; }
+        public List<DMSMovementListItems> MovementDetils { get; set; }
+        public class DMSMovementListItems()
+        {
+            public int MovementID { get; set; }
+            public string MovementFrom { get; set;}
+            public string MovementTo { get; set;}
+            public int UserID { get; set; }
+            public string UserName { get; set; }
+            public string Date {  get; set; }
+        }
+        
+       public string DonationDetails { get; set; }
+
+    }
+}

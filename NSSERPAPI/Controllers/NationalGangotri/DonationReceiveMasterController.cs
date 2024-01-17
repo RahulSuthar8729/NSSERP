@@ -59,6 +59,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.ReceiptsListJson = _dbFunctions.GetReceiptsDetailsListJsonById(receiveID);
             firstDetail.DonorInstructionsListJson = _dbFunctions.GetDonorInstructionsListJsonById(receiveID);
             firstDetail.AnnounceDetailsListJson = _dbFunctions.GetAnnounceListJsonById(receiveID);
+            firstDetail.DepositeDetailsListJson = _dbFunctions.GetBORTDetailsListJsonById(receiveID);
 
             return Ok(firstDetail);
         }
@@ -98,6 +99,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.ReceiptsListJson = _dbFunctions.GetReceiptsDetailsListJsonById(id);
             firstDetail.DonorInstructionsListJson = _dbFunctions.GetDonorInstructionsListJsonById(id);
             firstDetail.AnnounceDetailsListJson = _dbFunctions.GetAnnounceListJsonById(id);
+            firstDetail.DepositeDetailsListJson = _dbFunctions.GetBORTDetailsListJsonById(id);
 
 
             if (details == null)
@@ -376,6 +378,14 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             maxReceiveID = connection.QueryFirstOrDefault<int>("SelectMaxReceiveID", new { model.UserID, model.FinYear }, transaction, commandType: CommandType.StoredProcedure);
 
+                            var movementParams = new DynamicParameters();
+                            movementParams.Add("@ReceiveID", maxReceiveID);
+                            movementParams.Add("@MovementFrom",model.ReceiveDepartment);                           
+                            movementParams.Add("@UserID", model.UserID);
+                            movementParams.Add("@UserName",model.UserName);
+                            connection.Execute("InsertDmsMovement", movementParams, transaction, commandType: CommandType.StoredProcedure);
+
+
 
                             if (MobileList != null)
                             {
@@ -481,7 +491,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             }
                             transaction.Commit();
 
-                            ViewBag.msg = "Receive ID:" + maxReceiveID + " is Generated Successfully";
+                            //ViewBag.msg = "Receive ID:" + maxReceiveID + " is Generated Successfully";
                         }
 
                         catch (Exception)

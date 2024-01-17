@@ -363,6 +363,17 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             }
         }
 
+        public string GetBORTDetailsListJsonById(int ref_id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { REF_NO = ref_id };
+                var result = connection.Query<dynamic>("GetBORTDetsilsByid", parameters, commandType: CommandType.StoredProcedure);
+                return JsonConvert.SerializeObject(result);
+            }
+        }
+
         public  IEnumerable<DonationReceiveDetailsWithParaModel> SearchDonationDetailsByPara(DonationReceiveDetailsWithParaModel model)
         {
             using (var connection = new SqlConnection(_connectionString))

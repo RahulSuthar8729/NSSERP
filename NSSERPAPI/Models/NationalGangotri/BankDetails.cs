@@ -3,9 +3,7 @@
     public class BankDetails
     {
         public int BankID { get; set; }
-
         public string DonationMode { get; set; }
-
         public string BankName { get; set; }
         public string ChequeDate { get; set; }
         public string ChequeNo { get; set; }

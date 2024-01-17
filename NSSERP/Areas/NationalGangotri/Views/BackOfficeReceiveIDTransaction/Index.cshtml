@@ -1,0 +1,473 @@
+﻿@model NSSERP.Areas.NationalGangotri.Models.BackOfficeModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <style>
+        .card-header.sticky-top {
+            background-color: #fff; /* Set a background color for the sticky header */
+            z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
+            border-bottom: 1px solid #dee2e6; /* Add a border to separate it from the content */
+        }
+    </style>
+    @section scripts {
+        <script>
+            function convertToUpperCase(input) {
+                input.value = input.value.toUpperCase();
+            }
+        </script>
+
+
+    }
+</head>
+<body>
+    <div class="card">
+        @if (Model.msg != null)
+        {
+            ViewBag.msg = Model.msg;
+        }
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">BACK OFFICE RECEIVE ID </span>
+                        <span style="color:#28166f">TRANSACTION</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="BackOfficeForm" action="/NationalGangotri/BackOfficeReceiveIDTransaction/Index" enctype="multipart/form-data" method="post">
+                @Html.AntiForgeryToken()
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Donation Details</legend>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+
+                            <div class="form-group col-lg-3">
+                                <label for="Receive ID">Receive ID</label>
+                                <input type="text" readonly class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Receive Date">Receive Date</label>
+                                <input type="text"  readonly value="@Model.ReceieveDate" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="FullName" class="mb-2">Full Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select" disabled id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
+                                            <option value="" selected disabled>Select</option>
+                                            <option value="Mr." @(Model != null && Model.NamePrefix == "Mr." ? "selected" : "")>Mr.</option>
+                                            <option value="Mrs." @(Model != null && Model.NamePrefix == "Mrs." ? "selected" : "")>Mrs.</option>
+                                        </select>
+                                    </div>
+                                    <input type="text" readonly value="@Model.FullName" class="form-control" asp-for="FullName" placeholder="PRASANT KUMAR AGRAWAL" id="FullName" name="FullName" oninput="convertToUpperCase(this)">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Prov. No">Prov. No</label>
+                                <input class="form-control" readonly value="@Model.ProvNo" id="ProvNo" type="text" name="ProvNo" asp-for="ProvNo" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Prov. Date">Prov. Date</label>
+                                <input class="form-control" readonly value="@Model.ProvDate?" id="ProvDate" type="date" name="ProvDate" asp-for="ProvDate" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Person Name</label>
+                                <input class="form-control" readonly value="@Model.PersonName" id="PersonName" type="text" name="PersonName" asp-for="PersonName" />
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="PaymentMode">Donation Mode</label>
+                                <select id="PaymentMode" disabled class="form-control" name="PaymentMode" asp-for="PaymentMode" onchange="toggleMaterialFields()">
+                                    <option value="" selected disabled>Select Donation Mode</option>
+                                    @if (Model != null)
+                                    {
+                                        foreach (var paymentmode in Model.paymentModeList)
+                                        {
+                                            <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3" id="currencyAmountFields">
+                                <label for="currency" class="mb-2">Donation Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select disabled class="custom-select" asp-for="CurrencyID" id="CurrencyID" name="CurrencyID">
+                                            <option value="" disabled>Select</option>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var currency in Model.currenciesList)
+                                                {
+                                                    <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <input readonly class="form-control" value="@Model.TotalAmount" id="TotalAmount" type="text" name="TotalAmount" asp-for="TotalAmount" />
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label for="">Amount In Words</label>
+                                <input readonly class="form-control" id="TotalAmountInWords" value="@Model.TotalAmountInWords" type="text" name="TotalAmountInWords">
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Deposite Details</legend>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+
+                            <div class="form-group col-lg-2">
+                                <label for="DepositePaymentMode">Deposite Mode</label>
+                                <select id="DepositePaymentMode" required class="form-control" name="DepositePaymentMode" asp-for="DepositePaymentMode">
+                                    <option value="" selected disabled>Select Donation Mode</option>
+                                    @if (Model != null)
+                                    {
+                                        foreach (var paymentmode in Model.paymentModeList)
+                                        {
+                                            <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
+                                        }
+                                    }
+                                </select>                                
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label for="DepositeDate">Deposite Date</label>
+                                <input class="form-control" id="DepositeDate" type="date" name="DepositeDate" asp-for="DepositeDate" />
+                            </div>
+                            <div class="form-group col-lg-3" id="currencyAmountFields">
+                                <label for="currency" class="mb-2">Deposite Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select" asp-for="DepositeCurrencyID" id="DepositeCurrencyID" name="DepositeCurrencyID" required>
+                                            <option value="" disabled>Select</option>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var currency in Model.currenciesList)
+                                                {
+                                                    <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <input type="number" placeholder="Deposite Amount" asp-for="DepositeAmount" name="DepositeAmount" class="form-control" id="DepositeAmount">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">BankID/Transaction ID</label>
+                                <input class="form-control" value="" id="DepositeBankID" type="text" name="DepositeBankID" asp-for="DepositeBankID" />
+                            </div>
+
+                            <div class="form-group col-lg-1">
+                                <br />
+                                <button id="btnAdd" class="btn btn-primary">Add</button>
+                            </div>
+                        </div>
+                  
+                        <table id="depositTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Deposite Mode</th>
+                                    <th>Deposite Date</th>
+                                    <th>Currency Code</th> <!-- New column for Currency Code -->
+                                    <th>Deposite Amount</th>
+                                    <th>BankID/Transaction ID</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table rows will be added dynamically here -->
+                            </tbody>
+                        </table>
+                        <input type="hidden" asp-for="DonationDetails" id="hiddenTableData" name="DonationDetails" />
+                        <input type="hidden" id="hiddenTotalAmount" />
+
+                        <script>
+                            $(document).ready(function () {
+                                // Hide the table initially
+                                $('#depositTable').hide();
+
+                                // Variable to track added payment modes
+                                var addedPaymentModes = [];
+
+                                // Handle Add button click
+                                $('#btnAdd').on('click', function () {
+                                    event.preventDefault();
+
+                                    // Get values from form
+                                    var mode = $('#DepositePaymentMode option:selected').data('paymentmode');
+                                    var date = $('#DepositeDate').val();
+                                    var currencyCode = $('#DepositeCurrencyID option:selected').data('currencycode');
+                                    var amount = parseFloat($('#DepositeAmount').val());
+                                    var bankID = $('#DepositeBankID').val();
+
+                                    // Validate the amount
+                                    if (isNaN(amount) || amount <= 0) {
+                                        alert("Please enter a valid deposit amount.");
+                                        return;
+                                    }
+
+                                    // Check if the payment mode has already been added
+                                    if (addedPaymentModes.length > 0 && !addedPaymentModes.includes(mode)) {
+                                        alert("Cannot add a different payment mode. Only the same payment mode can be added.");
+                                        return;
+                                    }
+
+                                    // Validate total amount
+                                    var currentTotal = calculateTotalAmount();
+                                    var maxTotal = parseFloat($('#TotalAmount').val());
+                                    if (currentTotal + amount > maxTotal) {
+                                        alert("Total deposit amount exceeds the limit.");
+                                        return;
+                                    }
+
+                                    // Add the payment mode to the tracking variable
+                                    addedPaymentModes.push(mode);
+
+                                    // Create a new row and append it to the table
+                                    var newRow = '<tr>' +
+                                        '<td>' + mode + '</td>' +
+                                        '<td>' + date + '</td>' +
+                                        '<td>' + currencyCode + '</td>' +
+                                        '<td>' + amount + '</td>' +
+                                        '<td>' + bankID + '</td>' +
+                                        '<td><button class="btn btn-danger btnRemove">Delete</button></td>' +
+                                        '</tr>';
+                                    $('#depositTable tbody').append(newRow);
+
+                                    // Clear form values
+                                    $('#DepositeDate').val('');
+                                    $('#DepositeAmount').val('');
+                                    $('#DepositeBankID').val('');
+
+                                    // Update total amount and hidden field
+                                    updateTotalAmount();
+                                    updateHiddenField();
+
+                                    // Show the table
+                                    $('#depositTable').show();
+                                });
+
+                                // Handle Remove button click (delegated event for dynamically added rows)
+                                $('#depositTable').on('click', '.btnRemove', function () {
+                                    var removedPaymentMode = $(this).closest('tr').find('td:eq(0)').text();
+
+                                    // Remove the payment mode from the tracking variable
+                                    addedPaymentModes = addedPaymentModes.filter(function (mode) {
+                                        return mode !== removedPaymentMode;
+                                    });
+
+                                    $(this).closest('tr').remove();
+
+                                    // Update total amount and hidden field
+                                    updateTotalAmount();
+                                    updateHiddenField();
+
+                                    // If no rows left, hide the table
+                                    if ($('#depositTable tbody tr').length === 0) {
+                                        $('#depositTable').hide();
+                                    }
+                                });
+
+                                // Function to calculate the total amount of the rows
+                                function calculateTotalAmount() {
+                                    var total = 0;
+                                    $('#depositTable tbody tr').each(function () {
+                                        total += parseFloat($(this).find('td:eq(3)').text());
+                                    });
+                                    return total;
+                                }
+
+                                // Function to update the total amount and hidden field
+                                function updateTotalAmount() {
+                                    var totalAmount = calculateTotalAmount();
+                                    $('#hiddenTotalAmount').val(totalAmount);
+                                }
+
+                                // Function to update the hidden field with table data
+                                function updateHiddenField() {
+                                    var tableData = [];
+
+                                    $('#depositTable tbody tr').each(function () {
+                                        var rowData = {
+                                            mode: $(this).find('td:eq(0)').text(),
+                                            date: $(this).find('td:eq(1)').text(),
+                                            currencyCode: $(this).find('td:eq(2)').text(),
+                                            amount: parseFloat($(this).find('td:eq(3)').text()),
+                                            bankID: $(this).find('td:eq(4)').text()
+                                        };
+                                        tableData.push(rowData);
+                                    });
+
+                                    $('#hiddenTableData').val(JSON.stringify(tableData));
+                                }
+                            });
+                        </script>
+
+
+                    </div>
+                </fieldset>
+
+              
+
+                <fieldset>
+                    <legend style="font-weight:bold;" class="card">Attach Scan Copy</legend>
+
+                    <style>
+                        .file-preview {
+                            position: relative;
+                            max-width: 100%;
+                            height: auto;
+                            text-align: center;
+                        }
+
+                        .img-preview {
+                            max-width: 100%;
+                            max-height: 200px; /* Set a fixed height for the image preview */
+                            display: none;
+                            margin: 0 auto; /* Center the image horizontally */
+                        }
+
+                        .pdf-view {
+                            width: 100%;
+                            height: 200px; /* Set a fixed height for the PDF preview */
+                            display: none;
+                        }
+                    </style>
+
+                    <div class="nested-form-container">
+                        <div class="row">
+                            <div class="form-group col-lg-4" data-input-id="file1">
+                                <label for="file1">Attach Document 1</label>
+                                <input type="file" name="Doc1" asp-for="Doc1" id="file1" accept="image/*,application/pdf" onchange="previewFile(this)" />
+                                <div class="file-preview">
+                                    <img class="img-preview" src="~/DocDonationReceive/placeholder-image.jpg" alt="Uploaded Image" />
+                                    <object class="pdf-view" data="@Url.Content("~/DocDonationReceive/")" type="application/pdf"></object>
+                                </div>
+                                <span class="filename"></span>
+                                <a class="btn btn-primary download-link" style="display: none;">Download</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                        function previewFile(input) {
+                            var formGroup = input.parentElement;
+                            var preview = formGroup.querySelector('.file-preview');
+                            var filename = formGroup.querySelector('.filename');
+                            var downloadLink = formGroup.querySelector('.download-link');
+
+                            var file = input.files[0];
+
+                            if (file) {
+                                filename.innerText = file.name;
+
+                                if (file.type.startsWith('image/')) {
+                                    // Display image preview
+                                    preview.querySelector('.img-preview').src = URL.createObjectURL(file);
+                                    preview.querySelector('.img-preview').style.display = 'block';
+                                    preview.querySelector('.pdf-view').style.display = 'none';
+                                }
+                                else if (file.type === 'application/pdf') {
+                                    // Display PDF preview
+                                    preview.querySelector('.img-preview').style.display = 'none';
+                                    preview.querySelector('.pdf-view').style.display = 'block';
+                                }
+
+                                downloadLink.style.display = 'block';
+                            }
+                            else {
+                                filename.innerText = '';
+                                preview.querySelector('.img-preview').style.display = 'none';
+                                preview.querySelector('.pdf-view').style.display = 'none';
+                                downloadLink.style.display = 'none';
+                            }
+                        }
+                    </script>
+                </fieldset>
+
+                <br />
+                <div class="container-lg">
+                    <div class="text-center">
+                        <button type="submit" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
+                        <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print
+                        </a>
+                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#submitButton').on('click', function (event) {
+                            // Get visible and hidden total amounts
+                            var visibleTotalAmount = parseFloat($('#TotalAmount').val());
+                            var hiddenTotalAmount = parseFloat($('#hiddenTotalAmount').val());
+
+                            // Compare amounts
+                            if (isNaN(visibleTotalAmount) || isNaN(hiddenTotalAmount)) {
+                                // Prevent form submission
+                                event.preventDefault();
+
+                                // Display error message
+                                alert("Error: Total amount is invalid.");
+                            } else if (hiddenTotalAmount > visibleTotalAmount) {
+                                // Prevent form submission
+                                event.preventDefault();
+
+                                // Display error message
+                                alert("Error: Cannot deposit a greater amount than the receive ID amount.");
+                            } else if (hiddenTotalAmount < visibleTotalAmount) {
+                                // Prevent form submission
+                                event.preventDefault();
+
+                                // Display error message
+                                alert("Error: Cannot deposit a lesser amount than the receive ID amount.");
+                            }
+                        });
+                    });
+                </script>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+

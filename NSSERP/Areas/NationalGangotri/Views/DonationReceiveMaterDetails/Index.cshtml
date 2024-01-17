@@ -123,7 +123,12 @@
     </style>
 </head>
 <body>
+
     <div class="card">
+        @if (Model.msg != null)
+        {
+            ViewBag.msg = Model.msg;
+        }
         <div class="card-header">
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 mb-3 mb-md-0">
@@ -363,6 +368,7 @@
                             <th>CURRENCY</th>
                             <th>AMOUNT</th>
                             <th>PAYMENT MODE</th>
+                            <th>STATUS</th>
                             <th>IF DETAILS NOT COMPLETE</th>
                             <th>FORWARDED</th>
                             @*     <th>IF UPDATION IN ADDRESS</th>
@@ -398,6 +404,19 @@
                                     <td>@item.CurrencyCode</td>
                                     <td>@item.TotalAmount</td>
                                     <td>@item.PaymentModeName</td>
+                                    <td>
+                                        @if (item.AppStatus=="BORT")
+                                        {
+                                            <a href="@Url.Action("Index", "BackOfficeReceiveIDTransaction", new { id = item.ReceiveID })" title="Verify">
+                                                <span class="text-danger">Pending At Back Office</span>
+                                            </a>                                           
+                                        }
+                                        else
+                                        {
+
+                                            <span class="text-warning">@item.AppStatus</span>
+                                        }
+                                    </td>
                                     <td>
                                         @if (item.IfDetailsNotComplete.GetValueOrDefault())
                                         {

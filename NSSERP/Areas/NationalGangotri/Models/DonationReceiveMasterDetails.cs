@@ -4,6 +4,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
 {
     public class DonationReceiveMasterDetails
     {
+        public string msg {  get; set; }
         public List<DonationReceiveMasterDetails> masterDetails { get; set; }
         public List<CityMaster> CityMasterList { get; set; }
         public List<StateMaster> statelist { get; set; }
@@ -36,5 +37,26 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? ReceiveHeadName { get; set; }
         public string? CreatedBy { get; set; }
         public int? MaterialID { get; set; }
+
+
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int Draw { get; set; }
+        public int Start { get; set; }
+        public int Length { get; set; }
+        public List<DataTableColumn> Order { get; set; }
+        public DataTableSearch Search { get; set; }
+
+        public class DataTableColumn
+        {
+            public int Column { get; set; }
+            public string Dir { get; set; }
+        }
+
+        public class DataTableSearch
+        {
+            public string Value { get; set; }
+            public bool Regex { get; set; }
+        }
     }
 }

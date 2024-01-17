@@ -1973,6 +1973,58 @@
                         </div>
                     </div>
                 </fieldset>
+                <fieldset id="backOfficeFieldset">
+                    <legend style="font-weight: bold;" class="card">Back Office ReceiveID Transaction</legend>
+                    <div class="nested-form-container">
+                        <table id="depositTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Deposite Mode</th>
+                                    <th>Deposite Date</th>
+                                    <th>Currency Code</th>
+                                    <th>Deposite Amount</th>
+                                    <th>BankID/Transaction ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table rows will be added dynamically here -->
+                            </tbody>
+                        </table>
+                        <script>
+                            $(document).ready(function () {
+                                // Function to fill the table with data from model.DepositeDetailsListJson
+                                function fillTableFromJson() {
+                                    var jsonData = @Html.Raw(Model.DepositeDetailsListJson); // Parse JSON
+                                    var tableBody = $('#depositTable tbody');
+
+                                    // Clear existing rows
+                                    tableBody.empty();
+
+                                    // Iterate through JSON data and add rows to the table
+                                    jsonData.forEach(function (item) {
+                                        var newRow = '<tr>' +
+                                            '<td>' + item.DepositeMode + '</td>' +
+                                            '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
+                                            '<td>' + item.CurrencyCode + '</td>' +
+                                            '<td>' + item.DepositeAmount.toFixed(2) + '</td>' +
+                                            '<td>' + item.TransactionID + '</td>' +
+                                            '</tr>';
+                                        tableBody.append(newRow);
+                                    });
+
+                                    // Show the table
+                                    $('#depositTable').show();
+                                    // Toggle the visibility of the fieldset based on the number of rows
+                                    $('#backOfficeFieldset').toggle(tableBody.find('tr').length > 0);
+                                }
+
+                                // Call the function to fill the table on page load
+                                fillTableFromJson();
+                            });
+                        </script>
+                    </div>
+                </fieldset>
+
                 <fieldset>
                     <legend style="font-weight: bold;" class="card">Receipt Details</legend>
                     <div class="nested-form-container">

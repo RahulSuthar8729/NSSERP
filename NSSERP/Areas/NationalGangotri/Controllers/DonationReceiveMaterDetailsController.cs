@@ -57,7 +57,7 @@ public class DonationReceiveMaterDetailsController : Controller
                         model.ReceiveDate,
                         model.FullName,
                         model.PaymentModeID,
-                        model.IfDetailsNotComplete
+                        model.IfDetailsNotComplete,                      
                     };
 
                     //var parameterList = new List<object> { parameters };
@@ -70,7 +70,12 @@ public class DonationReceiveMaterDetailsController : Controller
 
                     var jsonResponse = await response1.Content.ReadAsStringAsync();
                     var result = JsonConvert.DeserializeObject<DonationReceiveMasterDetails>(jsonResponse);
-
+                    if (TempData.ContainsKey("msg"))
+                    {
+                        string messageFromFirstController = TempData["msg"] as string;
+                        result.msg = messageFromFirstController;                        
+                        TempData.Remove("msg");
+                    }
                     return View(result);
                 }
                 catch (Exception ex)
@@ -83,7 +88,7 @@ public class DonationReceiveMaterDetailsController : Controller
             var baseAddress = _apiClient.BaseAddress;
 
             // Make a GET request to the GetDonationReceiveDetails endpoint
-            var response = await _apiClient.GetAsync("api/DonationReceiveDetails/GetDonationReceiveDetails");
+            var response = await _apiClient.GetAsync($"api/DonationReceiveDetails/GetDonationReceiveDetails?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
             response.EnsureSuccessStatusCode();
 
             // Read the response content as a string
@@ -97,7 +102,12 @@ public class DonationReceiveMaterDetailsController : Controller
                 paymentModes = _dbFunctions.GetPaymentModes(),
                 statelist = _dbFunctions.GetStates()
             };
-
+            if (TempData.ContainsKey("msg"))
+            {
+                string messageFromFirstController = TempData["msg"] as string;
+                modelitems.msg = messageFromFirstController;
+                TempData.Remove("msg");
+            }
             return View(modelitems);
         }
         catch (Exception ex)
@@ -107,6 +117,9 @@ public class DonationReceiveMaterDetailsController : Controller
         }
 
         return View(new DonationReceiveMasterDetails());
-    }   
+    }
+
+
+
 
 }

@@ -17,10 +17,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string HeadName { get; set; } = "";
          public int? Purpose_ID { get; set; }
         public string Purpose { get; set; } = "";
-
         public int? ID { get; set; }
-
-
         public bool? IsReceiveHeadDiffrent { get; set; }
         
         public int? ReceiveID { get; set; }
@@ -142,6 +139,6 @@ namespace NSSERP.Areas.NationalGangotri.Models
 
         public string AnnounceDetailsListJson { get; set; } = "";
 
-
+        public string DepositeDetailsListJson { get; set; }
     }
 }
