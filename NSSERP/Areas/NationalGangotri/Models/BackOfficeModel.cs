@@ -7,13 +7,14 @@ namespace NSSERP.Areas.NationalGangotri.Models
     {
         public string? msg { get; set; }
         public int? ReceiveID { get; set; }
-        public string ? ReceieveDate { get; set; }
+        public DateTime? ReceiveDate { get; set; }
+
         public int? ReceiveHeadID { get; set; }
         public string? ReceiveHeadName { get; set; } = "";
         public string? NamePrefix { get; set; } = "";
         public string? FullName { get; set; }
         public int? ProvNo { get; set; }
-        public string? ProvDate { get; set; }
+        public DateTime? ProvDate { get; set; }
         public string? PersonName { get; set; } = "";
         public int? PaymentModeID { get; set; }
         public string? PaymentModeName { get; set; } = "";

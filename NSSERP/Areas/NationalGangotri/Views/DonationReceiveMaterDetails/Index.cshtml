@@ -29,7 +29,7 @@
                 $('#CityID').select2();
                 $('#StateID').select2();
                 $('#tableDetails').DataTable({
-                    "order": [[1, "desc"]],
+                    "order": [[2, "desc"]],
                     "paging": true, // Enable pagination
                     "lengthMenu": [10, 25, 50, 75, 100], // Set custom page lengths
                     "searching": true, // Enable searching
@@ -358,6 +358,7 @@
                     <thead class="thead-dark">
                         <tr>
                             <th></th>
+                            <th></th>
                             <th>RECEIVE ID</th>
                             <th>RECEIVE BY</th>
                             <th>ENTRY BY</th>
@@ -389,11 +390,12 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
-                                    @*   <td>
-                            <a title="View Details">
-                            <i class="fas fa-eye"></i>
-                            </a>
-                            </td> *@
+                                    <td>
+                                        <a href="@Url.Action("Edit", "DonationReceiveMaster", new { id = item.ReceiveID })" title="Edit ReceiveID">
+                                            <i style="color: orange;" class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+
                                     <td>@item.ReceiveID</td>
                                     <td>@item.ReceiveHeadName</td>
                                     <td>@item.CreatedBy</td>
@@ -405,11 +407,11 @@
                                     <td>@item.TotalAmount</td>
                                     <td>@item.PaymentModeName</td>
                                     <td>
-                                        @if (item.AppStatus=="BORT")
+                                        @if (item.AppStatus == "BORT")
                                         {
                                             <a href="@Url.Action("Index", "BackOfficeReceiveIDTransaction", new { id = item.ReceiveID })" title="Verify">
                                                 <span class="text-danger">Pending At Back Office</span>
-                                            </a>                                           
+                                            </a>
                                         }
                                         else
                                         {

@@ -78,6 +78,34 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/ViewDetails?id={id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {                    
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<DonationReceiveMaster>(json) : null;
+
+            if (detail == null)
+            {
+                return NotFound();
+            }         
+            return View(detail);
+
+        }
+
+        [HttpGet]
         public IActionResult GetEvents1(string q)
         {
             try
@@ -519,6 +547,186 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(DonationReceiveMaster model)
+        {
+            bool? isDifferent = model.IsReceiveHeadDiffrent;
+            string ReceiveDepartment = isDifferent == true ? model.ReceiveHeadName : User.FindFirst("Department")?.Value;
+            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount;
+            DateTime dob = model.DateOfBirth ?? DateTime.MinValue;
+            DateTime provdate = model.ProvDate ?? DateTime.MinValue;
+            string FinYear = User.FindFirst("FinYear")?.Value ?? string.Empty;
+            string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
+
+            string Doc1 = string.Empty;
+            string Doc2 = string.Empty;
+            string Doc3 = string.Empty;
+
+            if (model.DocProvisonal != null)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocProvisonal.FileName);
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    Doc1 = fileName;
+                    model.DocProvisonal.CopyTo(stream);
+                }
+            }
+            if (model.DocCheque != null)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocCheque.FileName);
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    Doc2 = fileName;
+                    model.DocCheque.CopyTo(stream);
+                }
+            }
+            if (model.DocPayInSlip != null)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocPayInSlip.FileName);
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    Doc3 = fileName;
+                    model.DocPayInSlip.CopyTo(stream);
+                }
+            }
+
+            var requestData = new
+            {
+                ReceiveID= model.ReceiveID,
+                IsReceiveHeadDiffrent = isDifferent,
+                ReceiveDepartment = ReceiveDepartment,
+                FinYear = FinYear,
+                UserID = UserID,
+                ReceiveDate = model.ReceiveDate,
+                ReceiveHeadID = model.ReceiveHeadID,
+                UserName = User.FindFirst(ClaimTypes.Name)?.Value,
+                ID = model.ID,
+                EventName = model.EventName,
+                CampaignID = model.CampaignID,
+                CampaignName = model.CampaignName,
+                DonorID = model.DonorID,
+                InMemory = model.InMemory,
+                NamePrefix = model.NamePrefix,
+                FullName = model.FullName,
+                PrefixToFullName = model.PrefixToFullName,
+                RelationToFullName = model.RelationToFullName,
+                DateOfBirth = dob,
+                Company = model.Company,
+                FullAddress = model.FullAddress,
+                PinCode = model.PinCode,
+                CountryId = model.CountryId,
+                CountryName = model.CountryName,
+                StateID = model.StateID,
+                StateName = model.StateName,
+                DistrictID = model.DistrictID,
+                DistrictName = model.DistrictName,
+                CityID = model.CityID,
+                CityName = model.CityName,
+                IfUpdationInAddress = model.IfUpdationInAddress,
+                IsPermanentAddressDiffrent = model.IsPermanentAddressDiff,
+                ifdetailsNotComplete = model.IfDetailsNotComplete,
+                P_FullAddress = model.P_FullAddress,
+                P_PinCode = model.P_PinCode,
+                P_CountryID = model.P_CountryID,
+                P_CountryName = model.P_CountryName,
+                P_StateID = model.P_StateID,
+                P_StateName = model.P_StateName,
+                P_DistrictID = model.P_DistrictID,
+                P_DistrictName = model.P_DistrictName,
+                P_CityID = model.P_CityID,
+                P_CityName = model.P_CityName,
+                EmailID = model.EmailID,
+                StdCode = model.StdCode,
+                PhoneR = model.PhoneR,
+                ProvNo = model.ProvNo,
+                provdate = provdate,
+                PersonName = model.PersonName,
+                paymentModeID = model.PaymentModeID,
+                PaymentModeName = model.PaymentModeName,
+                CurrencyID = model.CurrencyID,
+                CurrencyCode = model.CurrencyCode,
+                Amount = Amount,
+                MaterialDepositID = model.MaterialDepositID,
+                Material = model.Material,
+                IsManavaFormulaRequire = model.IsManavaFormulaRequire,
+                IsPatientsPhotoRequire = model.IsPatientsPhotoRequire,
+                IfDiffrentAddressForDispatch = model.IfDiffrentAddressForDispatch,
+                DifferentAddressToDispatch = model.DifferentAddressToDispatch,
+                IfAnnounceDueInFuture = model.IfAnnounceDueInFuture,
+                Doc1 = Doc1,
+                Doc2 = Doc2,
+                Doc3 = Doc3
+
+            };
+
+
+            try
+            {
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
+                string apiUrl = "api/DonationReceiveMaster/UpdateData";
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+                requestContent.Headers.Add("MobileList", model.MobileList);
+                requestContent.Headers.Add("IdentityList", model.IdentityList);
+                requestContent.Headers.Add("BankDetailsList", model.BankDetailsList);
+                requestContent.Headers.Add("receiptdetailslist", model.receiptdetailslist);
+                requestContent.Headers.Add("AnnounceDetsilsList", model.AnnounceDetsilsList);
+                requestContent.Headers.Add("donorInstructionjsonList", model.donorInstructionjsonList);
+                requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonationReceiveMaster>(modelget) : null;
+                    TempData["msg"] = modeldata.msg;
+                    return RedirectToAction("Index", "DonationReceiveMaterDetails", new { model = modeldata });
+                }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions, such as database connection issues
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
+            }
+
+            return View();
+        }
+
         public async Task<IActionResult> PrintProvisionalReceipt(int refid)
         {
             var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/GetProvisionalReceipt?refid={refid}");
@@ -549,6 +757,29 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             {
                 FileName = "ProvisionalReceipt" + refid + ".pdf"
             };
+        }
+
+        public async Task<IActionResult> DeleteReceiveID(int refid)
+        {
+            var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/DeleteReceiveID?refid={refid}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var modelget = await response.Content.ReadAsStringAsync();
+                var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonationReceiveMaster>(modelget) : null;
+                TempData["msg"] = modeldata.msg;
+                return RedirectToAction("Index", "DonationReceiveMaterDetails", new { model = modeldata });
+            }
+
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+            }
+
         }
 
     }

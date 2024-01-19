@@ -5,7 +5,7 @@
 @using System.IO;
 @model NSSERP.Areas.NationalGangotri.Models.DonationReceiveMaster;
 @{
-    ViewData["Title"] = "DonationReceiveMaster";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <!DOCTYPE html>
@@ -84,7 +84,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form id="donationForm" action="/NationalGangotri/DonationReceiveMaster/Home" enctype="multipart/form-data" method="post">
+            <form id="donationForm" action="/NationalGangotri/DonationReceiveMaster/Edit" enctype="multipart/form-data" method="post">
                 @Html.AntiForgeryToken()
                 <div class="col-lg-3">
 
@@ -162,11 +162,12 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Receive ID">Receive ID</label>
-                                <input type="text" disabled class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
+                                <input type="text" readonly class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
+                            <input type="hidden" name="ReceiveID" asp-for="ReceiveID" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Receive Date">Receive Date</label>
-                                <input type="text" disabled value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
+                                <input type="text" readonly value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
                             </div>
 
                             <script>
@@ -1551,23 +1552,28 @@
                                                 <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
                                             }
                                         </select>
+
                                         <input type="hidden" id="hdncurrncycode" name="CurrencyCode" asp-for="CurrencyCode" />
 
                                         <script>
                                             $(document).ready(function () {
-                                                // Set the selected item based on model's CurrencyID when the page loads
+                                                // Set the selected item and its text based on model's CurrencyID when the page loads
                                                 var modelCurrencyID = '@Model.CurrencyID'; // Convert to string for comparison
                                                 if (modelCurrencyID) {
-                                                    $("#CurrencyID").val(modelCurrencyID);
+                                                    var selectedOption = $("#CurrencyID option[value='" + modelCurrencyID + "']");
+                                                    var selectedText = selectedOption.data("currencycode");
+                                                    $("#hdncurrncycode").val(selectedText);
                                                 }
 
-                                                // Attach the change event to update the hidden field
+                                                // Attach the change event to update both the selected text and the hidden field
                                                 $("#CurrencyID").change(function () {
-                                                    var selectedItem = $(this).find("option:selected").data("currencycode");
-                                                    $("#hdncurrncycode").val(selectedItem);
+                                                    var selectedItem = $(this).find("option:selected");
+                                                    var selectedText = selectedItem.data("currencycode");
+                                                    $("#hdncurrncycode").val(selectedText);
                                                 });
                                             });
                                         </script>
+
                                     </div>
 
 
@@ -2191,6 +2197,7 @@
                                             addTableRow(item.HeadName, item.Purpose, item.Quantity, item.Amount);
                                         });
                                         toggleTableVisibility();
+                                        updateHiddenField();
                                     }
 
                                     // Add row event handler
@@ -2391,7 +2398,7 @@
                             </div>
                             <table class="table table-bordered" id="instructionTable" style="display: none;">
                                 <thead>
-                                    <tr>
+                                    <tr><th style="display:none">Instruction ID</th>
                                         <th>Donor Instruction</th>
                                         <th>Remarks</th>
                                         <th>Action</th>
@@ -2405,7 +2412,6 @@
 
                             <script>
                                 $(document).ready(function () {
-                                    // Initialize the table with data from the model
                                     var donorInstructionsListJson = @Html.Raw(Model.DonorInstructionsListJson);
                                     var instructionTableBody = $("#instructionTable tbody");
                                     var jsonDataField = $("#jsonDatafordonorInstruction");
@@ -2413,30 +2419,29 @@
                                     if (donorInstructionsListJson && donorInstructionsListJson.length > 0) {
                                         $.each(donorInstructionsListJson, function (index, item) {
                                             var newRow = "<tr>" +
-                                                "<td>" + item.InstructionName + "<input type='hidden' name='SelectedInstructions' value='" + item.InstructionId + "' /></td>" +
+                                                "<td style='display:none'>" + item.InstructionID + "</td>" +
+                                                "<td>" + item.InstructionName + "<input type='hidden' name='SelectedInstructions' value='" + item.InstructionID + "' /></td>" +
                                                 "<td>" + item.Remarks + "</td>" +
                                                 "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
                                                 "</tr>";
                                             instructionTableBody.append(newRow);
                                         });
+                                        updateHiddenField();
                                         toggleTableVisibility();
                                     }
 
-                                    // Button click event
                                     $("#addRowBtn").click(function () {
-                                        // Get selected values
                                         var selectedInstructionId = $("#Instruction").val();
                                         var selectedInstructionName = $("#Instruction option:selected").text();
                                         var remarks = $("#remarks").val();
 
-                                        // Validate
                                         if (selectedInstructionId === "0") {
                                             alert("Please select a Donor Instruction.");
                                             return;
                                         }
 
-                                        // Add row to the table
                                         var newRow = "<tr>" +
+                                            "<td style='display:none'>" + selectedInstructionId + "</td>" +
                                             "<td>" + selectedInstructionName + "<input type='hidden' name='SelectedInstructions' value='" + selectedInstructionId + "' /></td>" +
                                             "<td>" + remarks + "</td>" +
                                             "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
@@ -2444,49 +2449,45 @@
 
                                         instructionTableBody.append(newRow);
 
-                                        // Update hidden field with JSON data
                                         updateHiddenField();
 
-                                        // Clear input values
                                         $("#Instruction").val("0");
                                         $("#remarks").val("");
 
-                                        // Show the table
                                         toggleTableVisibility();
                                     });
 
-                                    // Handle delete button click within the table
                                     instructionTableBody.on("click", ".deleteRowBtn", function () {
                                         $(this).closest("tr").remove();
 
-                                        // Update hidden field with JSON data
                                         updateHiddenField();
 
-                                        // Hide the table if there are no rows
                                         toggleTableVisibility();
                                     });
 
-                                    // Function to update the hidden field with JSON data
                                     function updateHiddenField() {
                                         var data = [];
                                         instructionTableBody.find("tr").each(function () {
                                             var columns = $(this).find("td");
+
+                                            var InstructionID = columns.eq(0).text();
+                                            var instructionName = columns.eq(1).text();
+                                            var remarks = columns.eq(2).text();
+
                                             var item = {
-                                                "InstructionId": $(columns.eq(0)).find("input[name='SelectedInstructions']").val(),
-                                                "InstructionName": columns.eq(0).text(),
-                                                "Remarks": columns.eq(1).text()
+                                                "InstructionID": InstructionID,
+                                                "InstructionName": instructionName,
+                                                "Remarks": remarks
                                             };
+
                                             data.push(item);
                                         });
 
-                                        // Convert data array to JSON string
                                         var jsonData = JSON.stringify(data);
 
-                                        // Set JSON data to hidden field
                                         jsonDataField.val(jsonData);
                                     }
 
-                                    // Function to toggle table visibility based on row count
                                     function toggleTableVisibility() {
                                         if (instructionTableBody.find("tr").length === 0) {
                                             $("#instructionTable").hide();
@@ -2496,6 +2497,7 @@
                                     }
                                 });
                             </script>
+
 
                         </div>
                     </div>
@@ -2613,6 +2615,7 @@
                                 newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
                                 tableBody.append(newRow);
                             });
+                            updateHiddenField();
                             toggleTableVisibility();
                         }
 
@@ -2689,123 +2692,54 @@
                 <fieldset>
                     <legend style="font-weight:bold;" class="card">Attach Scan Copy</legend>
 
-                    <style>
-                        .file-preview {
-                            position: relative;
-                            max-width: 100%;
-                            height: auto;
-                            text-align: center;
-                        }
-
-                        .img-preview {
-                            max-width: 100%;
-                            max-height: 200px; /* Set a fixed height for the image preview */
-                            display: none;
-                            margin: 0 auto; /* Center the image horizontally */
-                        }
-
-                        .pdf-view {
-                            width: 100%;
-                            height: 200px; /* Set a fixed height for the PDF preview */
-                            display: none;
-                        }
-                    </style>
 
                     <div class="nested-form-container">
-
-
                         <div class="row">
                             <div class="form-group col-lg-4" data-input-id="file1">
                                 <label for="file1">Attach Provisional</label>
-
-                                @if (!string.IsNullOrEmpty(Model.Doc1))
+                                <input type="file" name="DocProvisonal" asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf" />
+                                @if (@Model.Doc1 != null)
                                 {
                                     <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc1"><i class="fa fa-eye"></i>View</a></div>
-                                }
-                                else
-                                {
-                                    <input type="file" name="DocProvisonal" asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf" />
+
                                 }
                             </div>
 
-
                             <div class="form-group col-lg-4" data-input-id="file2">
                                 <label for="file2">Attach Cheque</label>
-
-                                @if (!string.IsNullOrEmpty(Model.Doc2))
+                                <input type="file" name="DocCheque" asp-for="DocCheque" id="file2" accept="image/*,application/pdf" />
+                                @if (Model.Doc2 != null)
                                 {
                                     <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc2"><i class="fa fa-eye"></i>View</a></div>
-                                }
-                                else
-                                {
-                                    <input type="file" name="DocCheque" asp-for="DocCheque" id="file2" accept="image/*,application/pdf" />
+
                                 }
                             </div>
 
                             <div class="form-group col-lg-4" data-input-id="file3">
                                 <label for="file3">Attach Pay-In-Slip</label>
+                                <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file3" accept="image/*,application/pdf" />
+                                @if (Model.Doc3 != null)
+                                {
+                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc2"><i class="fa fa-eye"></i>View</a></div>
 
-                                @if (!string.IsNullOrEmpty(Model.Doc3))
-                                {
-                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc3"><i class="fa fa-eye"></i>View</a></div>
-                                }
-                                else
-                                {
-                                    <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file3" accept="image/*,application/pdf" />
                                 }
                             </div>
-
                         </div>
-
-
                     </div>
-
-                    <script>
-                        function previewFile(input) {
-                            var formGroup = input.parentElement;
-                            var preview = formGroup.querySelector('.file-preview');
-                            var filename = formGroup.querySelector('.filename');
-                            var downloadLink = formGroup.querySelector('.download-link');
-
-                            var file = input.files[0];
-
-                            if (file) {
-                                filename.innerText = file.name;
-
-                                if (file.type.startsWith('image/')) {
-                                    // Display image preview
-                                    preview.querySelector('.img-preview').src = URL.createObjectURL(file);
-                                    preview.querySelector('.img-preview').style.display = 'block';
-                                    preview.querySelector('.pdf-view').style.display = 'none';
-                                }
-                                else if (file.type === 'application/pdf') {
-                                    // Display PDF preview
-                                    preview.querySelector('.img-preview').style.display = 'none';
-                                    preview.querySelector('.pdf-view').style.display = 'block';
-                                }
-
-                                downloadLink.style.display = 'block';
-                            }
-                            else {
-                                filename.innerText = '';
-                                preview.querySelector('.img-preview').style.display = 'none';
-                                preview.querySelector('.pdf-view').style.display = 'none';
-                                downloadLink.style.display = 'none';
-                            }
-                        }
-                    </script>
                 </fieldset>
 
                 <br />
                 <div class="container-lg">
                     <div class="text-center">
 
-                        <button type="button" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
-
+                        <button type="button" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Update</button>
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">
                             <i class="fas fa-print"></i> Print
-                        </a>  <button type="reset" class="btn btn-warning"><i class="fas fa-undo"></i> CIT</button>
-                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        </a>  
+                        <a href="@Url.Action("DeleteReceiveID", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Discard ReceiveID
+                        </a>
+
                         <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </div>
@@ -2815,5 +2749,4 @@
     </div>
 </body>
 </html>
-
 
