@@ -90,7 +90,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             var updateParams = new DynamicParameters();
                             updateParams.Add("@ReceiveID", model.ReceiveID);
                             updateParams.Add("@Status", "Addresing");
-                            updateParams.Add("@DocProvisonal", model.Doc1);                           
+                            updateParams.Add("@DocPayInSlip", model.Doc3);                           
                             updateParams.Add("@ModifiedBy", model.UserName);
                             connection.Execute("UpdateDonationReceiveMasterAtBORT", updateParams, transaction, commandType: CommandType.StoredProcedure);
 

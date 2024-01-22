@@ -3,10 +3,13 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using System.IO;
+
 @model NSSERP.Areas.NationalGangotri.Models.DonationReceiveMaster;
 @{
     ViewData["Title"] = "DonationReceiveMaster";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var temporaryFolder = Href("/TempDocDonationReceive");
+    var rootUrl = Url.Content("~");
 }
 <!DOCTYPE html>
 <html>
@@ -95,7 +98,6 @@
                         </label>
                     </div>
 
-
                     <script>
                         // Using jQuery for simplicity, ensure you include jQuery in your project
                         $(document).ready(function () {
@@ -176,7 +178,6 @@
                                     $('#headInput').select2();
                                     $('#Instruction').select2();
                                 });
-
                             </script>
                             <div class="form-group col-lg-3">
                                 <label for="ID">Receive in Event:</label>
@@ -406,8 +407,6 @@
 
                                 });
                             </script>
-
-
 
                             <div class="form-group col-lg-6">
                                 <label for="responsefrom">Enter Search Data</label>
@@ -1602,6 +1601,9 @@
                                     var amountInput = document.getElementById('Amount');
                                     var divbankdetails = document.getElementById('divbankdetails');
                                     var TotalAmount = document.getElementById('DivTotalAmount');
+                                    var divMultiCheque = document.getElementById('divMultiCheque');
+                                    var lbl_multiDoc = document.getElementById('lbl_doc_multi');
+
                                     // Get the selected text instead of the value
                                     var selectedText = paymentModeDropdown.options[paymentModeDropdown.selectedIndex].text;
 
@@ -1631,54 +1633,32 @@
 
                                     }
                                     if (selectedText === 'MATERIAL' || selectedText === 'CASH') {
-
                                         divbankdetails.style.display = 'none';
-                                    }
-                                    else {
+                                    } else {
                                         divbankdetails.style.display = 'block';
                                     }
+
+                                    if (selectedText === 'CHEQUE') {
+                                        divMultiCheque.style.display = 'block';
+                                        lbl_multiDoc.innerText = 'Attach Cheque Doc';
+                                    } else if (selectedText === 'PAY-IN-SLIP') {
+                                        divMultiCheque.style.display = 'block';
+                                        lbl_multiDoc.innerText = 'Attach Pay-In-Slip Doc';
+                                    } else {
+                                        divMultiCheque.style.display = 'none';
+                                    }
+                                  
                                 }
 
                                 // Call the function initially to set the initial state
                                 toggleMaterialFields();
                             </script>
-                            <script>
-                                $(document).ready(function () {
-                                    // ... Your existing code ...
 
-                                    $("#submitButton").click(function (event) {
-                                        event.preventDefault();
-
-                                        var tableData = [];
-                                        $("#bankDetailsTable tbody tr").each(function () {
-                                            var rowData = {
-                                                DonationMode: $(this).find("td:eq(0)").text(),
-                                                BankName: $(this).find("td:eq(1)").text(),
-                                                ChequeDate: $(this).find("td:eq(2)").text(),
-                                                ChequeNo: $(this).find("td:eq(3)").text(),
-                                                DepositBank: $(this).find("td:eq(4)").text(),
-                                                DepositDate: $(this).find("td:eq(5)").text(),
-                                                Currency: $(this).find("td:eq(6)").text(),
-                                                Amount: $(this).find("td:eq(7)").text(),
-                                                PdcCheque: $(this).find("td:eq(8)").text()
-                                            };
-                                            tableData.push(rowData);
-                                        });
-
-                                        // Store tableData in a hidden field
-                                        $("#hiddenBankDetails").val(JSON.stringify(tableData));
-
-                                        // Submit the form
-                                        $("#yourFormId").submit();
-                                    });
-
-                                    // ... Your existing code ...
-                                });
-                            </script>
+                           
 
                             <div id="divbankdetails" style="display:none;">
                                 <div class="row">
-                                    <div class="form-group col-lg-3">
+                                    <div class="form-group col-lg-2">
                                         <label for="bankName">Bank Name</label>
                                         <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
                                             <option value="" selected disabled>Select Bank</option>
@@ -1722,6 +1702,13 @@
                                         <label for="depositDate">Deposit Date</label>
                                         <input class="form-control" id="depositDate" type="date" name="depositDate" />
                                     </div>
+
+                                    <div class="form-group col-lg-1" id="divMultiCheque" style="display:none;">
+                                        <label for="lbl_doc_multi" id="lbl_doc_multi"></label>
+                                        <input type="file" asp-for="DocCheque" name="DocCheque" id="filemultiCheque" accept="image/*,application/pdf" />
+                                    </div>                                
+
+
                                     <div class="form-group col-lg-1">
                                         <br />
                                         <button class="btn btn-primary" id="BtnAddBankDetails"><i class="fa fa-plus"></i>Add</button>
@@ -1729,7 +1716,75 @@
                                     <input type="hidden" asp-for="BankDetailsList" name="BankDetailsList" id="hiddenBankDetails" />
                                 </div>
                             </div>
+                            <input type="hidden" id="hiddenTempFilename" />
+                            <script>
+                                $(document).ready(function () {
+                                    // ... Your existing code ...
 
+                                    $("#submitButton").click(function (event) {
+                                        event.preventDefault();
+
+                                        var tableData = [];
+                                        $("#bankDetailsTable tbody tr").each(function () {
+                                            var rowData = {
+                                                DonationMode: $(this).find("td:eq(0)").text(),
+                                                BankName: $(this).find("td:eq(1)").text(),
+                                                ChequeDate: $(this).find("td:eq(2)").text(),
+                                                ChequeNo: $(this).find("td:eq(3)").text(),
+                                                DepositBank: $(this).find("td:eq(4)").text(),
+                                                DepositDate: $(this).find("td:eq(5)").text(),
+                                                Currency: $(this).find("td:eq(6)").text(),
+                                                Amount: $(this).find("td:eq(7)").text(),
+                                                PdcCheque: $(this).find("td:eq(8)").text(),
+                                                TempDoc: $(this).find("td:eq(10)").text()
+                                            };
+                                            tableData.push(rowData);
+                                        });
+
+                                        // Store tableData in a hidden field
+                                        $("#hiddenBankDetails").val(JSON.stringify(tableData));
+
+                                        // Submit the form
+                                        $("#yourFormId").submit();
+                                    });
+
+                                    // ... Your existing code ...
+                                });
+                            </script>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#filemultiCheque').change(function () {
+                                        var fileInput = this;
+                                        var file = fileInput.files[0];
+
+                                        if (file) {
+                                            // Create FormData object and append the file to it
+                                            var formData = new FormData();
+                                            formData.append('DocCheque', file);
+
+                                            // Perform AJAX request
+                                            $.ajax({
+                                                url: '/NationalGangotri/DonationReceiveMaster/TemporaryUploadFile',
+                                                type: 'POST',
+                                                data: formData,
+                                                processData: false,
+                                                contentType: false,
+                                                success: function (response) {
+                                                 
+                                                    $('#hiddenTempFilename').val(response.uniqueFileName);
+
+                                                    // Handle success, if needed
+                                                    console.log('File uploaded successfully:', response);
+                                                },
+                                                error: function (error) {
+                                                    // Handle error
+                                                    console.log('Error uploading file:', error);
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            </script>
                             <script>
                                 $(document).ready(function () {
                                     $('#depositDate').on('blur', function () {
@@ -1768,6 +1823,8 @@
                                                 <th>Currency</th>
                                                 <th>Amount</th>
                                                 <th>PDC Cheque</th>
+                                                <th>Document</th>
+                                                <th style="display:none"></th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -1777,6 +1834,7 @@
                                     </table>
                                 </div>
                             </div>
+
                             <style>
                                 #bankDetailsTable {
                                     display: none;
@@ -1787,7 +1845,7 @@
 
                                     // Parse the JSON data from the model for bank details
                                     var bankDetailsListJson = @Html.Raw(Model.BankDetailsListJson);
-
+                                   
                                     // If BankDetailsListJson is null, use data from the model directly
                                     if (!bankDetailsListJson) {
                                         // Use data from the model
@@ -1807,12 +1865,13 @@
                                                 DepositeDate: bankDetails.DepositeDate,
                                                 CurrencyCode: bankDetails.CurrencyCode,
                                                 Amount: bankDetails.Amount,
-                                                IsPdcCheque1: bankDetails.IsPdcCheque1
+                                                IsPdcCheque1: bankDetails.IsPdcCheque1,
+                                                Doc: bankDetails.FileName
                                                 // Add more mappings as needed
                                             };
 
                                             // Add a new row to the table
-                                            addBankDetailsRow(mappedBankDetails);
+                                            OnModeladdBankDetailsRow(mappedBankDetails);
                                         });
 
                                         // Show the table after adding data
@@ -1856,8 +1915,7 @@
                                         var depositBank = $("#BankID2 option:selected").text();
                                         var depositDate = $("#depositDate").val();
                                         var Currency = $("#CurrencyID option:selected").text();
-                                        var amount = $("#Amount").val();
-
+                                        var amount = $("#Amount").val();                                        
                                         // Convert Cheuquedate to a Date object
                                         var chequeDateObj = new Date(Cheuquedate);
                                         var today = new Date();
@@ -1905,7 +1963,8 @@
                                             DepositeDate: depositDate,
                                             CurrencyCode: Currency,
                                             Amount: amount,
-                                            IsPdcCheque1: pdcCheque1
+                                            IsPdcCheque1: pdcCheque1,
+                                            Doc: $("#hiddenTempFilename").val()
                                         };
 
                                         // Map property names if needed
@@ -1918,7 +1977,8 @@
                                             DepositeDate: bankDetails.DepositeDate,
                                             CurrencyCode: bankDetails.CurrencyCode,
                                             Amount: bankDetails.Amount,
-                                            IsPdcCheque1: bankDetails.IsPdcCheque1
+                                            IsPdcCheque1: bankDetails.IsPdcCheque1,
+                                            Doc: $("#hiddenTempFilename").val()
                                             // Add more mappings as needed
                                         };
 
@@ -1934,7 +1994,8 @@
                                     });
 
                                     // Your existing code for handling row deletion and showing/hiding the table
-
+                                      var temporaryFolder = '@temporaryFolder';
+                                    
                                     // Function to add a new row to the bank details table
                                     function addBankDetailsRow(bankDetails) {
                                         var newRow = "<tr>" +
@@ -1947,6 +2008,28 @@
                                             "<td>" + bankDetails.CurrencyCode + "</td>" +
                                             "<td>" + bankDetails.Amount + "</td>" +
                                             "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                            "<td><a href='" + temporaryFolder + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
+                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                            "</tr>";
+
+                                        $("#bankDetailsTable tbody").append(newRow);
+                                    }
+
+                                    function OnModeladdBankDetailsRow(bankDetails) {
+                                        var temporaryFolder1 = '@rootUrl/TempDocDonationReceive';
+                                        var newRow = "<tr>" +
+                                            "<td>" + bankDetails.DonationMode + "</td>" +
+                                            "<td>" + bankDetails.BankName + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                            "<td>" + bankDetails.DepositeBankName + "</td>" +
+                                            "<td>" + bankDetails.DepositeDate + "</td>" +
+                                            "<td>" + bankDetails.CurrencyCode + "</td>" +
+                                            "<td>" + bankDetails.Amount + "</td>" +
+                                            "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                            "<td><a href='" + temporaryFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
                                             "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                             "</tr>";
 
@@ -2034,11 +2117,15 @@
                                 $(document).ready(function () {
                                     $('#headInput').change(function () {
                                         var selectedHead = $(this).val();
-
+                                        var curid = $('#CurrencyID').val();
+                                        if (curid === null || curid === undefined || curid.trim() === "") {
+                                            alert('Please select Currency first.');
+                                            return; 
+                                        }
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetSubHeadByHead',
                                             type: 'GET',
-                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI" },
+                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI", CurrencyID:curid },
                                             success: function (response) {
                                                 var data = response.data; // Extract the 'data' array from the response
 
@@ -2097,30 +2184,48 @@
                                 </div>
                                 <script>
                                     $(document).ready(function () {
+                                        var initialAmount = 0; // Variable to store the initial amount
+
                                         $('#subHeadInput').change(function () {
                                             var yojnaid = $(this).val();
+                                            var curid = $('#CurrencyID').val();
+
+                                            if (curid === null || curid === undefined || curid.trim() === "") {
+                                                alert('Please select Currency first.');
+                                                return;
+                                            }
 
                                             $.ajax({
                                                 url: '/NationalGangotri/DonationReceiveMaster/GetQtyAmtBySubHead',
                                                 type: 'GET',
-                                                data: { YojnaID: yojnaid, DataFlag: "GANGOTRI" },
+                                                data: { YojnaID: yojnaid, DataFlag: "GANGOTRI", CurrencyID: curid },
                                                 success: function (response) {
-                                                    // Parse the JSON string in response.data
                                                     var data = JSON.parse(response.data);
 
-                                                    // Process the parsed data
-                                                    $('#autoQuantityInput').empty(); // Clear existing options
-                                                    $.each(data, function (index, head) {
-                                                        $('#autoQuantityInput').append('<option value="' + head.Yojna_id + '">' + head.Amt + '</option>');
-                                                    });
+                                                    // Clear existing options
+                                                    $('#autoQuantityInput').empty();
 
-                                                    // You might need to select a default option or handle selection logic here
-
-                                                    // You can set ReceiptAmount to the first value's Amt
                                                     if (data.length > 0) {
-                                                        $('#ReceiptAmount').val(data[0].Amt);
+                                                        // Store the initial amount for later use
+                                                        initialAmount = parseFloat(data[0].Amt);
+
+                                                        if (data[0].Start === 0) {
+                                                            // Disable quantity input if data.start is 0
+                                                            $('#autoQuantityInput').prop('disabled', true);
+                                                        } else {
+                                                            // Enable quantity input if data.start is not 0
+                                                            $('#autoQuantityInput').prop('disabled', false);
+
+                                                            // Generate options in multiples of data.start
+                                                            for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
+                                                                $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
+                                                            }
+                                                        }
+
+                                                        // Set the initial amount in the ReceiptAmount input field
+                                                        $('#ReceiptAmount').val(initialAmount.toFixed(2));
                                                     } else {
-                                                        $('#ReceiptAmount').val(''); // Clear the value if data is not available
+                                                        $('#ReceiptAmount').val('');
                                                     }
                                                 },
                                                 error: function (xhr, status, error) {
@@ -2128,8 +2233,19 @@
                                                 }
                                             });
                                         });
-                                    });
 
+                                        // Add event listener for the autoQuantityInput change event
+                                        $('#autoQuantityInput').change(function () {
+                                            // Get the selected quantity
+                                            var selectedQuantity = parseInt($(this).val());
+
+                                            // Calculate the total amount by multiplying quantity with the initial amount
+                                            var totalAmount = selectedQuantity * initialAmount;
+
+                                            // Set the total amount in the ReceiptAmount input field
+                                            $('#ReceiptAmount').val(totalAmount.toFixed(2));
+                                        });
+                                    });
 
                                 </script>
 
@@ -2207,7 +2323,7 @@
                                         var materialDepositId = $("#MaterialDepositID").val();
 
                                         if (materialDepositId) {
-                                            if (isValidInputs(purpose, quantity, amount)) {
+                                            if (isValidInputs(purpose, amount)) {
                                                 addTableRow(head, purpose, quantity, amount);
                                                 clearInputFields();
                                                 updateHiddenField();
@@ -2729,7 +2845,7 @@
                             </div>
 
 
-                            <div class="form-group col-lg-4" data-input-id="file2">
+                            <div class="form-group col-lg-4" style="display:none;" data-input-id="file2">
                                 <label for="file2">Attach Cheque</label>
 
                                 @if (!string.IsNullOrEmpty(Model.Doc2))
@@ -2742,7 +2858,7 @@
                                 }
                             </div>
 
-                            <div class="form-group col-lg-4" data-input-id="file3">
+                            <div class="form-group col-lg-4" style="display:none;" data-input-id="file3">
                                 <label for="file3">Attach Pay-In-Slip</label>
 
                                 @if (!string.IsNullOrEmpty(Model.Doc3))

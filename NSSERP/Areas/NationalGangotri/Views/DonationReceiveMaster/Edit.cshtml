@@ -2705,7 +2705,7 @@
                                 }
                             </div>
 
-                            <div class="form-group col-lg-4" data-input-id="file2">
+                            <div class="form-group col-lg-4" style="display:none;" data-input-id="file2">
                                 <label for="file2">Attach Cheque</label>
                                 <input type="file" name="DocCheque" asp-for="DocCheque" id="file2" accept="image/*,application/pdf" />
                                 @if (Model.Doc2 != null)
@@ -2715,12 +2715,12 @@
                                 }
                             </div>
 
-                            <div class="form-group col-lg-4" data-input-id="file3">
+                            <div class="form-group col-lg-4" style="display:none;" data-input-id="file3">
                                 <label for="file3">Attach Pay-In-Slip</label>
                                 <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file3" accept="image/*,application/pdf" />
                                 @if (Model.Doc3 != null)
                                 {
-                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc2"><i class="fa fa-eye"></i>View</a></div>
+                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc3"><i class="fa fa-eye"></i>View</a></div>
 
                                 }
                             </div>

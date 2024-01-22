@@ -46,9 +46,8 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
-            
-            var response = await _apiClient.GetAsync($"api/BackOfficeWork/ViewDetails?id={id}");
 
+            var response = await _apiClient.GetAsync($"api/BackOfficeWork/ViewDetails?id={id}");
             if (!response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
@@ -77,41 +76,40 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         public async Task<IActionResult> Index(BackOfficeModel model)
         {
 
-            string Doc1 = string.Empty;
+            string Doc3 = string.Empty;
 
-            if (model.DocProvisonal != null)
+            if (model.DocPayInSlip != null)
             {
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(model.DocProvisonal.FileName)}";
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocPayInSlip.FileName);
                 var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
 
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
                 }
-
                 var filePath = Path.Combine(folderPath, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    Doc1 = fileName;
-                    await model.DocProvisonal.CopyToAsync(stream);
+                    Doc3 = fileName;
+                    model.DocPayInSlip.CopyTo(stream);
                 }
             }
             string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
 
             var requestData = new
             {
-                ReceiveID=model.ReceiveID,
-                UserID = UserID,                
+                ReceiveID = model.ReceiveID,
+                UserID = UserID,
                 UserName = User.FindFirst(ClaimTypes.Name)?.Value,
-                Doc1 = Doc1               
+                Doc3 = Doc3
 
             };
             string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
             string apiUrl = "api/BackOfficeWork/InsertData";
             var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
-            requestContent.Headers.Add("DepositeList", model.DonationDetails);           
+            requestContent.Headers.Add("DepositeList", model.DonationDetails);
             requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
             var response = await _apiClient.PostAsync(apiUrl, requestContent);
 
@@ -131,7 +129,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             else
             {
                 return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
-            }           
+            }
         }
     }
 }

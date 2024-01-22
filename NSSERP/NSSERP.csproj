@@ -71,6 +71,25 @@
     <Folder Include="Areas\PostReceive\Models\" />
     <Folder Include="Areas\Searching\Models\" />
     <Folder Include="Theme\" />
+    <Folder Include="wwwroot\TempDocDonationReceive\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\TempDocDonationReceive\0704e0c3-65e6-4e1f-84eb-3af9cef0b45a" />
+    <None Include="wwwroot\TempDocDonationReceive\19572909-b586-42b7-bc13-77620fcfa48f_CrystalReportViewer1 %281%29_page-0001.jpg" />
+    <None Include="wwwroot\TempDocDonationReceive\275c7e41-235b-465f-8896-f37c7a57b74c_ProvisionalReceipt40.pdf" />
+    <None Include="wwwroot\TempDocDonationReceive\2b2d798d-7449-44be-b999-9580cc0d52dd" />
+    <None Include="wwwroot\TempDocDonationReceive\47b5b5eb-0e70-491e-aabf-22457aeda9cf" />
+    <None Include="wwwroot\TempDocDonationReceive\5888231f-cdc3-41c2-908c-94b48cccb8ef" />
+    <None Include="wwwroot\TempDocDonationReceive\5aea3c04-b9fc-4cb4-894f-bd04e2a65565_Index   NSSERP.pdf" />
+    <None Include="wwwroot\TempDocDonationReceive\5aecf112-6671-423c-8697-fe1e2e858c6d" />
+    <None Include="wwwroot\TempDocDonationReceive\6564e4cb-56f5-411a-9514-a637a70f94de" />
+    <None Include="wwwroot\TempDocDonationReceive\7598cbeb-eff0-464e-8b73-b82d6d498005_Index   NSSERP.pdf" />
+    <None Include="wwwroot\TempDocDonationReceive\92a69967-22db-4f96-8bfd-a22b84db0b66_ProvisionalReceipt0.pdf" />
+    <None Include="wwwroot\TempDocDonationReceive\ce413bb1-5dd7-429a-8a34-e8e4e0e6b13a" />
+    <None Include="wwwroot\TempDocDonationReceive\d9f194ea-e7ca-4bf1-8ddd-47ce72c3986a_ProvisionalReceipt40.pdf" />
+    <None Include="wwwroot\TempDocDonationReceive\e8aa0c8d-cb5b-4fa7-b349-058674af1598_ProvisionalReceipt0.pdf" />
+    <None Include="wwwroot\TempDocDonationReceive\fdd02f46-4070-4721-b2b5-4038187f7e3a" />
   </ItemGroup>
 
 </Project>

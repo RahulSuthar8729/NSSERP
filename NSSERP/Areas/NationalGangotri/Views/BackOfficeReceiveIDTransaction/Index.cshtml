@@ -375,8 +375,13 @@
                     <div class="nested-form-container">
                         <div class="row">
                             <div class="form-group col-lg-4" data-input-id="file1">
-                                <label for="file1">Attach Document 1</label>
-                                <input type="file" name="Doc1" asp-for="Doc1" id="file1" accept="image/*,application/pdf" onchange="previewFile(this)" />
+                                <label for="file1">Attach Pay-In-Slip/Nss Receipt</label>
+                                <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file1" accept="image/*,application/pdf" onchange="previewFile(this)" />
+                                @if (Model.Doc3 != null)
+                                {
+                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc3"><i class="fa fa-eye"></i>View</a></div>
+
+                                }
                                 <div class="file-preview">
                                     <img class="img-preview" src="~/DocDonationReceive/placeholder-image.jpg" alt="Uploaded Image" />
                                     <object class="pdf-view" data="@Url.Content("~/DocDonationReceive/")" type="application/pdf"></object>

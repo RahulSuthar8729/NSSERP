@@ -26,6 +26,7 @@ using System.Text;
 using Azure.Core;
 using System.Text.Json;
 using Rotativa.AspNetCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace NSSERP.Areas.NationalGangotri.Controllers
 {
     [Authorize]
@@ -225,12 +226,12 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSubHeadByHead(string HeadID, string DataFlag)
+        public async Task<IActionResult> GetSubHeadByHead(string HeadID, string DataFlag,string CurrencyID)
         {
             try
             {
                 // Construct the API endpoint URL with the pincode parameter
-                string apiUrl = $"api/DonationReceiveMaster/GetSubHeadByHead?HeadID={HeadID}&DataFlag={DataFlag}";
+                string apiUrl = $"api/DonationReceiveMaster/GetSubHeadByHead?HeadID={HeadID}&DataFlag={DataFlag}&CurrencyId={CurrencyID}";
 
                 // Make a GET request to the API endpoint
                 var response = await _apiClient.GetAsync(apiUrl);
@@ -265,12 +266,12 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID, string DataFlag)
+        public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID, string DataFlag, string CurrencyID)
         {
             try
             {
                 // Construct the API endpoint URL with the pincode parameter
-                string apiUrl = $"api/DonationReceiveMaster/GetQtyAmtBySubHead?YojnaID={Convert.ToInt32(YojnaID)}&DataFlag={DataFlag}";
+                string apiUrl = $"api/DonationReceiveMaster/GetQtyAmtBySubHead?YojnaID={Convert.ToInt32(YojnaID)}&DataFlag={DataFlag}&CurrencyId={CurrencyID}";
 
                 // Make a GET request to the API endpoint
                 var response = await _apiClient.GetAsync(apiUrl);
@@ -524,7 +525,8 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 {
                     var modelget = await response.Content.ReadAsStringAsync();
                     var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonationReceiveMaster>(modelget) : null;
-                    return View(modeldata);
+                    TempData["msg"] = modeldata.msg;
+                    return RedirectToAction("Index", "DonationReceiveMaterDetails", new { model = modeldata });
                 }
 
                 else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -781,6 +783,43 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
 
         }
+
+        [HttpPost]
+        public JsonResult TemporaryUploadFile(DonationReceiveMaster model)
+        {
+            try
+            {
+                if (model.DocCheque != null && model.DocCheque.Length > 0)
+                {
+                    var temporaryFolder = Path.Combine(_webHostEnvironment.WebRootPath, "TempDocDonationReceive");
+
+                    if (!Directory.Exists(temporaryFolder))
+                    {
+                        Directory.CreateDirectory(temporaryFolder);
+                    }
+
+                    // Generate a unique temporary path with file extension
+                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocCheque.FileName);
+                    var temporaryPath = Path.Combine(temporaryFolder, uniqueFileName);
+
+                    // Save the file to the temporary location
+                    using (var stream = new FileStream(temporaryPath, FileMode.Create))
+                    {
+                        model.DocCheque.CopyTo(stream);
+                    }
+
+                    // Return the temporary path
+                    return Json(new { uniqueFileName });
+                }
+
+                return Json(new { error = "No file received." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
 
     }
 }

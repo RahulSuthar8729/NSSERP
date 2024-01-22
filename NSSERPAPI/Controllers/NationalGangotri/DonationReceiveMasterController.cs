@@ -114,11 +114,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetSubHeadByHead(string HeadID, string DataFlag)
+        public IActionResult GetSubHeadByHead(string HeadID, string DataFlag,string CurrencyId)
         {
             try
             {
-                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID), DataFlag);
+                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID), DataFlag,Convert.ToInt32(CurrencyId));
                 return Ok(subheads);
             }
             catch (Exception ex)
@@ -129,11 +129,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetQtyAmtBySubHead(int YojnaID, string DataFlag)
+        public IActionResult GetQtyAmtBySubHead(int YojnaID, string DataFlag,string CurrencyId)
         {
             try
             {
-                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID, DataFlag);
+                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID, DataFlag,Convert.ToInt32(CurrencyId));
 
                 return Ok(data);
             }
@@ -234,7 +234,6 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
         }
 
-
         [HttpGet]
         public IActionResult GetLocationDetailsByPinCode(string pincode)
         {
@@ -250,7 +249,6 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
         }
 
-
         [HttpGet]
         public IActionResult GetProvisionalReceipt(string refid)
         {
@@ -265,7 +263,6 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 return BadRequest("An error occurred while retrieving cities.");
             }
         }
-
 
         [HttpPost]
         public IActionResult InsertData([FromBody] DonationReceiveMaster model)
@@ -433,6 +430,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     bankParams.Add("@DonationMode", bankDetail.DonationMode);
                                     bankParams.Add("@CurrencyCode", bankDetail.Currency);
                                     bankParams.Add("@Amount", bankDetail.Amount);
+                                    bankParams.Add("@FileName", bankDetail.TempDoc);
 
                                     connection.Execute("InsertBankDetailsInDonationReceiveMultiBank", bankParams, transaction, commandType: CommandType.StoredProcedure);
                                 }

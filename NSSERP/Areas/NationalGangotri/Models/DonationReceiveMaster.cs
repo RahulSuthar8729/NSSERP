@@ -6,6 +6,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
 {
     public class DonationReceiveMaster
     {
+        public string TempFilename { get; set; }
         public string msg { get; set; }
         public bool ischekecked { get; set; }
         public int? PaymentModeID { get; set; }

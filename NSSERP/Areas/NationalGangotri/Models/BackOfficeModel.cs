@@ -20,10 +20,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? PaymentModeName { get; set; } = "";
         public int? CurrencyID { get; set; }
         public string? CurrencyCode { get; set; } = "";
-        public decimal? TotalAmount { get; set; }       
-
-        public IFormFile? DocProvisonal {  get; set; } 
-        public string? Doc1 { get; set; }
+        public decimal? TotalAmount { get; set; }
+        public IFormFile DocPayInSlip { get; set; }
+        public string Doc3 { get; set; }
         public string? TotalAmountInWords { get; set; }
         public List<PaymentModeMaster> paymentModeList { get; set; }
         public IEnumerable<CurrencyMaster> currenciesList { get; set; }
@@ -37,7 +36,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
             public string UserName { get; set; }
             public string Date {  get; set; }
         }
-        
+      
        public string DonationDetails { get; set; }
 
     }

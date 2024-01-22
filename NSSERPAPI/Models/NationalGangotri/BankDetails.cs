@@ -18,6 +18,7 @@ namespace NSSERPAPI.Models.NationalGangotri
         public string Currency { get; set; }
         public decimal Amount { get; set; }
         public string PdcCheque { get; set; }
+        public string TempDoc { get;set;}
 
     }
 }
