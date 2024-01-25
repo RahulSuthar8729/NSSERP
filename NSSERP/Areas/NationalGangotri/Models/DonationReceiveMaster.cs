@@ -141,5 +141,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string AnnounceDetailsListJson { get; set; } = "";
 
         public string DepositeDetailsListJson { get; set; }
+
+        public string MovementMasterListJson { get; set; }
     }
 }

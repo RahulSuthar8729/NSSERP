@@ -41,10 +41,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 firstDetail = new ExpandoObject();
             }
 
-
+            firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
+            firstDetail.BankDetailsListJson = _dbFunctions.GetBankDetailsListJsonById(id);
             if (details == null)
             {
                 return NotFound();
@@ -69,23 +70,27 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                     using (SqlTransaction transaction = connection.BeginTransaction())
                     {
                         try
-                        {                            
+                        {
                             if (DepostiteDetailsList != null)
                             {
                                 foreach (var depositedetils in DepostiteDetailsList)
                                 {
                                     var DepositesParams = new DynamicParameters();
                                     DepositesParams.Add("@REF_NO", model.ReceiveID);
+                                    DepositesParams.Add("@REF_NO_BANK", depositedetils.refNo); 
                                     DepositesParams.Add("@DepositeMode", depositedetils.mode);
+                                    DepositesParams.Add("@DepositBank", depositedetils.DepositeBank); 
                                     DepositesParams.Add("@DepositeDate", depositedetils.date);
                                     DepositesParams.Add("@CurrencyCode", depositedetils.currencyCode);
                                     DepositesParams.Add("@DepositeAmount", depositedetils.amount);
                                     DepositesParams.Add("@TransactionID", depositedetils.bankID);
-                                    DepositesParams.Add("@CreatedBy", model.UserID);
+                                    DepositesParams.Add("@DocPayInSlip", depositedetils.TempDoc); 
+                                    DepositesParams.Add("@CreatedBy", model.UserName);
 
                                     connection.Execute("InsertDonationReceiveBORTMultiDeposite", DepositesParams, transaction, commandType: CommandType.StoredProcedure);
                                 }
                             }
+
 
                             var updateParams = new DynamicParameters();
                             updateParams.Add("@ReceiveID", model.ReceiveID);

@@ -7,7 +7,7 @@
 @model NSSERP.Areas.NationalGangotri.Models.DonationReceiveMaster;
 @{
     ViewData["Title"] = "DonationReceiveMaster";
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var temporaryFolder = Href("/TempDocDonationReceive");
     var rootUrl = Url.Content("~");
 }
@@ -1019,42 +1019,45 @@
 
                     <div class="nested-form-container">
                         <div class="row">
-                            <div class="form-group col-lg-3">
-                                <label for="mobileNumber" class="mr-2">Mobile/WhatsApp No.<span style="color: red;">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
-                                            <option value="" selected disabled>Select</option>
-                                            @if (Model != null)
-                                            {
-
-                                                @foreach (var countrycode in Model.CountryList)
+                            @if (Model.ReceiveID == null)
+                            {
+                                <div class="form-group col-lg-3">
+                                    <label for="mobileNumber" class="mr-2">Mobile/WhatsApp No.<span style="color: red;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
+                                                <option value="" selected disabled>Select</option>
+                                                @if (Model != null)
                                                 {
-                                                    <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
+
+                                                    @foreach (var countrycode in Model.CountryList)
+                                                    {
+                                                        <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
+                                                    }
+
                                                 }
+                                            </select>
 
-                                            }
-                                        </select>
+                                        </div>
+                                        <script>
+                                            $(document).ready(function () {
+                                                // Attach change event to the Country dropdown
+                                                $("#CountryID").change(function () {
+                                                    // Get the selected Country ID
+                                                    var selectedCountryId = $(this).val();
 
-                                    </div>
-                                    <script>
-                                        $(document).ready(function () {
-                                            // Attach change event to the Country dropdown
-                                            $("#CountryID").change(function () {
-                                                // Get the selected Country ID
-                                                var selectedCountryId = $(this).val();
-
-                                                // Set the corresponding Country Code in the second dropdown
-                                                $("#countryCode").val(selectedCountryId);
+                                                    // Set the corresponding Country Code in the second dropdown
+                                                    $("#countryCode").val(selectedCountryId);
+                                                });
                                             });
-                                        });
-                                    </script>
-                                    <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" placeholder="Enter your number">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button" id="addNumber"><i class="fas fa-plus"></i>Add</button>
+                                        </script>
+                                        <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" placeholder="Enter your number">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" id="addNumber"><i class="fas fa-plus"></i>Add</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                             <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="mobileNumbersTable">
                                 <thead>
                                     <tr>
@@ -1202,69 +1205,71 @@
                 <fieldset>
                     <legend style="font-weight:bold;" class="card">Identity Details</legend>
                     <div class="nested-form-container">
-                        <div class="row">
-                            <div class="form-group col-lg-3">
-                                <label for="IdentityType">Identity Type</label>
-                                <select class="form-control" id="identityType">
-                                    <option value="0">Select</option>
-                                    <option value="Aadhar">Aadhar</option>
-                                    <option value="PAN">PAN</option>
-                                    <option value="Passport">Passport</option>
-                                    <option value="DrivingLicence">Driving Licence</option>
-                                    <option value="RationCard">Ration Card</option>
-                                    <option value="VoterID">Voter ID</option>
-                                    <option value="TaxID">Tax Identification</option>
-                                    <!-- Add more identity types as needed -->
-                                </select>
-                            </div>
+                        @if (Model.ReceiveID == null)
+                        {
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label for="IdentityType">Identity Type</label>
+                                    <select class="form-control" id="identityType">
+                                        <option value="0">Select</option>
+                                        <option value="Aadhar">Aadhar</option>
+                                        <option value="PAN">PAN</option>
+                                        <option value="Passport">Passport</option>
+                                        <option value="DrivingLicence">Driving Licence</option>
+                                        <option value="RationCard">Ration Card</option>
+                                        <option value="VoterID">Voter ID</option>
+                                        <option value="TaxID">Tax Identification</option>
+                                        <!-- Add more identity types as needed -->
+                                    </select>
+                                </div>
 
-                            <div class="form-group col-lg-3">
-                                <label for="IdentityNumber">Identity Number</label>
-                                <input class="form-control" id="identityNumber" type="text" name="" />
-                            </div>
-                            <script>
-                                $(document).ready(function () {
-                                    // Add an event listener for identity type change
-                                    $('#identityType').change(function () {
-                                        // Get the selected identity type
-                                        var selectedIdentityType = $(this).val();
+                                <div class="form-group col-lg-3">
+                                    <label for="IdentityNumber">Identity Number</label>
+                                    <input class="form-control" id="identityNumber" type="text" name="" />
+                                </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        // Add an event listener for identity type change
+                                        $('#identityType').change(function () {
+                                            // Get the selected identity type
+                                            var selectedIdentityType = $(this).val();
 
-                                        // Set the watermark text based on the selected identity type
-                                        var watermarkText = getWatermarkText(selectedIdentityType);
+                                            // Set the watermark text based on the selected identity type
+                                            var watermarkText = getWatermarkText(selectedIdentityType);
 
-                                        // Apply the watermark to the identity number input
-                                        $('#identityNumber').attr('placeholder', watermarkText);
-                                    });
+                                            // Apply the watermark to the identity number input
+                                            $('#identityNumber').attr('placeholder', watermarkText);
+                                        });
 
-                                    // Function to get watermark text based on identity type
-                                    function getWatermarkText(identityType) {
-                                        switch (identityType) {
-                                            case 'Aadhar':
-                                                return 'Enter Aadhar Number';
-                                            case 'PAN':
-                                                return 'Enter PAN Number';
-                                            case 'Passport':
-                                                return 'Enter Passport Number';
-                                            case 'DrivingLicence':
-                                                return 'Enter Driving Licence Number';
-                                            case 'RationCard':
-                                                return 'Enter Ration Card Number';
-                                            case 'VoterID':
-                                                return 'Enter Voter ID Number';
-                                            case 'TaxID':
-                                                return 'Enter Tax Identification Number';
-                                            default:
-                                                return 'Enter Identity Number';
+                                        // Function to get watermark text based on identity type
+                                        function getWatermarkText(identityType) {
+                                            switch (identityType) {
+                                                case 'Aadhar':
+                                                    return 'Enter Aadhar Number';
+                                                case 'PAN':
+                                                    return 'Enter PAN Number';
+                                                case 'Passport':
+                                                    return 'Enter Passport Number';
+                                                case 'DrivingLicence':
+                                                    return 'Enter Driving Licence Number';
+                                                case 'RationCard':
+                                                    return 'Enter Ration Card Number';
+                                                case 'VoterID':
+                                                    return 'Enter Voter ID Number';
+                                                case 'TaxID':
+                                                    return 'Enter Tax Identification Number';
+                                                default:
+                                                    return 'Enter Identity Number';
+                                            }
                                         }
-                                    }
-                                });
-                            </script>
-                            <div class="form-group col-lg-3">
-                                <br />
-                                <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
+                                    });
+                                </script>
+                                <div class="form-group col-lg-3">
+                                    <br />
+                                    <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
+                                </div>
                             </div>
-                        </div>
-
+                        }
                         <div class="row" id="addedIdentities" style="display: none;">
                             <!-- Added identities will be dynamically inserted here -->
                         </div>
@@ -1307,7 +1312,7 @@
                                 var newRow = $("<div class='form-group col-lg-3'>");
                                 newRow.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
                                 newRow.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+                                // newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
                                 // Append the new row to the container
                                 $("#addedIdentities").append(newRow);
@@ -1454,6 +1459,8 @@
 
 
                 </script>
+
+
                 <fieldset>
                     <legend style="font-weight:bold;" class="card">Donation Details</legend>
 
@@ -1647,14 +1654,12 @@
                                     } else {
                                         divMultiCheque.style.display = 'none';
                                     }
-                                  
+
                                 }
 
                                 // Call the function initially to set the initial state
                                 toggleMaterialFields();
                             </script>
-
-                           
 
                             <div id="divbankdetails" style="display:none;">
                                 <div class="row">
@@ -1706,7 +1711,7 @@
                                     <div class="form-group col-lg-1" id="divMultiCheque" style="display:none;">
                                         <label for="lbl_doc_multi" id="lbl_doc_multi"></label>
                                         <input type="file" asp-for="DocCheque" name="DocCheque" id="filemultiCheque" accept="image/*,application/pdf" />
-                                    </div>                                
+                                    </div>
 
 
                                     <div class="form-group col-lg-1">
@@ -1770,7 +1775,7 @@
                                                 processData: false,
                                                 contentType: false,
                                                 success: function (response) {
-                                                 
+
                                                     $('#hiddenTempFilename').val(response.uniqueFileName);
 
                                                     // Handle success, if needed
@@ -1845,7 +1850,7 @@
 
                                     // Parse the JSON data from the model for bank details
                                     var bankDetailsListJson = @Html.Raw(Model.BankDetailsListJson);
-                                   
+
                                     // If BankDetailsListJson is null, use data from the model directly
                                     if (!bankDetailsListJson) {
                                         // Use data from the model
@@ -1915,7 +1920,7 @@
                                         var depositBank = $("#BankID2 option:selected").text();
                                         var depositDate = $("#depositDate").val();
                                         var Currency = $("#CurrencyID option:selected").text();
-                                        var amount = $("#Amount").val();                                        
+                                        var amount = $("#Amount").val();
                                         // Convert Cheuquedate to a Date object
                                         var chequeDateObj = new Date(Cheuquedate);
                                         var today = new Date();
@@ -1994,8 +1999,8 @@
                                     });
 
                                     // Your existing code for handling row deletion and showing/hiding the table
-                                      var temporaryFolder = '@temporaryFolder';
-                                    
+                                    var temporaryFolder = '@temporaryFolder';
+
                                     // Function to add a new row to the bank details table
                                     function addBankDetailsRow(bankDetails) {
                                         var newRow = "<tr>" +
@@ -2017,7 +2022,7 @@
                                     }
 
                                     function OnModeladdBankDetailsRow(bankDetails) {
-                                        var temporaryFolder1 = '@rootUrl/TempDocDonationReceive';
+                                        var MainFolder1 = '@rootUrl/DocDonationReceive';
                                         var newRow = "<tr>" +
                                             "<td>" + bankDetails.DonationMode + "</td>" +
                                             "<td>" + bankDetails.BankName + "</td>" +
@@ -2028,9 +2033,9 @@
                                             "<td>" + bankDetails.CurrencyCode + "</td>" +
                                             "<td>" + bankDetails.Amount + "</td>" +
                                             "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
-                                            "<td><a href='" + temporaryFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
                                             "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
-                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                            // "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                             "</tr>";
 
                                         $("#bankDetailsTable tbody").append(newRow);
@@ -2056,17 +2061,21 @@
                         </div>
                     </div>
                 </fieldset>
+
                 <fieldset id="backOfficeFieldset">
                     <legend style="font-weight: bold;" class="card">Back Office ReceiveID Transaction</legend>
                     <div class="nested-form-container">
                         <table id="depositTable" class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Deposite Mode</th>
-                                    <th>Deposite Date</th>
+
+                                    <th>Deposit Mode</th>
+                                    <th>Deposit Bank</th>
+                                    <th>Deposit Date</th>
                                     <th>Currency Code</th>
-                                    <th>Deposite Amount</th>
+                                    <th>Deposit Amount</th>
                                     <th>BankID/Transaction ID</th>
+                                    <th>Pay-In-Slip</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2082,15 +2091,17 @@
 
                                     // Clear existing rows
                                     tableBody.empty();
-
+                                    var MainFolder1 = '@rootUrl/DocDonationReceive';
                                     // Iterate through JSON data and add rows to the table
                                     jsonData.forEach(function (item) {
                                         var newRow = '<tr>' +
                                             '<td>' + item.DepositeMode + '</td>' +
+                                            '<td>' + item.DepositBank + '</td>' +
                                             '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
                                             '<td>' + item.CurrencyCode + '</td>' +
                                             '<td>' + item.DepositeAmount.toFixed(2) + '</td>' +
                                             '<td>' + item.TransactionID + '</td>' +
+                                            "<td><a href='" + MainFolder1 + "/" + item.DocPayInSlip + "' target='_blank'>View</a></td>" +
                                             '</tr>';
                                         tableBody.append(newRow);
                                     });
@@ -2120,12 +2131,12 @@
                                         var curid = $('#CurrencyID').val();
                                         if (curid === null || curid === undefined || curid.trim() === "") {
                                             alert('Please select Currency first.');
-                                            return; 
+                                            return;
                                         }
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetSubHeadByHead',
                                             type: 'GET',
-                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI", CurrencyID:curid },
+                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI", CurrencyID: curid },
                                             success: function (response) {
                                                 var data = response.data; // Extract the 'data' array from the response
 
@@ -2158,116 +2169,118 @@
                                 });
 
                             </script>
+                            <script>
+                                $(document).ready(function () {
+                                    var initialAmount = 0; // Variable to store the initial amount
 
-                            <div class="row">
-                                <div class="form-group col-lg-3">
-                                    <label for="head">Head</label>
-                                    <select class="form-control" id="headInput" asp-for="Purpose_ID" name="Purpose_ID">
-                                        <option value="0">Select Head</option>
-                                        @if (Model != null)
-                                        {
-                                            @foreach (var heads in Model.HeadList)
-                                            {
-                                                <option value="@heads.Purpose_ID">@heads.Purpose</option>
-                                            }
+                                    $('#subHeadInput').change(function () {
+                                        var yojnaid = $(this).val();
+                                        var curid = $('#CurrencyID').val();
 
+                                        if (curid === null || curid === undefined || curid.trim() === "") {
+                                            alert('Please select Currency first.');
+                                            return;
                                         }
-                                    </select>
 
-                                </div>
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetQtyAmtBySubHead',
+                                            type: 'GET',
+                                            data: { YojnaID: yojnaid, DataFlag: "GANGOTRI", CurrencyID: curid },
+                                            success: function (response) {
+                                                var data = JSON.parse(response.data);
 
-                                <div class="form-group col-lg-3">
-                                    <label for="subHead">Purpose</label>
-                                    <select class="form-control" id="subHeadInput" name="subHead">
-                                        <option value="0">Select Purpose</option>
-                                    </select>
-                                </div>
-                                <script>
-                                    $(document).ready(function () {
-                                        var initialAmount = 0; // Variable to store the initial amount
+                                                // Clear existing options
+                                                $('#autoQuantityInput').empty();
 
-                                        $('#subHeadInput').change(function () {
-                                            var yojnaid = $(this).val();
-                                            var curid = $('#CurrencyID').val();
+                                                if (data.length > 0) {
+                                                    // Store the initial amount for later use
+                                                    initialAmount = parseFloat(data[0].Amt);
 
-                                            if (curid === null || curid === undefined || curid.trim() === "") {
-                                                alert('Please select Currency first.');
-                                                return;
-                                            }
-
-                                            $.ajax({
-                                                url: '/NationalGangotri/DonationReceiveMaster/GetQtyAmtBySubHead',
-                                                type: 'GET',
-                                                data: { YojnaID: yojnaid, DataFlag: "GANGOTRI", CurrencyID: curid },
-                                                success: function (response) {
-                                                    var data = JSON.parse(response.data);
-
-                                                    // Clear existing options
-                                                    $('#autoQuantityInput').empty();
-
-                                                    if (data.length > 0) {
-                                                        // Store the initial amount for later use
-                                                        initialAmount = parseFloat(data[0].Amt);
-
-                                                        if (data[0].Start === 0) {
-                                                            // Disable quantity input if data.start is 0
-                                                            $('#autoQuantityInput').prop('disabled', true);
-                                                        } else {
-                                                            // Enable quantity input if data.start is not 0
-                                                            $('#autoQuantityInput').prop('disabled', false);
-
-                                                            // Generate options in multiples of data.start
-                                                            for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
-                                                                $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
-                                                            }
-                                                        }
-
-                                                        // Set the initial amount in the ReceiptAmount input field
-                                                        $('#ReceiptAmount').val(initialAmount.toFixed(2));
+                                                    if (data[0].Start === 0) {
+                                                        // Disable quantity input if data.start is 0
+                                                        $('#autoQuantityInput').prop('disabled', true);
                                                     } else {
-                                                        $('#ReceiptAmount').val('');
+                                                        // Enable quantity input if data.start is not 0
+                                                        $('#autoQuantityInput').prop('disabled', false);
+
+                                                        // Generate options in multiples of data.start
+                                                        for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
+                                                            $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
+                                                        }
                                                     }
-                                                },
-                                                error: function (xhr, status, error) {
-                                                    console.log("AJAX error: " + error);
+
+                                                    // Set the initial amount in the ReceiptAmount input field
+                                                    $('#ReceiptAmount').val(initialAmount.toFixed(2));
+                                                } else {
+                                                    $('#ReceiptAmount').val('');
                                                 }
-                                            });
-                                        });
-
-                                        // Add event listener for the autoQuantityInput change event
-                                        $('#autoQuantityInput').change(function () {
-                                            // Get the selected quantity
-                                            var selectedQuantity = parseInt($(this).val());
-
-                                            // Calculate the total amount by multiplying quantity with the initial amount
-                                            var totalAmount = selectedQuantity * initialAmount;
-
-                                            // Set the total amount in the ReceiptAmount input field
-                                            $('#ReceiptAmount').val(totalAmount.toFixed(2));
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log("AJAX error: " + error);
+                                            }
                                         });
                                     });
 
-                                </script>
+                                    // Add event listener for the autoQuantityInput change event
+                                    $('#autoQuantityInput').change(function () {
+                                        // Get the selected quantity
+                                        var selectedQuantity = parseInt($(this).val());
+
+                                        // Calculate the total amount by multiplying quantity with the initial amount
+                                        var totalAmount = selectedQuantity * initialAmount;
+
+                                        // Set the total amount in the ReceiptAmount input field
+                                        $('#ReceiptAmount').val(totalAmount.toFixed(2));
+                                    });
+                                });
+
+                            </script>
+
+                            @if (Model.ReceiveID == null)
+                            {
+                                <div class="row">
+                                    <div class="form-group col-lg-3">
+                                        <label for="head">Head</label>
+                                        <select class="form-control" id="headInput" asp-for="Purpose_ID" name="Purpose_ID">
+                                            <option value="0">Select Head</option>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var heads in Model.HeadList)
+                                                {
+                                                    <option value="@heads.Purpose_ID">@heads.Purpose</option>
+                                                }
+
+                                            }
+                                        </select>
+
+                                    </div>
+
+                                    <div class="form-group col-lg-3">
+                                        <label for="subHead">Purpose</label>
+                                        <select class="form-control" id="subHeadInput" name="subHead">
+                                            <option value="0">Select Purpose</option>
+                                        </select>
+                                    </div>
 
 
-                                <div class="form-group col-lg-2">
-                                    <label for="autoQuantity">Quantity</label>
-                                    <select class="form-control" id="autoQuantityInput" name="autoQuantity">
-                                        <option value="0">Select Quantity</option>
-                                    </select>
+                                    <div class="form-group col-lg-2">
+                                        <label for="autoQuantity">Quantity</label>
+                                        <select class="form-control" id="autoQuantityInput" name="autoQuantity">
+                                            <option value="0">Select Quantity</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-2">
+                                        <label for="ReceiptAmount">Amount</label>
+                                        <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
+                                    </div>
+
+                                    <div class="form-group col-lg-1">
+                                        <br>
+                                        <button class="btn btn-primary" id="addBtnReceipt"><i class="fas fa-plus"></i>Add</button>
+                                    </div>
                                 </div>
-
-                                <div class="form-group col-lg-2">
-                                    <label for="ReceiptAmount">Amount</label>
-                                    <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
-                                </div>
-
-                                <div class="form-group col-lg-1">
-                                    <br>
-                                    <button class="btn btn-primary" id="addBtnReceipt"><i class="fas fa-plus"></i>Add</button>
-                                </div>
-                            </div>
-
+                            }
                             <div id="tableContainer" style="display: none;">
                                 <table class="table table-bordered">
                                     <thead>
@@ -2481,30 +2494,35 @@
                                     textbox.style.display = checkbox.checked ? 'block' : 'none';
                                 });
                             </script>
-                            <div class="form-group col-lg-3">
-                                <label for="instruction">Donor Instruction</label>
-                                <select class="form-control" asp-for="Instructions" id="Instruction" name="Instructions">
-                                    <option value="0">Select Donor Instructions</option>
-                                    @if (Model != null)
-                                    {
-                                        @foreach (var mod in Model.donorInstructionList)
+                            @if (Model.ReceiveID == null)
+                            {
+
+                                <div class="form-group col-lg-3">
+                                    <label for="instruction">Donor Instruction</label>
+                                    <select class="form-control" asp-for="Instructions" id="Instruction" name="Instructions">
+                                        <option value="0">Select Donor Instructions</option>
+                                        @if (Model != null)
                                         {
-                                            <option value="@mod.REF_ID">@mod.InstructionName</option>
+                                            @foreach (var mod in Model.donorInstructionList)
+                                            {
+                                                <option value="@mod.REF_ID">@mod.InstructionName</option>
+                                            }
+
                                         }
+                                    </select>
+                                </div>
 
-                                    }
-                                </select>
-                            </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" rows="1" asp-for="ReceiptRemarks" name="ReceiptRemarks" oninput="convertToUpperCase(this)" typeof="text" id="remarks"></textarea>
+                                </div>
+                                <div class="col-lg-2">
+                                    <br />
+                                    <button type="button" id="addRowBtn" class="btn btn-primary"><i class="fas fa-plus"></i>Add</button>
 
-                            <div class="form-group col-lg-3">
-                                <label for="remarks">Remarks</label>
-                                <textarea class="form-control" rows="1" asp-for="ReceiptRemarks" name="ReceiptRemarks" oninput="convertToUpperCase(this)" typeof="text" id="remarks"></textarea>
-                            </div>
-                            <div class="col-lg-2">
-                                <br />
-                                <button type="button" id="addRowBtn" class="btn btn-primary"><i class="fas fa-plus"></i>Add</button>
+                                </div>
 
-                            </div>
+                            }
                             <table class="table table-bordered" id="instructionTable" style="display: none;">
                                 <thead>
                                     <tr>
@@ -2531,7 +2549,7 @@
                                             var newRow = "<tr>" +
                                                 "<td>" + item.InstructionName + "<input type='hidden' name='SelectedInstructions' value='" + item.InstructionId + "' /></td>" +
                                                 "<td>" + item.Remarks + "</td>" +
-                                                "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
+                                                // "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
                                                 "</tr>";
                                             instructionTableBody.append(newRow);
                                         });
@@ -2659,36 +2677,39 @@
                 <fieldset id="announceFieldset" style="display: none;">
                     <legend style="font-weight:bold;" class="card">Announce Due Installment Details</legend>
                     <div class="nested-form-container">
-                        <div class="row">
-                            <div class="form-group col-lg-3">
-                                <label for="totalPurposeAmount">Total Purpose Amount</label>
-                                <input class="form-control" id="totalPurposeAmountAnnounce" />
+                        @if (Model.ReceiveID == null)
+                        {
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label for="totalPurposeAmount">Total Purpose Amount</label>
+                                    <input class="form-control" id="totalPurposeAmountAnnounce" />
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="receiveAmount">Receive Amount</label>
+                                    <input class="form-control" id="receiveAmountAnnounce" />
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="dueAmount">Due Amount</label>
+                                    <input class="form-control" id="dueAmountAnnounce" />
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="announceId">Announce ID</label>
+                                    <input class="form-control" id="announceIdAnnounce" />
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="amount">Amount</label>
+                                    <input class="form-control" id="amountAnnounce" />
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="date1">Date</label>
+                                    <input type="date" class="form-control" id="date1Announce" />
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <br />
+                                    <button class="btn btn-primary" id="btnAddAnnounce">Add</button>
+                                </div>
                             </div>
-                            <div class="form-group col-lg-3">
-                                <label for="receiveAmount">Receive Amount</label>
-                                <input class="form-control" id="receiveAmountAnnounce" />
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="dueAmount">Due Amount</label>
-                                <input class="form-control" id="dueAmountAnnounce" />
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="announceId">Announce ID</label>
-                                <input class="form-control" id="announceIdAnnounce" />
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="amount">Amount</label>
-                                <input class="form-control" id="amountAnnounce" />
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="date1">Date</label>
-                                <input type="date" class="form-control" id="date1Announce" />
-                            </div>
-                            <div class="form-group col-lg-2">
-                                <br />
-                                <button class="btn btn-primary" id="btnAddAnnounce">Add</button>
-                            </div>
-                        </div>
+                        }
                         <div class="row">
                             <table class="table table-bordered" id="announceTable" style="display: none;">
                                 <thead>
@@ -2875,49 +2896,70 @@
 
 
                     </div>
-
-                    <script>
-                        function previewFile(input) {
-                            var formGroup = input.parentElement;
-                            var preview = formGroup.querySelector('.file-preview');
-                            var filename = formGroup.querySelector('.filename');
-                            var downloadLink = formGroup.querySelector('.download-link');
-
-                            var file = input.files[0];
-
-                            if (file) {
-                                filename.innerText = file.name;
-
-                                if (file.type.startsWith('image/')) {
-                                    // Display image preview
-                                    preview.querySelector('.img-preview').src = URL.createObjectURL(file);
-                                    preview.querySelector('.img-preview').style.display = 'block';
-                                    preview.querySelector('.pdf-view').style.display = 'none';
-                                }
-                                else if (file.type === 'application/pdf') {
-                                    // Display PDF preview
-                                    preview.querySelector('.img-preview').style.display = 'none';
-                                    preview.querySelector('.pdf-view').style.display = 'block';
-                                }
-
-                                downloadLink.style.display = 'block';
-                            }
-                            else {
-                                filename.innerText = '';
-                                preview.querySelector('.img-preview').style.display = 'none';
-                                preview.querySelector('.pdf-view').style.display = 'none';
-                                downloadLink.style.display = 'none';
-                            }
-                        }
-                    </script>
                 </fieldset>
+                @if (Model.ReceiveID != null)
+                {
+                    <table id="movementTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>Receive ID</th>
+                                <th>Movement From</th>
+                                <th>Movement To</th>
+                                <th>User ID</th>
+                                <th>User Name</th>
+                                <th>Created On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table rows will be added dynamically here -->
+                        </tbody>
+                    </table>
+                    <script>
+                        $(document).ready(function () {
+                            function fillTableFromJson() {
+                                var jsonData = @Html.Raw(Model.MovementMasterListJson); // Parse JSON
+                                var tableBody = $('#movementTable tbody');
 
+                                // Clear existing rows
+                                tableBody.empty();
+                                var srno = 1;
+                                // Iterate through JSON data and add rows to the table
+                                jsonData.forEach(function (item) {
+                                    var newRow = '<tr>' +
+                                        '<td>' + srno++ + '</td>' +
+                                        '<td>' + item.ReceiveID + '</td>' +
+                                        '<td>' + item.MovementFrom + '</td>' +
+                                        '<td>' + item.MovementTo + '</td>' +
+                                        '<td>' + item.UserID + '</td>' +
+                                        '<td>' + item.UserName + '</td>' +
+                                        '<td>' + new Date(item.CreatedOn).toLocaleString() + '</td>' +
+                                        '</tr>';
+                                    tableBody.append(newRow);
+                                });
+
+                                // Show the table
+                                $('#movementTable').show();
+                            }
+
+                            // Call the function to fill the table on page load
+                            fillTableFromJson();
+                        });
+                    </script>
+
+                }
+                <div class="row">
+                   
+                </div>
                 <br />
                 <div class="container-lg">
                     <div class="text-center">
+                        @if (Model.ReceiveID == null)
+                        {
+                            <button type="button" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
 
-                        <button type="button" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
 
+                        }
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">
                             <i class="fas fa-print"></i> Print
                         </a>  <button type="reset" class="btn btn-warning"><i class="fas fa-undo"></i> CIT</button>

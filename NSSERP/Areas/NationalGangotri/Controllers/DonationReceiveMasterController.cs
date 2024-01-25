@@ -90,7 +90,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                     return NotFound();
                 }
                 else
-                {                    
+                {
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
@@ -101,35 +101,10 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             if (detail == null)
             {
                 return NotFound();
-            }         
+            }
             return View(detail);
 
-        }
-
-        [HttpGet]
-        public IActionResult GetEvents1(string q)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    var events = connection.Query<Events>("GetEvents", commandType: CommandType.StoredProcedure);
-
-                    if (!string.IsNullOrEmpty(q))
-                    {
-                        events = events.Where(e => e.EventName.Contains(q, StringComparison.OrdinalIgnoreCase));
-                    }
-
-                    return Json(events.ToList());
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return BadRequest("An error occurred while retrieving events.");
-            }
-        }
+        } 
 
         [HttpGet]
         public async Task<IActionResult> GetStatesByCountry(int countryId)
@@ -226,7 +201,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSubHeadByHead(string HeadID, string DataFlag,string CurrencyID)
+        public async Task<IActionResult> GetSubHeadByHead(string HeadID, string DataFlag, string CurrencyID)
         {
             try
             {
@@ -384,41 +359,31 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             string Doc1 = string.Empty;
             string Doc2 = string.Empty;
             string Doc3 = string.Empty;
+            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
 
-            if (model.DocProvisonal != null)
+            if (bankDetailslist != null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocProvisonal.FileName);
-                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
-
-                if (!Directory.Exists(folderPath))
+                foreach (var bankDetail in bankDetailslist)
                 {
-                    Directory.CreateDirectory(folderPath);
-                }
-                var filePath = Path.Combine(folderPath, fileName);
+                    string docFile = bankDetail.TempDoc;
+                    var fileName = Path.GetFileName(docFile);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    Doc1 = fileName;
-                    model.DocProvisonal.CopyTo(stream);
+                    var tempFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "TempDocDonationReceive");
+                    var mainFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+
+                    var tempFilePath = Path.Combine(tempFolderPath, fileName);
+                    var mainFilePath = Path.Combine(mainFolderPath, fileName);
+
+                    // Check if the file exists in the temporary folder before attempting to move it
+                    if (System.IO.File.Exists(tempFilePath))
+                    {
+                        // Move the file from the temporary folder to the main folder
+                        System.IO.File.Move(tempFilePath, mainFilePath);
+                    }
                 }
             }
-            if (model.DocCheque != null)
-            {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocCheque.FileName);
-                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
 
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-                var filePath = Path.Combine(folderPath, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    Doc2 = fileName;
-                    model.DocCheque.CopyTo(stream);
-                }
-            }
             if (model.DocPayInSlip != null)
             {
                 var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocPayInSlip.FileName);
@@ -563,39 +528,27 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             string Doc1 = string.Empty;
             string Doc2 = string.Empty;
             string Doc3 = string.Empty;
+            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
 
-            if (model.DocProvisonal != null)
+            if (bankDetailslist != null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocProvisonal.FileName);
-                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
-
-                if (!Directory.Exists(folderPath))
+                foreach (var bankDetail in bankDetailslist)
                 {
-                    Directory.CreateDirectory(folderPath);
-                }
-                var filePath = Path.Combine(folderPath, fileName);
+                    string docFile = bankDetail.TempDoc;
+                    var fileName = Path.GetFileName(docFile);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    Doc1 = fileName;
-                    model.DocProvisonal.CopyTo(stream);
-                }
-            }
-            if (model.DocCheque != null)
-            {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocCheque.FileName);
-                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+                    var tempFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "TempDocDonationReceive");
+                    var mainFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
 
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-                var filePath = Path.Combine(folderPath, fileName);
+                    var tempFilePath = Path.Combine(tempFolderPath, fileName);
+                    var mainFilePath = Path.Combine(mainFolderPath, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    Doc2 = fileName;
-                    model.DocCheque.CopyTo(stream);
+                    // Check if the file exists in the temporary folder before attempting to move it
+                    if (System.IO.File.Exists(tempFilePath))
+                    {
+                        // Move the file from the temporary folder to the main folder
+                        System.IO.File.Move(tempFilePath, mainFilePath);
+                    }
                 }
             }
             if (model.DocPayInSlip != null)
@@ -618,7 +571,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
             var requestData = new
             {
-                ReceiveID= model.ReceiveID,
+                ReceiveID = model.ReceiveID,
                 IsReceiveHeadDiffrent = isDifferent,
                 ReceiveDepartment = ReceiveDepartment,
                 FinYear = FinYear,
@@ -785,7 +738,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpPost]
-        public JsonResult TemporaryUploadFile(DonationReceiveMaster model)
+        public async Task<JsonResult> TemporaryUploadFile(DonationReceiveMaster model)
         {
             try
             {
@@ -802,10 +755,10 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                     var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocCheque.FileName);
                     var temporaryPath = Path.Combine(temporaryFolder, uniqueFileName);
 
-                    // Save the file to the temporary location
+                    // Save the file to the temporary location asynchronously
                     using (var stream = new FileStream(temporaryPath, FileMode.Create))
                     {
-                        model.DocCheque.CopyTo(stream);
+                        await model.DocCheque.CopyToAsync(stream);
                     }
 
                     // Return the temporary path
@@ -819,7 +772,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 return Json(new { error = ex.Message });
             }
         }
-
 
     }
 }

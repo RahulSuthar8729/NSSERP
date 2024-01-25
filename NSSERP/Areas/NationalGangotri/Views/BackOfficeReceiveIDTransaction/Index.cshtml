@@ -1,7 +1,14 @@
-﻿@model NSSERP.Areas.NationalGangotri.Models.BackOfficeModel
+﻿@using System.Security.Claims;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.IO;
+@model NSSERP.Areas.NationalGangotri.Models.BackOfficeModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var temporaryFolder = Href("/TempDocDonationReceive");
+    var rootUrl = Url.Content("~");
 }
 <!DOCTYPE html>
 <html>
@@ -139,23 +146,157 @@
 
                             </div>
 
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-3">
                                 <label for="">Amount In Words</label>
-                                <input readonly class="form-control" id="TotalAmountInWords" value="@Model.TotalAmountInWords" type="text" name="TotalAmountInWords">
+                                <textarea readonly class="form-control" id="TotalAmountInWords" name="TotalAmountInWords" rows="1">@Model.TotalAmountInWords</textarea>
                             </div>
 
                         </div>
+
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" style="display:none" id="bankDetailsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Ref No</th>
+                                            <th>Donation Mode</th>
+                                            <th>Bank Name</th>
+                                            <th>Cheque/Draft Date</th>
+                                            <th>Cheque/Draft No.</th>
+                                            <th>Deposit Bank</th>
+                                            <th>Deposit Date</th>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                            <th>PDC Cheque</th>
+                                            <th>Document</th>
+                                            <th style="display:none"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <script>
+                            $(document).ready(function () {
+
+                                // Parse the JSON data from the model for bank details
+                                var bankDetailsListJson = @Html.Raw(Model.BankDetailsListJson);
+
+                                // If BankDetailsListJson is null, use data from the model directly
+                                if (!bankDetailsListJson) {
+                                    // Use data from the model
+                                    bankDetailsListJson = @Html.Raw(JsonConvert.SerializeObject(Model.BankDetailsList));
+                                }
+
+                                if (bankDetailsListJson && bankDetailsListJson.length > 0) {
+                                    // Loop through each item in the JSON array
+                                    $.each(bankDetailsListJson, function (index, bankDetails) {
+                                        // Map property names if needed
+                                        var mappedBankDetails = {
+                                            REF_ID: bankDetails.REF_ID,
+                                            DonationMode: bankDetails.DonationMode,
+                                            BankName: bankDetails.BankName,
+                                            ChequeOrDraftDate: bankDetails.ChequeOrDraftDate,
+                                            ChequeOrDraftNo: bankDetails.ChequeOrDraftNo,
+                                            DepositeBankName: bankDetails.DepositeBankName,
+                                            DepositeDate: bankDetails.DepositeDate,
+                                            CurrencyCode: bankDetails.CurrencyCode,
+                                            Amount: bankDetails.Amount,
+                                            IsPdcCheque1: bankDetails.IsPdcCheque1,
+                                            Doc: bankDetails.FileName
+
+                                        };
+
+                                        // Add a new row to the table
+                                        OnModeladdBankDetailsRow(mappedBankDetails);
+                                    });
+
+                                    // Show the table after adding data
+                                    $("#bankDetailsTable").show();
+                                }
+
+                                var temporaryFolder = '@temporaryFolder';
+
+                                function OnModeladdBankDetailsRow(bankDetails) {
+                                    var MainFolder1 = '@rootUrl/DocDonationReceive';
+                                    var newRow = "<tr>" +
+                                        "<td class='filename'><a href='#' class='ref-id-link' data-ref-id='" + bankDetails.REF_ID + "'>" + bankDetails.REF_ID + "</a></td>" +
+
+                                        "<td>" + bankDetails.DonationMode + "</td>" +
+                                        "<td>" + bankDetails.BankName + "</td>" +
+                                        "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
+                                        "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                        "<td>" + bankDetails.DepositeBankName + "</td>" +
+                                        "<td>" + bankDetails.DepositeDate + "</td>" +
+                                        "<td>" + bankDetails.CurrencyCode + "</td>" +
+                                        "<td>" + bankDetails.Amount + "</td>" +
+                                        "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                        "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                        "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
+                                        // "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                        "</tr>";
+
+                                    $("#bankDetailsTable tbody").append(newRow);
+                                }
+
+                                $("#bankDetailsTable").on("click", ".delete-row", function () {
+                                    // Reset the flag and added donation mode when a row is deleted
+                                    donationModeAdded = false;
+                                    addedDonationMode = null;
+                                    currencyAdded = false;
+                                    addedcurrency = true;
+
+                                    $(this).closest("tr").remove();
+
+                                    // Hide the table if there is no data after deletion
+                                    if ($("#bankDetailsTable tbody tr").length === 0) {
+                                        $("#bankDetailsTable").hide();
+                                    }
+                                });
+
+                                $("#bankDetailsTable").on("click", ".ref-id-link", function (e) {
+                                    e.preventDefault(); // Prevent the default behavior (e.g., navigating to another page)
+
+                                    // Get the REF_ID from the data attribute
+                                    var refId = $(this).data("ref-id");
+
+                                    // Set the RefNo input field value
+                                    $("#RefNo").val(refId);
+
+                                    // Remove the highlight class from all rows
+                                    $("#bankDetailsTable tbody tr").removeClass("highlight");
+
+                                    // Highlight the selected row
+                                    $(this).closest("tr").addClass("highlight");
+
+                                    // Show the div_refNo
+                                    // $("#div_refNo").show();
+                                });
+                            });
+                        </script>
+                        <style>
+                            /* Existing styles */
+
+                            .highlight {
+                                background-color: #FFFF99; /* Change the background color to your desired highlight color */
+                            }
+                        </style>
                     </div>
                 </fieldset>
 
                 <fieldset>
-                    <legend style="font-weight:bold;" class="card">Deposite Details</legend>
+                    <legend style="font-weight:bold;" class="card">Deposit Details</legend>
 
                     <div class="nested-form-container">
                         <div class="row">
-
+                            <div style="display:none;" id="div_refNo" class="form-group col-lg-1">
+                                <label for="RefNo">Ref No</label>
+                                <input readonly class="form-control" id="RefNo" type="number" name="RefNo" asp-for="RefNo" />
+                            </div>
                             <div class="form-group col-lg-2">
-                                <label for="DepositePaymentMode">Deposite Mode</label>
+                                <label for="DepositePaymentMode">Deposit Mode</label>
                                 <select id="DepositePaymentMode" required class="form-control" name="DepositePaymentMode" asp-for="DepositePaymentMode">
                                     <option value="" selected disabled>Select Donation Mode</option>
                                     @if (Model != null)
@@ -165,14 +306,28 @@
                                             <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
                                         }
                                     }
-                                </select>                                
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-2">
+                                <label for="bankName">Deposit Bank Name</label>
+                                <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
+                                    <option value="" selected disabled>Select Bank</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var bank in Model.bankmasterlist)
+                                        {
+                                            <option value="@bank.BankID">@bank.BankName</option>
+                                        }
+                                    }
+                                </select>
                             </div>
                             <div class="form-group col-lg-2">
-                                <label for="DepositeDate">Deposite Date</label>
+                                <label for="DepositeDate">Deposit Date</label>
                                 <input class="form-control" id="DepositeDate" type="date" name="DepositeDate" asp-for="DepositeDate" />
                             </div>
-                            <div class="form-group col-lg-3" id="currencyAmountFields">
-                                <label for="currency" class="mb-2">Deposite Amount</label>
+                            <div class="form-group col-lg-2" id="currencyAmountFields">
+                                <label for="currency" class="mb-2">Deposit Amount</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <select class="custom-select" asp-for="DepositeCurrencyID" id="DepositeCurrencyID" name="DepositeCurrencyID" required>
@@ -187,33 +342,74 @@
                                             }
                                         </select>
                                     </div>
-                                    <input type="number" placeholder="Deposite Amount" asp-for="DepositeAmount" name="DepositeAmount" class="form-control" id="DepositeAmount">
+                                    <input type="number" placeholder="Deposit Amount" asp-for="DepositeAmount" name="DepositeAmount" class="form-control" id="DepositeAmount">
                                 </div>
                             </div>
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-2">
                                 <label for="">BankID/Transaction ID</label>
                                 <input class="form-control" value="" id="DepositeBankID" type="text" name="DepositeBankID" asp-for="DepositeBankID" />
                             </div>
+                            <div class="form-group col-lg-1" id="divMultiPayInSlip">
+                                <label for="MultiPayInSlip" id="lbl_MultiPayInSlip">Pay-In-Slip</label>
+                                <input type="file" asp-for="DocPayInSlip" name="DocPayInSlip" id="filemultipayInSlip" accept="image/*,application/pdf" />
+                                <input type="hidden" id="hiddenTempFilename" />
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#filemultipayInSlip').change(function () {
+                                        var fileInput = this;
+                                        var file = fileInput.files[0];
 
+                                        if (file) {
+                                            // Create FormData object and append the file to it
+                                            var formData = new FormData();
+                                            formData.append('DocPayInSlip', file);
+
+                                            // Perform AJAX request
+                                            $.ajax({
+                                                url: '/NationalGangotri/BackOfficeReceiveIDTransaction/TemporaryUploadFile',
+                                                type: 'POST',
+                                                data: formData,
+                                                processData: false,
+                                                contentType: false,
+                                                success: function (response) {
+
+                                                    $('#hiddenTempFilename').val(response.uniqueFileName);
+
+                                                    // Handle success, if needed
+                                                    console.log('File uploaded successfully:', response);
+                                                },
+                                                error: function (error) {
+                                                    // Handle error
+                                                    console.log('Error uploading file:', error);
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            </script>
                             <div class="form-group col-lg-1">
                                 <br />
                                 <button id="btnAdd" class="btn btn-primary">Add</button>
                             </div>
                         </div>
-                  
+
                         <table id="depositTable" class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Deposite Mode</th>
-                                    <th>Deposite Date</th>
-                                    <th>Currency Code</th> <!-- New column for Currency Code -->
-                                    <th>Deposite Amount</th>
+                                    <td>Ref No</td>
+                                    <th>Deposit Mode</th>
+                                    <th>Deposit Bank</th>
+                                    <th>Deposit Date</th>
+                                    <th>Currency Code</th>
+                                    <th>Deposit Amount</th>
                                     <th>BankID/Transaction ID</th>
+                                    <th>Pay-In-Slip</th>
+                                    <th style="display:none"></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Table rows will be added dynamically here -->
                             </tbody>
                         </table>
                         <input type="hidden" asp-for="DonationDetails" id="hiddenTableData" name="DonationDetails" />
@@ -226,17 +422,33 @@
 
                                 // Variable to track added payment modes
                                 var addedPaymentModes = [];
+                                var temporaryFolder = '@temporaryFolder';
 
                                 // Handle Add button click
-                                $('#btnAdd').on('click', function () {
+                                $('#btnAdd').on('click', function (event) {
                                     event.preventDefault();
 
-                                    // Get values from form
+                                    var refNo = $('#RefNo').val();
+                                    var depositMode = $('#DepositePaymentMode option:selected').data('paymentmode');
+
+                                    // Check if donation mode is CASH
+                                    if (depositMode.toUpperCase() === 'CASH') {
+                                        // Skip validation for RefNo
+                                    } else {
+                                        // Validate RefNo
+                                        if (!refNo) {
+                                            alert("Please select a Ref No before adding.");
+                                            return;
+                                        }
+                                    }
+
                                     var mode = $('#DepositePaymentMode option:selected').data('paymentmode');
+                                    var DepositeBank = $("#BankID1 option:selected").text();
                                     var date = $('#DepositeDate').val();
                                     var currencyCode = $('#DepositeCurrencyID option:selected').data('currencycode');
                                     var amount = parseFloat($('#DepositeAmount').val());
                                     var bankID = $('#DepositeBankID').val();
+                                    var Doc = $("#hiddenTempFilename").val();
 
                                     // Validate the amount
                                     if (isNaN(amount) || amount <= 0) {
@@ -244,38 +456,31 @@
                                         return;
                                     }
 
-                                    // Check if the payment mode has already been added
-                                    if (addedPaymentModes.length > 0 && !addedPaymentModes.includes(mode)) {
-                                        alert("Cannot add a different payment mode. Only the same payment mode can be added.");
-                                        return;
-                                    }
-
-                                    // Validate total amount
-                                    var currentTotal = calculateTotalAmount();
-                                    var maxTotal = parseFloat($('#TotalAmount').val());
-                                    if (currentTotal + amount > maxTotal) {
-                                        alert("Total deposit amount exceeds the limit.");
-                                        return;
-                                    }
-
-                                    // Add the payment mode to the tracking variable
-                                    addedPaymentModes.push(mode);
-
                                     // Create a new row and append it to the table
                                     var newRow = '<tr>' +
+                                        '<td>' + refNo + '</td>' +
                                         '<td>' + mode + '</td>' +
+                                        '<td>' + DepositeBank + '</td>' +
                                         '<td>' + date + '</td>' +
                                         '<td>' + currencyCode + '</td>' +
                                         '<td>' + amount + '</td>' +
                                         '<td>' + bankID + '</td>' +
+                                        "<td><a href='" + temporaryFolder + "/" + Doc + "' target='_blank'>View</a></td>" +
+                                        "<td style='display:none;' class='filename'>" + Doc + "</td>" +
                                         '<td><button class="btn btn-danger btnRemove">Delete</button></td>' +
                                         '</tr>';
                                     $('#depositTable tbody').append(newRow);
 
                                     // Clear form values
+                                    $('#BankID1').val('');
                                     $('#DepositeDate').val('');
                                     $('#DepositeAmount').val('');
                                     $('#DepositeBankID').val('');
+
+                                    // Replace file input with a new one
+                                    var newFileInput = $('#filemultipayInSlip').clone();
+                                    $('#filemultipayInSlip').after(newFileInput);
+                                    $('#filemultipayInSlip').remove();
 
                                     // Update total amount and hidden field
                                     updateTotalAmount();
@@ -310,7 +515,7 @@
                                 function calculateTotalAmount() {
                                     var total = 0;
                                     $('#depositTable tbody tr').each(function () {
-                                        total += parseFloat($(this).find('td:eq(3)').text());
+                                        total += parseFloat($(this).find('td:eq(5)').text());
                                     });
                                     return total;
                                 }
@@ -327,11 +532,14 @@
 
                                     $('#depositTable tbody tr').each(function () {
                                         var rowData = {
-                                            mode: $(this).find('td:eq(0)').text(),
-                                            date: $(this).find('td:eq(1)').text(),
-                                            currencyCode: $(this).find('td:eq(2)').text(),
-                                            amount: parseFloat($(this).find('td:eq(3)').text()),
-                                            bankID: $(this).find('td:eq(4)').text()
+                                            refNo: $(this).find('td:eq(0)').text(),
+                                            DepositeBank: $(this).find('td:eq(1)').text(),
+                                            mode: $(this).find('td:eq(2)').text(),
+                                            date: $(this).find('td:eq(3)').text(),
+                                            currencyCode: $(this).find('td:eq(4)').text(),
+                                            amount: parseFloat($(this).find('td:eq(5)').text()),
+                                            bankID: $(this).find('td:eq(6)').text(),
+                                            TempDoc: $(this).find("td:eq(8)").text()
                                         };
                                         tableData.push(rowData);
                                     });
@@ -341,94 +549,8 @@
                             });
                         </script>
 
-
                     </div>
                 </fieldset>
-
-              
-
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Attach Scan Copy</legend>
-
-                    <style>
-                        .file-preview {
-                            position: relative;
-                            max-width: 100%;
-                            height: auto;
-                            text-align: center;
-                        }
-
-                        .img-preview {
-                            max-width: 100%;
-                            max-height: 200px; /* Set a fixed height for the image preview */
-                            display: none;
-                            margin: 0 auto; /* Center the image horizontally */
-                        }
-
-                        .pdf-view {
-                            width: 100%;
-                            height: 200px; /* Set a fixed height for the PDF preview */
-                            display: none;
-                        }
-                    </style>
-
-                    <div class="nested-form-container">
-                        <div class="row">
-                            <div class="form-group col-lg-4" data-input-id="file1">
-                                <label for="file1">Attach Pay-In-Slip/Nss Receipt</label>
-                                <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file1" accept="image/*,application/pdf" onchange="previewFile(this)" />
-                                @if (Model.Doc3 != null)
-                                {
-                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc3"><i class="fa fa-eye"></i>View</a></div>
-
-                                }
-                                <div class="file-preview">
-                                    <img class="img-preview" src="~/DocDonationReceive/placeholder-image.jpg" alt="Uploaded Image" />
-                                    <object class="pdf-view" data="@Url.Content("~/DocDonationReceive/")" type="application/pdf"></object>
-                                </div>
-                                <span class="filename"></span>
-                                <a class="btn btn-primary download-link" style="display: none;">Download</a>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <script>
-                        function previewFile(input) {
-                            var formGroup = input.parentElement;
-                            var preview = formGroup.querySelector('.file-preview');
-                            var filename = formGroup.querySelector('.filename');
-                            var downloadLink = formGroup.querySelector('.download-link');
-
-                            var file = input.files[0];
-
-                            if (file) {
-                                filename.innerText = file.name;
-
-                                if (file.type.startsWith('image/')) {
-                                    // Display image preview
-                                    preview.querySelector('.img-preview').src = URL.createObjectURL(file);
-                                    preview.querySelector('.img-preview').style.display = 'block';
-                                    preview.querySelector('.pdf-view').style.display = 'none';
-                                }
-                                else if (file.type === 'application/pdf') {
-                                    // Display PDF preview
-                                    preview.querySelector('.img-preview').style.display = 'none';
-                                    preview.querySelector('.pdf-view').style.display = 'block';
-                                }
-
-                                downloadLink.style.display = 'block';
-                            }
-                            else {
-                                filename.innerText = '';
-                                preview.querySelector('.img-preview').style.display = 'none';
-                                preview.querySelector('.pdf-view').style.display = 'none';
-                                downloadLink.style.display = 'none';
-                            }
-                        }
-                    </script>
-                </fieldset>
-
                 <br />
                 <div class="container-lg">
                     <div class="text-center">

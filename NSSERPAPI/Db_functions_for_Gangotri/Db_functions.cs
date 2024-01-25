@@ -271,6 +271,16 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return JsonConvert.SerializeObject(result);
             }
         }
+        public string GetMovementMasterListJsonById(int ref_id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { ReceiveID = ref_id };
+                var result = connection.Query<dynamic>("[GetDmsMovementMasterByReceiveID]", parameters, commandType: CommandType.StoredProcedure);
+                return JsonConvert.SerializeObject(result);
+            }
+        }
 
         public string GetMobileListJsonById(int ref_id)
         {

@@ -5,6 +5,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
 {
     public class BackOfficeModel
     {
+   
         public string? msg { get; set; }
         public int? ReceiveID { get; set; }
         public DateTime? ReceiveDate { get; set; }
@@ -27,6 +28,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public List<PaymentModeMaster> paymentModeList { get; set; }
         public IEnumerable<CurrencyMaster> currenciesList { get; set; }
         public List<DMSMovementListItems> MovementDetils { get; set; }
+        public IEnumerable<BankMaster> bankmasterlist { get; set; }
+        public int BankID { get; set; }
+        public string BankName { get; set; }
         public class DMSMovementListItems()
         {
             public int MovementID { get; set; }
@@ -37,6 +41,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
             public string Date {  get; set; }
         }
       
+        public string BankDetailsList { get; set; }
+        public string BankDetailsListJson { get; set; }
        public string DonationDetails { get; set; }
 
     }

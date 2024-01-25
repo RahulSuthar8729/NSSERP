@@ -75,26 +75,30 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(BackOfficeModel model)
         {
+            List<DepositeDetailsModel> DepostiteDetailsList = string.IsNullOrEmpty(model.DonationDetails) ? new List<DepositeDetailsModel>() : JsonConvert.DeserializeObject<List<DepositeDetailsModel>>(model.DonationDetails);
 
-            string Doc3 = string.Empty;
-
-            if (model.DocPayInSlip != null)
+            if (DepostiteDetailsList != null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocPayInSlip.FileName);
-                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
-
-                if (!Directory.Exists(folderPath))
+                foreach (var bankDetail in DepostiteDetailsList)
                 {
-                    Directory.CreateDirectory(folderPath);
-                }
-                var filePath = Path.Combine(folderPath, fileName);
+                    string docFile = bankDetail.TempDoc;
+                    var fileName = Path.GetFileName(docFile);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    Doc3 = fileName;
-                    model.DocPayInSlip.CopyTo(stream);
+                    var tempFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "TempDocDonationReceive");
+                    var mainFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+
+                    var tempFilePath = Path.Combine(tempFolderPath, fileName);
+                    var mainFilePath = Path.Combine(mainFolderPath, fileName);
+
+                    // Check if the file exists in the temporary folder before attempting to move it
+                    if (System.IO.File.Exists(tempFilePath))
+                    {
+                        // Move the file from the temporary folder to the main folder
+                        System.IO.File.Move(tempFilePath, mainFilePath);
+                    }
                 }
             }
+
             string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
 
             var requestData = new
@@ -102,7 +106,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 ReceiveID = model.ReceiveID,
                 UserID = UserID,
                 UserName = User.FindFirst(ClaimTypes.Name)?.Value,
-                Doc3 = Doc3
+             
 
             };
             string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
@@ -131,5 +135,42 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
             }
         }
+
+        [HttpPost]
+        public async Task<JsonResult> TemporaryUploadFile(BackOfficeModel model)
+        {
+            try
+            {
+                if (model.DocPayInSlip != null && model.DocPayInSlip.Length > 0)
+                {
+                    var temporaryFolder = Path.Combine(_webHostEnvironment.WebRootPath, "TempDocDonationReceive");
+
+                    if (!Directory.Exists(temporaryFolder))
+                    {
+                        Directory.CreateDirectory(temporaryFolder);
+                    }
+
+                    // Generate a unique temporary path with file extension
+                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocPayInSlip.FileName);
+                    var temporaryPath = Path.Combine(temporaryFolder, uniqueFileName);
+
+                    // Save the file to the temporary location asynchronously
+                    using (var stream = new FileStream(temporaryPath, FileMode.Create))
+                    {
+                        await model.DocPayInSlip.CopyToAsync(stream);
+                    }
+
+                    // Return the temporary path
+                    return Json(new { uniqueFileName });
+                }
+
+                return Json(new { error = "No file received." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
     }
 }

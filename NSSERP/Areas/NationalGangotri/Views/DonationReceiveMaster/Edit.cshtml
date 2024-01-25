@@ -7,6 +7,8 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var temporaryFolder = Href("/TempDocDonationReceive");
+    var rootUrl = Url.Content("~");
 }
 <!DOCTYPE html>
 <html>
@@ -483,6 +485,7 @@
                         </div>
                     </div>
                 </fieldset>
+
                 <fieldset>
                     <legend style="font-weight:bold;" class="card">Letter Communication Address Details</legend>
 
@@ -1456,6 +1459,8 @@
 
 
                 </script>
+
+
                 <fieldset>
                     <legend style="font-weight:bold;" class="card">Donation Details</legend>
 
@@ -1608,6 +1613,9 @@
                                     var amountInput = document.getElementById('Amount');
                                     var divbankdetails = document.getElementById('divbankdetails');
                                     var TotalAmount = document.getElementById('DivTotalAmount');
+                                    var divMultiCheque = document.getElementById('divMultiCheque');
+                                    var lbl_multiDoc = document.getElementById('lbl_doc_multi');
+
                                     // Get the selected text instead of the value
                                     var selectedText = paymentModeDropdown.options[paymentModeDropdown.selectedIndex].text;
 
@@ -1637,12 +1645,21 @@
 
                                     }
                                     if (selectedText === 'MATERIAL' || selectedText === 'CASH') {
-
                                         divbankdetails.style.display = 'none';
-                                    }
-                                    else {
+                                    } else {
                                         divbankdetails.style.display = 'block';
                                     }
+
+                                    if (selectedText === 'CHEQUE') {
+                                        divMultiCheque.style.display = 'block';
+                                        lbl_multiDoc.innerText = 'Attach Cheque Doc';
+                                    } else if (selectedText === 'PAY-IN-SLIP') {
+                                        divMultiCheque.style.display = 'block';
+                                        lbl_multiDoc.innerText = 'Attach Pay-In-Slip Doc';
+                                    } else {
+                                        divMultiCheque.style.display = 'none';
+                                    }
+
                                 }
 
                                 // Call the function initially to set the initial state
@@ -1666,7 +1683,8 @@
                                                 DepositDate: $(this).find("td:eq(5)").text(),
                                                 Currency: $(this).find("td:eq(6)").text(),
                                                 Amount: $(this).find("td:eq(7)").text(),
-                                                PdcCheque: $(this).find("td:eq(8)").text()
+                                                PdcCheque: $(this).find("td:eq(8)").text(),
+                                                TempDoc: $(this).find("td:eq(10)").text()
                                             };
                                             tableData.push(rowData);
                                         });
@@ -1681,10 +1699,44 @@
                                     // ... Your existing code ...
                                 });
                             </script>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#filemultiCheque').change(function () {
+                                        var fileInput = this;
+                                        var file = fileInput.files[0];
+
+                                        if (file) {
+                                            // Create FormData object and append the file to it
+                                            var formData = new FormData();
+                                            formData.append('DocCheque', file);
+
+                                            // Perform AJAX request
+                                            $.ajax({
+                                                url: '/NationalGangotri/DonationReceiveMaster/TemporaryUploadFile',
+                                                type: 'POST',
+                                                data: formData,
+                                                processData: false,
+                                                contentType: false,
+                                                success: function (response) {
+
+                                                    $('#hiddenTempFilename').val(response.uniqueFileName);
+
+                                                    // Handle success, if needed
+                                                    console.log('File uploaded successfully:', response);
+                                                },
+                                                error: function (error) {
+                                                    // Handle error
+                                                    console.log('Error uploading file:', error);
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            </script>
 
                             <div id="divbankdetails" style="display:none;">
                                 <div class="row">
-                                    <div class="form-group col-lg-3">
+                                    <div class="form-group col-lg-2">
                                         <label for="bankName">Bank Name</label>
                                         <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
                                             <option value="" selected disabled>Select Bank</option>
@@ -1728,11 +1780,17 @@
                                         <label for="depositDate">Deposit Date</label>
                                         <input class="form-control" id="depositDate" type="date" name="depositDate" />
                                     </div>
+                                    <div class="form-group col-lg-1" id="divMultiCheque" style="display:none;">
+                                        <label for="lbl_doc_multi" id="lbl_doc_multi"></label>
+                                        <input type="file" asp-for="DocCheque" name="DocCheque" id="filemultiCheque" accept="image/*,application/pdf" />
+                                        <input type="hidden" id="hiddenTempFilename" />
+                                    </div>
                                     <div class="form-group col-lg-1">
                                         <br />
                                         <button class="btn btn-primary" id="BtnAddBankDetails"><i class="fa fa-plus"></i>Add</button>
                                     </div>
                                     <input type="hidden" asp-for="BankDetailsList" name="BankDetailsList" id="hiddenBankDetails" />
+                                
                                 </div>
                             </div>
 
@@ -1774,6 +1832,8 @@
                                                 <th>Currency</th>
                                                 <th>Amount</th>
                                                 <th>PDC Cheque</th>
+                                                <th>Document</th>
+                                                <th style="display:none"></th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -1813,12 +1873,12 @@
                                                 DepositeDate: bankDetails.DepositeDate,
                                                 CurrencyCode: bankDetails.CurrencyCode,
                                                 Amount: bankDetails.Amount,
-                                                IsPdcCheque1: bankDetails.IsPdcCheque1
+                                                IsPdcCheque1: bankDetails.IsPdcCheque1,
+                                                Doc: bankDetails.FileName
                                                 // Add more mappings as needed
                                             };
 
-                                            // Add a new row to the table
-                                            addBankDetailsRow(mappedBankDetails);
+                                            OnModeladdBankDetailsRow(mappedBankDetails);
                                         });
 
                                         // Show the table after adding data
@@ -1850,7 +1910,6 @@
                                     //currency flag
                                     var currencyAdded = false;
                                     var addedcurrency = null;
-
                                     $("#BtnAddBankDetails").on("click", function (event) {
                                         event.preventDefault();
 
@@ -1863,7 +1922,6 @@
                                         var depositDate = $("#depositDate").val();
                                         var Currency = $("#CurrencyID option:selected").text();
                                         var amount = $("#Amount").val();
-
                                         // Convert Cheuquedate to a Date object
                                         var chequeDateObj = new Date(Cheuquedate);
                                         var today = new Date();
@@ -1911,7 +1969,8 @@
                                             DepositeDate: depositDate,
                                             CurrencyCode: Currency,
                                             Amount: amount,
-                                            IsPdcCheque1: pdcCheque1
+                                            IsPdcCheque1: pdcCheque1,
+                                            Doc: $("#hiddenTempFilename").val()
                                         };
 
                                         // Map property names if needed
@@ -1924,7 +1983,8 @@
                                             DepositeDate: bankDetails.DepositeDate,
                                             CurrencyCode: bankDetails.CurrencyCode,
                                             Amount: bankDetails.Amount,
-                                            IsPdcCheque1: bankDetails.IsPdcCheque1
+                                            IsPdcCheque1: bankDetails.IsPdcCheque1,
+                                            Doc: $("#hiddenTempFilename").val()
                                             // Add more mappings as needed
                                         };
 
@@ -1940,6 +2000,7 @@
                                     });
 
                                     // Your existing code for handling row deletion and showing/hiding the table
+                                    var temporaryFolder = '@temporaryFolder';
 
                                     // Function to add a new row to the bank details table
                                     function addBankDetailsRow(bankDetails) {
@@ -1953,6 +2014,28 @@
                                             "<td>" + bankDetails.CurrencyCode + "</td>" +
                                             "<td>" + bankDetails.Amount + "</td>" +
                                             "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                            "<td><a href='" + temporaryFolder + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
+                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                            "</tr>";
+
+                                        $("#bankDetailsTable tbody").append(newRow);
+                                    }
+
+                                    function OnModeladdBankDetailsRow(bankDetails) {
+                                        var MainFolder1 = '@rootUrl/DocDonationReceive';
+                                        var newRow = "<tr>" +
+                                            "<td>" + bankDetails.DonationMode + "</td>" +
+                                            "<td>" + bankDetails.BankName + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                            "<td>" + bankDetails.DepositeBankName + "</td>" +
+                                            "<td>" + bankDetails.DepositeDate + "</td>" +
+                                            "<td>" + bankDetails.CurrencyCode + "</td>" +
+                                            "<td>" + bankDetails.Amount + "</td>" +
+                                            "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                            "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
                                             "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                             "</tr>";
 
@@ -1979,6 +2062,9 @@
                         </div>
                     </div>
                 </fieldset>
+
+
+
                 <fieldset id="backOfficeFieldset">
                     <legend style="font-weight: bold;" class="card">Back Office ReceiveID Transaction</legend>
                     <div class="nested-form-container">
@@ -2697,11 +2783,14 @@
                         <div class="row">
                             <div class="form-group col-lg-4" data-input-id="file1">
                                 <label for="file1">Attach Provisional</label>
-                                <input type="file" name="DocProvisonal" asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf" />
-                                @if (@Model.Doc1 != null)
+
+                                @if (!string.IsNullOrEmpty(Model.Doc1))
                                 {
                                     <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc1"><i class="fa fa-eye"></i>View</a></div>
-
+                                }
+                                else
+                                {
+                                    <input type="file" name="DocProvisonal" asp-for="@Model.DocProvisonal" id="file1" accept="image/*,application/pdf" />
                                 }
                             </div>
 

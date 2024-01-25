@@ -55,7 +55,8 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
 
-            // Set JSON properties           
+            // Set JSON properties
+            firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(receiveID);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(receiveID);
             firstDetail.IdentityListJson = _dbFunctions.GetIdentityListJsonById(receiveID);
             firstDetail.BankDetailsListJson = _dbFunctions.GetBankDetailsListJsonById(receiveID);
@@ -95,7 +96,8 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
 
-            // Set JSON properties           
+            // Set JSON properties
+            firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(id);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(id);
             firstDetail.IdentityListJson = _dbFunctions.GetIdentityListJsonById(id);
             firstDetail.BankDetailsListJson = _dbFunctions.GetBankDetailsListJsonById(id);
@@ -375,6 +377,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
 
                             connection.Execute("InsertDonationReceiveMaster", parameters, transaction, commandType: CommandType.StoredProcedure);
+                            connection.Execute("[InsertDonationReceiveMasterUpadteLogs]", parameters, transaction, commandType: CommandType.StoredProcedure);
 
                             maxReceiveID = connection.QueryFirstOrDefault<int>("SelectMaxReceiveID", new { model.UserID, model.FinYear }, transaction, commandType: CommandType.StoredProcedure);
 
@@ -636,7 +639,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@CampaignName", model.CampaignName);
 
                             connection.Execute("[UpdateDonationReceiveMaster]", parameters, transaction, commandType: CommandType.StoredProcedure);
-                           
+
+                            connection.Execute("[InsertDonationReceiveMasterUpadteLogs]", parameters, transaction, commandType: CommandType.StoredProcedure);
+
+
                             var movementParams = new DynamicParameters();
                             movementParams.Add("@ReceiveID", model.ReceiveID);
                             movementParams.Add("@MovementFrom", model.ReceiveDepartment);
@@ -699,6 +705,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     bankParams.Add("@DonationMode", bankDetail.DonationMode);
                                     bankParams.Add("@CurrencyCode", bankDetail.Currency);
                                     bankParams.Add("@Amount", bankDetail.Amount);
+                                    bankParams.Add("@FileName", bankDetail.TempDoc);
 
                                     connection.Execute("InsertBankDetailsInDonationReceiveMultiBank", bankParams, transaction, commandType: CommandType.StoredProcedure);
                                 }

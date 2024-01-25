@@ -7,5 +7,7 @@
         public int? DepositeCurrencyID { get; set; }
         public decimal? DepositeAmount { get; set; }
         public string? DepositeBankID { get; set; }
+
+        public string TempDoc {  get; set; }
     }
 }
