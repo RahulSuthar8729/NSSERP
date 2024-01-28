@@ -22,7 +22,7 @@ builder.Services.AddDbContext<YourDbContext>(options =>
 );
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.LoginPath = "/Access/Login";
