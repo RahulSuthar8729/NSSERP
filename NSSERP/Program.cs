@@ -11,7 +11,6 @@ using Rotativa.AspNetCore;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
 using System.IO;
 using OfficeOpenXml;
 
@@ -23,6 +22,13 @@ builder.Services.AddDbContext<YourDbContext>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebApp",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.LoginPath = "/Access/Login";
@@ -54,9 +60,6 @@ builder.Services.AddHttpClient("WebApi", client =>
 //builder.Services.AddScoped<WebApiService>();
 //builder.Services.AddScoped<IWebApiService, WebApiService>();
 
-
-
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -87,5 +90,4 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Access}/{action=Login}/{id?}");
 });
-
 app.Run();

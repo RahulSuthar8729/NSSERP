@@ -23,14 +23,16 @@ public class DonationReceiveMaterDetailsController : Controller
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly HttpClient _apiClient;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<DonationReceiveMaterDetailsController> _logger;
 
-    public DonationReceiveMaterDetailsController(DbClass dbFunctions, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory httpClientFactory)
+    public DonationReceiveMaterDetailsController(DbClass dbFunctions, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory httpClientFactory, ILogger<DonationReceiveMaterDetailsController> logger)
     {
         _dbFunctions = dbFunctions;
         _connectionString = configuration.GetConnectionString("ConStr");
         _webHostEnvironment = webHostEnvironment;
         _apiClient = httpClientFactory.CreateClient("WebApi");
         _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
     
     [HttpGet]
@@ -61,7 +63,7 @@ public class DonationReceiveMaterDetailsController : Controller
                     };
 
                     //var parameterList = new List<object> { parameters };
-
+                   
                     string requestBody = System.Text.Json.JsonSerializer.Serialize(parameters);
                     var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
@@ -80,11 +82,12 @@ public class DonationReceiveMaterDetailsController : Controller
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception
+                    _logger.LogError(ex, "An error occurred in the Index action.");
 
                     return BadRequest($"An error occurred during the search operation: {ex.Message}");
                 }
             }
+
             var baseAddress = _apiClient.BaseAddress;
 
             // Make a GET request to the GetDonationReceiveDetails endpoint
@@ -112,6 +115,7 @@ public class DonationReceiveMaterDetailsController : Controller
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.StackTrace);
             // Log or handle the exception
             ModelState.AddModelError("", $"An error occurred during the request: {ex.Message}");
         }

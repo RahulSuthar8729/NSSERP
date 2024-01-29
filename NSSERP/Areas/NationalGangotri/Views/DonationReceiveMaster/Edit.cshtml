@@ -2071,11 +2071,14 @@
                         <table id="depositTable" class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Deposite Mode</th>
-                                    <th>Deposite Date</th>
+
+                                    <th>Deposit Mode</th>
+                                    <th>Deposit Bank</th>
+                                    <th>Deposit Date</th>
                                     <th>Currency Code</th>
-                                    <th>Deposite Amount</th>
+                                    <th>Deposit Amount</th>
                                     <th>BankID/Transaction ID</th>
+                                    <th>Pay-In-Slip</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2091,15 +2094,17 @@
 
                                     // Clear existing rows
                                     tableBody.empty();
-
+                                    var MainFolder1 = '@rootUrl/DocDonationReceive';
                                     // Iterate through JSON data and add rows to the table
                                     jsonData.forEach(function (item) {
                                         var newRow = '<tr>' +
                                             '<td>' + item.DepositeMode + '</td>' +
+                                            '<td>' + item.DepositBank + '</td>' +
                                             '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
                                             '<td>' + item.CurrencyCode + '</td>' +
                                             '<td>' + item.DepositeAmount.toFixed(2) + '</td>' +
                                             '<td>' + item.TransactionID + '</td>' +
+                                            "<td><a href='" + MainFolder1 + "/" + item.DocPayInSlip + "' target='_blank'>View</a></td>" +
                                             '</tr>';
                                         tableBody.append(newRow);
                                     });
@@ -2126,11 +2131,15 @@
                                 $(document).ready(function () {
                                     $('#headInput').change(function () {
                                         var selectedHead = $(this).val();
-
+                                        var curid = $('#CurrencyID').val();
+                                        if (curid === null || curid === undefined || curid.trim() === "") {
+                                            alert('Please select Currency first.');
+                                            return;
+                                        }
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetSubHeadByHead',
                                             type: 'GET',
-                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI" },
+                                            data: { HeadID: selectedHead, DataFlag: "GANGOTRI", CurrencyID: curid },
                                             success: function (response) {
                                                 var data = response.data; // Extract the 'data' array from the response
 
@@ -2189,30 +2198,48 @@
                                 </div>
                                 <script>
                                     $(document).ready(function () {
+                                        var initialAmount = 0; // Variable to store the initial amount
+
                                         $('#subHeadInput').change(function () {
                                             var yojnaid = $(this).val();
+                                            var curid = $('#CurrencyID').val();
+
+                                            if (curid === null || curid === undefined || curid.trim() === "") {
+                                                alert('Please select Currency first.');
+                                                return;
+                                            }
 
                                             $.ajax({
                                                 url: '/NationalGangotri/DonationReceiveMaster/GetQtyAmtBySubHead',
                                                 type: 'GET',
-                                                data: { YojnaID: yojnaid, DataFlag: "GANGOTRI" },
+                                                data: { YojnaID: yojnaid, DataFlag: "GANGOTRI", CurrencyID: curid },
                                                 success: function (response) {
-                                                    // Parse the JSON string in response.data
                                                     var data = JSON.parse(response.data);
 
-                                                    // Process the parsed data
-                                                    $('#autoQuantityInput').empty(); // Clear existing options
-                                                    $.each(data, function (index, head) {
-                                                        $('#autoQuantityInput').append('<option value="' + head.Yojna_id + '">' + head.Amt + '</option>');
-                                                    });
+                                                    // Clear existing options
+                                                    $('#autoQuantityInput').empty();
 
-                                                    // You might need to select a default option or handle selection logic here
-
-                                                    // You can set ReceiptAmount to the first value's Amt
                                                     if (data.length > 0) {
-                                                        $('#ReceiptAmount').val(data[0].Amt);
+                                                        // Store the initial amount for later use
+                                                        initialAmount = parseFloat(data[0].Amt);
+
+                                                        if (data[0].Start === 0) {
+                                                            // Disable quantity input if data.start is 0
+                                                            $('#autoQuantityInput').prop('disabled', true);
+                                                        } else {
+                                                            // Enable quantity input if data.start is not 0
+                                                            $('#autoQuantityInput').prop('disabled', false);
+
+                                                            // Generate options in multiples of data.start
+                                                            for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
+                                                                $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
+                                                            }
+                                                        }
+
+                                                        // Set the initial amount in the ReceiptAmount input field
+                                                        $('#ReceiptAmount').val(initialAmount.toFixed(2));
                                                     } else {
-                                                        $('#ReceiptAmount').val(''); // Clear the value if data is not available
+                                                        $('#ReceiptAmount').val('');
                                                     }
                                                 },
                                                 error: function (xhr, status, error) {
@@ -2220,11 +2247,21 @@
                                                 }
                                             });
                                         });
+
+                                        // Add event listener for the autoQuantityInput change event
+                                        $('#autoQuantityInput').change(function () {
+                                            // Get the selected quantity
+                                            var selectedQuantity = parseInt($(this).val());
+
+                                            // Calculate the total amount by multiplying quantity with the initial amount
+                                            var totalAmount = selectedQuantity * initialAmount;
+
+                                            // Set the total amount in the ReceiptAmount input field
+                                            $('#ReceiptAmount').val(totalAmount.toFixed(2));
+                                        });
                                     });
 
-
                                 </script>
-
 
                                 <div class="form-group col-lg-2">
                                     <label for="autoQuantity">Quantity</label>
@@ -2260,6 +2297,7 @@
                             </div>
 
                             <input type="hidden" id="jsonData" name="receiptdetailslist" asp-for="receiptdetailslist" />
+                            <input type="hidden" id="hdnPurposetotalamount" />
 
                             <script>
                                 $(document).ready(function () {
@@ -2267,6 +2305,7 @@
                                     var tableContainer = $("#tableContainer");
                                     var jsonDataField = $("#jsonData");
                                     var totalAmountInput = $("#TotalAmount");
+
 
                                     // Constants
                                     var SELECT_OPTION = "Select";
@@ -2283,7 +2322,6 @@
                                             addTableRow(item.HeadName, item.Purpose, item.Quantity, item.Amount);
                                         });
                                         toggleTableVisibility();
-                                        updateHiddenField();
                                     }
 
                                     // Add row event handler
@@ -2300,7 +2338,7 @@
                                         var materialDepositId = $("#MaterialDepositID").val();
 
                                         if (materialDepositId) {
-                                            if (isValidInputs(purpose, quantity, amount)) {
+                                            if (isValidInputs(purpose, amount)) {
                                                 addTableRow(head, purpose, quantity, amount);
                                                 clearInputFields();
                                                 updateHiddenField();
@@ -2344,9 +2382,10 @@
                                         updateHiddenField();
                                     });
 
-                                    // Function to update the hidden field with JSON data
                                     function updateHiddenField() {
                                         var data = [];
+                                        var totalAmount = 0;
+
                                         tableBody.find("tr").each(function () {
                                             var columns = $(this).find("td");
                                             var item = {
@@ -2356,6 +2395,10 @@
                                                 "Amount": columns.eq(3).text()
                                             };
                                             data.push(item);
+
+                                            // Calculate total amount
+                                            var amount = parseFloat(columns.eq(3).text()) || 0;
+                                            totalAmount += amount;
                                         });
 
                                         // Convert data array to JSON string
@@ -2363,8 +2406,10 @@
 
                                         // Set JSON data to hidden field
                                         jsonDataField.val(jsonData);
-                                    }
 
+                                        // Set total amount to the hidden field
+                                        $("#hdnPurposetotalamount").val(totalAmount.toFixed(2));
+                                    }
                                     // Function to toggle table visibility based on row count
                                     function toggleTableVisibility() {
                                         tableContainer.toggle(tableBody.find("tr").length > 0);
@@ -2633,44 +2678,35 @@
                     <div class="nested-form-container">
                         <div class="row">
                             <div class="form-group col-lg-3">
-                                <label for="totalPurposeAmount">Total Purpose Amount</label>
-                                <input class="form-control" id="totalPurposeAmountAnnounce" />
+                                <label for="announceId">Announce ID</label>
+                                <input type="number" class="form-control" id="announceIdAnnounce" />
                             </div>
                             <div class="form-group col-lg-3">
-                                <label for="receiveAmount">Receive Amount</label>
-                                <input class="form-control" id="receiveAmountAnnounce" />
+                                <label>Announcer Name</label>
+                                <input type="text" class="form-control" id="AnnouncerName" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="dueAmount">Due Amount</label>
-                                <input class="form-control" id="dueAmountAnnounce" />
+                                <input type="number" class="form-control" id="dueAmountAnnounce" />
                             </div>
-                            <div class="form-group col-lg-3">
-                                <label for="announceId">Announce ID</label>
-                                <input class="form-control" id="announceIdAnnounce" />
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="amount">Amount</label>
-                                <input class="form-control" id="amountAnnounce" />
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="date1">Date</label>
-                                <input type="date" class="form-control" id="date1Announce" />
-                            </div>
+
                             <div class="form-group col-lg-2">
+                                <label for="date1">Due Date</label>
+                                <input type="date" class="form-control" id="dateAnnounce" />
+                            </div>
+                            <div class="form-group col-lg-1">
                                 <br />
-                                <button class="btn btn-primary" id="btnAddAnnounce">Add</button>
+                                <button class="btn btn-primary" id="btnAddAnnounce"><span class="fa fa-plus"></span>Add</button>
                             </div>
                         </div>
                         <div class="row">
                             <table class="table table-bordered" id="announceTable" style="display: none;">
                                 <thead>
                                     <tr>
-                                        <th>Total Purpose Amount</th>
-                                        <th>Receive Amount</th>
-                                        <th>Due Amount</th>
                                         <th>Announce ID</th>
-                                        <th>Amount</th>
-                                        <th>Date</th>
+                                        <th>Announcer Name</th>
+                                        <th>Due Amount</th>
+                                        <th>Due Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -2692,34 +2728,29 @@
                         if (announceDetailsListJson) {
                             $.each(announceDetailsListJson, function (index, item) {
                                 var newRow = $("<tr>");
-                                newRow.append("<td>" + item.TotalPurposeAmount + "</td>");
-                                newRow.append("<td>" + item.ReceiveAmount + "</td>");
-                                newRow.append("<td>" + item.DueAmount + "</td>");
                                 newRow.append("<td>" + item.AnnunceID + "</td>");
-                                newRow.append("<td>" + item.Amount + "</td>");
+                                newRow.append("<td>" + item.AnnouncerName + "</td>");
+                                newRow.append("<td>" + item.DueAmount + "</td>");
                                 newRow.append("<td>" + new Date(item.date).toLocaleDateString() + "</td>");
                                 newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
                                 tableBody.append(newRow);
                             });
-                            updateHiddenField();
                             toggleTableVisibility();
                         }
 
                         $("#btnAddAnnounce").on("click", function () {
                             event.preventDefault();
                             var newRow = $("<tr>");
-                            newRow.append("<td>" + $("#totalPurposeAmountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#receiveAmountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#dueAmountAnnounce").val() + "</td>");
                             newRow.append("<td>" + $("#announceIdAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#amountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#date1Announce").val() + "</td>");
+                            newRow.append("<td>" + $("#AnnouncerName").val() + "</td>");
+                            newRow.append("<td>" + $("#dueAmountAnnounce").val() + "</td>");
+                            newRow.append("<td>" + $("#dateAnnounce").val() + "</td>");
                             newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
 
                             tableBody.append(newRow);
 
                             // Clear input fields
-                            $("#totalPurposeAmountAnnounce, #receiveAmountAnnounce, #dueAmountAnnounce, #announceIdAnnounce, #amountAnnounce, #date1Announce").val("");
+                            $("#announceIdAnnounce, #AnnouncerName, #dueAmountAnnounce, #dateAnnounce").val("");
 
                             // Show the table
                             $("#announceTable").show();
@@ -2746,12 +2777,10 @@
                             tableBody.find('tr').each(function () {
                                 var row = $(this);
                                 var rowData = {
-                                    TotalPurposeAmount: row.find('td:eq(0)').text(),
-                                    ReceiveAmount: row.find('td:eq(1)').text(),
+                                    AnnounceId: row.find('td:eq(0)').text(),
+                                    AnnouncerName: row.find('td:eq(1)').text(),
                                     DueAmount: row.find('td:eq(2)').text(),
-                                    AnnounceId: row.find('td:eq(3)').text(),
-                                    Amount: row.find('td:eq(4)').text(),
-                                    Date: row.find('td:eq(5)').text()
+                                    DueDate: row.find('td:eq(3)').text()
                                 };
                                 announceData.push(rowData);
                             });
@@ -2820,8 +2849,22 @@
                 <br />
                 <div class="container-lg">
                     <div class="text-center">
+                        <script>
+                            function validateAmount() {
+                                var totalAmount = parseFloat($("#hdnTotalAmount").val());
+                                var purposeTotalAmount = parseFloat($("#hdnPurposetotalamount").val());
 
-                        <button type="button" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Update</button>
+                                // Check if the totalAmount is neither less nor greater than purposeTotalAmount
+                                if (totalAmount === purposeTotalAmount) {
+
+                                    return true; // Allow form submission
+                                } else {
+                                    alert("Total Donation amount must be equal to the purpose total amount.");
+                                    return false; // Prevent form submission
+                                }
+                            }
+                        </script>
+                        <button type="button" id="submitButton" onclick="return validateAmount()" class="btn btn-success"><i class="fas fa-check"></i> Update</button>
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">
                             <i class="fas fa-print"></i> Print
                         </a>  

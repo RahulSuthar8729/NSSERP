@@ -377,7 +377,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
 
                             connection.Execute("InsertDonationReceiveMaster", parameters, transaction, commandType: CommandType.StoredProcedure);
-                            connection.Execute("[InsertDonationReceiveMasterUpadteLogs]", parameters, transaction, commandType: CommandType.StoredProcedure);
+                            connection.Execute("[InsertDonationReceiveMasterLogs]", parameters, transaction, commandType: CommandType.StoredProcedure);
 
                             maxReceiveID = connection.QueryFirstOrDefault<int>("SelectMaxReceiveID", new { model.UserID, model.FinYear }, transaction, commandType: CommandType.StoredProcedure);
 
@@ -482,12 +482,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var Announcepara = new DynamicParameters();
                                     Announcepara.Add("@REF_NO", maxReceiveID);
-                                    Announcepara.Add("@TotalPurposeAmount", announce.TotalPurposeAmount);
-                                    Announcepara.Add("@ReceiveAmount", announce.ReceiveAmount);
-                                    Announcepara.Add("@DueAmount", announce.DueAmount);
                                     Announcepara.Add("@AnnunceID", announce.AnnounceId);
-                                    Announcepara.Add("@Amount", announce.Amount);
-                                    Announcepara.Add("@Date", announce.Date);
+                                    Announcepara.Add("@AnnouncerName", announce.AnnouncerName);
+                                    Announcepara.Add("@DueAmount", announce.DueAmount);                           
+                                    Announcepara.Add("@Date", announce.DueDate);
                                     Announcepara.Add("@CreatedBy", model.UserID);
 
                                     connection.Execute("InsertDonationReceiveAnnunceDue", Announcepara, transaction, commandType: CommandType.StoredProcedure);
@@ -762,12 +760,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var Announcepara = new DynamicParameters();
                                     Announcepara.Add("@REF_NO", model.ReceiveID);
-                                    Announcepara.Add("@TotalPurposeAmount", announce.TotalPurposeAmount);
-                                    Announcepara.Add("@ReceiveAmount", announce.ReceiveAmount);
-                                    Announcepara.Add("@DueAmount", announce.DueAmount);
                                     Announcepara.Add("@AnnunceID", announce.AnnounceId);
-                                    Announcepara.Add("@Amount", announce.Amount);
-                                    Announcepara.Add("@Date", announce.Date);
+                                    Announcepara.Add("@AnnouncerName", announce.AnnouncerName);
+                                    Announcepara.Add("@DueAmount", announce.DueAmount);
+                                    Announcepara.Add("@Date", announce.DueDate);
                                     Announcepara.Add("@CreatedBy", model.UserID);
 
                                     connection.Execute("InsertDonationReceiveAnnunceDue", Announcepara, transaction, commandType: CommandType.StoredProcedure);

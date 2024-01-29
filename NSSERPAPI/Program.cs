@@ -1,3 +1,5 @@
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,32 +7,39 @@ builder.Services.AddControllers();
 
 builder.Services.AddTransient<NSSERPAPI.Db_functions_for_Gangotri.Db_functions>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+});
 
 // Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebApp",
         builder => builder
-            .AllowAnyOrigin()  // You can restrict this to specific origins if needed
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
+    
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+    });
 }
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowWebApp"); // Apply CORS middleware before other middleware
+app.UseCors("AllowWebApp");
 
 app.UseAuthorization();
 

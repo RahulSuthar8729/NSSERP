@@ -61,6 +61,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 }
                 else
                 {
+                    Response.WriteAsJsonAsync(response);
                     // Handle other error cases if needed
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }

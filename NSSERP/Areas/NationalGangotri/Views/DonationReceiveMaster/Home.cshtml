@@ -123,9 +123,15 @@
 
                 </div>
                 <br />
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Receive Details</legend>
-                    <div class="row">
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiveDetailsContent" aria-expanded="false" aria-controls="receiveDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Receive Details</span>
+                        </button>
+                    </legend>
+                    <div id="receiveDetailsContent" class="nested-form-container collapse show">
+                       
                         <div id="divReceiveHead" class="col-lg-3" style="display: none;">
                             <div class="form-group">
                                 <label for="receivehead">Receive Head</label>
@@ -158,273 +164,279 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="nested-form-container">
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label for="Receive ID">Receive ID</label>
+                                    <input type="text" disabled class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="Receive Date">Receive Date</label>
+                                    <input type="text" disabled value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
+                                </div>
 
-                    <div class="nested-form-container">
-                        <div class="row">
-                            <div class="form-group col-lg-3">
-                                <label for="Receive ID">Receive ID</label>
-                                <input type="text" disabled class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="Receive Date">Receive Date</label>
-                                <input type="text" disabled value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
-                            </div>
-
-                            <script>
-                                $(document).ready(function () {
-                                    // Apply Select2 to your dropdown element by its ID
-                                    $('#ID').select2();
-                                    $('#headInput').select2();
-                                    $('#Instruction').select2();
-                                });
-                            </script>
-                            <div class="form-group col-lg-3">
-                                <label for="ID">Receive in Event:</label>
-
-                                <select class="form-control" id="ID" name="ID" asp-for="ID">
-                                    <option value="" selected disabled>Select Event</option>
-                                    @foreach (var eventlist in Model.ReceiveInEventList)
-                                    {
-                                        <option value="@eventlist.ID" data-eventname="@eventlist.EventName">
-                                            @eventlist.EventName
-                                        </option>
-                                    }
-                                </select>
-                                <input type="hidden" name="EventName" asp-for="EventName" id="EventNameHidden" />
                                 <script>
-                                    $("#ID").change(function () {
-                                        var selectedEventName = $(this).find("option:selected").data("eventname");
-                                        $("#EventNameHidden").val(selectedEventName);
+                                    $(document).ready(function () {
+                                        // Apply Select2 to your dropdown element by its ID
+                                        $('#ID').select2();
+                                        $('#headInput').select2();
+                                        $('#Instruction').select2();
+                                    });
+                                </script>
+                                <div class="form-group col-lg-3">
+                                    <label for="ID">Receive in Event:</label>
+
+                                    <select class="form-control" id="ID" name="ID" asp-for="ID">
+                                        <option value="" selected disabled>Select Event</option>
+                                        @foreach (var eventlist in Model.ReceiveInEventList)
+                                        {
+                                            <option value="@eventlist.ID" data-eventname="@eventlist.EventName">
+                                                @eventlist.EventName
+                                            </option>
+                                        }
+                                    </select>
+                                    <input type="hidden" name="EventName" asp-for="EventName" id="EventNameHidden" />
+                                    <script>
+                                        $("#ID").change(function () {
+                                            var selectedEventName = $(this).find("option:selected").data("eventname");
+                                            $("#EventNameHidden").val(selectedEventName);
+                                        });
+
+                                        var modelID = parseInt('@Model.ReceiveInEventID'); // Convert to number
+                                        // Convert to string for comparison
+                                        if (modelID) {
+                                            $("#ID").val(modelID);
+                                            $("#ID").trigger("change"); // Trigger the change event to update the hidden field
+                                        }
+                                    </script>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="Campaign">Campaign</label>
+                                    <select class="custom-select" asp-for="" id="Campaign" name="CampaignID">
+                                        <option value="" selected disabled>Select</option>
+                                        @if (Model != null)
+                                        {
+                                            foreach (var mod in Model.campaignlist)
+                                            {
+                                                <option value="@mod.REF_ID" data-campaignname="@mod.CampaignName">@mod.CampaignName</option>
+                                            }
+                                        }
+                                    </select>
+                                    <input type="hidden" name="CampaignName" asp-for="CampaignName" id="CampaignNamehideen" />
+                                </div>
+
+                                <script>
+                                    $("#Campaign").change(function () {
+                                        var selectedEventName = $(this).find("option:selected").data("campaignname");
+                                        $("#CampaignNamehideen").val(selectedEventName);
                                     });
 
-                                    var modelID = parseInt('@Model.ReceiveInEventID'); // Convert to number
+                                    var modelID = parseInt('@Model.CampaignID'); // Convert to number
                                     // Convert to string for comparison
                                     if (modelID) {
-                                        $("#ID").val(modelID);
-                                        $("#ID").trigger("change"); // Trigger the change event to update the hidden field
+                                        $("#Campaign").val(modelID);
+                                        $("#Campaign").trigger("change"); // Trigger the change event to update the hidden field
                                     }
                                 </script>
-                            </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="">Donor ID</label>
+                                    <input class="form-control" placeholder="Please enter the donor ID to fetch donor data." id="DonorID" value="@Model.DonorID" asp-for="DonorID" name="DonorID" />
+                                </div>
 
-                            <div class="form-group col-lg-3">
-                                <label for="Campaign">Campaign</label>
-                                <select class="custom-select" asp-for="" id="Campaign" name="CampaignID">
-                                    <option value="" selected disabled>Select</option>
-                                    @if (Model != null)
-                                    {
-                                        foreach (var mod in Model.campaignlist)
-                                        {
-                                            <option value="@mod.REF_ID" data-campaignname="@mod.CampaignName">@mod.CampaignName</option>
-                                        }
-                                    }
-                                </select>
-                                <input type="hidden" name="CampaignName" asp-for="CampaignName" id="CampaignNamehideen" />
-                            </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#DonorID').blur(function () {
+                                            var enteredDonorID = $(this).val();
+                                            $.ajax({
+                                                url: '/NationalGangotri/DonationReceiveMaster/GetDataByDonorID',
+                                                type: 'GET',
+                                                data: { donorID: enteredDonorID },
+                                                success: function (response) {
+                                                    if (response != null) {
+                                                        var jsonData = JSON.parse(response.data);
 
-                            <script>
-                                $("#Campaign").change(function () {
-                                    var selectedEventName = $(this).find("option:selected").data("campaignname");
-                                    $("#CampaignNamehideen").val(selectedEventName);
-                                });
+                                                        // Populate form fields with JSON data
+                                                        // Populate form fields with JSON data
+                                                        selectOptionByText('#NamePrefix', jsonData.NamePrefix);
 
-                                var modelID = parseInt('@Model.CampaignID'); // Convert to number
-                                // Convert to string for comparison
-                                if (modelID) {
-                                    $("#Campaign").val(modelID);
-                                    $("#Campaign").trigger("change"); // Trigger the change event to update the hidden field
-                                }
-                            </script>
-                            <div class="form-group col-lg-3">
-                                <label for="">Donor ID</label>
-                                <input class="form-control" placeholder="Please enter the donor ID to fetch donor data." id="DonorID" value="@Model.DonorID" asp-for="DonorID" name="DonorID" />
-                            </div>
+                                                        // Function to select option in a select element based on text
+                                                        function selectOptionByText(selectId, text) {
+                                                            var select = $(selectId);
 
-                            <script>
-                                $(document).ready(function () {
-                                    $('#DonorID').blur(function () {
-                                        var enteredDonorID = $(this).val();
-                                        $.ajax({
-                                            url: '/NationalGangotri/DonationReceiveMaster/GetDataByDonorID',
-                                            type: 'GET',
-                                            data: { donorID: enteredDonorID },
-                                            success: function (response) {
-                                                if (response != null) {
-                                                    var jsonData = JSON.parse(response.data);
+                                                            // Check if text is defined before using trim
+                                                            if (text !== undefined && text !== null) {
+                                                                text = text.trim();
+                                                            }
 
-                                                    // Populate form fields with JSON data
-                                                    // Populate form fields with JSON data
-                                                    selectOptionByText('#NamePrefix', jsonData.NamePrefix);
-
-                                                    // Function to select option in a select element based on text
-                                                    function selectOptionByText(selectId, text) {
-                                                        var select = $(selectId);
-
-                                                        // Check if text is defined before using trim
-                                                        if (text !== undefined && text !== null) {
-                                                            text = text.trim();
+                                                            select.find('option:contains("' + text + '")').prop('selected', true);
                                                         }
 
-                                                        select.find('option:contains("' + text + '")').prop('selected', true);
+                                                        selectOptionByText('#PrefixToFullName', jsonData.PrefixToFullName);
+                                                        $('#FullName').val(jsonData.FullName);
+                                                        $('#RelationToFullName').val(jsonData.RelationToFullName);
+
+                                                        // Format date using moment.js (make sure to include moment.js in your project)
+                                                        $('#DateOfBirth').val(moment(jsonData.DateOfBirth).format('YYYY-MM-DD'));
+
+                                                        $('#Company').val(jsonData.Company);
+                                                        $('#FullAddress').val(jsonData.FullAddress);
+                                                        $('#PinCode1').val(jsonData.PinCode);
+                                                        $('#CountryID').val(jsonData.CountryID);
+
+
+                                                        var pinCodeMaster = JSON.parse(jsonData.pinCodeMasterList);
+
+                                                        // Bind the StateID dropdown
+                                                        $('#StateID').empty().append('<option value="' + pinCodeMaster.StateID + '">' + pinCodeMaster.StateName + '</option>');
+
+                                                        // Populate District dropdown
+                                                        $('#DistrictID').empty().append('<option value="' + pinCodeMaster.DistrictID + '">' + pinCodeMaster.DistrictName + '</option>');
+
+                                                        // Populate City dropdown
+                                                        $('#CityID').empty().append('<option value="' + pinCodeMaster.CityID + '">' + pinCodeMaster.CityName + '</option>');
+                                                        $('#EmailID').val(jsonData.EmailID);
+                                                        $('#StdCode').val(jsonData.StdCode);
+                                                        $('#PhoneR').val(jsonData.PhoneR);
+                                                        $('#IsPermanentAddressDiff').prop('checked', jsonData.IsPermanentAddressDiff);
+
+                                                        // Bind the mobile numbers table
+                                                        bindMobileNumbersTable(jsonData.MobileListJson);
+
+                                                        // Bind the identity details
+                                                        bindIdentityDetails(jsonData.IdentityListJson);
+                                                    } else {
+                                                        console.log("No data found for the entered DonorID");
                                                     }
-
-                                                    selectOptionByText('#PrefixToFullName', jsonData.PrefixToFullName);
-                                                    $('#FullName').val(jsonData.FullName);
-                                                    $('#RelationToFullName').val(jsonData.RelationToFullName);
-
-                                                    // Format date using moment.js (make sure to include moment.js in your project)
-                                                    $('#DateOfBirth').val(moment(jsonData.DateOfBirth).format('YYYY-MM-DD'));
-
-                                                    $('#Company').val(jsonData.Company);
-                                                    $('#FullAddress').val(jsonData.FullAddress);
-                                                    $('#PinCode1').val(jsonData.PinCode);
-                                                    $('#CountryID').val(jsonData.CountryID);
-
-
-                                                    var pinCodeMaster = JSON.parse(jsonData.pinCodeMasterList);
-
-                                                    // Bind the StateID dropdown
-                                                    $('#StateID').empty().append('<option value="' + pinCodeMaster.StateID + '">' + pinCodeMaster.StateName + '</option>');
-
-                                                    // Populate District dropdown
-                                                    $('#DistrictID').empty().append('<option value="' + pinCodeMaster.DistrictID + '">' + pinCodeMaster.DistrictName + '</option>');
-
-                                                    // Populate City dropdown
-                                                    $('#CityID').empty().append('<option value="' + pinCodeMaster.CityID + '">' + pinCodeMaster.CityName + '</option>');
-                                                    $('#EmailID').val(jsonData.EmailID);
-                                                    $('#StdCode').val(jsonData.StdCode);
-                                                    $('#PhoneR').val(jsonData.PhoneR);
-                                                    $('#IsPermanentAddressDiff').prop('checked', jsonData.IsPermanentAddressDiff);
-
-                                                    // Bind the mobile numbers table
-                                                    bindMobileNumbersTable(jsonData.MobileListJson);
-
-                                                    // Bind the identity details
-                                                    bindIdentityDetails(jsonData.IdentityListJson);
-                                                } else {
-                                                    console.log("No data found for the entered DonorID");
-                                                }
-                                            },
-                                            // ... (rest of your code)
+                                                },
+                                                // ... (rest of your code)
+                                            });
                                         });
+
+                                        // Function to select option in a select element based on text
+                                        function selectOptionByText(selectId, text) {
+                                            var select = $(selectId);
+
+                                            // Check if text is defined before using trim
+                                            if (text !== undefined && text !== null) {
+                                                text = text.trim();
+                                            }
+
+                                            select.find('option:contains("' + text + '")').prop('selected', true);
+                                        }
+                                        // Function to bind the mobile numbers table
+                                        function bindMobileNumbersTable(mobileListJson) {
+                                            var mobileNumbersTable = $("#mobileNumbersTable tbody");
+                                            mobileNumbersTable.empty(); // Clear existing rows
+
+                                            // Parse the JSON string in mobileListJson if it's a string
+                                            var mobileList = Array.isArray(mobileListJson) ? mobileListJson : JSON.parse(mobileListJson);
+
+
+                                            if (mobileList && mobileList.length > 0) {
+                                                // Loop through each item in the JSON array
+                                                $.each(mobileList, function (index, item) {
+                                                    // Add a new row to the table
+                                                    var newRow = $("<tr>");
+                                                    newRow.append("<td>" + item.CountryCode + "</td>");
+                                                    newRow.append("<td>" + item.MobileNumber + "</td>");
+                                                    newRow.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+
+                                                    // Add a special class to identify rows from MobileListJson
+                                                    newRow.addClass("json-data-row");
+
+                                                    mobileNumbersTable.append(newRow);
+                                                });
+
+                                                // Show the table
+                                                $("#mobileNumbersTable").css("visibility", "visible");
+                                            }
+                                        }
+                                        // Function to bind the identity details
+                                        function bindIdentityDetails(identityListJson) {
+                                            var addedIdentities = $("#addedIdentities");
+
+                                            // Clear existing identities
+                                            addedIdentities.empty();
+
+                                            // Check if identityListJson is not an empty string
+                                            if (identityListJson.trim() === "") {
+                                                return;
+                                            }
+
+                                            // Parse the JSON string in identityListJson
+                                            var identityList = Array.isArray(identityListJson) ? identityListJson : JSON.parse(identityListJson);
+
+                                            if (identityList && identityList.length > 0) {
+                                                // Loop through each item in the JSON array
+                                                $.each(identityList, function (index, identity) {
+                                                    // Create a new row for the added identity
+                                                    var newRow = $("<div class='form-group col-lg-3'>");
+                                                    newRow.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                                    newRow.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                                    newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+
+                                                    // Append the new row to the container
+                                                    addedIdentities.append(newRow);
+
+                                                    // Show the added identities section
+                                                    addedIdentities.css("display", "flex");
+                                                });
+
+                                                // Update the hidden field value with the current identities after binding
+                                                updateHiddenField();
+                                            }
+                                        }
+
+                                        // Function to update the hidden field with the current identities displayed in the UI
+                                        function updateHiddenField() {
+                                            var currentIdentities = [];
+
+                                            // Loop through each item in the addedIdentities section
+                                            $("#addedIdentities .form-group").each(function () {
+                                                var identityType = $(this).find("label").text();
+                                                var identityNumber = $(this).find("input").val();
+
+                                                currentIdentities.push({
+                                                    IdentityType: identityType,
+                                                    IdentityNumber: identityNumber
+                                                });
+                                            });
+
+                                            // Update the hidden field value with the current identities as a JSON string
+                                            $("#identityDetails").val(JSON.stringify(currentIdentities));
+                                        }
+
+
+
                                     });
+                                </script>
 
-                                    // Function to select option in a select element based on text
-                                    function selectOptionByText(selectId, text) {
-                                        var select = $(selectId);
-
-                                        // Check if text is defined before using trim
-                                        if (text !== undefined && text !== null) {
-                                            text = text.trim();
-                                        }
-
-                                        select.find('option:contains("' + text + '")').prop('selected', true);
-                                    }
-                                    // Function to bind the mobile numbers table
-                                    function bindMobileNumbersTable(mobileListJson) {
-                                        var mobileNumbersTable = $("#mobileNumbersTable tbody");
-                                        mobileNumbersTable.empty(); // Clear existing rows
-
-                                        // Parse the JSON string in mobileListJson if it's a string
-                                        var mobileList = Array.isArray(mobileListJson) ? mobileListJson : JSON.parse(mobileListJson);
-
-
-                                        if (mobileList && mobileList.length > 0) {
-                                            // Loop through each item in the JSON array
-                                            $.each(mobileList, function (index, item) {
-                                                // Add a new row to the table
-                                                var newRow = $("<tr>");
-                                                newRow.append("<td>" + item.CountryCode + "</td>");
-                                                newRow.append("<td>" + item.MobileNumber + "</td>");
-                                                newRow.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
-
-                                                // Add a special class to identify rows from MobileListJson
-                                                newRow.addClass("json-data-row");
-
-                                                mobileNumbersTable.append(newRow);
-                                            });
-
-                                            // Show the table
-                                            $("#mobileNumbersTable").css("visibility", "visible");
-                                        }
-                                    }
-                                    // Function to bind the identity details
-                                    function bindIdentityDetails(identityListJson) {
-                                        var addedIdentities = $("#addedIdentities");
-
-                                        // Clear existing identities
-                                        addedIdentities.empty();
-
-                                        // Check if identityListJson is not an empty string
-                                        if (identityListJson.trim() === "") {
-                                            return;
-                                        }
-
-                                        // Parse the JSON string in identityListJson
-                                        var identityList = Array.isArray(identityListJson) ? identityListJson : JSON.parse(identityListJson);
-
-                                        if (identityList && identityList.length > 0) {
-                                            // Loop through each item in the JSON array
-                                            $.each(identityList, function (index, identity) {
-                                                // Create a new row for the added identity
-                                                var newRow = $("<div class='form-group col-lg-3'>");
-                                                newRow.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
-                                                newRow.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                                newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
-
-                                                // Append the new row to the container
-                                                addedIdentities.append(newRow);
-
-                                                // Show the added identities section
-                                                addedIdentities.css("display", "flex");
-                                            });
-
-                                            // Update the hidden field value with the current identities after binding
-                                            updateHiddenField();
-                                        }
-                                    }
-
-                                    // Function to update the hidden field with the current identities displayed in the UI
-                                    function updateHiddenField() {
-                                        var currentIdentities = [];
-
-                                        // Loop through each item in the addedIdentities section
-                                        $("#addedIdentities .form-group").each(function () {
-                                            var identityType = $(this).find("label").text();
-                                            var identityNumber = $(this).find("input").val();
-
-                                            currentIdentities.push({
-                                                IdentityType: identityType,
-                                                IdentityNumber: identityNumber
-                                            });
-                                        });
-
-                                        // Update the hidden field value with the current identities as a JSON string
-                                        $("#identityDetails").val(JSON.stringify(currentIdentities));
-                                    }
-
-
-
-                                });
-                            </script>
-
-                            <div class="form-group col-lg-6">
-                                <label for="responsefrom">Enter Search Data</label>
-                                <input placeholder="Search data using Aadhaar, PAN, driving license, mobile number, or other identity numbers." class="form-control" id="" />
+                                <div class="form-group col-lg-6">
+                                    <label for="responsefrom">Enter Search Data</label>
+                                    <input placeholder="Search data using Aadhaar, PAN, driving license, mobile number, or other identity numbers." class="form-control" id="" />
+                                </div>
+                                <div class="from-group col-lg-2">
+                                    <br />
+                                    <a asp-action="" title="Search" asp-controller="Gangotri" class="btn btn-primary"><i class="fas fa-search "></i>Search</a>
+                                </div>
                             </div>
-                            <div class="from-group col-lg-2">
-                                <br />
-                                <a asp-action="" title="Search" asp-controller="Gangotri" class="btn btn-primary"><i class="fas fa-search "></i>Search</a>
-                            </div>
+
                         </div>
-
                     </div>
+
+                   
                 </fieldset>
 
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Personal Details</legend>
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#personalDetailsContent" aria-expanded="false" aria-controls="personalDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Personal Details</span>
+                        </button>
+                    </legend>
 
-                    <div class="nested-form-container">
+                    <div id="personalDetailsContent" class="nested-form-container collapse show">
                         <div class="row">
 
                             <div class="form-group col-lg-3">
@@ -481,10 +493,16 @@
                         </div>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Letter Communication Address Details</legend>
+                <div id="letteraddress" class="show border rounded p-3">
+                    <div class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon modal-header" type="button" data-toggle="collapse" data-target="#letteraddressContent" aria-expanded="false" aria-controls="letteraddressContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger">Letter Communication Address Details</span>
+                        </button>
+                    </div>
 
-                    <div class="nested-form-container">
+                    <div id="letteraddressContent" class="nested-form-container collapse ">
+
                         <div class="row">
                             <div class="form-group col-lg-9">
                                 <label for="Address1">Full Address<span style="color: red;">*</span></label>
@@ -789,14 +807,18 @@
                             togglePermanentAddress();
                         });
                     </script>
-                </fieldset>
 
-                <fieldset id="permanentAddressFieldset" style="display: none;">
-                    <legend style="font-weight:bold;" class="card">
-                        Permanent Address Details
+                </div>
+                <fieldset id="permanentAddressFieldset" class="show border rounded p-3" style="display: none;">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#permanentAddressContent" aria-expanded="false" aria-controls="permanentAddressContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger">Permanent Address Details</span>
+                        </button>
                     </legend>
 
-                    <div class="nested-form-container">
+                    <div id="permanentAddressContent" class="nested-form-container collapse">
+
                         <div class="row">
                             <div class="form-group col-lg-9">
                                 <label for="Address1">Full Address</label>
@@ -1014,10 +1036,16 @@
 
                 </fieldset>
 
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Contact Details</legend>
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#contactDetailsContent" aria-expanded="false" aria-controls="contactDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger">Contact Details</span>
+                        </button>
+                    </legend>
 
-                    <div class="nested-form-container">
+                    <div id="contactDetailsContent" class="nested-form-container collapse">
+
                         <div class="row">
                             @if (Model.ReceiveID == null)
                             {
@@ -1202,9 +1230,15 @@
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Identity Details</legend>
-                    <div class="nested-form-container">
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#identityDetailsContent" aria-expanded="false" aria-controls="identityDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger">Identity Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="identityDetailsContent" class="nested-form-container collapse">
                         @if (Model.ReceiveID == null)
                         {
                             <div class="row">
@@ -1461,10 +1495,16 @@
                 </script>
 
 
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Donation Details</legend>
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donationDetailsContent" aria-expanded="false" aria-controls="donationDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger">Donation Details</span>
+                        </button>
+                    </legend>
 
-                    <div class="nested-form-container">
+                    <div id="donationDetailsContent" class="nested-form-container collapse show">
+
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Prov. No">Prov. No<span style="color: red;">*</span></label>
@@ -1594,6 +1634,7 @@
                             <div class="form-group col-lg-3" id="DivTotalAmount" style="display: none;">
                                 <label for="Amount">Total Amount</label>
                                 <input readonly class="form-control" value="@Model.TotalAmount" id="TotalAmount" type="text" name="TotalAmount" asp-for="TotalAmount" />
+                                <input  value="@Model.TotalAmount" id="hdnTotalAmount" type="hidden" name="TotalAmount" asp-for="TotalAmount" />
                             </div>
 
                             <script>
@@ -1897,6 +1938,7 @@
 
                                         // Update the Total Amount field with the calculated total
                                         $("#TotalAmount").val(totalAmount.toFixed(2));
+                                        $("#hdnTotalAmount").val(totalAmount.toFixed(2));
                                     }
 
 
@@ -2062,9 +2104,15 @@
                     </div>
                 </fieldset>
 
-                <fieldset id="backOfficeFieldset">
-                    <legend style="font-weight: bold;" class="card">Back Office ReceiveID Transaction</legend>
-                    <div class="nested-form-container">
+                <fieldset id="backOfficeFieldset" class="show border rounded p-3">
+                    <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#backOfficeContent" aria-expanded="false" aria-controls="backOfficeContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Back Office ReceiveID Transaction</span>
+                        </button>
+                    </legend>
+
+                    <div id="backOfficeContent" class="nested-form-container collapse">
                         <table id="depositTable" class="table table-bordered">
                             <thead>
                                 <tr>
@@ -2119,9 +2167,15 @@
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend style="font-weight: bold;" class="card">Receipt Details</legend>
-                    <div class="nested-form-container">
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiptDetailsContent" aria-expanded="false" aria-controls="receiptDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Receipt Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="receiptDetailsContent" class="nested-form-container collapse show">
                         <div class="row">
 
                             <script>
@@ -2297,6 +2351,7 @@
                             </div>
 
                             <input type="hidden" id="jsonData" name="receiptdetailslist" asp-for="receiptdetailslist" />
+                            <input type="hidden" id="hdnPurposetotalamount"  />
 
                             <script>
                                 $(document).ready(function () {
@@ -2304,6 +2359,7 @@
                                     var tableContainer = $("#tableContainer");
                                     var jsonDataField = $("#jsonData");
                                     var totalAmountInput = $("#TotalAmount");
+                                  
 
                                     // Constants
                                     var SELECT_OPTION = "Select";
@@ -2380,9 +2436,10 @@
                                         updateHiddenField();
                                     });
 
-                                    // Function to update the hidden field with JSON data
                                     function updateHiddenField() {
                                         var data = [];
+                                        var totalAmount = 0;
+
                                         tableBody.find("tr").each(function () {
                                             var columns = $(this).find("td");
                                             var item = {
@@ -2392,6 +2449,10 @@
                                                 "Amount": columns.eq(3).text()
                                             };
                                             data.push(item);
+
+                                            // Calculate total amount
+                                            var amount = parseFloat(columns.eq(3).text()) || 0;
+                                            totalAmount += amount;
                                         });
 
                                         // Convert data array to JSON string
@@ -2399,8 +2460,10 @@
 
                                         // Set JSON data to hidden field
                                         jsonDataField.val(jsonData);
-                                    }
 
+                                        // Set total amount to the hidden field
+                                        $("#hdnPurposetotalamount").val(totalAmount.toFixed(2));
+                                    }
                                     // Function to toggle table visibility based on row count
                                     function toggleTableVisibility() {
                                         tableContainer.toggle(tableBody.find("tr").length > 0);
@@ -2446,9 +2509,15 @@
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend style="font-weight: bold;" class="card">Donor Instructions</legend>
-                    <div class="nested-form-container">
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donorInstructionsContent" aria-expanded="false" aria-controls="donorInstructionsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Donor Instructions</span>
+                        </button>
+                    </legend>
+
+                    <div id="donorInstructionsContent" class="nested-form-container collapse">
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="manavFormulaRequire">Manav Formula Require</label>
@@ -2674,39 +2743,38 @@
                     </div>
                 </fieldset>
 
-                <fieldset id="announceFieldset" style="display: none;">
-                    <legend style="font-weight:bold;" class="card">Announce Due Installment Details</legend>
-                    <div class="nested-form-container">
+                <fieldset id="announceFieldset" class="show border rounded p-3" style="display:none;">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#announceDetailsContent" aria-expanded="false" aria-controls="announceDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Announce Due Installment Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="announceDetailsContent" class="nested-form-container collapse">
                         @if (Model.ReceiveID == null)
                         {
                             <div class="row">
                                 <div class="form-group col-lg-3">
-                                    <label for="totalPurposeAmount">Total Purpose Amount</label>
-                                    <input class="form-control" id="totalPurposeAmountAnnounce" />
-                                </div>
+                                    <label for="announceId">Announce ID</label>
+                                    <input type="number" class="form-control" id="announceIdAnnounce" />
+                                </div> 
                                 <div class="form-group col-lg-3">
-                                    <label for="receiveAmount">Receive Amount</label>
-                                    <input class="form-control" id="receiveAmountAnnounce" />
+                                    <label>Announcer Name</label>
+                                    <input type="text" class="form-control" id="AnnouncerName" />
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="dueAmount">Due Amount</label>
-                                    <input class="form-control" id="dueAmountAnnounce" />
-                                </div>
-                                <div class="form-group col-lg-3">
-                                    <label for="announceId">Announce ID</label>
-                                    <input class="form-control" id="announceIdAnnounce" />
-                                </div>
-                                <div class="form-group col-lg-3">
-                                    <label for="amount">Amount</label>
-                                    <input class="form-control" id="amountAnnounce" />
-                                </div>
-                                <div class="form-group col-lg-3">
-                                    <label for="date1">Date</label>
-                                    <input type="date" class="form-control" id="date1Announce" />
-                                </div>
+                                    <input type="number" class="form-control" id="dueAmountAnnounce" />
+                                </div>                            
+                              
                                 <div class="form-group col-lg-2">
+                                    <label for="date1">Due Date</label>
+                                    <input type="date" class="form-control" id="dateAnnounce" />
+                                </div>                            
+                                <div class="form-group col-lg-1">
                                     <br />
-                                    <button class="btn btn-primary" id="btnAddAnnounce">Add</button>
+                                    <button class="btn btn-primary" id="btnAddAnnounce"><span class="fa fa-plus"></span>Add</button>
                                 </div>
                             </div>
                         }
@@ -2714,12 +2782,10 @@
                             <table class="table table-bordered" id="announceTable" style="display: none;">
                                 <thead>
                                     <tr>
-                                        <th>Total Purpose Amount</th>
-                                        <th>Receive Amount</th>
-                                        <th>Due Amount</th>
                                         <th>Announce ID</th>
-                                        <th>Amount</th>
-                                        <th>Date</th>
+                                        <th>Announcer Name</th>
+                                        <th>Due Amount</th>
+                                        <th>Due Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -2741,11 +2807,9 @@
                         if (announceDetailsListJson) {
                             $.each(announceDetailsListJson, function (index, item) {
                                 var newRow = $("<tr>");
-                                newRow.append("<td>" + item.TotalPurposeAmount + "</td>");
-                                newRow.append("<td>" + item.ReceiveAmount + "</td>");
-                                newRow.append("<td>" + item.DueAmount + "</td>");
                                 newRow.append("<td>" + item.AnnunceID + "</td>");
-                                newRow.append("<td>" + item.Amount + "</td>");
+                                newRow.append("<td>" + item.AnnouncerName + "</td>");
+                                newRow.append("<td>" + item.DueAmount + "</td>");
                                 newRow.append("<td>" + new Date(item.date).toLocaleDateString() + "</td>");
                                 newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
                                 tableBody.append(newRow);
@@ -2756,18 +2820,16 @@
                         $("#btnAddAnnounce").on("click", function () {
                             event.preventDefault();
                             var newRow = $("<tr>");
-                            newRow.append("<td>" + $("#totalPurposeAmountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#receiveAmountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#dueAmountAnnounce").val() + "</td>");
                             newRow.append("<td>" + $("#announceIdAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#amountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#date1Announce").val() + "</td>");
+                            newRow.append("<td>" + $("#AnnouncerName").val() + "</td>");
+                            newRow.append("<td>" + $("#dueAmountAnnounce").val() + "</td>");
+                            newRow.append("<td>" + $("#dateAnnounce").val() + "</td>");
                             newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
 
                             tableBody.append(newRow);
 
                             // Clear input fields
-                            $("#totalPurposeAmountAnnounce, #receiveAmountAnnounce, #dueAmountAnnounce, #announceIdAnnounce, #amountAnnounce, #date1Announce").val("");
+                            $("#announceIdAnnounce, #AnnouncerName, #dueAmountAnnounce, #dateAnnounce").val("");
 
                             // Show the table
                             $("#announceTable").show();
@@ -2794,12 +2856,10 @@
                             tableBody.find('tr').each(function () {
                                 var row = $(this);
                                 var rowData = {
-                                    TotalPurposeAmount: row.find('td:eq(0)').text(),
-                                    ReceiveAmount: row.find('td:eq(1)').text(),
+                                    AnnounceId: row.find('td:eq(0)').text(),
+                                    AnnouncerName: row.find('td:eq(1)').text(),
                                     DueAmount: row.find('td:eq(2)').text(),
-                                    AnnounceId: row.find('td:eq(3)').text(),
-                                    Amount: row.find('td:eq(4)').text(),
-                                    Date: row.find('td:eq(5)').text()
+                                    DueDate: row.find('td:eq(3)').text()
                                 };
                                 announceData.push(rowData);
                             });
@@ -2822,34 +2882,35 @@
                     });
                 </script>
 
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#scanCopyContent" aria-expanded="false" aria-controls="scanCopyContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;">Attach Scan Copy</span>
+                        </button>
+                    </legend>
+                    <div id="scanCopyContent" class="nested-form-container collapse show">
+                        <style>
+                            .file-preview {
+                                position: relative;
+                                max-width: 100%;
+                                height: auto;
+                                text-align: center;
+                            }
 
-                <fieldset>
-                    <legend style="font-weight:bold;" class="card">Attach Scan Copy</legend>
+                            .img-preview {
+                                max-width: 100%;
+                                max-height: 200px; /* Set a fixed height for the image preview */
+                                display: none;
+                                margin: 0 auto; /* Center the image horizontally */
+                            }
 
-                    <style>
-                        .file-preview {
-                            position: relative;
-                            max-width: 100%;
-                            height: auto;
-                            text-align: center;
-                        }
-
-                        .img-preview {
-                            max-width: 100%;
-                            max-height: 200px; /* Set a fixed height for the image preview */
-                            display: none;
-                            margin: 0 auto; /* Center the image horizontally */
-                        }
-
-                        .pdf-view {
-                            width: 100%;
-                            height: 200px; /* Set a fixed height for the PDF preview */
-                            display: none;
-                        }
-                    </style>
-
-                    <div class="nested-form-container">
-
+                            .pdf-view {
+                                width: 100%;
+                                height: 200px; /* Set a fixed height for the PDF preview */
+                                display: none;
+                            }
+                        </style>
 
                         <div class="row">
                             <div class="form-group col-lg-4" data-input-id="file1">
@@ -2899,64 +2960,91 @@
                 </fieldset>
                 @if (Model.ReceiveID != null)
                 {
-                    <table id="movementTable" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Sr.No.</th>
-                                <th>Receive ID</th>
-                                <th>Movement From</th>
-                                <th>Movement To</th>
-                                <th>User ID</th>
-                                <th>User Name</th>
-                                <th>Created On</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Table rows will be added dynamically here -->
-                        </tbody>
-                    </table>
-                    <script>
-                        $(document).ready(function () {
-                            function fillTableFromJson() {
-                                var jsonData = @Html.Raw(Model.MovementMasterListJson); // Parse JSON
-                                var tableBody = $('#movementTable tbody');
+                    <fieldset class="show border rounded p-3 your-custom-class">
+                        <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                            <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiveIdMovementDetailsContent" aria-expanded="false" aria-controls="receiveIdMovementDetailsContent">
+                                <span id="collapseIcon" class="">&#43;</span>
+                                <span style="font-size: larger;">ReceiveID Movement Details</span>
+                            </button>
+                        </legend>
 
-                                // Clear existing rows
-                                tableBody.empty();
-                                var srno = 1;
-                                // Iterate through JSON data and add rows to the table
-                                jsonData.forEach(function (item) {
-                                    var newRow = '<tr>' +
-                                        '<td>' + srno++ + '</td>' +
-                                        '<td>' + item.ReceiveID + '</td>' +
-                                        '<td>' + item.MovementFrom + '</td>' +
-                                        '<td>' + item.MovementTo + '</td>' +
-                                        '<td>' + item.UserID + '</td>' +
-                                        '<td>' + item.UserName + '</td>' +
-                                        '<td>' + new Date(item.CreatedOn).toLocaleString() + '</td>' +
-                                        '</tr>';
-                                    tableBody.append(newRow);
+                        <div id="receiveIdMovementDetailsContent" class="row nested-form-container collapse">
+
+                            <table id="movementTable" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>Receive ID</th>
+                                        <th>Movement From</th>
+                                        <th>Movement To</th>
+                                        <th>User ID</th>
+                                        <th>User Name</th>
+                                        <th>Created On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table rows will be added dynamically here -->
+                                </tbody>
+                            </table>
+                            <script>
+                                $(document).ready(function () {
+                                    function fillTableFromJson() {
+                                        var jsonData = @Html.Raw(Model.MovementMasterListJson); // Parse JSON
+                                        var tableBody = $('#movementTable tbody');
+
+                                        // Clear existing rows
+                                        tableBody.empty();
+                                        var srno = 1;
+                                        // Iterate through JSON data and add rows to the table
+                                        jsonData.forEach(function (item) {
+                                            var newRow = '<tr>' +
+                                                '<td>' + srno++ + '</td>' +
+                                                '<td>' + item.ReceiveID + '</td>' +
+                                                '<td>' + item.MovementFrom + '</td>' +
+                                                '<td>' + item.MovementTo + '</td>' +
+                                                '<td>' + item.UserID + '</td>' +
+                                                '<td>' + item.UserName + '</td>' +
+                                                '<td>' + new Date(item.CreatedOn).toLocaleString() + '</td>' +
+                                                '</tr>';
+                                            tableBody.append(newRow);
+                                        });
+
+                                        // Show the table
+                                        $('#movementTable').show();
+                                    }
+
+                                    // Call the function to fill the table on page load
+                                    fillTableFromJson();
                                 });
+                            </script>
 
-                                // Show the table
-                                $('#movementTable').show();
-                            }
-
-                            // Call the function to fill the table on page load
-                            fillTableFromJson();
-                        });
-                    </script>
-
+                        </div>
+                </fieldset>
+                  
                 }
-                <div class="row">
-                   
-                </div>
+                
                 <br />
                 <div class="container-lg">
                     <div class="text-center">
+                        <script>
+                            function validateAmount() {
+                                var totalAmount = parseFloat($("#hdnTotalAmount").val());
+                                var purposeTotalAmount = parseFloat($("#hdnPurposetotalamount").val());
+
+                                // Check if the totalAmount is neither less nor greater than purposeTotalAmount
+                                if (totalAmount === purposeTotalAmount) {
+                                   
+                                    return true; // Allow form submission
+                                } else {
+                                    alert("Total Donation amount must be equal to the purpose total amount.");
+                                    return false; // Prevent form submission
+                                }
+                            }
+                        </script>
+                           
                         @if (Model.ReceiveID == null)
                         {
-                            <button type="button" id="submitButton" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
+                            <button type="submit" class="btn btn-success" onclick="return validateAmount()"><i class="fas fa-check"></i> Submit</button>
 
 
                         }
