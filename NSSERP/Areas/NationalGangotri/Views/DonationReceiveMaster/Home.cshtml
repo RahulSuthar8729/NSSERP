@@ -131,7 +131,7 @@
                         </button>
                     </legend>
                     <div id="receiveDetailsContent" class="nested-form-container collapse show">
-                       
+
                         <div id="divReceiveHead" class="col-lg-3" style="display: none;">
                             <div class="form-group">
                                 <label for="receivehead">Receive Head</label>
@@ -337,15 +337,15 @@
                                                 // Loop through each item in the JSON array
                                                 $.each(mobileList, function (index, item) {
                                                     // Add a new row to the table
-                                                    var newRow = $("<tr>");
-                                                    newRow.append("<td>" + item.CountryCode + "</td>");
-                                                    newRow.append("<td>" + item.MobileNumber + "</td>");
-                                                    newRow.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+                                                    var newRowmobile = $("<tr>");
+                                                    newRowmobile.append("<td>" + item.CountryCode + "</td>");
+                                                    newRowmobile.append("<td>" + item.MobileNumber + "</td>");
+                                                    newRowmobile.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
 
                                                     // Add a special class to identify rows from MobileListJson
-                                                    newRow.addClass("json-data-row");
+                                                    newRowmobile.addClass("json-data-row");
 
-                                                    mobileNumbersTable.append(newRow);
+                                                    mobileNumbersTable.append(newRowmobile);
                                                 });
 
                                                 // Show the table
@@ -371,13 +371,13 @@
                                                 // Loop through each item in the JSON array
                                                 $.each(identityList, function (index, identity) {
                                                     // Create a new row for the added identity
-                                                    var newRow = $("<div class='form-group col-lg-3'>");
-                                                    newRow.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
-                                                    newRow.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                                    newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+                                                    var newRowIdentity = $("<div class='form-group col-lg-3'>");
+                                                    newRowIdentity.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                                    newRowIdentity.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                                    newRowIdentity.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
                                                     // Append the new row to the container
-                                                    addedIdentities.append(newRow);
+                                                    addedIdentities.append(newRowIdentity);
 
                                                     // Show the added identities section
                                                     addedIdentities.css("display", "flex");
@@ -425,7 +425,7 @@
                         </div>
                     </div>
 
-                   
+
                 </fieldset>
 
                 <fieldset class="show border rounded p-3">
@@ -1106,15 +1106,15 @@
 
                                         // Loop through each row in the table
                                         $("#mobileNumbersTable tbody tr").each(function () {
-                                            var rowData = {};
+                                            var rowDatamobile = {};
                                             $(this).find("td").each(function (index, element) {
                                                 if (index === 0) {
-                                                    rowData.CountryCode = $(element).text();
+                                                    rowDatamobile.CountryCode = $(element).text();
                                                 } else if (index === 1) {
-                                                    rowData.MobileNumber = $(element).text();
+                                                    rowDatamobile.MobileNumber = $(element).text();
                                                 }
                                             });
-                                            tableDatamobile.push(rowData);
+                                            tableDatamobile.push(rowDatamobile);
                                         });
 
                                         // Store the JSON data in the hidden input field
@@ -1138,15 +1138,15 @@
                                         // Loop through each item in the JSON array
                                         $.each(mobileListJson, function (index, item) {
                                             // Add a new row to the table
-                                            var newRow = $("<tr>");
-                                            newRow.append("<td>" + item.CountryCode + "</td>");
-                                            newRow.append("<td>" + item.MobileNumber + "</td>");
-                                            newRow.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+                                            var newRowmobilelist = $("<tr>");
+                                            newRowmobilelist.append("<td>" + item.CountryCode + "</td>");
+                                            newRowmobilelist.append("<td>" + item.MobileNumber + "</td>");
+                                            newRowmobilelist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
 
                                             // Add a special class to identify rows from MobileListJson
-                                            newRow.addClass("json-data-row");
+                                            newRowmobilelist.addClass("json-data-row");
 
-                                            $("#mobileNumbersTable tbody").append(newRow);
+                                            $("#mobileNumbersTable tbody").append(newRowmobilelist);
 
                                             // Show the table
                                             $("#mobileNumbersTable").css("visibility", "visible");
@@ -1178,15 +1178,15 @@
                                         // Rest of your existing code...
 
                                         // Add a new row to the table
-                                        var newRow = $("<tr>");
-                                        newRow.append("<td>" + countryCode + "</td>");
-                                        newRow.append("<td>" + mobileNumber + "</td>");
-                                        newRow.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+                                        var newRowmobilenumberlist = $("<tr>");
+                                        newRowmobilenumberlist.append("<td>" + countryCode + "</td>");
+                                        newRowmobilenumberlist.append("<td>" + mobileNumber + "</td>");
+                                        newRowmobilenumberlist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
 
                                         // Add a special class to identify manually added rows
-                                        newRow.addClass("manual-data-row");
+                                        newRowmobilenumberlist.addClass("manual-data-row");
 
-                                        $("#mobileNumbersTable tbody").append(newRow);
+                                        $("#mobileNumbersTable tbody").append(newRowmobilenumberlist);
 
                                         // Show the table
                                         $("#mobileNumbersTable").css("visibility", "visible");
@@ -1343,13 +1343,13 @@
                                 $("#identityDetails").val(JSON.stringify(existingIdentities));
 
                                 // Create a new row for the added identity
-                                var newRow = $("<div class='form-group col-lg-3'>");
-                                newRow.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
-                                newRow.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                var newRowidentityList = $("<div class='form-group col-lg-3'>");
+                                newRowidentityList.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                newRowidentityList.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
                                 // newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
                                 // Append the new row to the container
-                                $("#addedIdentities").append(newRow);
+                                $("#addedIdentities").append(newRowidentityList);
 
                                 // Show the added identities section
                                 $("#addedIdentities").css("display", "flex");
@@ -1459,13 +1459,13 @@
                             $("#identityDetails").val(JSON.stringify(existingIdentities));
 
                             // Create a new row for the added identity
-                            var newRow = $("<div class='form-group col-lg-3'>");
-                            newRow.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
-                            newRow.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
-                            newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+                            var newRowidentitydetails = $("<div class='form-group col-lg-3'>");
+                            newRowidentitydetails.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
+                            newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
+                            newRowidentitydetails.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
                             // Append the new row to the container
-                            $("#addedIdentities").append(newRow);
+                            $("#addedIdentities").append(newRowidentitydetails);
 
                             // Show the added identities section
                             $("#addedIdentities").css("display", "flex");
@@ -1633,9 +1633,10 @@
                             </div>
                             <div class="form-group col-lg-3" id="DivTotalAmount" style="display: none;">
                                 <label for="Amount">Total Amount</label>
-                                <input readonly class="form-control" value="@Model.TotalAmount" id="TotalAmount" type="text" name="TotalAmount" asp-for="TotalAmount" />
-                                <input  value="@Model.TotalAmount" id="hdnTotalAmount" type="hidden" name="TotalAmount" asp-for="TotalAmount" />
+                                <input class="form-control" id="TotalAmount" name="TotalAmount" asp-for="TotalAmount" readonly value="@Model.TotalAmount" />
+                                <input value="@Model.TotalAmount" id="hdnTotalAmount" type="hidden" name="TotalAmount" asp-for="TotalAmount" />
                             </div>
+
 
                             <script>
                                 function toggleMaterialFields() {
@@ -1765,14 +1766,13 @@
                             <input type="hidden" id="hiddenTempFilename" />
                             <script>
                                 $(document).ready(function () {
-                                    // ... Your existing code ...
 
                                     $("#submitButton").click(function (event) {
                                         event.preventDefault();
 
                                         var tableData = [];
                                         $("#bankDetailsTable tbody tr").each(function () {
-                                            var rowData = {
+                                            var rowDatabankdetails = {
                                                 DonationMode: $(this).find("td:eq(0)").text(),
                                                 BankName: $(this).find("td:eq(1)").text(),
                                                 ChequeDate: $(this).find("td:eq(2)").text(),
@@ -1784,14 +1784,12 @@
                                                 PdcCheque: $(this).find("td:eq(8)").text(),
                                                 TempDoc: $(this).find("td:eq(10)").text()
                                             };
-                                            tableData.push(rowData);
+                                            tableData.push(rowDatabankdetails);
                                         });
 
                                         // Store tableData in a hidden field
                                         $("#hiddenBankDetails").val(JSON.stringify(tableData));
 
-                                        // Submit the form
-                                        $("#yourFormId").submit();
                                     });
 
                                     // ... Your existing code ...
@@ -2045,7 +2043,7 @@
 
                                     // Function to add a new row to the bank details table
                                     function addBankDetailsRow(bankDetails) {
-                                        var newRow = "<tr>" +
+                                        var newRowBankAdd = "<tr>" +
                                             "<td>" + bankDetails.DonationMode + "</td>" +
                                             "<td>" + bankDetails.BankName + "</td>" +
                                             "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
@@ -2060,12 +2058,12 @@
                                             "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                             "</tr>";
 
-                                        $("#bankDetailsTable tbody").append(newRow);
+                                        $("#bankDetailsTable tbody").append(newRowBankAdd);
                                     }
 
                                     function OnModeladdBankDetailsRow(bankDetails) {
                                         var MainFolder1 = '@rootUrl/DocDonationReceive';
-                                        var newRow = "<tr>" +
+                                        var newRowModelaAdd = "<tr>" +
                                             "<td>" + bankDetails.DonationMode + "</td>" +
                                             "<td>" + bankDetails.BankName + "</td>" +
                                             "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
@@ -2080,7 +2078,7 @@
                                             // "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                             "</tr>";
 
-                                        $("#bankDetailsTable tbody").append(newRow);
+                                        $("#bankDetailsTable tbody").append(newRowModelaAdd);
                                     }
 
                                     $("#bankDetailsTable").on("click", ".delete-row", function () {
@@ -2142,7 +2140,7 @@
                                     var MainFolder1 = '@rootUrl/DocDonationReceive';
                                     // Iterate through JSON data and add rows to the table
                                     jsonData.forEach(function (item) {
-                                        var newRow = '<tr>' +
+                                        var newRowdepositeBank = '<tr>' +
                                             '<td>' + item.DepositeMode + '</td>' +
                                             '<td>' + item.DepositBank + '</td>' +
                                             '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
@@ -2151,7 +2149,7 @@
                                             '<td>' + item.TransactionID + '</td>' +
                                             "<td><a href='" + MainFolder1 + "/" + item.DocPayInSlip + "' target='_blank'>View</a></td>" +
                                             '</tr>';
-                                        tableBody.append(newRow);
+                                        tableBody.append(newRowdepositeBank);
                                     });
 
                                     // Show the table
@@ -2351,7 +2349,7 @@
                             </div>
 
                             <input type="hidden" id="jsonData" name="receiptdetailslist" asp-for="receiptdetailslist" />
-                            <input type="hidden" id="hdnPurposetotalamount"  />
+                            <input type="hidden" id="hdnPurposetotalamount" />
 
                             <script>
                                 $(document).ready(function () {
@@ -2359,7 +2357,7 @@
                                     var tableContainer = $("#tableContainer");
                                     var jsonDataField = $("#jsonData");
                                     var totalAmountInput = $("#TotalAmount");
-                                  
+
 
                                     // Constants
                                     var SELECT_OPTION = "Select";
@@ -2485,15 +2483,15 @@
                                         if (purpose !== SELECT_OPTION && quantity && amount) {
                                             return true;
                                         } else {
-                                            alert(ERROR_MESSAGES.FILL_ALL_FIELDS);
-                                            return false;
+                                            // alert(ERROR_MESSAGES.FILL_ALL_FIELDS);
+                                            //return false;
                                         }
                                     }
 
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount) {
-                                        var newRow = `<tr><td>${head}</td><td>${purpose}</td><td>${quantity}</td><td>${amount.toFixed(2)}</td><td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td></tr>`;
-                                        tableBody.append(newRow);
+                                        var newRowPurpose = `<tr><td>${head}</td><td>${purpose}</td><td>${quantity}</td><td>${amount.toFixed(2)}</td><td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td></tr>`;
+                                        tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
                                     }
 
@@ -2615,12 +2613,12 @@
 
                                     if (donorInstructionsListJson && donorInstructionsListJson.length > 0) {
                                         $.each(donorInstructionsListJson, function (index, item) {
-                                            var newRow = "<tr>" +
+                                            var newRowDonorInstruction = "<tr>" +
                                                 "<td>" + item.InstructionName + "<input type='hidden' name='SelectedInstructions' value='" + item.InstructionId + "' /></td>" +
                                                 "<td>" + item.Remarks + "</td>" +
                                                 // "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
                                                 "</tr>";
-                                            instructionTableBody.append(newRow);
+                                            instructionTableBody.append(newRowDonorInstruction);
                                         });
                                         toggleTableVisibility();
                                     }
@@ -2639,13 +2637,13 @@
                                         }
 
                                         // Add row to the table
-                                        var newRow = "<tr>" +
+                                        var newRowDonorInstAdd = "<tr>" +
                                             "<td>" + selectedInstructionName + "<input type='hidden' name='SelectedInstructions' value='" + selectedInstructionId + "' /></td>" +
                                             "<td>" + remarks + "</td>" +
                                             "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
                                             "</tr>";
 
-                                        instructionTableBody.append(newRow);
+                                        instructionTableBody.append(newRowDonorInstAdd);
 
                                         // Update hidden field with JSON data
                                         updateHiddenField();
@@ -2728,9 +2726,9 @@
                                 var tableBody = $("#tableBody");
 
                                 $("#btn").on("click", function () {
-                                    var newRow = $("<tr>");
+                                    var newRowaddclick = $("<tr>");
                                     // Add your row creation logic here
-                                    tableBody.append(newRow);
+                                    tableBody.append(newRowaddclick);
 
                                     // Clear input fields
                                     $("#totalPurposeAmount, #receiveAmount, #dueAmount, #announceId, #amount, #date1").val("");
@@ -2758,7 +2756,7 @@
                                 <div class="form-group col-lg-3">
                                     <label for="announceId">Announce ID</label>
                                     <input type="number" class="form-control" id="announceIdAnnounce" />
-                                </div> 
+                                </div>
                                 <div class="form-group col-lg-3">
                                     <label>Announcer Name</label>
                                     <input type="text" class="form-control" id="AnnouncerName" />
@@ -2766,12 +2764,12 @@
                                 <div class="form-group col-lg-3">
                                     <label for="dueAmount">Due Amount</label>
                                     <input type="number" class="form-control" id="dueAmountAnnounce" />
-                                </div>                            
-                              
+                                </div>
+
                                 <div class="form-group col-lg-2">
                                     <label for="date1">Due Date</label>
                                     <input type="date" class="form-control" id="dateAnnounce" />
-                                </div>                            
+                                </div>
                                 <div class="form-group col-lg-1">
                                     <br />
                                     <button class="btn btn-primary" id="btnAddAnnounce"><span class="fa fa-plus"></span>Add</button>
@@ -2806,27 +2804,27 @@
                         var announceDetailsListJson = @Html.Raw(Model.AnnounceDetailsListJson);
                         if (announceDetailsListJson) {
                             $.each(announceDetailsListJson, function (index, item) {
-                                var newRow = $("<tr>");
-                                newRow.append("<td>" + item.AnnunceID + "</td>");
-                                newRow.append("<td>" + item.AnnouncerName + "</td>");
-                                newRow.append("<td>" + item.DueAmount + "</td>");
-                                newRow.append("<td>" + new Date(item.date).toLocaleDateString() + "</td>");
-                                newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
-                                tableBody.append(newRow);
+                                var newRowannouncebind = $("<tr>");
+                                newRowannouncebind.append("<td>" + item.AnnunceID + "</td>");
+                                newRowannouncebind.append("<td>" + item.AnnouncerName + "</td>");
+                                newRowannouncebind.append("<td>" + item.DueAmount + "</td>");
+                                newRowannouncebind.append("<td>" + new Date(item.date).toLocaleDateString() + "</td>");
+                                newRowannouncebind.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
+                                tableBody.append(newRowannouncebind);
                             });
                             toggleTableVisibility();
                         }
 
                         $("#btnAddAnnounce").on("click", function () {
                             event.preventDefault();
-                            var newRow = $("<tr>");
-                            newRow.append("<td>" + $("#announceIdAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#AnnouncerName").val() + "</td>");
-                            newRow.append("<td>" + $("#dueAmountAnnounce").val() + "</td>");
-                            newRow.append("<td>" + $("#dateAnnounce").val() + "</td>");
-                            newRow.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
+                            var newRowAddAnnounce = $("<tr>");
+                            newRowAddAnnounce.append("<td>" + $("#announceIdAnnounce").val() + "</td>");
+                            newRowAddAnnounce.append("<td>" + $("#AnnouncerName").val() + "</td>");
+                            newRowAddAnnounce.append("<td>" + $("#dueAmountAnnounce").val() + "</td>");
+                            newRowAddAnnounce.append("<td>" + $("#dateAnnounce").val() + "</td>");
+                            newRowAddAnnounce.append("<td><button class='btn btn-danger btn-sm delete-row-announce'>Delete</button></td>");
 
-                            tableBody.append(newRow);
+                            tableBody.append(newRowAddAnnounce);
 
                             // Clear input fields
                             $("#announceIdAnnounce, #AnnouncerName, #dueAmountAnnounce, #dateAnnounce").val("");
@@ -2855,13 +2853,13 @@
 
                             tableBody.find('tr').each(function () {
                                 var row = $(this);
-                                var rowData = {
+                                var rowDataannounce = {
                                     AnnounceId: row.find('td:eq(0)').text(),
                                     AnnouncerName: row.find('td:eq(1)').text(),
                                     DueAmount: row.find('td:eq(2)').text(),
                                     DueDate: row.find('td:eq(3)').text()
                                 };
-                                announceData.push(rowData);
+                                announceData.push(rowDataannounce);
                             });
 
                             // Convert data array to JSON string
@@ -2997,7 +2995,7 @@
                                         var srno = 1;
                                         // Iterate through JSON data and add rows to the table
                                         jsonData.forEach(function (item) {
-                                            var newRow = '<tr>' +
+                                            var newRowMovement = '<tr>' +
                                                 '<td>' + srno++ + '</td>' +
                                                 '<td>' + item.ReceiveID + '</td>' +
                                                 '<td>' + item.MovementFrom + '</td>' +
@@ -3006,7 +3004,7 @@
                                                 '<td>' + item.UserName + '</td>' +
                                                 '<td>' + new Date(item.CreatedOn).toLocaleString() + '</td>' +
                                                 '</tr>';
-                                            tableBody.append(newRow);
+                                            tableBody.append(newRowMovement);
                                         });
 
                                         // Show the table
@@ -3019,10 +3017,10 @@
                             </script>
 
                         </div>
-                </fieldset>
-                  
+                    </fieldset>
+
                 }
-                
+
                 <br />
                 <div class="container-lg">
                     <div class="text-center">
@@ -3033,7 +3031,7 @@
 
                                 // Check if the totalAmount is neither less nor greater than purposeTotalAmount
                                 if (totalAmount === purposeTotalAmount) {
-                                   
+
                                     return true; // Allow form submission
                                 } else {
                                     alert("Total Donation amount must be equal to the purpose total amount.");
@@ -3041,11 +3039,10 @@
                                 }
                             }
                         </script>
-                           
+
                         @if (Model.ReceiveID == null)
                         {
-                            <button type="submit" class="btn btn-success" onclick="return validateAmount()"><i class="fas fa-check"></i> Submit</button>
-
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
 
                         }
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">

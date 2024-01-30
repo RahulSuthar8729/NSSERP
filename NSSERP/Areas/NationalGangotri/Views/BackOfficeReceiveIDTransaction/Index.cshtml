@@ -38,8 +38,6 @@
                 input.value = input.value.toUpperCase();
             }
         </script>
-
-
     }
 </head>
 <body>
@@ -112,7 +110,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="PaymentMode">Donation Mode</label>
-                                <select id="PaymentMode" disabled class="form-control" name="PaymentMode" asp-for="PaymentMode" onchange="toggleMaterialFields()">
+                                <select id="PaymentMode" disabled class="form-control" name="PaymentMode" asp-for="PaymentMode">
                                     <option value="" selected disabled>Select Donation Mode</option>
                                     @if (Model != null)
                                     {
@@ -298,15 +296,12 @@
                             <div class="form-group col-lg-2">
                                 <label for="DepositePaymentMode">Deposit Mode</label>
                                 <select id="DepositePaymentMode" required class="form-control" name="DepositePaymentMode" asp-for="DepositePaymentMode">
-                                    <option value="" selected disabled>Select Donation Mode</option>
-                                    @if (Model != null)
-                                    {
-                                        foreach (var paymentmode in Model.paymentModeList)
-                                        {
-                                            <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
-                                        }
-                                    }
+                                    <option value="" selected disabled>Select Deposit Mode</option>                                   
+                                    <option value="pay-in-slip" data-paymentmode="PAY-IN-SLIP">PAY-IN-SLIP</option>
+                                    <option value="debit-to-shadhak" data-paymentmode="Debit To Shadhak">Debit To Shadhak</option>
+                                    <option value="debit-to-person" data-paymentmode="Debit to Person">Debit to Person</option>                                  
                                 </select>
+
                             </div>
 
                             <div class="form-group col-lg-2">
@@ -315,9 +310,9 @@
                                     <option value="" selected disabled>Select Bank</option>
                                     @if (Model != null)
                                     {
-                                        @foreach (var bank in Model.bankmasterlist)
+                                        @foreach (var bank in Model.depositBankmaster)
                                         {
-                                            <option value="@bank.BankID">@bank.BankName</option>
+                                            <option value="@bank.bank_code">@bank.Bank_Name</option>
                                         }
                                     }
                                 </select>
@@ -345,9 +340,13 @@
                                     <input type="number" placeholder="Deposit Amount" asp-for="DepositeAmount" name="DepositeAmount" class="form-control" id="DepositeAmount">
                                 </div>
                             </div>
-                            <div class="form-group col-lg-2">
-                                <label for="">BankID/Transaction ID</label>
+                            <div class="form-group col-lg-1">
+                                <label for="">BankID</label>
                                 <input class="form-control" value="" id="DepositeBankID" type="text" name="DepositeBankID" asp-for="DepositeBankID" />
+                            </div>
+                            <div class="form-group col-lg-1">
+                                <label>Transaction ID</label>
+                                <input class="form-control" id="DepositeTrasactionID" type="text" name="DepositeTrasactionID" asp-for="DepositeTrasactionID" />
                             </div>
                             <div class="form-group col-lg-1" id="divMultiPayInSlip">
                                 <label for="MultiPayInSlip" id="lbl_MultiPayInSlip">Pay-In-Slip</label>
@@ -403,7 +402,8 @@
                                     <th>Deposit Date</th>
                                     <th>Currency Code</th>
                                     <th>Deposit Amount</th>
-                                    <th>BankID/Transaction ID</th>
+                                    <th>BankID</th>
+                                    <th>Transaction ID</th>
                                     <th>Pay-In-Slip</th>
                                     <th style="display:none"></th>
                                     <th>Action</th>
@@ -429,7 +429,7 @@
                                     event.preventDefault();
 
                                     var refNo = $('#RefNo').val();
-                                    var depositMode = $('#DepositePaymentMode option:selected').data('paymentmode');
+                                    var depositMode = $('#PaymentMode option:selected').data('paymentmode');
 
                                     // Check if donation mode is CASH
                                     if (depositMode.toUpperCase() === 'CASH') {

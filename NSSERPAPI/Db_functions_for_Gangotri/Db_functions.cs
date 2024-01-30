@@ -137,6 +137,16 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetAllBankMasters", commandType: CommandType.StoredProcedure);
             }
         }
+        public IEnumerable<dynamic> GetDepositBankMaster()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                return connection.Query<dynamic>("GetDepositeBankMaster", commandType: CommandType.StoredProcedure);
+            }
+        }
+
         public IEnumerable<dynamic>GetProvisionalReceiptbyId(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

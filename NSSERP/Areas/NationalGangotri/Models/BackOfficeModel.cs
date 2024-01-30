@@ -29,6 +29,14 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public IEnumerable<CurrencyMaster> currenciesList { get; set; }
         public List<DMSMovementListItems> MovementDetils { get; set; }
         public IEnumerable<BankMaster> bankmasterlist { get; set; }
+        public IEnumerable<DepositBankmaster> depositBankmaster {  get; set; }
+        public class DepositBankmaster() {
+            public int bank_code { get; set; }
+            public string Bank_Name { get; set; }
+            public string FullName { get; set; }            
+
+        }
+
         public int BankID { get; set; }
         public string BankName { get; set; }
         public class DMSMovementListItems()

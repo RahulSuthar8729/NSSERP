@@ -42,6 +42,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
 
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
+            firstDetail.depositBankmaster = _dbFunctions.GetDepositBankMaster();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
