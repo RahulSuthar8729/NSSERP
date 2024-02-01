@@ -1,0 +1,684 @@
+﻿@model NSSERP.Areas.NationalGangotri.Models.SankalpSiddhiDetails
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var temporaryFolder = Href("/TempDocDonationReceive");
+    var rootUrl = Url.Content("~");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    @section scripts {
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Select2 CSS and JS -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+        <!-- DataTables CSS and JS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#CityID').select2();
+                $('#StateID').select2();
+                $('#tableDetails').DataTable({
+                    "order": [[2, "desc"]],
+                    "paging": true, // Enable pagination
+                    "lengthMenu": [10, 25, 50, 75, 100], // Set custom page lengths
+                    "searching": true, // Enable searching
+                    "info": true, // Enable table information display
+                    "responsive": true, // Enable responsive design
+                    "columnDefs": [
+                        { "targets": [0, 1], "orderable": false } // Disable sorting for the first column (icons)
+                    ]
+
+                });
+                $('#CityID').select2();
+            });
+
+        </script>
+
+    }
+    <style>
+        /* Add your custom styles here */
+        body {
+            padding: 20px;
+            background-color: #f8f9fa; /* Set a background color */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Add horizontal scroll for small screens */
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%; /* Adjust the width as needed */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            background-color: #fff; /* Set a white background */
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #fff;
+                background-color: #28166f;
+            }
+
+            /* Add custom zoom-in effect on hover for tabs */
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #1cb8a1, #008081);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            .nav-link:hover::before {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+    </style>
+    <style>
+        .card-header.sticky-top {
+            background-color: #fff; /* Set a background color for the sticky header */
+            z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
+            border-bottom: 1px solid #dee2e6; /* Add a border to separate it from the content */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        @if (Model.msg != null)
+        {
+            ViewBag.msg = Model.msg;
+        }
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <h5 class="mb-0">
+                        <span style="color:#1cb8a1">SANKALP SIDDHI</span>
+                        <span style="color:#28166f">DETAILS</span>
+                    </h5>
+                </div>
+                <div class="col-12 col-md-3 mb-3 mb-md-0 text-left">
+                    <h5 class="mb-0">
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-12 col-md-3 text-md-right">
+                    @*   <a href="/Nationalgangotri/DonationReceiveMaster/Home" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a> *@
+                    <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning ml-2"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <form id="detailsform" action="/NationalGangotri/DonationReceiveMaterDetails/Index" method="post">
+            <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Post ID">Post ID</label>
+                                <input type="text" class="form-control" id="PostID" name="PostID">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Donator Name">Donator Name</label>
+                                <input type="text" class="form-control" value="@Model.FullName" id="FullName" name="FullName" asp-for="FullName">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Amount">Amount</label>
+                                <input type="text" class="form-control" value="@Model.TotalAmount" id="TotalAmount" asp="TotalAmount" name="TotalAmount">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Receive ID">Receive ID</label>
+                                <input type="text" class="form-control" value="@Model.ReceiveID" id="ReceiveID" name="ReceiveID" asp-for="ReceiveID">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Chq No.">Chq NO.</label>
+                                <input type="text" class="form-control" id="ChequeNo" asp-for="ChequeNo" name="ChequeNo">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Donation Mode">Donation Mode</label>
+                                <select id="PaymentMode" class="form-control" name="PaymentMode" asp-for="PaymentMode">
+                                    <option value="" selected disabled>Select Donation Mode</option>
+                                    @if (Model != null)
+                                    {
+                                        foreach (var paymentmode in Model.paymentModes)
+                                        {
+                                            <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
+                                        }
+                                    }
+                                </select>
+                                <input type="hidden" id="hdnpaymentmode" name="PaymentModeName" asp-for="PaymentModeName" />
+                                <!-- Include a hidden field for PaymentModeID -->
+                                <input type="hidden" id="hdnpaymentmodeid" name="PaymentModeID" asp-for="PaymentModeID" />
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    var modelPaymentModeID = parseInt('@Model.PaymentModeID');
+                                    if (modelPaymentModeID) {
+                                        $("#PaymentMode").val(modelPaymentModeID);
+                                    }
+
+                                    // Attach the change event to update the hidden fields
+                                    $("#PaymentMode").change(function () {
+                                        var selectedOption = $(this).find("option:selected");
+                                        var paymentModeName = selectedOption.data("paymentmode");
+                                        var paymentModeID = selectedOption.val();
+
+                                        $("#hdnpaymentmode").val(paymentModeName);
+                                        $("#hdnpaymentmodeid").val(paymentModeID);
+                                    });
+                                });
+
+
+                                $(document).ready(function () {
+                                    var modelCityID = parseInt('@Model.CityID');
+                                    if (modelCityID) {
+                                        $("#CityID").val(modelCityID);
+                                    }
+
+                                    var modelStateID = parseInt('@Model.StateID');
+                                    if (modelStateID) {
+                                        $("#StateID").val(modelStateID);
+                                    }
+
+                                    // Attach the change event to update the hidden fields for City
+                                    $("#CityID").change(function () {
+                                        var selectedOption = $(this).find("option:selected");
+                                        var cityID = selectedOption.val();
+                                        var cityName = selectedOption.text();
+
+                                        $("#hdnCityID").val(cityID);
+
+                                    });
+
+                                    // Attach the change event to update the hidden fields for State
+                                    $("#StateID").change(function () {
+                                        var selectedOption = $(this).find("option:selected");
+                                        var stateID = selectedOption.val();
+                                        var stateName = selectedOption.text();
+
+                                        $("#hdnStateID").val(stateID);
+
+                                    });
+                                });
+
+                            </script>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="row">
+                            <label asp-for="CityID" class="control-label">City</label>
+                            <div class="form-group">
+                                <select id="CityID" asp-for="CityID" name="CityID" class="form-control">
+                                    <option value="">Select City</option>
+                                    @foreach (var city in Model.CityMasterList)
+                                    {
+                                        <option value="@city.CityID">@city.CityName</option>
+                                    }
+                                </select>
+                                <input type="hidden" id="hdnCityName" name="CityName" asp-for="CityName" />
+                                <!-- Include a hidden field for CityID -->
+                                <input type="hidden" id="hdnCityID" name="CityID" asp-for="CityID" />
+                                <span asp-validation-for="CityID" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="row">
+                            <label for="StateID">State</label>
+                            <div class="form-group">
+                                <select id="StateID" asp-for="StateID" name="StateID" class="form-control">
+                                    <option value="">Select State</option>
+                                    @foreach (var state in Model.statelist)
+                                    {
+                                        <option value="@state.StateID">@state.StateName</option>
+                                    }
+                                </select>
+                                <input type="hidden" id="hdnStateName" name="StateName" asp-for="StateName" />
+                                <!-- Include a hidden field for StateID -->
+                                <input type="hidden" id="hdnStateID" name="StateID" asp-for="StateID" />
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="">Material</label>
+                                <select class="form-control" id="Material" name="Material">
+                                    <option value="Select">Select</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Prov.No.">Prov.No.</label>
+                                <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Date">Date</label>
+                                <input type="date" asp-for="ReceiveDate" value="@Model.ProvNo" class="form-control" id="ReceiveDate" name="ReceiveDate">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row">
+
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
+
+                                    <label class="form-check-label" for="Detailsnotcomplete">Details Not Complete</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+        </form>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="table-container">
+                <table id="tableDetails" class="table table-hover table-bordered">
+
+                    <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>RECEIVE ID</th>
+                            <th>RECEIVE BY</th>
+                            <th>ENTRY BY</th>
+                            <th>RECEIVE DATE</th>
+                            <th>PROV.NO.</th>
+                            <th>DONNER NAME</th>
+                            <th>ADDRESS</th>
+                            <th>CURRENCY</th>
+                            <th>AMOUNT</th>
+                            <th>PAYMENT MODE</th>
+                            <th>STATUS</th>
+                            <th>IF DETAILS NOT COMPLETE</th>
+
+                            @*     <th>IF UPDATION IN ADDRESS</th>
+
+                            <th>IF ANNOUNCE DUE IN FUTURE</th>
+                            <th>FORWARDED</th> *@
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.masterDetails)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID })" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("ViewBackOfficeDetails", "SankalpSiddhi", new { id = item.ReceiveID })" title="Map With Bank ID">
+                                            <i style="color:blueviolet;" class="fas fa-bank"></i>
+                                        </a>
+                                    </td>
+
+                                    <td>@item.ReceiveID</td>
+                                    <td>@item.ReceiveHeadName</td>
+                                    <td>@item.CreatedBy</td>
+                                    <td>@item.ReceiveDate.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
+                                    <td>@item.ProvNo</td>
+                                    <td>@item.FullName</td>
+                                    <td>@item.FullAddress</td>
+                                    <td>@item.CurrencyCode</td>
+                                    <td>@item.TotalAmount</td>
+                                    <td>@item.PaymentModeName</td>
+                                    <td>
+                                        @if (item.AppStatus == "BORT")
+                                        {
+                                            <a href="@Url.Action("Index", "BackOfficeReceiveIDTransaction", new { id = item.ReceiveID })" title="Verify">
+                                                <span class="text-danger">Pending At Back Office</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="text-warning">@item.AppStatus</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IfDetailsNotComplete.GetValueOrDefault())
+                                        {
+                                            <span class="text-danger">Details Not Complete</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">Details Completed</span>
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!-- Add this script to your HTML file -->
+    <script>
+        $(document).ready(function () {
+            // Add a click event listener to the BankID icon
+            $('#tableDetails tbody tr td:nth-child(2) a').on('click', function (e) {
+                e.preventDefault();
+
+                // Retrieve the receive ID from the data attribute or any other way based on your HTML structure
+                var receiveId = $(this).closest('tr').find('td:nth-child(3)').text();
+
+                // Make an AJAX request to fetch details based on receive ID
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDepositDetails", "SankalpSiddhi")', // Replace with your controller and action method
+                    data: { receiveId: receiveId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Process the received data
+                        if (data && data.data) {
+                            // Parse the JSON string into an array of objects
+                            var depositDetails = JSON.parse(data.data);
+
+                            // Check if data is an array or an object
+                            depositDetails = Array.isArray(depositDetails) ? depositDetails : [depositDetails];
+
+                            // Populate the Back Office ReceiveID Transaction fieldset with the received data
+                            populateFieldset(depositDetails);
+
+                            // Show the modal
+                            $('#myModal').modal('show');
+                        } else {
+                            alert('Failed to fetch details.');
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to fetch details. Please try again.');
+                    }
+                });
+            });
+
+            // Function to populate the Back Office ReceiveID Transaction fieldset with data
+            function populateFieldset(data) {
+                var tableBody = $('#depositTable tbody');
+                tableBody.empty();
+
+                var MainFolder1 = '@rootUrl/DocDonationReceive';
+                data.forEach(function (item) {
+                    var newRow = '<tr>' +
+                        '<td>' + item.DepositeMode + '</td>' +
+                        '<td>' + item.DepositBank + '</td>' +
+                        '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
+                        '<td>' + item.CurrencyCode + '</td>' +
+                        '<td>' + (item.DepositeAmount ? item.DepositeAmount.toFixed(2) : 'N/A') + '</td>' +
+                        '<td>' + item.BankID + '</td>' +
+                        '<td>' + item.TransactionID + '</td>' +
+                        "<td><a href='" + MainFolder1 + "/" + item.DocPayInSlip + "' target='_blank'>View</a></td>" +
+                        '</tr>';
+                    tableBody.append(newRow);
+                });
+
+                $('#depositTable').show();
+                $('#backOfficeFieldset').toggle(tableBody.find('tr').length > 0);
+            }
+
+            // Remove modal from the DOM when it's closed
+            $('body').on('hidden.bs.modal', '.modal', function () {
+                $(this).remove();
+            });
+        });
+    </script>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <!-- Added modal-lg class here -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Back Office ReceiveID Transaction Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   
+                        <div class="nested-form-container">
+                            <table id="depositTable" class="table table-bordered table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Deposit Mode</th>
+                                        <th>Deposit Bank</th>
+                                        <th>Deposit Date</th>
+                                        <th>Currency Code</th>
+                                        <th>Deposit Amount</th>
+                                        <th>BankID</th>
+                                        <th>TransactionID</th>
+                                        <th>Pay-In-Slip</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table rows will be added dynamically here -->
+                                </tbody>
+                            </table>
+                        </div>
+                 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <h5 class="mb-0">
+                    <span style="color:#1cb8a1">BANK STATEMENT</span>
+                    <span style="color:#28166f">DETAILS</span>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
+        <tr>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Bank Code/SAP Tran Code</label>
+                        <input type="text" class="form-control" id="" name="">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
+                            <option value="" selected disabled>Select Bank</option>
+                            @if (Model != null)
+                            {
+                                @foreach (var bank in Model.DepositBankList)
+                                {
+                                    <option value="@bank.bank_code">@bank.Bank_Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Annoounce ID</label>
+                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Particular </label>
+                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Amount </label>
+                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                    </div>
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Branch </label>
+                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Cheque No.</label>
+                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label asp-for="DateFrom">DateFrom</label>
+                        <input type="date" asp-for="DateFrom" class="form-control" id="DateFrom" name="DateFrom">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="form-group">
+                        <label asp-for="DateTo">DateTo</label>
+                        <input type="date" asp-for="DateTo" class="form-control" id="DateTo" name="DateTo">
+                    </div>
+                </div>
+            </td>
+
+            <td>
+                <div class="row">
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
+
+                            <label class="form-check-label" for="Detailsnotcomplete">Balance Pending</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button> &nbsp;&nbsp;&nbsp;
+                        <button type="submit" class="btn btn-outline-primary"><i class="fa fa-file-excel"></i> Export</button>
+                    </div>
+
+                </div>
+            </td>
+        </tr>
+
+    </table>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+
+</body>
+</html>
+
+

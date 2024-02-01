@@ -2120,7 +2120,8 @@
                                     <th>Deposit Date</th>
                                     <th>Currency Code</th>
                                     <th>Deposit Amount</th>
-                                    <th>BankID/Transaction ID</th>
+                                    <th>BankID</th>
+                                    <th>TransactionID</th>
                                     <th>Pay-In-Slip</th>
                                 </tr>
                             </thead>
@@ -2146,6 +2147,7 @@
                                             '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
                                             '<td>' + item.CurrencyCode + '</td>' +
                                             '<td>' + item.DepositeAmount.toFixed(2) + '</td>' +
+                                            '<td>' + item.BankID + '</td>' +
                                             '<td>' + item.TransactionID + '</td>' +
                                             "<td><a href='" + MainFolder1 + "/" + item.DocPayInSlip + "' target='_blank'>View</a></td>" +
                                             '</tr>';

@@ -24,9 +24,15 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             _httpClientFactory = clientFactory;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(ImportExcel model)
         {
-            return View();
+            if (TempData.ContainsKey("msg"))
+            {
+                string messageFromFirstController = TempData["msg"] as string;
+                model.msg = messageFromFirstController;
+                TempData.Remove("msg");
+            }
+            return View(model);
         }
 
         [HttpPost]
@@ -48,26 +54,39 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                     {
                         ImportExcel data = new ImportExcel
                         {
-                            Column1 = int.Parse(worksheet.Cells[row, 1].Value?.ToString() ?? "0"),
-                            Column2 = worksheet.Cells[row, 2].Value?.ToString(),
-                            // ... (other columns)
+                            TRDATE = DateTime.TryParse(worksheet.Cells[row, 1].Value?.ToString(), out DateTime trDateValue) ? trDateValue : DateTime.MinValue,
+                            Bank_Name = worksheet.Cells[row, 2].Value?.ToString(),
+                            DESCRIPTION = worksheet.Cells[row, 3].Value?.ToString(),
+                            CHEQUENO = worksheet.Cells[row, 4].Value?.ToString(),
+                            DR = decimal.TryParse(worksheet.Cells[row, 5].Value?.ToString(), out decimal drValue) ? drValue : 0,
+                            CR = decimal.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out decimal crValue) ? crValue : 0,
+                            RATE = decimal.TryParse(worksheet.Cells[row, 7].Value?.ToString(), out decimal rateValue) ? rateValue : 0,
+                            BAL = decimal.TryParse(worksheet.Cells[row, 8].Value?.ToString(), out decimal balValue) ? balValue : 0, 
+                            BRANCH = worksheet.Cells[row, 9].Value?.ToString() ?? string.Empty, 
                         };
 
                         excelData.Add(data);
                     }
+
+
                 }
 
-                string requestBody = System.Text.Json.JsonSerializer.Serialize(excelData);
+                string ExcelData = System.Text.Json.JsonSerializer.Serialize(excelData);
+                var requestBody = new 
+                {
+                    ExcelData = ExcelData
+                };
+                string request = System.Text.Json.JsonSerializer.Serialize(requestBody);
                 string apiUrl = "api/ImportExcel/InsertExcelData";
-                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var requestContent = new StringContent(request, Encoding.UTF8, "application/json");
                
                 var response = await _apiClient.PostAsync(apiUrl, requestContent);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var modelget = await response.Content.ReadAsStringAsync();
-                    var modeldata = modelget != null ? JsonConvert.DeserializeObject<ImportExcel>(modelget) : null;                    
-                    return RedirectToAction("Index", "DonationReceiveMaterDetails", new { model = modeldata });
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "ImportExcel");
                 }
 
                 else if (response.StatusCode == HttpStatusCode.NotFound)

@@ -84,7 +84,8 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     DepositesParams.Add("@DepositeDate", depositedetils.date);
                                     DepositesParams.Add("@CurrencyCode", depositedetils.currencyCode);
                                     DepositesParams.Add("@DepositeAmount", depositedetils.amount);
-                                    DepositesParams.Add("@TransactionID", depositedetils.bankID);
+                                    DepositesParams.Add("@BankID", depositedetils.bankID);
+                                    DepositesParams.Add("@TransactionID", depositedetils.TrasactionID);
                                     DepositesParams.Add("@DocPayInSlip", depositedetils.TempDoc); 
                                     DepositesParams.Add("@CreatedBy", model.UserName);
 

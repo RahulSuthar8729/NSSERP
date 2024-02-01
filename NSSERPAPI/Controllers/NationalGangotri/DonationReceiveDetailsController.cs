@@ -20,7 +20,13 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         public IActionResult GetDonationReceiveDetails()
         {
             var result = _dbFunctions.GetDonationReciveDetails();
-            return Ok(result);
+            dynamic firstDetail;
+            firstDetail = new ExpandoObject();
+            firstDetail.masterDetails = result;
+            firstDetail.CityMasterList = _dbFunctions.GetActiveCities();
+            firstDetail.paymentModes = _dbFunctions.GetPaymentModes();
+            firstDetail.statelist = _dbFunctions.GetStates();
+            return Ok(firstDetail);
         }
 
         [HttpGet("GetActiveCities")]

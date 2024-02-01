@@ -433,7 +433,7 @@
 
                                     // Check if donation mode is CASH
                                     if (depositMode.toUpperCase() === 'CASH') {
-                                        // Skip validation for RefNo
+                                       // refNo = '0';
                                     } else {
                                         // Validate RefNo
                                         if (!refNo) {
@@ -448,6 +448,7 @@
                                     var currencyCode = $('#DepositeCurrencyID option:selected').data('currencycode');
                                     var amount = parseFloat($('#DepositeAmount').val());
                                     var bankID = $('#DepositeBankID').val();
+                                    var TrasactionID = $('#DepositeTrasactionID').val();
                                     var Doc = $("#hiddenTempFilename").val();
 
                                     // Validate the amount
@@ -465,6 +466,7 @@
                                         '<td>' + currencyCode + '</td>' +
                                         '<td>' + amount + '</td>' +
                                         '<td>' + bankID + '</td>' +
+                                        '<td>' + TrasactionID + '</td>' +
                                         "<td><a href='" + temporaryFolder + "/" + Doc + "' target='_blank'>View</a></td>" +
                                         "<td style='display:none;' class='filename'>" + Doc + "</td>" +
                                         '<td><button class="btn btn-danger btnRemove">Delete</button></td>' +
@@ -476,6 +478,7 @@
                                     $('#DepositeDate').val('');
                                     $('#DepositeAmount').val('');
                                     $('#DepositeBankID').val('');
+                                    $('#DepositeTrasactionID').val('');
 
                                     // Replace file input with a new one
                                     var newFileInput = $('#filemultipayInSlip').clone();
@@ -533,13 +536,14 @@
                                     $('#depositTable tbody tr').each(function () {
                                         var rowData = {
                                             refNo: $(this).find('td:eq(0)').text(),
-                                            DepositeBank: $(this).find('td:eq(1)').text(),
-                                            mode: $(this).find('td:eq(2)').text(),
+                                            mode: $(this).find('td:eq(1)').text(),
+                                            DepositeBank: $(this).find('td:eq(2)').text(),                                           
                                             date: $(this).find('td:eq(3)').text(),
                                             currencyCode: $(this).find('td:eq(4)').text(),
                                             amount: parseFloat($(this).find('td:eq(5)').text()),
                                             bankID: $(this).find('td:eq(6)').text(),
-                                            TempDoc: $(this).find("td:eq(8)").text()
+                                            TrasactionID: $(this).find('td:eq(7)').text(),
+                                            TempDoc: $(this).find("td:eq(9)").text()
                                         };
                                         tableData.push(rowData);
                                     });

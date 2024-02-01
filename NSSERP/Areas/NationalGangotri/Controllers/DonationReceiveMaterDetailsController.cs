@@ -94,24 +94,17 @@ public class DonationReceiveMaterDetailsController : Controller
             var response = await _apiClient.GetAsync($"api/DonationReceiveDetails/GetDonationReceiveDetails?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
             response.EnsureSuccessStatusCode();
 
-            // Read the response content as a string
-            var json = await response.Content.ReadAsStringAsync();
 
-            // Deserialize JSON to a list of DonationReceiveMasterDetails
-            var modelitems = new DonationReceiveMasterDetails()
-            {
-                masterDetails = JsonConvert.DeserializeObject<List<DonationReceiveMasterDetails>>(json),
-                CityMasterList = _dbFunctions.GetActiveCities(),
-                paymentModes = _dbFunctions.GetPaymentModes(),
-                statelist = _dbFunctions.GetStates()
-            };
+            var jsonres = await response.Content.ReadAsStringAsync();
+            var resultmodel = JsonConvert.DeserializeObject<DonationReceiveMasterDetails>(jsonres);
+
             if (TempData.ContainsKey("msg"))
             {
                 string messageFromFirstController = TempData["msg"] as string;
-                modelitems.msg = messageFromFirstController;
+                resultmodel.msg = messageFromFirstController;
                 TempData.Remove("msg");
             }
-            return View(modelitems);
+            return View(resultmodel);
         }
         catch (Exception ex)
         {

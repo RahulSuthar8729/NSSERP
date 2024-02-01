@@ -1,18 +1,81 @@
 ﻿@model NSSERP.Areas.NationalGangotri.Models.ImportExcel
+@{
+    ViewData["Title"] = "DonationReceiveMaster";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
 
 <form action="/NationalGangotri/ImportExcel/ConvertExcel" method="post" enctype="multipart/form-data" id="uploadForm">
     <div class="form-group">
         <label for="excelFile">Select Excel File:</label>
-        <input type="file" class="form-control-file" asp-for="excelFile" name="excelFile" id="excelFile" required />
+        <input type="file" class="form-control-file" asp-for="excelFile" name="excelFile" id="excelFile" required onchange="previewExcelFile()" />
     </div>
 
-    <!-- Preview div for Excel file -->
     <div id="excelPreview" style="margin-top: 20px;"></div>
 
     <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
-
 </form>
 
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
+    <!-- Include SheetJS for Excel parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 
+    <script>
+        function previewExcelFile() {
+            var fileInput = document.getElementById('excelFile');
+            var previewArea = document.getElementById('excelPreview');
 
+            // Ensure a file is selected
+            if (fileInput.files.length > 0) {
+                var file = fileInput.files[0];
+
+                // Validate file type (optional, but recommended)
+                if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.type === 'application/vnd.ms-excel') {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        // Use SheetJS to parse Excel content
+                        var workbook = XLSX.read(e.target.result, { type: 'binary' });
+
+                        // Display sheet names and row counts in the preview area
+                        var previewHtml = '<p>Sheet Details:</p><ul>';
+                        workbook.SheetNames.forEach(function (sheetName) {
+                            var sheet = workbook.Sheets[sheetName];
+
+                            // Check if the sheet range is defined
+                            if (sheet['!ref']) {
+                                var rowCount = XLSX.utils.decode_range(sheet['!ref']).e.r + 1; // Total row count
+                                previewHtml += '<li>' + sheetName + ' - Total Rows: ' + rowCount + '</li>';
+                            } else {
+                                previewHtml += '<li>' + sheetName + ' - Unable to determine row count</li>';
+                            }
+                        });
+                        previewHtml += '</ul>';
+
+                        // Update the preview area with extracted information
+                        previewArea.innerHTML = previewHtml;
+                    };
+
+                    // Read the file as binary data
+                    reader.readAsBinaryString(file);
+                } else {
+                    // Display an error message if the file type is not supported
+                    previewArea.innerHTML = '<p>Error: Please select a valid Excel file.</p>';
+                }
+            } else {
+                // Clear the preview area if no file is selected
+                previewArea.innerHTML = '';
+            }
+        }
+    </script>
+
+}
