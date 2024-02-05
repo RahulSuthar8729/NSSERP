@@ -4,6 +4,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
 {
     public class SankalpSiddhiDetails
     {
+        public string MapWithBankIDList { get; set; }
         public string msg { get; set; }
         public List<DonationReceiveMasterDetails> masterDetails { get; set; }
         public List<CityMaster> CityMasterList { get; set; }
@@ -21,6 +22,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string DepositeDetailsListJson { get; set; }
         public int? PaymentModeID { get; set; }
         public int? ReceiveID { get; set; }
+        public int? ReceiveIDOnUpdate { get; set; }
         public string? AppStatus { get; set; }
         public DateTime? ReceiveDate { get; set; }
         public string? ProvNo { get; set; }

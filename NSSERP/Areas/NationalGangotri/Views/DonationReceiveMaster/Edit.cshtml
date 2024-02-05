@@ -1554,7 +1554,7 @@
                                             <option value="" disabled>Select</option>
                                             @foreach (var currency in Model.currenciesList)
                                             {
-                                                <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                <option value="@currency.CountryID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CountryID ? "selected" : "")>@currency.CurrencyCode</option>
                                             }
                                         </select>
 

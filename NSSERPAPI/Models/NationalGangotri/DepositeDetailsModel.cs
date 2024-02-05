@@ -3,6 +3,7 @@
     public class DepositeDetailsModel
     {
         public int? refNo {  get; set; }
+   
         public string? DepositeBank { get; set; }
         public string TempDoc { get; set; }
         public string mode { get; set; } 

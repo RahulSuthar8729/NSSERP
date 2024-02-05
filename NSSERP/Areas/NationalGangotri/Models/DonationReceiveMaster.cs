@@ -48,6 +48,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public DateTime? DateOfBirth { get; set; }
         public string Company { get; set; } = "";
         public string FullAddress { get; set; } = "";
+        public string Address1 { get; set; } = "";
+        public string Address2 { get; set; } = "";
+        public string Address3 { get; set; } = "";
         public string PinCode { get; set; } = "";
         public int? CountryId { get; set; }
         public string CountryName { get; set; } = "";
@@ -63,6 +66,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public bool?  IfDetailsNotComplete { get; set; }
 
         public string P_FullAddress { get; set; } = "";
+        public string P_Address1 { get; set; } = "";
+        public string P_Address2 { get; set; } = "";
+        public string P_Address3 { get; set; } = "";
         public string P_PinCode { get; set; } = "";
 
         public int? P_CountryID { get; set; }
@@ -116,6 +122,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public IEnumerable<DonorInstructionMaster> donorInstructionList { get; set; }
         public IEnumerable<PaymentModeMaster> paymentModeList { get; set; }
         public IEnumerable<CurrencyMaster> currenciesList { get; set; }
+
+   
         public IEnumerable<BankMaster> bankmasterlist { get; set; }
         public IEnumerable<DonationReceiveMaster> ReceiveHeadList { get; set; }
         public IEnumerable<DonationReceiveMaster> HeadList { get; set; }

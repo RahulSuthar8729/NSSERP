@@ -42,6 +42,19 @@
                     ]
 
                 });
+                $('#tblbankDetails').DataTable({
+                    "order": [[3, "desc"]],
+                    "paging": true,
+                    "lengthMenu": [10, 25, 50, 75, 100],
+                    "searching": true,
+                    "info": true,
+                    "responsive": true,
+                    "columnDefs": [
+                        { "targets": [0, 1], "orderable": false }
+                    ]
+
+                });
+
                 $('#CityID').select2();
             });
 
@@ -355,6 +368,7 @@
     <div class="row">
         <div class="col-12">
             <div class="table-container">
+                <input type="hidden" id="hdnReceiveID" name="ReceiveIDOnUpdate" asp-for="ReceiveIDOnUpdate" />
                 <table id="tableDetails" class="table table-hover table-bordered">
 
                     <thead class="thead-dark">
@@ -441,9 +455,39 @@
             </div>
         </div>
     </div>
-    <!-- Add this script to your HTML file -->
+
     <script>
         $(document).ready(function () {
+            var hiddenField = $('#hdnMapWithBankIDList'); // Update with your actual hidden field ID
+            var tableData = []; // Array to store all table data
+
+            // Function to update hidden field with JSON data
+            function updateHiddenField() {
+                var newData = [];
+
+                // Iterate through table rows and collect data
+                $('#depositTable tbody tr').each(function () {
+                    var rowData = {
+                        mode: $(this).find('td:eq(0)').text(),
+                        DepositeBank: $(this).find('td:eq(1)').text(),
+                        date: $(this).find('td:eq(2)').text(),
+                        currencyCode: $(this).find('td:eq(3)').text(),
+                        amount: parseFloat($(this).find('td:eq(4)').text()),
+                        BankID: $(this).find('.bankIdInput').val(),
+                        TransactionID: $(this).find('.transactionIdInput').val(),
+                        TempDoc: $(this).find("td:eq(8)").text(),
+                        refNo: $(this).find('td:eq(9)').text(),
+                        receiveId: $(this).find('td:eq(10)').text()
+
+                    };
+
+                    newData.push(rowData);
+                });
+
+                // Update hidden field with updated JSON data
+                hiddenField.val(JSON.stringify(newData));
+            }
+
             // Add a click event listener to the BankID icon
             $('#tableDetails tbody tr td:nth-child(2) a').on('click', function (e) {
                 e.preventDefault();
@@ -469,6 +513,9 @@
                             // Populate the Back Office ReceiveID Transaction fieldset with the received data
                             populateFieldset(depositDetails);
 
+                            // Update the tableData array with the new data
+                            tableData = depositDetails;
+
                             // Show the modal
                             $('#myModal').modal('show');
                         } else {
@@ -487,67 +534,134 @@
                 tableBody.empty();
 
                 var MainFolder1 = '@rootUrl/DocDonationReceive';
-                data.forEach(function (item) {
+                data.forEach(function (item, index) {
                     var newRow = '<tr>' +
                         '<td>' + item.DepositeMode + '</td>' +
                         '<td>' + item.DepositBank + '</td>' +
                         '<td>' + new Date(item.DepositeDate).toLocaleDateString() + '</td>' +
                         '<td>' + item.CurrencyCode + '</td>' +
                         '<td>' + (item.DepositeAmount ? item.DepositeAmount.toFixed(2) : 'N/A') + '</td>' +
-                        '<td>' + item.BankID + '</td>' +
-                        '<td>' + item.TransactionID + '</td>' +
+                        '<td><input type="text" class="form-control bankIdInput" value="' + item.BankID + '"></td>' +
+                        '<td><input type="text" class="form-control transactionIdInput" value="' + item.TransactionID + '"></td>' +
                         "<td><a href='" + MainFolder1 + "/" + item.DocPayInSlip + "' target='_blank'>View</a></td>" +
+                        "<td style='display:none;'>" + item.DocPayInSlip + "</td>" +
+                        '<td style="display:none">' + item.REF_NO_BANK + '</td>' +
+                        '<td style="display:none">' + item.REF_NO + '</td>' +
                         '</tr>';
                     tableBody.append(newRow);
                 });
+
+                // Update hidden field with JSON data
+                updateHiddenField();
 
                 $('#depositTable').show();
                 $('#backOfficeFieldset').toggle(tableBody.find('tr').length > 0);
             }
 
+            // Listen for changes in input fields
+            $(document).on('input', '.bankIdInput, .transactionIdInput', function () {
+                updateHiddenField();
+            });
+
             // Remove modal from the DOM when it's closed
+            // Hide modal without removing it from the DOM
             $('body').on('hidden.bs.modal', '.modal', function () {
-                $(this).remove();
+                $(this).data('bs.modal', null);
+            });
+
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Close modal on button click in modal header
+            $('#myModal #btnclose').on('click', function () {
+                $('#myModal').modal('hide');
+            });
+
+            // Close modal on button click in modal footer
+            $('#myModal .btn-secondary').on('click', function () {
+                $('#myModal').modal('hide');
             });
         });
     </script>
-
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <!-- Added modal-lg class here -->
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Back Office ReceiveID Transaction Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" id="btnclose" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                   
-                        <div class="nested-form-container">
-                            <table id="depositTable" class="table table-bordered table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>Deposit Mode</th>
-                                        <th>Deposit Bank</th>
-                                        <th>Deposit Date</th>
-                                        <th>Currency Code</th>
-                                        <th>Deposit Amount</th>
-                                        <th>BankID</th>
-                                        <th>TransactionID</th>
-                                        <th>Pay-In-Slip</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Table rows will be added dynamically here -->
-                                </tbody>
-                            </table>
-                        </div>
-                 
+
+                    <div class="nested-form-container">
+                        <table id="depositTable" class="table table-bordered table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Deposit Mode</th>
+                                    <th>Deposit Bank</th>
+                                    <th>Deposit Date</th>
+                                    <th>Currency Code</th>
+                                    <th>Deposit Amount</th>
+                                    <th>BankID</th>
+                                    <th>TransactionID</th>
+                                    <th>Pay-In-Slip</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table rows will be added dynamically here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <input type="hidden" id="hdnMapWithBankIDList" asp-for="MapWithBankIDList" name="MapWithBankIDLists">
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="btnUpdate" class="btn btn-success" data-dismiss="modal">Map BankCode</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
+                <script>
+                    $(document).ready(function () {
+                        var hiddenField = $('#hdnMapWithBankIDList');
+
+                        $('#btnUpdate').on('click', function () {
+                            var hiddenData = hiddenField.val();
+
+                            // Create a JavaScript object with the model property
+                            var model = {
+                                MapWithBankIDList: hiddenData
+                            };
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '@Url.Action("UpdateBankIDandTrasactionID", "SankalpSiddhi")',
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(model),
+                                success: function (result) {
+
+                                    if (result.message) {
+                                        alert(result.message);
+                                        $('#myModal').modal('hide');
+                                    } else {
+
+                                        alert('Unexpected response from the server.');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error sending data:', error);
+                                    alert('Failed to send data. Please try again.');
+                                }
+                            });
+                        });
+                    });
+
+
+                </script>
+
             </div>
         </div>
     </div>
@@ -671,7 +785,44 @@
         </tr>
 
     </table>
+    <table id="tblbankDetails" class="table table-hover table-bordered">
 
+        <thead class="thead-dark">
+            <tr>
+                <th>BANK ID</th>
+                <th>DATE</th>
+                <th>BANK NAME</th>
+                <th>PARTICULAR</th>
+                <th>CHEQUE NO.</th>
+                <th>AMOUNT/RATE</th>
+                <th>BALANCE</th>
+                <th>BRANCH</th>
+                <th>RECEIVE ID</th>
+                <th>REJECT REMARK</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model.masterDetails)
+                {
+                    <tr>
+                        <td>@item.ReceiveID</td>
+                        <td>@item.ReceiveHeadName</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ReceiveDate.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
+                        <td>@item.ProvNo</td>
+                        <td>@item.FullName</td>
+                        <td>@item.FullAddress</td>
+                        <td>@item.CurrencyCode</td>
+                        <td>@item.TotalAmount</td>
+                        <td>@item.PaymentModeName</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>

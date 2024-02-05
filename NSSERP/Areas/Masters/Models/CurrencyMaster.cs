@@ -9,7 +9,7 @@
         public string Symbol { get; set; }
         public string CreatedBy { get; set; }
         public int CountryID { get; set;}
-        public Countrys CountryMaster { get; set; }
-
+        public Countrys CountryMaster { get; set; }   
+        public string CountryName { get; set; }
     }
 }

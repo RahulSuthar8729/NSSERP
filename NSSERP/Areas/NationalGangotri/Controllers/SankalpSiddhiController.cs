@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using NSSERP.Areas.NationalGangotri.Models;
 using NSSERP.DbFunctions;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace NSSERP.Areas.NationalGangotri.Controllers
@@ -141,6 +142,48 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateBankIDandTrasactionID([FromBody] SankalpSiddhiDetails model)
+        {
+            try
+            {
+                var requestData = new
+                {                    
+                    UserID = User.FindFirst("UserID")?.Value,
+                    UserName = User.FindFirst(ClaimTypes.Name)?.Value,
+                };
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
+                string apiUrl = "api/SankalpSiddhi/InsertData";
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                requestContent.Headers.Add("DepositeDetailsListJson", model.MapWithBankIDList);
+                requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var jsonString = json.ToString();
+                    return Json(new { success = true, message = jsonString, data = jsonString });
+
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
+
 
     }
 }

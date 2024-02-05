@@ -10,6 +10,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var temporaryFolder = Href("/TempDocDonationReceive");
     var rootUrl = Url.Content("~");
+    var UserDepartment = User.FindFirst("Department")?.Value;
 }
 <!DOCTYPE html>
 <html>
@@ -59,7 +60,6 @@
                 });
             });
         </script>
-
     }
 </head>
 <body>
@@ -180,10 +180,10 @@
                                         // Apply Select2 to your dropdown element by its ID
                                         $('#ID').select2();
                                         $('#headInput').select2();
-                                        $('#Instruction').select2();
+                                        //$('#Instruction').select2();
                                     });
                                 </script>
-                                <div class="form-group col-lg-3">
+                                <div class="form-group col-lg-3" style="display:none;">
                                     <label for="ID">Receive in Event:</label>
 
                                     <select class="form-control" id="ID" name="ID" asp-for="ID">
@@ -211,7 +211,7 @@
                                     </script>
                                 </div>
 
-                                <div class="form-group col-lg-3">
+                                <div class="form-group col-lg-3" style="display:none;">
                                     <label for="Campaign">Campaign</label>
                                     <select class="custom-select" asp-for="" id="Campaign" name="CampaignID">
                                         <option value="" selected disabled>Select</option>
@@ -224,202 +224,22 @@
                                         }
                                     </select>
                                     <input type="hidden" name="CampaignName" asp-for="CampaignName" id="CampaignNamehideen" />
-                                </div>
-
-                                <script>
-                                    $("#Campaign").change(function () {
-                                        var selectedEventName = $(this).find("option:selected").data("campaignname");
-                                        $("#CampaignNamehideen").val(selectedEventName);
-                                    });
-
-                                    var modelID = parseInt('@Model.CampaignID'); // Convert to number
-                                    // Convert to string for comparison
-                                    if (modelID) {
-                                        $("#Campaign").val(modelID);
-                                        $("#Campaign").trigger("change"); // Trigger the change event to update the hidden field
-                                    }
-                                </script>
-                                <div class="form-group col-lg-3">
-                                    <label for="">Donor ID</label>
-                                    <input class="form-control" placeholder="Please enter the donor ID to fetch donor data." id="DonorID" value="@Model.DonorID" asp-for="DonorID" name="DonorID" />
-                                </div>
-
-                                <script>
-                                    $(document).ready(function () {
-                                        $('#DonorID').blur(function () {
-                                            var enteredDonorID = $(this).val();
-                                            $.ajax({
-                                                url: '/NationalGangotri/DonationReceiveMaster/GetDataByDonorID',
-                                                type: 'GET',
-                                                data: { donorID: enteredDonorID },
-                                                success: function (response) {
-                                                    if (response != null) {
-                                                        var jsonData = JSON.parse(response.data);
-
-                                                        // Populate form fields with JSON data
-                                                        // Populate form fields with JSON data
-                                                        selectOptionByText('#NamePrefix', jsonData.NamePrefix);
-
-                                                        // Function to select option in a select element based on text
-                                                        function selectOptionByText(selectId, text) {
-                                                            var select = $(selectId);
-
-                                                            // Check if text is defined before using trim
-                                                            if (text !== undefined && text !== null) {
-                                                                text = text.trim();
-                                                            }
-
-                                                            select.find('option:contains("' + text + '")').prop('selected', true);
-                                                        }
-
-                                                        selectOptionByText('#PrefixToFullName', jsonData.PrefixToFullName);
-                                                        $('#FullName').val(jsonData.FullName);
-                                                        $('#RelationToFullName').val(jsonData.RelationToFullName);
-
-                                                        // Format date using moment.js (make sure to include moment.js in your project)
-                                                        $('#DateOfBirth').val(moment(jsonData.DateOfBirth).format('YYYY-MM-DD'));
-
-                                                        $('#Company').val(jsonData.Company);
-                                                        $('#FullAddress').val(jsonData.FullAddress);
-                                                        $('#PinCode1').val(jsonData.PinCode);
-                                                        $('#CountryID').val(jsonData.CountryID);
-
-
-                                                        var pinCodeMaster = JSON.parse(jsonData.pinCodeMasterList);
-
-                                                        // Bind the StateID dropdown
-                                                        $('#StateID').empty().append('<option value="' + pinCodeMaster.StateID + '">' + pinCodeMaster.StateName + '</option>');
-
-                                                        // Populate District dropdown
-                                                        $('#DistrictID').empty().append('<option value="' + pinCodeMaster.DistrictID + '">' + pinCodeMaster.DistrictName + '</option>');
-
-                                                        // Populate City dropdown
-                                                        $('#CityID').empty().append('<option value="' + pinCodeMaster.CityID + '">' + pinCodeMaster.CityName + '</option>');
-                                                        $('#EmailID').val(jsonData.EmailID);
-                                                        $('#StdCode').val(jsonData.StdCode);
-                                                        $('#PhoneR').val(jsonData.PhoneR);
-                                                        $('#IsPermanentAddressDiff').prop('checked', jsonData.IsPermanentAddressDiff);
-
-                                                        // Bind the mobile numbers table
-                                                        bindMobileNumbersTable(jsonData.MobileListJson);
-
-                                                        // Bind the identity details
-                                                        bindIdentityDetails(jsonData.IdentityListJson);
-                                                    } else {
-                                                        console.log("No data found for the entered DonorID");
-                                                    }
-                                                },
-                                                // ... (rest of your code)
-                                            });
+                                    <script>
+                                        $("#Campaign").change(function () {
+                                            var selectedEventName = $(this).find("option:selected").data("campaignname");
+                                            $("#CampaignNamehideen").val(selectedEventName);
                                         });
 
-                                        // Function to select option in a select element based on text
-                                        function selectOptionByText(selectId, text) {
-                                            var select = $(selectId);
-
-                                            // Check if text is defined before using trim
-                                            if (text !== undefined && text !== null) {
-                                                text = text.trim();
-                                            }
-
-                                            select.find('option:contains("' + text + '")').prop('selected', true);
+                                        var modelID = parseInt('@Model.CampaignID'); // Convert to number
+                                        // Convert to string for comparison
+                                        if (modelID) {
+                                            $("#Campaign").val(modelID);
+                                            $("#Campaign").trigger("change"); // Trigger the change event to update the hidden field
                                         }
-                                        // Function to bind the mobile numbers table
-                                        function bindMobileNumbersTable(mobileListJson) {
-                                            var mobileNumbersTable = $("#mobileNumbersTable tbody");
-                                            mobileNumbersTable.empty(); // Clear existing rows
-
-                                            // Parse the JSON string in mobileListJson if it's a string
-                                            var mobileList = Array.isArray(mobileListJson) ? mobileListJson : JSON.parse(mobileListJson);
-
-
-                                            if (mobileList && mobileList.length > 0) {
-                                                // Loop through each item in the JSON array
-                                                $.each(mobileList, function (index, item) {
-                                                    // Add a new row to the table
-                                                    var newRowmobile = $("<tr>");
-                                                    newRowmobile.append("<td>" + item.CountryCode + "</td>");
-                                                    newRowmobile.append("<td>" + item.MobileNumber + "</td>");
-                                                    newRowmobile.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
-
-                                                    // Add a special class to identify rows from MobileListJson
-                                                    newRowmobile.addClass("json-data-row");
-
-                                                    mobileNumbersTable.append(newRowmobile);
-                                                });
-
-                                                // Show the table
-                                                $("#mobileNumbersTable").css("visibility", "visible");
-                                            }
-                                        }
-                                        // Function to bind the identity details
-                                        function bindIdentityDetails(identityListJson) {
-                                            var addedIdentities = $("#addedIdentities");
-
-                                            // Clear existing identities
-                                            addedIdentities.empty();
-
-                                            // Check if identityListJson is not an empty string
-                                            if (identityListJson.trim() === "") {
-                                                return;
-                                            }
-
-                                            // Parse the JSON string in identityListJson
-                                            var identityList = Array.isArray(identityListJson) ? identityListJson : JSON.parse(identityListJson);
-
-                                            if (identityList && identityList.length > 0) {
-                                                // Loop through each item in the JSON array
-                                                $.each(identityList, function (index, identity) {
-                                                    // Create a new row for the added identity
-                                                    var newRowIdentity = $("<div class='form-group col-lg-3'>");
-                                                    newRowIdentity.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
-                                                    newRowIdentity.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                                    newRowIdentity.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
-
-                                                    // Append the new row to the container
-                                                    addedIdentities.append(newRowIdentity);
-
-                                                    // Show the added identities section
-                                                    addedIdentities.css("display", "flex");
-                                                });
-
-                                                // Update the hidden field value with the current identities after binding
-                                                updateHiddenField();
-                                            }
-                                        }
-
-                                        // Function to update the hidden field with the current identities displayed in the UI
-                                        function updateHiddenField() {
-                                            var currentIdentities = [];
-
-                                            // Loop through each item in the addedIdentities section
-                                            $("#addedIdentities .form-group").each(function () {
-                                                var identityType = $(this).find("label").text();
-                                                var identityNumber = $(this).find("input").val();
-
-                                                currentIdentities.push({
-                                                    IdentityType: identityType,
-                                                    IdentityNumber: identityNumber
-                                                });
-                                            });
-
-                                            // Update the hidden field value with the current identities as a JSON string
-                                            $("#identityDetails").val(JSON.stringify(currentIdentities));
-                                        }
-
-
-
-                                    });
-                                </script>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="responsefrom">Enter Search Data</label>
-                                    <input placeholder="Search data using Aadhaar, PAN, driving license, mobile number, or other identity numbers." class="form-control" id="" />
+                                    </script>
                                 </div>
-                                <div class="from-group col-lg-2">
-                                    <br />
-                                    <a asp-action="" title="Search" asp-controller="Gangotri" class="btn btn-primary"><i class="fas fa-search "></i>Search</a>
-                                </div>
+
+
                             </div>
 
                         </div>
@@ -438,11 +258,197 @@
 
                     <div id="personalDetailsContent" class="nested-form-container collapse show">
                         <div class="row">
-
                             <div class="form-group col-lg-3">
-                                <label for="InMemory">In Memory/Occession</label>
-                                <textarea class="form-control" id="InMemory" name="InMemory" asp-for="InMemory" rows="1">@Model.InMemory</textarea>
+                                <label for="">Donor ID</label>
+                                <input class="form-control" placeholder="Please enter the donor ID to fetch donor data." id="DonorID" value="@Model.DonorID" asp-for="DonorID" name="DonorID" />
                             </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#DonorID').blur(function () {
+                                        var enteredDonorID = $(this).val();
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetDataByDonorID',
+                                            type: 'GET',
+                                            data: { donorID: enteredDonorID },
+                                            success: function (response) {
+                                                if (response != null) {
+                                                    var jsonData = JSON.parse(response.data);
+
+                                                    // Populate form fields with JSON data
+                                                    // Populate form fields with JSON data
+                                                    selectOptionByText('#NamePrefix', jsonData.NamePrefix);
+
+                                                    // Function to select option in a select element based on text
+                                                    function selectOptionByText(selectId, text) {
+                                                        var select = $(selectId);
+
+                                                        // Check if text is defined before using trim
+                                                        if (text !== undefined && text !== null) {
+                                                            text = text.trim();
+                                                        }
+
+                                                        select.find('option:contains("' + text + '")').prop('selected', true);
+                                                    }
+
+                                                    selectOptionByText('#PrefixToFullName', jsonData.PrefixToFullName);
+                                                    $('#FullName').val(jsonData.FullName);
+                                                    $('#RelationToFullName').val(jsonData.RelationToFullName);
+
+                                                    // Format date using moment.js (make sure to include moment.js in your project)
+                                                    $('#DateOfBirth').val(moment(jsonData.DateOfBirth).format('YYYY-MM-DD'));
+
+                                                    $('#Company').val(jsonData.Company);
+                                                    $('#FullAddress').val(jsonData.FullAddress);
+                                                    $('#PinCode1').val(jsonData.PinCode);
+                                                    $('#CountryID').val(jsonData.CountryID);
+                                                    // Assuming jsonData is the parsed JSON data
+                                                    var selectedCountry = jsonData.CountryID;
+
+                                                    $("#CurrencyID option").each(function () {
+                                                        if ($(this).val() == selectedCountry) {
+                                                            $(this).prop("selected", true);
+                                                        } else {
+                                                            $(this).prop("selected", false);
+                                                        }
+                                                    });
+
+
+                                                    var pinCodeMaster = JSON.parse(jsonData.pinCodeMasterList);
+
+                                                    // Bind the StateID dropdown
+                                                    $('#StateID').empty().append('<option value="' + pinCodeMaster.StateID + '">' + pinCodeMaster.StateName + '</option>');
+
+                                                    // Populate District dropdown
+                                                    $('#DistrictID').empty().append('<option value="' + pinCodeMaster.DistrictID + '">' + pinCodeMaster.DistrictName + '</option>');
+
+                                                    // Populate City dropdown
+                                                    $('#CityID').empty().append('<option value="' + pinCodeMaster.CityID + '">' + pinCodeMaster.CityName + '</option>');
+                                                    $('#EmailID').val(jsonData.EmailID);
+                                                    $('#StdCode').val(jsonData.StdCode);
+                                                    $('#PhoneR').val(jsonData.PhoneR);
+                                                    $('#IsPermanentAddressDiff').prop('checked', jsonData.IsPermanentAddressDiff);
+
+                                                    // Bind the mobile numbers table
+                                                    bindMobileNumbersTable(jsonData.MobileListJson);
+
+                                                    // Bind the identity details
+                                                    bindIdentityDetails(jsonData.IdentityListJson);
+                                                } else {
+                                                    console.log("No data found for the entered DonorID");
+                                                }
+                                            },
+                                            // ... (rest of your code)
+                                        });
+                                    });
+
+                                    // Function to select option in a select element based on text
+                                    function selectOptionByText(selectId, text) {
+                                        var select = $(selectId);
+
+                                        // Check if text is defined before using trim
+                                        if (text !== undefined && text !== null) {
+                                            text = text.trim();
+                                        }
+
+                                        select.find('option:contains("' + text + '")').prop('selected', true);
+                                    }
+                                    // Function to bind the mobile numbers table
+                                    function bindMobileNumbersTable(mobileListJson) {
+                                        var mobileNumbersTable = $("#mobileNumbersTable tbody");
+                                        mobileNumbersTable.empty(); // Clear existing rows
+
+                                        // Parse the JSON string in mobileListJson if it's a string
+                                        var mobileList = Array.isArray(mobileListJson) ? mobileListJson : JSON.parse(mobileListJson);
+
+
+                                        if (mobileList && mobileList.length > 0) {
+                                            // Loop through each item in the JSON array
+                                            $.each(mobileList, function (index, item) {
+                                                // Add a new row to the table
+                                                var newRowmobile = $("<tr>");
+                                                newRowmobile.append("<td>" + item.CountryCode + "</td>");
+                                                newRowmobile.append("<td>" + item.MobileNumber + "</td>");
+                                                newRowmobile.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+
+                                                // Add a special class to identify rows from MobileListJson
+                                                newRowmobile.addClass("json-data-row");
+
+                                                mobileNumbersTable.append(newRowmobile);
+                                            });
+
+                                            // Show the table
+                                            $("#mobileNumbersTable").css("visibility", "visible");
+                                        }
+                                    }
+                                    // Function to bind the identity details
+                                    function bindIdentityDetails(identityListJson) {
+                                        var addedIdentities = $("#addedIdentities");
+
+                                        // Clear existing identities
+                                        addedIdentities.empty();
+
+                                        // Check if identityListJson is not an empty string
+                                        if (identityListJson.trim() === "") {
+                                            return;
+                                        }
+
+                                        // Parse the JSON string in identityListJson
+                                        var identityList = Array.isArray(identityListJson) ? identityListJson : JSON.parse(identityListJson);
+
+                                        if (identityList && identityList.length > 0) {
+                                            // Loop through each item in the JSON array
+                                            $.each(identityList, function (index, identity) {
+                                                // Create a new row for the added identity
+                                                var newRowIdentity = $("<div class='form-group col-lg-3'>");
+                                                newRowIdentity.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                                newRowIdentity.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                                newRowIdentity.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+
+                                                // Append the new row to the container
+                                                addedIdentities.append(newRowIdentity);
+
+                                                // Show the added identities section
+                                                addedIdentities.css("display", "flex");
+                                            });
+
+                                            // Update the hidden field value with the current identities after binding
+                                            updateHiddenField();
+                                        }
+                                    }
+
+                                    // Function to update the hidden field with the current identities displayed in the UI
+                                    function updateHiddenField() {
+                                        var currentIdentities = [];
+
+                                        // Loop through each item in the addedIdentities section
+                                        $("#addedIdentities .form-group").each(function () {
+                                            var identityType = $(this).find("label").text();
+                                            var identityNumber = $(this).find("input").val();
+
+                                            currentIdentities.push({
+                                                IdentityType: identityType,
+                                                IdentityNumber: identityNumber
+                                            });
+                                        });
+
+                                        // Update the hidden field value with the current identities as a JSON string
+                                        $("#identityDetails").val(JSON.stringify(currentIdentities));
+                                    }
+
+
+
+                                });
+                            </script>
+
+                            <div class="form-group col-lg-6">
+                                <label for="responsefrom">Enter Search Data</label>
+                                <input placeholder="Search data using Aadhaar, PAN, driving license, mobile number, or other identity numbers." class="form-control" id="" />
+                            </div>
+                            <div class="from-group col-lg-2">
+                                <br />
+                                <a asp-action="" title="Search" asp-controller="Gangotri" class="btn btn-primary"><i class="fas fa-search "></i>Search</a>
+                            </div>
+
                             <div class="form-group col-md-3">
                                 <label for="FullName" class="mb-2">Full Name<span style="color: red;">*</span></label>
                                 <div class="input-group">
@@ -486,6 +492,10 @@
                                 <input type="date" required value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
                             </div>
                             <div class="form-group col-lg-3">
+                                <label for="InMemory">In Memory/Occession</label>
+                                <textarea class="form-control" id="InMemory" name="InMemory" asp-for="InMemory" rows="1">@Model.InMemory</textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
                                 <label for="">Company</label>
                                 <input type="text" name="Company" value="@Model.Company" class="form-control" oninput="convertToUpperCase(this)" id="Company" asp-for="Company">
                             </div>
@@ -504,48 +514,23 @@
                     <div id="letteraddressContent" class="nested-form-container collapse ">
 
                         <div class="row">
-                            <div class="form-group col-lg-9">
-                                <label for="Address1">Full Address<span style="color: red;">*</span></label>
-                                <textarea required class="form-control" name="FullAddress" asp-for="FullAddress" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="FullAddress" rows="1">@Model.FullAddress</textarea>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1<span style="color: red;">*</span></label>
+                                <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.Address1</textarea>
+                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address2</label>
+                                <textarea class="form-control" name="Address2" asp-for="Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address2" rows="1">@Model.Address2</textarea>
                                 <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
                             </div>
 
-                            <script>
-                                function suggestAddress(input) {
-                                    var suggestions = document.getElementById('suggestions');
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address3</label>
+                                <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.Address2</textarea>
+                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                            </div>
 
-                                    // Clear previous suggestions
-                                    suggestions.innerHTML = '';
-
-                                    // Address format suggestions based on user input
-                                    if (input.toLowerCase().includes('h')) {
-                                        addSuggestion('House');
-                                    }
-                                    if (input.toLowerCase().includes('b')) {
-                                        addSuggestion('Building');
-                                    }
-                                    if (input.toLowerCase().includes('f')) {
-                                        addSuggestion('Flat');
-                                    }
-                                    if (input.toLowerCase().includes('a')) {
-                                        addSuggestion('Apartment');
-                                    } if (input.toLowerCase().includes('s')) {
-                                        addSuggestion('Sector');
-                                    }
-                                    // Add more suggestions based on your criteria
-
-                                    // Display suggestions
-                                    function addSuggestion(suggestion) {
-                                        var suggestionElement = document.createElement('div');
-                                        suggestionElement.innerText = suggestion;
-                                        suggestionElement.addEventListener('click', function () {
-                                            document.getElementById('Address1').value += ' ' + suggestion;
-                                            suggestions.innerHTML = ''; // Clear suggestions after selecting
-                                        });
-                                        suggestions.appendChild(suggestionElement);
-                                    }
-                                }
-                            </script>
 
                             <div class="form-group col-lg-3">
                                 <label for="PinCode">PinCode<span style="color: red;">*</span></label>
@@ -565,7 +550,7 @@
 
                                                 // Access the correct property names
                                                 $('#CountryID').val(jsonData.CountryID);
-
+                                                $("#CurrencyID").val(jsonData.CountryID);
                                                 // Populate State dropdown
                                                 $('#StateID').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
 
@@ -580,6 +565,16 @@
                                                 if ($('#countryCode').val() == null) {
                                                     $('#countryCode').val('');
                                                 }
+
+                                                var selectedCountry = jsonData.CountryID;
+
+                                                $("#CurrencyID option").each(function () {
+                                                    if ($(this).val() == selectedCountry) {
+                                                        $(this).prop("selected", true);
+                                                    } else {
+                                                        $(this).prop("selected", false);
+                                                    }
+                                                });
                                             },
                                             error: function (xhr, status, error) {
                                                 console.log(error);
@@ -655,11 +650,14 @@
                                     });
 
                                     function updateCurrencyDropdown() {
-                                        // Get the selected country's currency ID
-                                        var selectedCountryCurrencyID = $("#CountryID option:selected").data("currency-id");
-
-                                        // Set the currency dropdown to the country's currency ID
-                                        $("#CurrencyID").val(selectedCountryCurrencyID);
+                                        var selectedCountry = $('#CountryID').val();
+                                        $("#CurrencyID option").each(function () {
+                                            if ($(this).val() == selectedCountry) {
+                                                $(this).prop("selected", true);
+                                            } else {
+                                                $(this).prop("selected", false);
+                                            }
+                                        });
                                     }
                                 });
                             </script>
@@ -820,48 +818,22 @@
                     <div id="permanentAddressContent" class="nested-form-container collapse">
 
                         <div class="row">
-                            <div class="form-group col-lg-9">
-                                <label for="Address1">Full Address</label>
-                                <textarea class="form-control" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" asp-for="P_FullAddress" name="P_FullAddress" rows="1">@Model.P_FullAddress</textarea>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1<span style="color: red;">*</span></label>
+                                <textarea required class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.P_Address1</textarea>
+                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address2</label>
+                                <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address2" rows="1">@Model.P_Address2</textarea>
                                 <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
                             </div>
 
-                            <script>
-                                function suggestAddress(input) {
-                                    var suggestions = document.getElementById('suggestions');
-
-                                    // Clear previous suggestions
-                                    suggestions.innerHTML = '';
-
-                                    // Address format suggestions based on user input
-                                    if (input.toLowerCase().includes('h')) {
-                                        addSuggestion('House');
-                                    }
-                                    if (input.toLowerCase().includes('b')) {
-                                        addSuggestion('Building');
-                                    }
-                                    if (input.toLowerCase().includes('f')) {
-                                        addSuggestion('Flat');
-                                    }
-                                    if (input.toLowerCase().includes('a')) {
-                                        addSuggestion('Apartment');
-                                    } if (input.toLowerCase().includes('s')) {
-                                        addSuggestion('Sector');
-                                    }
-                                    // Add more suggestions based on your criteria
-
-                                    // Display suggestions
-                                    function addSuggestion(suggestion) {
-                                        var suggestionElement = document.createElement('div');
-                                        suggestionElement.innerText = suggestion;
-                                        suggestionElement.addEventListener('click', function () {
-                                            document.getElementById('Address1').value += ' ' + suggestion;
-                                            suggestions.innerHTML = ''; // Clear suggestions after selecting
-                                        });
-                                        suggestions.appendChild(suggestionElement);
-                                    }
-                                }
-                            </script>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address3</label>
+                                <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.P_Address3</textarea>
+                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                            </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="PinCode">PinCode</label>
@@ -1050,7 +1022,16 @@
                             @if (Model.ReceiveID == null)
                             {
                                 <div class="form-group col-lg-3">
-                                    <label for="mobileNumber" class="mr-2">Mobile/WhatsApp No.<span style="color: red;">*</span></label>
+                                    <label for="contactType" class="mr-2">Contact Type<span style="color: red;">*</span></label>
+                                    <select class="form-control" id="contactType" name="contactType">
+                                        <option value="Mobile">Mobile No.</option>
+                                        <option value="WhatsApp">WhatsApp No.</option>
+                                        <option value="Phone(O)">Office Phone</option>
+                                        <option value="Phone(R)">Residence Phone</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="mobileNumber" class="mr-2">Contact No.<span style="color: red;">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
@@ -1085,12 +1066,19 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+
+
+
+
                             }
                             <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="mobileNumbersTable">
                                 <thead>
                                     <tr>
+                                        <th>Contact Type</th>
                                         <th>Country Code</th>
-                                        <th>Mobile Number</th>
+                                        <th>Contact Number</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -1099,30 +1087,7 @@
                                 </tbody>
                             </table>
                             <input type="hidden" asp-for="MobileList" name="MobileList" id="mobileListField" />
-                            <script>
-                                $(document).ready(function () {
-                                    $("#submitButton").on("click", function () {
-                                        var tableDatamobile = [];
 
-                                        // Loop through each row in the table
-                                        $("#mobileNumbersTable tbody tr").each(function () {
-                                            var rowDatamobile = {};
-                                            $(this).find("td").each(function (index, element) {
-                                                if (index === 0) {
-                                                    rowDatamobile.CountryCode = $(element).text();
-                                                } else if (index === 1) {
-                                                    rowDatamobile.MobileNumber = $(element).text();
-                                                }
-                                            });
-                                            tableDatamobile.push(rowDatamobile);
-                                        });
-
-                                        // Store the JSON data in the hidden input field
-                                        $("#mobileListField").val(JSON.stringify(tableDatamobile));
-                                    });
-                                });
-
-                            </script>
                             <script>
                                 $(document).ready(function () {
                                     // Parse the JSON data from the model
@@ -1139,6 +1104,7 @@
                                         $.each(mobileListJson, function (index, item) {
                                             // Add a new row to the table
                                             var newRowmobilelist = $("<tr>");
+                                            newRowmobilelist.append("<td>" + item.ContactType + "</td>");
                                             newRowmobilelist.append("<td>" + item.CountryCode + "</td>");
                                             newRowmobilelist.append("<td>" + item.MobileNumber + "</td>");
                                             newRowmobilelist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
@@ -1146,6 +1112,7 @@
                                             // Add a special class to identify rows from MobileListJson
                                             newRowmobilelist.addClass("json-data-row");
 
+                                            updateMobileNumbersHiddenField();
                                             $("#mobileNumbersTable tbody").append(newRowmobilelist);
 
                                             // Show the table
@@ -1155,9 +1122,17 @@
 
                                     // Add Number button click event
                                     $("#addNumber").on("click", function () {
-                                        // Get values from input fields
+                                        var ContactType = $("#contactType").val();
                                         var countryCode = $("#countryCode").find(':selected').text();
                                         var mobileNumber = $("#mobileNumber").val();
+                                        var donorid = $("#DonorID").val();
+                                        var ReceiveHeadName = '';
+
+                                        if ($('#IsReceiveHeadDiffrent').is(':checked')) {
+                                            ReceiveHeadName = $("#ReceiveHeadName").find(':selected').text();
+                                        } else {
+                                            ReceiveHeadName = "@UserDepartment";
+                                        }
 
                                         // Validate mobile number format based on the country code
                                         var mobileNumberPattern;
@@ -1171,16 +1146,17 @@
                                         }
 
                                         if (!mobileNumberPattern.test(mobileNumber)) {
-                                            alert("Invalid mobile number format for the selected country code.");
+                                            alert("Invalid mobile number format for the selected country code. Please enter a valid mobile number.");
                                             return;
                                         }
 
-                                        // Rest of your existing code...
-
                                         // Add a new row to the table
                                         var newRowmobilenumberlist = $("<tr>");
+                                        newRowmobilenumberlist.append("<td>" + ContactType + "</td>");
                                         newRowmobilenumberlist.append("<td>" + countryCode + "</td>");
                                         newRowmobilenumberlist.append("<td>" + mobileNumber + "</td>");
+                                        newRowmobilenumberlist.append("<td style='display:none'>" + donorid + "</td>");
+                                        newRowmobilenumberlist.append("<td style='display:none'>" + ReceiveHeadName + "</td>");
                                         newRowmobilenumberlist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
 
                                         // Add a special class to identify manually added rows
@@ -1188,6 +1164,7 @@
 
                                         $("#mobileNumbersTable tbody").append(newRowmobilenumberlist);
 
+                                        updateMobileNumbersHiddenField();
                                         // Show the table
                                         $("#mobileNumbersTable").css("visibility", "visible");
 
@@ -1195,18 +1172,41 @@
                                         $("#mobileNumber").val("");
                                     });
 
+
                                     // Delete row when the delete button is clicked
                                     $("#mobileNumbersTable").on("click", ".delete-row", function () {
                                         var row = $(this).closest("tr");
 
                                         // Remove the row
                                         row.remove();
-
+                                        updateMobileNumbersHiddenField();
                                         // Hide the table if no rows are left
                                         if ($("#mobileNumbersTable tbody tr").length === 0) {
                                             $("#mobileNumbersTable").css("visibility", "hidden");
                                         }
                                     });
+
+                                    function updateMobileNumbersHiddenField() {
+                                        var tableDatamobile = [];
+
+                                        // Loop through each row in the table
+                                        $("#mobileNumbersTable tbody tr").each(function () {
+                                            var rowDatamobile = {};
+                                            $(this).find("td").each(function (index, element) {
+                                                if (index === 0) {
+                                                    rowDatamobile.ContactType = $(element).text();
+                                                } else if (index === 1) {
+                                                    rowDatamobile.CountryCode = $(element).text();
+                                                } else if (index === 2) {
+                                                    rowDatamobile.MobileNumber = $(element).text();
+                                                }
+                                            });
+                                            tableDatamobile.push(rowDatamobile);
+                                        });
+
+                                        // Store the JSON data in the hidden input field
+                                        $("#mobileListField").val(JSON.stringify(tableDatamobile));
+                                    }
                                 });
                             </script>
 
@@ -1217,11 +1217,11 @@
                                 <label for="EmailID">Email ID<span style="color: red;">*</span></label>
                                 <input class="form-control" value="@Model.EmailID" type="text" id="EmailID" required name="EmailID" asp-for="EmailID" />
                             </div>
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-3" style="display:none;">
                                 <label for="StdCode">STD Code</label>
                                 <input class="form-control" id="StdCode" value="@Model.StdCode" type="text" name="StdCode" asp-for="StdCode" />
                             </div>
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-3" style="display:none">
                                 <label for="Phoneno">Phone (R)</label>
                                 <input class="form-control" id="PhoneR" value="@Model.PhoneR" type="text" name="PhoneR" asp-for="PhoneR" />
                             </div>
@@ -1366,6 +1366,7 @@
                             // Get selected identity type and number
                             var selectedIdentityType = $("#identityType").val();
                             var identityNumber = $("#identityNumber").val().trim();
+                            var donorid = $("#DonorID").val();
 
                             // Validate input and identity number based on type
                             var isValid = validateIdentity(selectedIdentityType, identityNumber);
@@ -1373,7 +1374,13 @@
                             if (!isValid) {
                                 return;
                             }
+                            var ReceiveHeadName = '';
 
+                            if ($('#IsReceiveHeadDiffrent').is(':checked')) {
+                                ReceiveHeadName = $("#ReceiveHeadName").find(':selected').text();
+                            } else {
+                                ReceiveHeadName = "@UserDepartment";
+                            }
                             // Check if an identity of the same type already exists
                             var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
                             var existingIdentity = existingIdentities.find(function (identity) {
@@ -1388,7 +1395,9 @@
                             // Create a new object for the added identity
                             var identity = {
                                 IdentityType: selectedIdentityType,
-                                IdentityNumber: identityNumber
+                                IdentityNumber: identityNumber,
+                                DonorID: donorid,
+                                ReceiveHead: ReceiveHeadName
                             };
 
                             // Append the new identity to the container
@@ -1462,6 +1471,8 @@
                             var newRowidentitydetails = $("<div class='form-group col-lg-3'>");
                             newRowidentitydetails.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
                             newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
+                            newRowidentitydetails.append("<input style='display:none'  id='" + identity.IdentityType + "' type='text' value='" + identity.DonorID + "' readonly />");
+                            newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "' type='text' value='" + identity.ReceiveHead + "' readonly />");
                             newRowidentitydetails.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
                             // Append the new row to the container
@@ -1482,7 +1493,9 @@
 
                                 currentIdentities.push({
                                     IdentityType: identityType,
-                                    IdentityNumber: identityNumber
+                                    IdentityNumber: identityNumber,
+                                    DonorID: donorid,
+                                    ReceiveHead: ReceiveHeadName
                                 });
                             });
 
@@ -1567,7 +1580,8 @@
                                         var amount = parseFloat($('#Amount').val()) || 0;
 
                                         if (selectedPaymentMode === 'CASH') {
-                                            $('#TotalAmount').val(amount.toFixed(2)); // Set the TotalAmount only when Cash is selected
+                                            $('#TotalAmount').val(amount.toFixed(2));
+                                            $('#receiveamount').val(amount.toFixed(2));
                                         }
                                     }
 
@@ -1587,25 +1601,24 @@
                             </script>
 
                             <div class="form-group col-lg-3" id="currencyAmountFields">
-                                <label for="currency" class="mb-2">Currency<span style="color: red;">*</span></label>
+                                <label for="currency" class="mb-2">Donation Amount<span style="color: red;">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <select class="custom-select" asp-for="CurrencyID" id="CurrencyID" name="CurrencyID" required>
                                             <option value="" disabled>Select</option>
                                             @foreach (var currency in Model.currenciesList)
                                             {
-                                                <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>
+                                                    @currency.CurrencyCode
+                                                </option>
                                             }
                                         </select>
+
+
                                         <input type="hidden" id="hdncurrncycode" name="CurrencyCode" asp-for="CurrencyCode" />
 
                                         <script>
                                             $(document).ready(function () {
-                                                // Set the selected item based on model's CurrencyID when the page loads
-                                                var modelCurrencyID = '@Model.CurrencyID'; // Convert to string for comparison
-                                                if (modelCurrencyID) {
-                                                    $("#CurrencyID").val(modelCurrencyID);
-                                                }
 
                                                 // Attach the change event to update the hidden field
                                                 $("#CurrencyID").change(function () {
@@ -1662,6 +1675,7 @@
                                         materialFields.style.display = 'block';
                                         currencyAmountFields.style.display = 'none';
                                         TotalAmount.style.display = 'none';
+
                                         // Set required attribute dynamically
                                         materialDepositIDTextbox.required = true;
                                         materialInputTextarea.required = true;
@@ -1673,7 +1687,7 @@
                                         materialDepositFields.style.display = 'none';
                                         materialFields.style.display = 'none';
                                         currencyAmountFields.style.display = 'block';
-                                        TotalAmount.style.display = 'block';
+
                                         // Remove required attribute dynamically
                                         materialDepositIDTextbox.required = false;
                                         materialInputTextarea.required = false;
@@ -1764,37 +1778,7 @@
                                 </div>
                             </div>
                             <input type="hidden" id="hiddenTempFilename" />
-                            <script>
-                                $(document).ready(function () {
 
-                                    $("#submitButton").click(function (event) {
-                                        event.preventDefault();
-
-                                        var tableData = [];
-                                        $("#bankDetailsTable tbody tr").each(function () {
-                                            var rowDatabankdetails = {
-                                                DonationMode: $(this).find("td:eq(0)").text(),
-                                                BankName: $(this).find("td:eq(1)").text(),
-                                                ChequeDate: $(this).find("td:eq(2)").text(),
-                                                ChequeNo: $(this).find("td:eq(3)").text(),
-                                                DepositBank: $(this).find("td:eq(4)").text(),
-                                                DepositDate: $(this).find("td:eq(5)").text(),
-                                                Currency: $(this).find("td:eq(6)").text(),
-                                                Amount: $(this).find("td:eq(7)").text(),
-                                                PdcCheque: $(this).find("td:eq(8)").text(),
-                                                TempDoc: $(this).find("td:eq(10)").text()
-                                            };
-                                            tableData.push(rowDatabankdetails);
-                                        });
-
-                                        // Store tableData in a hidden field
-                                        $("#hiddenBankDetails").val(JSON.stringify(tableData));
-
-                                    });
-
-                                    // ... Your existing code ...
-                                });
-                            </script>
                             <script>
                                 $(document).ready(function () {
                                     $('#filemultiCheque').change(function () {
@@ -1831,6 +1815,8 @@
                             </script>
                             <script>
                                 $(document).ready(function () {
+                                    var currentFinancialYearEnd;
+
                                     $('#depositDate').on('blur', function () {
                                         validateDepositDate();
                                     });
@@ -1842,7 +1828,7 @@
                                         // Calculate the start and end dates of the current and previous Indian financial years
                                         var currentFinancialYearStart = new Date(currentDate.getFullYear(), 3, 1); // Financial year starts on April 1st
                                         var previousFinancialYearStart = new Date(currentDate.getFullYear() - 1, 3, 1); // Start of the previous financial year
-                                        var previousFinancialYearEnd = new Date(currentDate.getFullYear(), 2, 31); // End of the previous financial year
+                                        currentFinancialYearEnd = new Date(currentDate.getFullYear(), 2, 31); // End of the current financial year
 
                                         if (depositDate < previousFinancialYearStart || depositDate > currentFinancialYearEnd) {
                                             alert('Receive ID cannot be credited if the deposit date is not within the current or previous Indian financial year.');
@@ -1855,7 +1841,7 @@
 
                             <div class="col-12">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" id="bankDetailsTable">
+                                    <table class="table table-bordered" style="display:none;" id="bankDetailsTable">
                                         <thead>
                                             <tr>
                                                 <th>Donation Mode</th>
@@ -1879,11 +1865,6 @@
                                 </div>
                             </div>
 
-                            <style>
-                                #bankDetailsTable {
-                                    display: none;
-                                }
-                            </style>
                             <script>
                                 $(document).ready(function () {
 
@@ -1937,6 +1918,8 @@
                                         // Update the Total Amount field with the calculated total
                                         $("#TotalAmount").val(totalAmount.toFixed(2));
                                         $("#hdnTotalAmount").val(totalAmount.toFixed(2));
+                                        $("#receiveamount").val(totalAmount.toFixed(2));
+
                                     }
 
 
@@ -2059,6 +2042,8 @@
                                             "</tr>";
 
                                         $("#bankDetailsTable tbody").append(newRowBankAdd);
+                                        updateBankDetailsHiddenField();
+                                        $("#DivTotalAmount").show();
                                     }
 
                                     function OnModeladdBankDetailsRow(bankDetails) {
@@ -2079,6 +2064,8 @@
                                             "</tr>";
 
                                         $("#bankDetailsTable tbody").append(newRowModelaAdd);
+                                        updateBankDetailsHiddenField();
+                                        $("#DivTotalAmount").show();
                                     }
 
                                     $("#bankDetailsTable").on("click", ".delete-row", function () {
@@ -2090,11 +2077,35 @@
 
                                         $(this).closest("tr").remove();
                                         updateTotalAmount();
+                                        updateBankDetailsHiddenField();
                                         // Hide the table if there is no data after deletion
                                         if ($("#bankDetailsTable tbody tr").length === 0) {
                                             $("#bankDetailsTable").hide();
                                         }
                                     });
+
+
+                                    function updateBankDetailsHiddenField() {
+                                        var tableData = [];
+                                        $("#bankDetailsTable tbody tr").each(function () {
+                                            var rowDatabankdetails = {
+                                                DonationMode: $(this).find("td:eq(0)").text(),
+                                                BankName: $(this).find("td:eq(1)").text(),
+                                                ChequeDate: $(this).find("td:eq(2)").text(),
+                                                ChequeNo: $(this).find("td:eq(3)").text(),
+                                                DepositBank: $(this).find("td:eq(4)").text(),
+                                                DepositDate: $(this).find("td:eq(5)").text(),
+                                                Currency: $(this).find("td:eq(6)").text(),
+                                                Amount: $(this).find("td:eq(7)").text(),
+                                                PdcCheque: $(this).find("td:eq(8)").text(),
+                                                TempDoc: $(this).find("td:eq(10)").text()
+                                            };
+                                            tableData.push(rowDatabankdetails);
+                                        });
+
+                                        // Store tableData in a hidden field
+                                        $("#hiddenBankDetails").val(JSON.stringify(tableData));
+                                    }
 
                                 });
                             </script>
@@ -2265,6 +2276,7 @@
 
                                                     // Set the initial amount in the ReceiptAmount input field
                                                     $('#ReceiptAmount').val(initialAmount.toFixed(2));
+                                                    updateAnnounce();
                                                 } else {
                                                     $('#ReceiptAmount').val('');
                                                 }
@@ -2285,7 +2297,35 @@
 
                                         // Set the total amount in the ReceiptAmount input field
                                         $('#ReceiptAmount').val(totalAmount.toFixed(2));
+                                        updateAnnounce();
+
                                     });
+
+                                    $('#receiveamount').on('input', function () {
+                                        updateAnnounce();
+                                    });
+
+                                    function updateAnnounce() {
+                                        // Get the value of the receiveamount input
+                                        var receiveAmount = parseFloat($('#receiveamount').val()) || 0;
+
+                                        // Get the value of the ReceiptAmount input
+                                        var receiptAmount = parseFloat($('#ReceiptAmount').val()) || 0;
+
+                                        // Check if the receipt amount is greater than the receive amount
+                                        if (receiptAmount > receiveAmount) {
+                                            // Calculate the announce amount as the difference between receipt amount and initial amount
+                                            var announceAmount = receiptAmount - receiveAmount;
+
+                                            // Set the announce amount in the announceamount input field
+                                            $('#announceamount').val(announceAmount.toFixed(2));
+                                        } else {
+                                            // If the receipt amount is not greater than the receive amount, set announce amount to 0
+                                            $('#announceamount').val("0.00");
+                                        }
+                                    }
+
+
                                 });
 
                             </script>
@@ -2293,7 +2333,7 @@
                             @if (Model.ReceiveID == null)
                             {
                                 <div class="row">
-                                    <div class="form-group col-lg-3">
+                                    <div class="form-group col-lg-2">
                                         <label for="head">Head</label>
                                         <select class="form-control" id="headInput" asp-for="Purpose_ID" name="Purpose_ID">
                                             <option value="0">Select Head</option>
@@ -2309,7 +2349,7 @@
 
                                     </div>
 
-                                    <div class="form-group col-lg-3">
+                                    <div class="form-group col-lg-2">
                                         <label for="subHead">Purpose</label>
                                         <select class="form-control" id="subHeadInput" name="subHead">
                                             <option value="0">Select Purpose</option>
@@ -2317,16 +2357,24 @@
                                     </div>
 
 
-                                    <div class="form-group col-lg-2">
+                                    <div class="form-group col-lg-1">
                                         <label for="autoQuantity">Quantity</label>
                                         <select class="form-control" id="autoQuantityInput" name="autoQuantity">
-                                            <option value="0">Select Quantity</option>
+                                            <option value="0">Select Qty</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-lg-2">
                                         <label for="ReceiptAmount">Amount</label>
                                         <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
+                                    </div>
+                                    <div class="form-group col-lg-2">
+                                        <label for="ReceiptAmount">Receive Amount</label>
+                                        <input class="form-control" id="receiveamount" type="text" name="receiveamount">
+                                    </div>
+                                    <div class="form-group col-lg-2">
+                                        <label for="ReceiptAmount">Announce Amount</label>
+                                        <input class="form-control" id="announceamount" type="text" name="announceamount">
                                     </div>
 
                                     <div class="form-group col-lg-1">
@@ -2342,7 +2390,9 @@
                                             <th>Head</th>
                                             <th>Purpose</th>
                                             <th>Quantity</th>
-                                            <th>Amount</th>
+                                            <th>Purpose Amount</th>
+                                            <th>Receive Amount</th>
+                                            <th>Announce Amount</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -2352,6 +2402,7 @@
 
                             <input type="hidden" id="jsonData" name="receiptdetailslist" asp-for="receiptdetailslist" />
                             <input type="hidden" id="hdnPurposetotalamount" />
+                            <input type="hidden" id="hdnAnnounceTotalAmount" />
 
                             <script>
                                 $(document).ready(function () {
@@ -2359,7 +2410,7 @@
                                     var tableContainer = $("#tableContainer");
                                     var jsonDataField = $("#jsonData");
                                     var totalAmountInput = $("#TotalAmount");
-
+                                    var announceTotalInput = $("#hdnAnnounceTotalAmount");
 
                                     // Constants
                                     var SELECT_OPTION = "Select";
@@ -2373,9 +2424,10 @@
                                     var receiptsListJson = @Html.Raw(Model.ReceiptsListJson);
                                     if (receiptsListJson) {
                                         $.each(receiptsListJson, function (index, item) {
-                                            addTableRow(item.HeadName, item.Purpose, item.Quantity, item.Amount);
+                                            addTableRow(item.HeadName, item.Purpose, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount);
                                         });
                                         toggleTableVisibility();
+                                        updateAnnounceTotal();
                                     }
 
                                     // Add row event handler
@@ -2385,40 +2437,24 @@
                                         var purpose = $("#subHeadInput option:selected").text();
                                         var quantity = $("#autoQuantityInput").val();
                                         var amount = parseFloat($("#ReceiptAmount").val()) || 0;
+                                        var receiveAmount = parseFloat($("#receiveamount").val()) || 0;
+                                        var announceAmount = parseFloat($("#announceamount").val()) || 0;
                                         var TotalDonation = parseFloat(totalAmountInput.val()) || 0;
 
                                         // Check if the sum of amounts is not greater than TotalAmount
                                         var currentTotal = getCurrentTotalAmount();
                                         var materialDepositId = $("#MaterialDepositID").val();
 
-                                        if (materialDepositId) {
-                                            if (isValidInputs(purpose, amount)) {
-                                                addTableRow(head, purpose, quantity, amount);
-                                                clearInputFields();
-                                                updateHiddenField();
-                                            }
-                                            return;
-                                        }
+                                        addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount);
+                                        clearInputFields();
+                                        updateHiddenField();
+                                        updateAnnounceTotal();
 
-                                        if (!TotalDonation || TotalDonation <= 0) {
-                                            totalAmountInput.focus();
-                                            alert(ERROR_MESSAGES.ADD_AMOUNT_FIRST);
-                                        } else if ((currentTotal + amount) <= TotalDonation) {
-                                            // Proceed with adding a new row
-                                            if (isValidInputs(purpose, quantity, amount)) {
-                                                addTableRow(head, purpose, quantity, amount);
-                                                clearInputFields();
-                                                updateHiddenField();
-                                            }
-                                        } else {
-                                            totalAmountInput.focus();
-                                            alert(ERROR_MESSAGES.TOTAL_AMOUNT_EXCEED);
-                                        }
                                     });
 
                                     // Delete row event handler
                                     tableBody.on("click", ".deleteBtn", function () {
-                                        // Remove the corresponding row when the delete button is clicked
+                                        var announceAmount = parseFloat($(this).closest("tr").find("td:eq(5)").text()) || 0;
                                         $(this).closest("tr").remove();
 
                                         // Toggle table visibility based on row count
@@ -2426,6 +2462,9 @@
 
                                         // Update hidden field with JSON data
                                         updateHiddenField();
+
+                                        // Update announce total
+                                        updateAnnounceTotal(-announceAmount);
                                     });
 
                                     $("#clearTableBtn").click(function () {
@@ -2434,8 +2473,51 @@
 
                                         // Update hidden field with JSON data
                                         updateHiddenField();
+
+                                        // Reset announce total
+                                        announceTotalInput.val(0);
                                     });
 
+                                    // Function to toggle table visibility based on row count
+                                    function toggleTableVisibility() {
+                                        tableContainer.toggle(tableBody.find("tr").length > 0);
+                                    }
+
+                                    // Function to get the current total amount in the table
+                                    function getCurrentTotalAmount() {
+                                        var currentTotal = 0;
+                                        tableBody.find("tr").each(function () {
+                                            var columns = $(this).find("td");
+                                            var amount = parseFloat(columns.eq(3).text()) || 0;
+                                            currentTotal += amount;
+                                        });
+                                        return currentTotal;
+                                    }
+
+                                    // Function to add a new row
+                                    function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
+                                        var newRowPurpose = `<tr>
+                                                                                                <td>${head}</td>
+                                                                                                <td>${purpose}</td>
+                                                                                                <td>${quantity}</td>
+                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                            </tr>`;
+
+                                        tableBody.append(newRowPurpose);
+                                        toggleTableVisibility();
+                                        updateHiddenField();
+                                        updateAnnounceTotal(announceAmount);
+                                    }
+
+                                    // Function to clear input fields
+                                    function clearInputFields() {
+                                        $("#headInput, #subHeadInput, #autoQuantityInput, #ReceiptAmount, #receiveamount, #announceamount, #DonationMode").val("");
+                                    }
+
+                                    // Function to update the hidden field with JSON data
                                     function updateHiddenField() {
                                         var data = [];
                                         var totalAmount = 0;
@@ -2446,7 +2528,9 @@
                                                 "HeadName": columns.eq(0).text(),
                                                 "Purpose": columns.eq(1).text(),
                                                 "Quantity": columns.eq(2).text(),
-                                                "Amount": columns.eq(3).text()
+                                                "Amount": columns.eq(3).text(),
+                                                "ReceiveAmount": columns.eq(4).text(),
+                                                "AnnounceAmount": columns.eq(5).text()
                                             };
                                             data.push(item);
 
@@ -2464,44 +2548,15 @@
                                         // Set total amount to the hidden field
                                         $("#hdnPurposetotalamount").val(totalAmount.toFixed(2));
                                     }
-                                    // Function to toggle table visibility based on row count
-                                    function toggleTableVisibility() {
-                                        tableContainer.toggle(tableBody.find("tr").length > 0);
-                                    }
 
-                                    // Function to get the current total amount in the table
-                                    function getCurrentTotalAmount() {
-                                        var currentTotal = 0;
-                                        tableBody.find("tr").each(function () {
-                                            var columns = $(this).find("td");
-                                            var amount = parseFloat(columns.eq(3).text()) || 0;
-                                            currentTotal += amount;
-                                        });
-                                        return currentTotal;
-                                    }
-
-                                    // Function to check if inputs are valid
-                                    function isValidInputs(purpose, quantity, amount) {
-                                        if (purpose !== SELECT_OPTION && quantity && amount) {
-                                            return true;
-                                        } else {
-                                            // alert(ERROR_MESSAGES.FILL_ALL_FIELDS);
-                                            //return false;
-                                        }
-                                    }
-
-                                    // Function to add a new row
-                                    function addTableRow(head, purpose, quantity, amount) {
-                                        var newRowPurpose = `<tr><td>${head}</td><td>${purpose}</td><td>${quantity}</td><td>${amount.toFixed(2)}</td><td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td></tr>`;
-                                        tableBody.append(newRowPurpose);
-                                        toggleTableVisibility();
-                                    }
-
-                                    // Function to clear input fields
-                                    function clearInputFields() {
-                                        $("#headInput, #subHeadInput, #autoQuantityInput, #ReceiptAmount, #DonationMode").val("");
+                                    // Function to update announce total
+                                    function updateAnnounceTotal(announceAmount = 0) {
+                                        var currentTotal = parseFloat(announceTotalInput.val()) || 0;
+                                        var newTotal = currentTotal + announceAmount;
+                                        announceTotalInput.val(newTotal.toFixed(2));
                                     }
                                 });
+
                             </script>
 
                         </div>
@@ -2510,16 +2565,16 @@
                 </fieldset>
 
                 <fieldset class="show border rounded p-3">
-                    <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
+                    <legen00d style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donorInstructionsContent" aria-expanded="false" aria-controls="donorInstructionsContent">
                             <span id="collapseIcon" class="">&#43;</span>
                             <span style="font-size: larger;">Donor Instructions</span>
                         </button>
-                    </legend>
+                    </legen00d>
 
                     <div id="donorInstructionsContent" class="nested-form-container collapse">
                         <div class="row">
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-3" style="display:none;">
                                 <label for="manavFormulaRequire">Manav Formula Require</label>
                                 <div class="custom-control custom-radio">
                                     <input class="custom-control-input" type="radio" name="IsManavaFormulaRequire" id="manavFormulaYes" asp-for="IsManavaFormulaRequire" value="true" @(Model.IsManavaFormulaRequire.GetValueOrDefault() ? "checked" : "")>
@@ -2531,7 +2586,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-3" style="display:none;">
                                 <label for="patientsPhotoRequire">Patients Photo Require</label>
                                 <div class="custom-control custom-radio">
                                     <input class="custom-control-input" type="radio" name="IsPatientsPhotoRequire" id="patientsPhotoYes" asp-for="IsPatientsPhotoRequire" value="true" @(Model.IsPatientsPhotoRequire.GetValueOrDefault() ? "checked" : "")>
@@ -2542,7 +2597,7 @@
                                     <label class="custom-control-label" for="patientsPhotoNo">No</label>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-4" style="display:none;">
                                 <input type="checkbox" class="form-check-input" id="requireCheckbox" name="IfDiffrentAddressForDispatch" value="true" @(Model.IfDiffrentAddressForDispatch.GetValueOrDefault() ? "checked" : "") />
                                 <input type="hidden" value="false" name="IfDiffrentAddressForDispatch" />
                                 <label for="requireCheckbox">If the dispatch address is different, please fill in the address here.</label>
@@ -2566,7 +2621,7 @@
                             @if (Model.ReceiveID == null)
                             {
 
-                                <div class="form-group col-lg-3">
+                                <div class="form-group col-lg-5">
                                     <label for="instruction">Donor Instruction</label>
                                     <select class="form-control" asp-for="Instructions" id="Instruction" name="Instructions">
                                         <option value="0">Select Donor Instructions</option>
@@ -2581,9 +2636,10 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-lg-3">
+                                <div class="form-group col-lg-5">
                                     <label for="remarks">Remarks</label>
                                     <textarea class="form-control" rows="1" asp-for="ReceiptRemarks" name="ReceiptRemarks" oninput="convertToUpperCase(this)" typeof="text" id="remarks"></textarea>
+
                                 </div>
                                 <div class="col-lg-2">
                                     <br />
@@ -2702,45 +2758,7 @@
 
                         </div>
                     </div>
-                    <div class="card-header text-center">
-                        <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" id="announcedue" name="IfAnnounceDueInFuture" value="true" @(Model.IfAnnounceDueInFuture ? "checked" : "") />
-                            <input type="hidden" name="IfAnnounceDueInFuture" value="false" />
-                            <label class="form-check-label" for="announcedue"> If Announce Due For Future Dates</label>
-                        </div>
-                        <script>
-                            $(document).ready(function () {
-                                var announceCheckbox = $("#announcedue");
-                                var announceFieldset = $("#announceFieldset");
 
-                                announceCheckbox.on("change", function () {
-                                    announceFieldset.toggle(this.checked);
-
-                                    // Hide the table if there are no rows
-                                    if (!this.checked) {
-                                        $("#announceTable").hide();
-                                    }
-                                });
-
-                                // Trigger the change event to initialize the state
-                                announceCheckbox.change();
-
-                                var tableBody = $("#tableBody");
-
-                                $("#btn").on("click", function () {
-                                    var newRowaddclick = $("<tr>");
-                                    // Add your row creation logic here
-                                    tableBody.append(newRowaddclick);
-
-                                    // Clear input fields
-                                    $("#totalPurposeAmount, #receiveAmount, #dueAmount, #announceId, #amount, #date1").val("");
-
-                                    // Show the table
-                                    $("#announceTable").show();
-                                });
-                            });
-                        </script>
-                    </div>
                 </fieldset>
 
                 <fieldset id="announceFieldset" class="show border rounded p-3" style="display:none;">
@@ -2752,6 +2770,46 @@
                     </legend>
 
                     <div id="announceDetailsContent" class="nested-form-container collapse">
+                        <div class="card-header text-center">
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="announcedue" name="IfAnnounceDueInFuture" value="true" @(Model.IfAnnounceDueInFuture ? "checked" : "") />
+                                <input type="hidden" name="IfAnnounceDueInFuture" value="false" />
+                                <label class="form-check-label" for="announcedue"> If Announce Due For Future Dates</label>
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    var announceCheckbox = $("#announcedue");
+                                    var announceFieldset = $("#announceFieldset");
+
+                                    announceCheckbox.on("change", function () {
+                                        announceFieldset.toggle(this.checked);
+
+                                        // Hide the table if there are no rows
+                                        if (!this.checked) {
+                                            $("#announceTable").hide();
+                                        }
+                                    });
+
+                                    // Trigger the change event to initialize the state
+                                    announceCheckbox.change();
+
+                                    var tableBody = $("#tableBody");
+
+                                    $("#btn").on("click", function () {
+                                        var newRowaddclick = $("<tr>");
+                                        // Add your row creation logic here
+                                        tableBody.append(newRowaddclick);
+
+                                        // Clear input fields
+                                        $("#totalPurposeAmount, #receiveAmount, #dueAmount, #announceId, #amount, #date1").val("");
+
+                                        // Show the table
+                                        $("#announceTable").show();
+                                    });
+                                });
+                            </script>
+                        </div>
+
                         @if (Model.ReceiveID == null)
                         {
                             <div class="row">
@@ -2889,7 +2947,7 @@
                             <span style="font-size: larger;">Attach Scan Copy</span>
                         </button>
                     </legend>
-                    <div id="scanCopyContent" class="nested-form-container collapse show">
+                    <div id="scanCopyContent" class="nested-form-container collapse">
                         <style>
                             .file-preview {
                                 position: relative;
