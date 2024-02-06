@@ -127,7 +127,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiveDetailsContent" aria-expanded="false" aria-controls="receiveDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Receive Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Receive Details</span>
                         </button>
                     </legend>
                     <div id="receiveDetailsContent" class="nested-form-container collapse show">
@@ -135,7 +135,6 @@
                         <div id="divReceiveHead" class="col-lg-3" style="display: none;">
                             <div class="form-group">
                                 <label for="receivehead">Receive Head</label>
-
 
                                 <div class="input-group">
                                     <select class="custom-select" id="ReceiveHeadName" name="ReceiveHeadID" asp-for="ReceiveHeadID">
@@ -173,6 +172,20 @@
                                 <div class="form-group col-lg-3">
                                     <label for="Receive Date">Receive Date</label>
                                     <input type="text" disabled value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Search BY</label>
+                                    <div class="input-group">
+                                        <select class="form-select col-2" id="SearchParaType" name="SearchParaType" asp-for="SearchParaType">
+                                            <option value="" selected disabled>Select</option>
+                                            <option value="Aadhar">Aadhar</option>
+                                            <option value="PAN">PAN</option>
+                                            <option value="Mobile">Mobile</option>
+                                            <option value="Name">Name</option>
+                                        </select>
+                                        <input type="text" class="form-control col-8" id="SearchData" name="SearchData" placeholder="Search data...">
+                                        <button type="button" class="btn btn-primary col-2" id="searchBtn"><i class="fas fa-search"></i> Search</button>
+                                    </div>
                                 </div>
 
                                 <script>
@@ -239,7 +252,6 @@
                                     </script>
                                 </div>
 
-
                             </div>
 
                         </div>
@@ -252,7 +264,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#personalDetailsContent" aria-expanded="false" aria-controls="personalDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Personal Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Personal Details</span>
                         </button>
                     </legend>
 
@@ -440,14 +452,7 @@
                                 });
                             </script>
 
-                            <div class="form-group col-lg-6">
-                                <label for="responsefrom">Enter Search Data</label>
-                                <input placeholder="Search data using Aadhaar, PAN, driving license, mobile number, or other identity numbers." class="form-control" id="" />
-                            </div>
-                            <div class="from-group col-lg-2">
-                                <br />
-                                <a asp-action="" title="Search" asp-controller="Gangotri" class="btn btn-primary"><i class="fas fa-search "></i>Search</a>
-                            </div>
+
 
                             <div class="form-group col-md-3">
                                 <label for="FullName" class="mb-2">Full Name<span style="color: red;">*</span></label>
@@ -507,7 +512,7 @@
                     <div class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon modal-header" type="button" data-toggle="collapse" data-target="#letteraddressContent" aria-expanded="false" aria-controls="letteraddressContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger">Letter Communication Address Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Letter Communication Address Details</span>
                         </button>
                     </div>
 
@@ -517,18 +522,18 @@
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
                                 <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.Address1</textarea>
-                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
                                 <textarea class="form-control" name="Address2" asp-for="Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address2" rows="1">@Model.Address2</textarea>
-                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
                                 <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.Address2</textarea>
-                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
 
@@ -811,7 +816,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#permanentAddressContent" aria-expanded="false" aria-controls="permanentAddressContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger">Permanent Address Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Permanent Address Details</span>
                         </button>
                     </legend>
 
@@ -821,18 +826,18 @@
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
                                 <textarea required class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.P_Address1</textarea>
-                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
                                 <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address2" rows="1">@Model.P_Address2</textarea>
-                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
                                 <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.P_Address3</textarea>
-                                <div style="color:#28166f;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -1012,7 +1017,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#contactDetailsContent" aria-expanded="false" aria-controls="contactDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger">Contact Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Contact Details</span>
                         </button>
                     </legend>
 
@@ -1234,7 +1239,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#identityDetailsContent" aria-expanded="false" aria-controls="identityDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger">Identity Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Identity Details</span>
                         </button>
                     </legend>
 
@@ -1512,7 +1517,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donationDetailsContent" aria-expanded="false" aria-controls="donationDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger">Donation Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Donation Details</span>
                         </button>
                     </legend>
 
@@ -2117,7 +2122,7 @@
                     <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#backOfficeContent" aria-expanded="false" aria-controls="backOfficeContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Back Office ReceiveID Transaction</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Back Office ReceiveID Transaction</span>
                         </button>
                     </legend>
 
@@ -2182,7 +2187,7 @@
                     <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiptDetailsContent" aria-expanded="false" aria-controls="receiptDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Receipt Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Receipt Details</span>
                         </button>
                     </legend>
 
@@ -2497,14 +2502,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                <td>${head}</td>
-                                                                                                <td>${purpose}</td>
-                                                                                                <td>${quantity}</td>
-                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                            </tr>`;
+                                                                                                                                <td>${head}</td>
+                                                                                                                                <td>${purpose}</td>
+                                                                                                                                <td>${quantity}</td>
+                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
@@ -2568,7 +2573,7 @@
                     <legen00d style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donorInstructionsContent" aria-expanded="false" aria-controls="donorInstructionsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Donor Instructions</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Donor Instructions</span>
                         </button>
                     </legen00d>
 
@@ -2765,7 +2770,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#announceDetailsContent" aria-expanded="false" aria-controls="announceDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Announce Due Installment Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Announce Due Installment Details</span>
                         </button>
                     </legend>
 
@@ -2944,7 +2949,7 @@
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#scanCopyContent" aria-expanded="false" aria-controls="scanCopyContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;">Attach Scan Copy</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Attach Scan Copy</span>
                         </button>
                     </legend>
                     <div id="scanCopyContent" class="nested-form-container collapse">
@@ -3022,7 +3027,7 @@
                         <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                             <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiveIdMovementDetailsContent" aria-expanded="false" aria-controls="receiveIdMovementDetailsContent">
                                 <span id="collapseIcon" class="">&#43;</span>
-                                <span style="font-size: larger;">ReceiveID Movement Details</span>
+                                <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">ReceiveID Movement Details</span>
                             </button>
                         </legend>
 

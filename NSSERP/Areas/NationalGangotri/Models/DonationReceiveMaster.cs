@@ -25,7 +25,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public int? ReceiveHeadID { get; set; }
         public string ReceiveHeadName { get; set; } = "";
 
-        //public int ReceiveID { get; set; }
+        public string DataFlag { get; set; }
 
         public DateTime ReceiveDate { get; set; }
 

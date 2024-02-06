@@ -29,6 +29,7 @@
 
         //public int ReceiveID { get; set; }
 
+        public string? DataFlag { get; set; }
         public DateTime ReceiveDate { get; set; }
 
         public DonationReceiveMaster()
@@ -49,6 +50,10 @@
         public DateTime? DateOfBirth { get; set; }
         public string? Company { get; set; }
         public string? FullAddress { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Address3 { get; set; }
+
         public string? PinCode { get; set; }
         public int? CountryId { get; set; }
         public string? CountryName { get; set; }
@@ -64,6 +69,11 @@
         public bool? IfDetailsNotComplete { get; set; }
 
         public string? P_FullAddress { get; set; }
+        public string? P_Address1 { get; set; }
+        public string? P_Address2 { get; set; }
+        public string? P_Address3 { get; set; }
+
+
         public string? P_PinCode { get; set; }
 
         public int? P_CountryID { get; set; }

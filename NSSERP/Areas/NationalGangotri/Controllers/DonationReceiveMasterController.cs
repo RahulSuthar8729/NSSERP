@@ -425,6 +425,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 DateOfBirth = dob,
                 Company = model.Company,
                 FullAddress = model.FullAddress,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                Address3 = model.Address3,
                 PinCode = model.PinCode,
                 CountryId = model.CountryId,
                 CountryName = model.CountryName,
@@ -438,6 +441,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 IsPermanentAddressDiffrent = model.IsPermanentAddressDiff,
                 ifdetailsNotComplete = model.IfDetailsNotComplete,
                 P_FullAddress = model.P_FullAddress,
+                P_Address1 = model.P_Address1,
+                P_Address2 = model.P_Address2,
+                P_Address3 = model.P_Address3,
                 P_PinCode = model.P_PinCode,
                 P_CountryID = model.P_CountryID,
                 P_CountryName = model.P_CountryName,
@@ -467,8 +473,8 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 IfAnnounceDueInFuture = model.IfAnnounceDueInFuture,
                 Doc1 = Doc1,
                 Doc2 = Doc2,
-                Doc3 = Doc3
-
+                Doc3 = Doc3,
+                DataFlag=User.FindFirst("DataFlag")?.Value
             };
 
 

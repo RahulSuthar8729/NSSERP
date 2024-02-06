@@ -12,6 +12,8 @@
         public string? Purpose { get; set; }
         public decimal? Quantity { get; set; }
         public decimal? Amount { get; set; }
+        public decimal? ReceiveAmount { get; set; }
+        public decimal? AnnounceAmount { get; set; }
         public string? CreatedBy { get; set; }
         public string? HeadName { get; set; }
 

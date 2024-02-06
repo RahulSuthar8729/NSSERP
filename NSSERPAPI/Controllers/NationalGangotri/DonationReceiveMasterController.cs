@@ -116,11 +116,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetSubHeadByHead(string HeadID, string DataFlag,string CurrencyId)
+        public IActionResult GetSubHeadByHead(string HeadID, string DataFlag, string CurrencyId)
         {
             try
             {
-                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID), DataFlag,Convert.ToInt32(CurrencyId));
+                var subheads = _dbFunctions.GetSubHeadByHead(Convert.ToInt32(HeadID), DataFlag, Convert.ToInt32(CurrencyId));
                 return Ok(subheads);
             }
             catch (Exception ex)
@@ -131,11 +131,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetQtyAmtBySubHead(int YojnaID, string DataFlag,string CurrencyId)
+        public IActionResult GetQtyAmtBySubHead(int YojnaID, string DataFlag, string CurrencyId)
         {
             try
             {
-                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID, DataFlag,Convert.ToInt32(CurrencyId));
+                var data = _dbFunctions.GetQtyAmtBySubHead(YojnaID, DataFlag, Convert.ToInt32(CurrencyId));
 
                 return Ok(data);
             }
@@ -322,6 +322,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@DateOfBirth", model.DateOfBirth);
                             parameters.Add("@Company", model.Company);
                             parameters.Add("@FullAddress", model.FullAddress);
+                            parameters.Add("@Address1", model.Address1);
+                            parameters.Add("@Address2", model.Address2);
+                            parameters.Add("@Address3", model.Address3);
                             parameters.Add("@PinCode", model.PinCode);
                             parameters.Add("@CountryID", model.CountryId);
                             parameters.Add("@CountryName", model.CountryName);
@@ -335,6 +338,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@IsPermanentAddressDiff", model.IsPermanentAddressDiff);
                             parameters.Add("@IfDetailsNotComplete", model.IfDetailsNotComplete);
                             parameters.Add("@P_FullAddress", model.P_FullAddress);
+                            parameters.Add("@P_Address1", model.P_Address1);
+                            parameters.Add("@P_Address2", model.P_Address2);
+                            parameters.Add("@P_Address3", model.P_Address3);
                             parameters.Add("@P_PinCode", model.P_PinCode);
                             parameters.Add("@P_CountryID", model.P_CountryID);
                             parameters.Add("@P_CountryName", model.P_CountryName);
@@ -373,6 +379,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@TotalAmount", model.Amount);
                             parameters.Add("@CampaignID", model.CampaignID);
                             parameters.Add("@CampaignName", model.CampaignName);
+                            parameters.Add("@DataFlag", model.DataFlag);
 
 
 
@@ -383,9 +390,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             var movementParams = new DynamicParameters();
                             movementParams.Add("@ReceiveID", maxReceiveID);
-                            movementParams.Add("@MovementFrom",model.ReceiveDepartment);                           
+                            movementParams.Add("@MovementFrom", model.ReceiveDepartment);
                             movementParams.Add("@UserID", model.UserID);
-                            movementParams.Add("@UserName",model.UserName);
+                            movementParams.Add("@UserName", model.UserName);
                             connection.Execute("InsertDmsMovement", movementParams, transaction, commandType: CommandType.StoredProcedure);
 
 
@@ -396,8 +403,12 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var mobileParams = new DynamicParameters();
                                     mobileParams.Add("@REF_NO", maxReceiveID);
+                                    mobileParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    mobileParams.Add("@DonorID", model.DonorID);
+                                    mobileParams.Add("@ContactType", mobileNumber.ContactType);
                                     mobileParams.Add("@CountryCode", mobileNumber.CountryCode);
                                     mobileParams.Add("@MobileNo", mobileNumber.MobileNumber);
+                                    mobileParams.Add("@DataFlag", model.DataFlag);
                                     mobileParams.Add("@CreatedBy", model.UserID);
                                     connection.Execute("InsertMultiMobileInDonationReceiveMaster", mobileParams, transaction, commandType: CommandType.StoredProcedure);
                                 }
@@ -408,8 +419,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var identityParams = new DynamicParameters();
                                     identityParams.Add("@REF_NO", maxReceiveID);
+                                    identityParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    identityParams.Add("@DonorID", model.DonorID);
                                     identityParams.Add("@IdentityType", identity.IdentityType);
                                     identityParams.Add("@IdentityNumber", identity.IdentityNumber);
+                                    identityParams.Add("@DataFlag", model.DataFlag);
                                     identityParams.Add("@CreatedBy", model.UserID);
 
                                     connection.Execute("InsertMultiIdentityInDonationReceiveMaster", identityParams, transaction, commandType: CommandType.StoredProcedure);
@@ -421,6 +435,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var bankParams = new DynamicParameters();
                                     bankParams.Add("@REF_NO", maxReceiveID);
+                                    bankParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    bankParams.Add("@DonorID", model.DonorID);
+                                    bankParams.Add("@DataFlag", model.DataFlag);
                                     bankParams.Add("@BankID", bankDetail.BankID);
                                     bankParams.Add("@BankName", bankDetail.BankName);
                                     bankParams.Add("@ChequeOrDraftDate", bankDetail.ChequeDate);
@@ -445,14 +462,17 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var rparameters = new DynamicParameters();
                                     rparameters.Add("@REF_NO", maxReceiveID);
+                                    rparameters.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    rparameters.Add("@DonorID", model.DonorID);
+                                    rparameters.Add("@DataFlag", model.DataFlag);
                                     rparameters.Add("@HeadID", receiptDetail.HeadID);
-                                    rparameters.Add("@Campaign", receiptDetail.Campaign);
                                     rparameters.Add("@HeadName", receiptDetail.HeadName);
                                     rparameters.Add("@SubHeadID", receiptDetail.SubHeadID);
                                     rparameters.Add("@SubHeadName", receiptDetail.Purpose);
-                                    rparameters.Add("@Purpose", receiptDetail.Purpose);
                                     rparameters.Add("@Quantity", receiptDetail.Quantity);
                                     rparameters.Add("@Amount", receiptDetail.Amount);
+                                    rparameters.Add("@ReceiveAmount", receiptDetail.ReceiveAmount);
+                                    rparameters.Add("@AnnounceAmount", receiptDetail.AnnounceAmount);
                                     rparameters.Add("@CreatedOn", DateTime.Now);
                                     rparameters.Add("@CreatedBy", model.UserID);
 
@@ -466,6 +486,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var instructionParams = new DynamicParameters();
                                     instructionParams.Add("@REF_NO", maxReceiveID);
+                                    instructionParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    instructionParams.Add("@DonorID", model.DonorID);
+                                    instructionParams.Add("@DataFlag", model.DataFlag);
                                     instructionParams.Add("@InstructionID", instruction.InstructionId);
                                     instructionParams.Add("@InstructionName", instruction.InstructionName);
                                     instructionParams.Add("@Remarks", instruction.Remarks);
@@ -484,7 +507,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     Announcepara.Add("@REF_NO", maxReceiveID);
                                     Announcepara.Add("@AnnunceID", announce.AnnounceId);
                                     Announcepara.Add("@AnnouncerName", announce.AnnouncerName);
-                                    Announcepara.Add("@DueAmount", announce.DueAmount);                           
+                                    Announcepara.Add("@DueAmount", announce.DueAmount);
                                     Announcepara.Add("@Date", announce.DueDate);
                                     Announcepara.Add("@CreatedBy", model.UserID);
 
@@ -537,7 +560,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             string receiptDetailsListJson = HttpContext.Request.Headers["receiptdetailslist"];
             string announceDetailsListJson = HttpContext.Request.Headers["AnnounceDetsilsList"];
             string donorInstructionJsonList = HttpContext.Request.Headers["donorInstructionjsonList"];
-      
+
 
             List<MobileDetails> MobileList = string.IsNullOrEmpty(mobileListJson) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(mobileListJson);
 
@@ -653,7 +676,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (MobileList != null)
                             {
-                               
+
 
                                 foreach (var mobileNumber in MobileList)
                                 {
@@ -670,7 +693,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (IdentityList != null)
                             {
-                                
+
                                 foreach (var identity in IdentityList)
                                 {
                                     var identityParams = new DynamicParameters();
@@ -686,7 +709,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (bankDetailslist != null)
                             {
-                                
+
                                 foreach (var bankDetail in bankDetailslist)
                                 {
                                     var bankParams = new DynamicParameters();
@@ -737,7 +760,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (donorInstructionLists != null)
                             {
-                                
+
                                 foreach (var instruction in donorInstructionLists)
                                 {
                                     var instructionParams = new DynamicParameters();
@@ -755,7 +778,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (announcelist != null)
                             {
-                               
+
                                 foreach (var announce in announcelist)
                                 {
                                     var Announcepara = new DynamicParameters();
@@ -813,12 +836,12 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();                 
-                    connection.Execute("UpdateReceiveStatus", new {ReceiveID=Convert.ToInt32(refid) }, commandType: CommandType.StoredProcedure);                  
+                    connection.Open();
+                    connection.Execute("UpdateReceiveStatus", new { ReceiveID = Convert.ToInt32(refid) }, commandType: CommandType.StoredProcedure);
                 }
 
                 dynamic firstDetail;
-                firstDetail = new ExpandoObject();               
+                firstDetail = new ExpandoObject();
                 firstDetail.msg = "Receive ID: " + refid + " is Discard Successfully";
                 return Ok(firstDetail);
             }

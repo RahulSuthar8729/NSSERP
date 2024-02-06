@@ -106,7 +106,8 @@ public class AccessController : Controller
                 new Claim(ClaimTypes.Role, role),
                 new Claim("Department", department),
                 new Claim("UserID",UserID),
-                new Claim("FinYear",FinYear)
+                new Claim("FinYear",FinYear),
+                new Claim("DataFlag","GANGOTRI")
             };
 
                         // Add 'stay logged in' claim if the checkbox is checked
