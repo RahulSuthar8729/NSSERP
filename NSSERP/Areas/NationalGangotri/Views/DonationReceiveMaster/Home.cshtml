@@ -311,18 +311,21 @@
 
                                                     $('#Company').val(jsonData.Company);
                                                     $('#FullAddress').val(jsonData.FullAddress);
+                                                    $('#Address1').val(jsonData.Address1);
+                                                    $('#Address2').val(jsonData.Address2);
+                                                    $('#Address3').val(jsonData.Address3);
                                                     $('#PinCode1').val(jsonData.PinCode);
                                                     $('#CountryID').val(jsonData.CountryID);
                                                     // Assuming jsonData is the parsed JSON data
                                                     var selectedCountry = jsonData.CountryID;
 
-                                                    $("#CurrencyID option").each(function () {
-                                                        if ($(this).val() == selectedCountry) {
-                                                            $(this).prop("selected", true);
-                                                        } else {
-                                                            $(this).prop("selected", false);
-                                                        }
-                                                    });
+                                                    // $("#CurrencyID option").each(function () {
+                                                    //     if ($(this).val() == selectedCountry) {
+                                                    //         $(this).prop("selected", true);
+                                                    //     } else {
+                                                    //         $(this).prop("selected", false);
+                                                    //     }
+                                                    // });
 
 
                                                     var pinCodeMaster = JSON.parse(jsonData.pinCodeMasterList);
@@ -555,7 +558,7 @@
 
                                                 // Access the correct property names
                                                 $('#CountryID').val(jsonData.CountryID);
-                                                $("#CurrencyID").val(jsonData.CountryID);
+                                                //$("#CurrencyID").val(jsonData.CountryID);
                                                 // Populate State dropdown
                                                 $('#StateID').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
 
@@ -825,7 +828,7 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
-                                <textarea required class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.P_Address1</textarea>
+                                <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.P_Address1</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
                             <div class="form-group col-lg-3">
@@ -1609,35 +1612,40 @@
                                 <label for="currency" class="mb-2">Donation Amount<span style="color: red;">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <select class="custom-select" asp-for="CurrencyID" id="CurrencyID" name="CurrencyID" required>
+                                        <select class="custom-select" asp-for="CurrencyID" id="CurrencyID" name="CurrencyID">
                                             <option value="" disabled>Select</option>
-                                            @foreach (var currency in Model.currenciesList)
+                                            @if (Model != null)
                                             {
-                                                <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>
-                                                    @currency.CurrencyCode
-                                                </option>
+                                                @foreach (var currency in Model.currenciesList)
+                                                {
+                                                    <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                }
                                             }
                                         </select>
-
 
                                         <input type="hidden" id="hdncurrncycode" name="CurrencyCode" asp-for="CurrencyCode" />
 
                                         <script>
                                             $(document).ready(function () {
 
-                                                // Attach the change event to update the hidden field
-                                                $("#CurrencyID").change(function () {
-                                                    var selectedItem = $(this).find("option:selected").data("currencycode");
+                                                function updateHiddenField() {
+                                                    var selectedItem = $("#CurrencyID option:selected").data("currencycode");
                                                     $("#hdncurrncycode").val(selectedItem);
-                                                });
+                                                }
+
+
+                                                $("#CurrencyID").change(updateHiddenField);
+
+                                                updateHiddenField();
                                             });
                                         </script>
+
                                     </div>
 
 
 
                                     <!-- Amount Input -->
-                                    <input type="text" placeholder="Amount" asp-for="Amount" name="Amount" class="form-control" id="Amount">
+                                    <input type="number" placeholder="Amount" value="@((Model.TotalAmount.GetValueOrDefault() == 0) ? "" : Model.TotalAmount.GetValueOrDefault())" asp-for="Amount" name="Amount" class="form-control" id="Amount">
                                 </div>
                             </div>
                             <div class="form-group col-lg-3" id="materialDepositFields" style="display: none;">
@@ -2070,7 +2078,7 @@
 
                                         $("#bankDetailsTable tbody").append(newRowModelaAdd);
                                         updateBankDetailsHiddenField();
-                                        $("#DivTotalAmount").show();
+                                        // $("#DivTotalAmount").show();
                                     }
 
                                     $("#bankDetailsTable").on("click", ".delete-row", function () {
@@ -2429,7 +2437,7 @@
                                     var receiptsListJson = @Html.Raw(Model.ReceiptsListJson);
                                     if (receiptsListJson) {
                                         $.each(receiptsListJson, function (index, item) {
-                                            addTableRow(item.HeadName, item.Purpose, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount);
+                                            addTableRow(item.HeadName, item.SubHeadName, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount);
                                         });
                                         toggleTableVisibility();
                                         updateAnnounceTotal();
@@ -2502,14 +2510,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                <td>${head}</td>
-                                                                                                                                <td>${purpose}</td>
-                                                                                                                                <td>${quantity}</td>
-                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                            </tr>`;
+                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();

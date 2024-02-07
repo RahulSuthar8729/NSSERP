@@ -143,6 +143,40 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetBankStatement()
+        {
+            try
+            {
+                string apiUrl = $"api/SankalpSiddhi/GetBankStatement";
+
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var jsonString = json.ToString();
+                    return Content($"{{\"data\": {jsonString}}}", "application/json");
+
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> UpdateBankIDandTrasactionID([FromBody] SankalpSiddhiDetails model)
         {

@@ -19,6 +19,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? CurrencyCode { get; set; }
         public string? FullName { get; set; }
         public string? FullAddress { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Address3 { get; set; }
         public string? PinCode { get; set; }
         public int? CountryId { get; set; }
         public string? CountryName { get; set; }

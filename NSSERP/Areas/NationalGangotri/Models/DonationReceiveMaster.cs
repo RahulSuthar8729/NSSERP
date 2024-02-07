@@ -12,7 +12,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public int? PaymentModeID { get; set; }
         public string PaymentModeName { get; set; } = "";
         public int? CurrencyID { get; set; }
-        public string CurrencyCode { get; set; } = "";
+        public string? CurrencyCode { get; set; } 
 
         public int? HeadID { get; set; }
         public string HeadName { get; set; } = "";
@@ -95,7 +95,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string PersonName { get; set; } = "";
         public string EventName { get; set; } = "";
         public decimal Amount { get; set; }
-        public decimal TotalAmount { get; set; }
+        public decimal? TotalAmount { get; set; }
         public string MaterialDepositID { get; set; } = "";
         public string Material { get; set; } = "";
         public bool? IsManavaFormulaRequire { get; set; }
@@ -122,13 +122,11 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public IEnumerable<DonorInstructionMaster> donorInstructionList { get; set; }
         public IEnumerable<PaymentModeMaster> paymentModeList { get; set; }
         public IEnumerable<CurrencyMaster> currenciesList { get; set; }
-
-   
         public IEnumerable<BankMaster> bankmasterlist { get; set; }
         public IEnumerable<DonationReceiveMaster> ReceiveHeadList { get; set; }
         public IEnumerable<DonationReceiveMaster> HeadList { get; set; }
         public IEnumerable<DonationReceiveMaster> SubHeadList { get; set; }
-        public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }
+        public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }     
 
         public int? ReceiveInEventID { get; set; }
         public string? ReceiveInEventName { get; set; }

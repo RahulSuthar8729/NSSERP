@@ -1551,12 +1551,23 @@
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <select class="custom-select" asp-for="CurrencyID" id="CurrencyID" name="CurrencyID" required>
-                                            <option value="" disabled>Select</option>
+                                            <option value="" selected disabled>Select</option>
                                             @foreach (var currency in Model.currenciesList)
                                             {
-                                                <option value="@currency.CountryID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CountryID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode">
+                                                    @currency.CurrencyCode
+                                                </option>
                                             }
                                         </select>
+
+
+                                        <script>
+                                            $(document).ready(function () {
+                                                var modelCurrencyID = @Model.CurrencyID;
+                                                $("#CurrencyID").val(modelCurrencyID);
+                                            });
+                                        </script>
+
 
                                         <input type="hidden" id="hdncurrncycode" name="CurrencyCode" asp-for="CurrencyCode" />
 

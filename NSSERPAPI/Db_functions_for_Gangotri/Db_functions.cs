@@ -38,6 +38,14 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query("GetDonationReceiveDetails", commandType: CommandType.StoredProcedure);
             }
         }
+        public IEnumerable<dynamic> GetBankStatement()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                return connection.Query("GetBankStatementOnSankalpSiddhi", commandType: CommandType.StoredProcedure);
+            }
+        }
 
         public List<dynamic> GetActiveCities()
         {
@@ -137,6 +145,16 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetAllBankMasters", commandType: CommandType.StoredProcedure);
             }
         }
+
+        public IEnumerable<dynamic> CurrencyList()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                return connection.Query<dynamic>("[GetCurrencyForDonationReceiveMaster]", commandType: CommandType.StoredProcedure);
+            }
+        }
         public IEnumerable<dynamic> GetDepositBankMaster()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -146,7 +164,6 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetDepositeBankMaster", commandType: CommandType.StoredProcedure);
             }
         }
-
         public IEnumerable<dynamic>GetProvisionalReceiptbyId(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

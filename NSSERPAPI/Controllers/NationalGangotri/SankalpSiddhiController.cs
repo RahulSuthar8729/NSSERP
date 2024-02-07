@@ -30,18 +30,26 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             var result = _dbFunctions.GetDonationReciveDetails();
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
-            firstDetail.masterDetails = result;
+            firstDetail.masterDetails = result;            
             firstDetail.CityMasterList = _dbFunctions.GetActiveCities();
             firstDetail.paymentModes = _dbFunctions.GetPaymentModes();
             firstDetail.statelist = _dbFunctions.GetStates();
             firstDetail.DepositBankList = _dbFunctions.GetDepositBankMaster();
+            firstDetail.BankStatementsList = _dbFunctions.GetBankStatement();
             return Ok(firstDetail);
         }
 
         [HttpGet]
         public IActionResult GetDepositDetails(int refno)
         {
-            var result = _dbFunctions.GetBORTDetailsListJsonById(refno);
+            var result = _dbFunctions.GetBORTDetailsListJsonById(refno);         
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IActionResult GetBankStatement()
+        {
+            var result = _dbFunctions.GetBankStatement();
             return Ok(result);
         }
 

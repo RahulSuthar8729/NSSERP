@@ -587,242 +587,267 @@
         });
     </script>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <!-- Added modal-lg class here -->
-            <div class="modal-content">
+        <div class="modal-dialog modal-full" role="document">
+            <!-- Changed modal-lg to modal-full here -->
+            <div class="modal-content">            
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Back Office ReceiveID Transaction Details</h5>
                     <button type="button" id="btnclose" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
 
                     <div class="nested-form-container">
-                        <table id="depositTable" class="table table-bordered table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Deposit Mode</th>
-                                    <th>Deposit Bank</th>
-                                    <th>Deposit Date</th>
-                                    <th>Currency Code</th>
-                                    <th>Deposit Amount</th>
-                                    <th>BankID</th>
-                                    <th>TransactionID</th>
-                                    <th>Pay-In-Slip</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Table rows will be added dynamically here -->
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                               
+                                <table id="depositTable" class="table table-bordered table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Deposit Mode</th>
+                                            <th>Deposit Bank</th>
+                                            <th>Deposit Date</th>
+                                            <th>Currency Code</th>
+                                            <th>Deposit Amount</th>
+                                            <th>BankID</th>
+                                            <th>TransactionID</th>
+                                            <th>Pay-In-Slip</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
 
                     <input type="hidden" id="hdnMapWithBankIDList" asp-for="MapWithBankIDList" name="MapWithBankIDLists">
                 </div>
                 <div class="modal-footer">
+                   
+                    <button type="button" class="btn btn-primary" id="toggleBankDetails"><i class="fa fa-search"></i>Find Bank Details</button>
                     <button type="button" id="btnUpdate" class="btn btn-success" data-dismiss="modal">Map BankCode</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
+
                 <script>
-                    $(document).ready(function () {
-                        var hiddenField = $('#hdnMapWithBankIDList');
-
-                        $('#btnUpdate').on('click', function () {
-                            var hiddenData = hiddenField.val();
-
-                            // Create a JavaScript object with the model property
-                            var model = {
-                                MapWithBankIDList: hiddenData
-                            };
-
-                            $.ajax({
-                                type: 'POST',
-                                url: '@Url.Action("UpdateBankIDandTrasactionID", "SankalpSiddhi")',
-                                contentType: 'application/json; charset=utf-8',
-                                data: JSON.stringify(model),
-                                success: function (result) {
-
-                                    if (result.message) {
-                                        alert(result.message);
-                                        $('#myModal').modal('hide');
-                                    } else {
-
-                                        alert('Unexpected response from the server.');
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error('Error sending data:', error);
-                                    alert('Failed to send data. Please try again.');
-                                }
-                            });
+                    $(document).ready(function () {                        
+                        $("#toggleBankDetails").click(function () {
+                            $("#divBankdetails").toggle();
                         });
                     });
-
-
                 </script>
 
-            </div>
-        </div>
-    </div>
+          
+                <div id="divBankdetails"  style="display:none">
 
-
-    <br />
-    <div class="card-header">
-        <div class="row align-items-center">
-            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                <h5 class="mb-0">
-                    <span style="color:#1cb8a1">BANK STATEMENT</span>
-                    <span style="color:#28166f">DETAILS</span>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
-        <tr>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Bank Code/SAP Tran Code</label>
-                        <input type="text" class="form-control" id="" name="">
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Bank Name</label>
-                        <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
-                            <option value="" selected disabled>Select Bank</option>
-                            @if (Model != null)
-                            {
-                                @foreach (var bank in Model.DepositBankList)
-                                {
-                                    <option value="@bank.bank_code">@bank.Bank_Name</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Annoounce ID</label>
-                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Particular </label>
-                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Amount </label>
-                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
-                    </div>
-                </div>
-            </td>
-
-        </tr>
-        <tr>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Branch </label>
-                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Cheque No.</label>
-                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label asp-for="DateFrom">DateFrom</label>
-                        <input type="date" asp-for="DateFrom" class="form-control" id="DateFrom" name="DateFrom">
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="row">
-                    <div class="form-group">
-                        <label asp-for="DateTo">DateTo</label>
-                        <input type="date" asp-for="DateTo" class="form-control" id="DateTo" name="DateTo">
-                    </div>
-                </div>
-            </td>
-
-            <td>
-                <div class="row">
-
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
-
-                            <label class="form-check-label" for="Detailsnotcomplete">Balance Pending</label>
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                <h5 class="mb-0">
+                                    <span style="color:#1cb8a1">BANK STATEMENT</span>
+                                    <span style="color:#28166f">DETAILS</span>
+                                </h5>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button> &nbsp;&nbsp;&nbsp;
-                        <button type="submit" class="btn btn-outline-primary"><i class="fa fa-file-excel"></i> Export</button>
-                    </div>
+                    <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
+                        <tr>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Bank Code/SAP Tran Code</label>
+                                        <input type="text" class="form-control" id="" name="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Bank Name</label>
+                                        <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
+                                            <option value="" selected disabled>Select Bank</option>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var bank in Model.DepositBankList)
+                                                {
+                                                    <option value="@bank.bank_code">@bank.Bank_Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Annoounce ID</label>
+                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Particular </label>
+                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Amount </label>
+                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Branch </label>
+                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Cheque No.</label>
+                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label asp-for="DateFrom">DateFrom</label>
+                                        <input type="date" asp-for="DateFrom" class="form-control" id="DateFrom" name="DateFrom">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label asp-for="DateTo">DateTo</label>
+                                        <input type="date" asp-for="DateTo" class="form-control" id="DateTo" name="DateTo">
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="row">
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
+
+                                            <label class="form-check-label" for="Detailsnotcomplete">Balance Pending</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button> &nbsp;&nbsp;&nbsp;
+                                        <button type="submit" class="btn btn-outline-primary"><i class="fa fa-file-excel"></i> Export</button>
+                                    </div>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <table id="tblbankDetails" class="table table-hover table-bordered">
+
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>BANK ID</th>
+                                <th>DATE</th>
+                                <th>BANK NAME</th>
+                                <th>PARTICULAR</th>
+                                <th>CHEQUE NO.</th>
+                                <th>AMOUNT/RATE</th>
+                                <th>BALANCE</th>
+                                <th>BRANCH</th>
+                                <th>RECEIVE ID</th>
+                                
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.BankStatementsList)
+                                {
+                                    <tr>
+                                        <td>@item.BANK_Code</td>
+                                        <td>@item.DOE.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
+                                        <td>@item.Bank_Name</td>
+                                        <td>@item.Particular</td>
+                                        <td>@item.ChqNo</td>
+                                        <td>@item.CR<br />@item.Curr_Rate</td>
+                                        <td>@item.BALANCE</td>
+                                        <td>@item.Branch</td>
+                                        <td>@item.ReceiveID</td>                                        
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
 
                 </div>
-            </td>
-        </tr>
+            </div>
+        </div>
+    </div>
 
-    </table>
-    <table id="tblbankDetails" class="table table-hover table-bordered">
+<style>
+        .modal-full {
+            min-width: 80%;
+        }
 
-        <thead class="thead-dark">
-            <tr>
-                <th>BANK ID</th>
-                <th>DATE</th>
-                <th>BANK NAME</th>
-                <th>PARTICULAR</th>
-                <th>CHEQUE NO.</th>
-                <th>AMOUNT/RATE</th>
-                <th>BALANCE</th>
-                <th>BRANCH</th>
-                <th>RECEIVE ID</th>
-                <th>REJECT REMARK</th>
-            </tr>
-        </thead>
+</style>
+    <script>
+        $(document).ready(function () {
+            var hiddenField = $('#hdnMapWithBankIDList');
 
-        <tbody>
-            @if (Model != null)
-            {
-                foreach (var item in Model.masterDetails)
-                {
-                    <tr>
-                        <td>@item.ReceiveID</td>
-                        <td>@item.ReceiveHeadName</td>
-                        <td>@item.CreatedBy</td>
-                        <td>@item.ReceiveDate.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
-                        <td>@item.ProvNo</td>
-                        <td>@item.FullName</td>
-                        <td>@item.FullAddress</td>
-                        <td>@item.CurrencyCode</td>
-                        <td>@item.TotalAmount</td>
-                        <td>@item.PaymentModeName</td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
+            $('#btnUpdate').on('click', function () {
+                var hiddenData = hiddenField.val();
+
+                // Create a JavaScript object with the model property
+                var model = {
+                    MapWithBankIDList: hiddenData
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateBankIDandTrasactionID", "SankalpSiddhi")',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(model),
+                    success: function (result) {
+
+                        if (result.message) {
+                            alert(result.message);
+                            $('#myModal').modal('hide');
+                        } else {
+
+                            alert('Unexpected response from the server.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending data:', error);
+                        alert('Failed to send data. Please try again.');
+                    }
+                });
+            });
+        });
+
+
+    </script>
+    <br />
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>

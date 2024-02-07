@@ -1,4 +1,5 @@
-﻿using NSSERP.Areas.Masters.Models;
+﻿using NSSERP.Areas.AdminSetup.Controllers;
+using NSSERP.Areas.Masters.Models;
 
 namespace NSSERP.Areas.NationalGangotri.Models
 {
@@ -11,11 +12,29 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public List<StateMaster> statelist { get; set; }
         public List<PaymentModeMaster> paymentModes { get; set; }
         public IEnumerable<DepositBankmaster> DepositBankList { get; set; }
+        public IEnumerable<BankStatement> BankStatementsList { get; set; }
         public class DepositBankmaster()
         {
             public int bank_code { get; set; }
             public string Bank_Name { get; set; }
             public string FullName { get; set; }
+
+        }
+       public class BankStatement()
+        {
+            public int? BANK_Code { get; set; }
+            public DateTime? DOE { get; set; }
+            public string? Bank_Name { get; set; }
+            public string? Particular { get; set; }
+            public string? ChqNo { get; set; }
+            public decimal? DR { get; set; }
+            public decimal? CR { get; set; }
+            public decimal? BALANCE { get; set; }
+            public decimal? Curr_Rate { get; set; }
+            public string? Branch { get; set; }
+            public string? DataFlag { get; set; }
+            public int? ReceiveID { get; set; }
+            public decimal? ReceiveAmt { get; set; }
 
         }
 
@@ -50,25 +69,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? CreatedBy { get; set; }
         public int? MaterialID { get; set; }
 
-
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
-        public int Draw { get; set; }
-        public int Start { get; set; }
-        public int Length { get; set; }
-        public List<DataTableColumn> Order { get; set; }
-        public DataTableSearch Search { get; set; }
-
-        public class DataTableColumn
-        {
-            public int Column { get; set; }
-            public string Dir { get; set; }
-        }
-
-        public class DataTableSearch
-        {
-            public string Value { get; set; }
-            public bool Regex { get; set; }
-        }
+ 
     }
 }

@@ -351,11 +351,13 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             bool? isDifferent = model.IsReceiveHeadDiffrent;
             string ReceiveDepartment = isDifferent == true ? model.ReceiveHeadName : User.FindFirst("Department")?.Value;
-            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount;
+            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount.GetValueOrDefault();
             DateTime dob = model.DateOfBirth ?? DateTime.MinValue;
             DateTime provdate = model.ProvDate ?? DateTime.MinValue;
             string FinYear = User.FindFirst("FinYear")?.Value ?? string.Empty;
             string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
+            string DataFlag = User.FindFirst("DataFlag")?.Value ?? string.Empty;
+          
 
             string Doc1 = string.Empty;
             string Doc2 = string.Empty;
@@ -438,7 +440,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 CityID = model.CityID,
                 CityName = model.CityName,
                 IfUpdationInAddress = model.IfUpdationInAddress,
-                IsPermanentAddressDiffrent = model.IsPermanentAddressDiff,
+                IsPermanentAddressDiff = model.IsPermanentAddressDiff,
                 ifdetailsNotComplete = model.IfDetailsNotComplete,
                 P_FullAddress = model.P_FullAddress,
                 P_Address1 = model.P_Address1,
@@ -474,7 +476,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 Doc1 = Doc1,
                 Doc2 = Doc2,
                 Doc3 = Doc3,
-                DataFlag=User.FindFirst("DataFlag")?.Value
+                DataFlag= DataFlag
             };
 
 
@@ -526,7 +528,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             bool? isDifferent = model.IsReceiveHeadDiffrent;
             string ReceiveDepartment = isDifferent == true ? model.ReceiveHeadName : User.FindFirst("Department")?.Value;
-            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount;
+            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount.GetValueOrDefault();
             DateTime dob = model.DateOfBirth ?? DateTime.MinValue;
             DateTime provdate = model.ProvDate ?? DateTime.MinValue;
             string FinYear = User.FindFirst("FinYear")?.Value ?? string.Empty;
