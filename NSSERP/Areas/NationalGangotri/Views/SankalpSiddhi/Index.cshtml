@@ -40,7 +40,6 @@
                     "columnDefs": [
                         { "targets": [0, 1], "orderable": false } // Disable sorting for the first column (icons)
                     ]
-
                 });
                 $('#tblbankDetails').DataTable({
                     "order": [[3, "desc"]],
@@ -292,7 +291,7 @@
                                     }
                                 </select>
                                 <input type="hidden" id="hdnCityName" name="CityName" asp-for="CityName" />
-                                <!-- Include a hidden field for CityID -->
+                             
                                 <input type="hidden" id="hdnCityID" name="CityID" asp-for="CityID" />
                                 <span asp-validation-for="CityID" class="text-danger"></span>
                             </div>
@@ -573,6 +572,20 @@
 
     </script>
 
+   
+
+    <style>
+        .preview-box {
+            position: fixed;
+            display: none;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+
+    </style>
     <script>
         $(document).ready(function () {
             // Close modal on button click in modal header
@@ -586,10 +599,30 @@
             });
         });
     </script>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+    <div id="filePreviewModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">File Preview</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="previewContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="ModelForm" action="/NationalGangotri/SankalpSiddhi/Index" >
+        <input type="hidden" name="formName" value="ModelForm" />
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-full" role="document">
             <!-- Changed modal-lg to modal-full here -->
-            <div class="modal-content">            
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Back Office ReceiveID Transaction Details</h5>
                     <button type="button" id="btnclose" class="close" data-dismiss="modal" aria-label="Close">
@@ -601,7 +634,7 @@
                     <div class="nested-form-container">
                         <div class="row">
                             <div class="col-12">
-                               
+
                                 <table id="depositTable" class="table table-bordered table-responsive">
                                     <thead>
                                         <tr>
@@ -616,7 +649,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -626,22 +658,22 @@
                     <input type="hidden" id="hdnMapWithBankIDList" asp-for="MapWithBankIDList" name="MapWithBankIDLists">
                 </div>
                 <div class="modal-footer">
-                   
+
                     <button type="button" class="btn btn-primary" id="toggleBankDetails"><i class="fa fa-search"></i>Find Bank Details</button>
                     <button type="button" id="btnUpdate" class="btn btn-success" data-dismiss="modal">Map BankCode</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
 
                 <script>
-                    $(document).ready(function () {                        
+                    $(document).ready(function () {
                         $("#toggleBankDetails").click(function () {
                             $("#divBankdetails").toggle();
                         });
                     });
                 </script>
 
-          
-                <div id="divBankdetails"  style="display:none">
+
+                <div id="divBankdetails" style="display:none">
 
                     <div class="card-header">
                         <div class="row align-items-center">
@@ -659,7 +691,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Bank Code/SAP Tran Code</label>
-                                        <input type="text" class="form-control" id="" name="">
+                                            <input type="text" class="form-control" id="bankCode" name="BANK_Code">
                                     </div>
                                 </div>
                             </td>
@@ -667,16 +699,26 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Bank Name</label>
-                                        <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
-                                            <option value="" selected disabled>Select Bank</option>
-                                            @if (Model != null)
-                                            {
-                                                @foreach (var bank in Model.DepositBankList)
+                                            <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
+                                                <option value="" selected disabled>Select Bank</option>
+                                                @if (Model != null)
                                                 {
-                                                    <option value="@bank.bank_code">@bank.Bank_Name</option>
+                                                    @foreach (var bank in Model.DepositBankList)
+                                                    {
+                                                        <option value="@bank.bank_code">@bank.Bank_Name</option>
+                                                    }
                                                 }
-                                            }
-                                        </select>
+                                            </select>
+                                          
+                                            <input type="hidden" name="Bank_Name" id="SelectedBankName" />
+                                            <script>
+                                                $(document).ready(function () {
+                                                    // Event handler for dropdown change
+                                                    $("#BankID1").change(function () {                                                    
+                                                        $("#SelectedBankName").val($("#BankID1 option:selected").text());
+                                                    });
+                                                });
+                                            </script>
                                     </div>
                                 </div>
                             </td>
@@ -684,7 +726,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Annoounce ID</label>
-                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                                        <input type="text" class="form-control"  asp-for="" id="ProvNo" name="ProvNo">
                                     </div>
                                 </div>
                             </td>
@@ -692,7 +734,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Particular </label>
-                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                                            <input type="text" class="form-control" value="@Model.Particular" asp-for="Particular" id="Particular" name="Particular">
                                     </div>
                                 </div>
                             </td>
@@ -700,7 +742,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Amount </label>
-                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                                        <input type="text" class="form-control" value="@Model.CR" asp-for="CR" id="CR" name="CR">
                                     </div>
                                 </div>
                             </td>
@@ -711,7 +753,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Branch </label>
-                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="Particular" id="Particular" name="Particular">
+                                            <input type="text" class="form-control" value="@Model.Branch" asp-for="Branch" id="Branch" name="Branch">
                                     </div>
                                 </div>
                             </td>
@@ -719,7 +761,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label>Cheque No.</label>
-                                        <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
+                                            <input type="text" class="form-control" value="@Model.ChqNo" asp-for="ChqNo" id="ChqNo" name="ChqNo">
                                     </div>
                                 </div>
                             </td>
@@ -727,7 +769,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label asp-for="DateFrom">DateFrom</label>
-                                        <input type="date" asp-for="DateFrom" class="form-control" id="DateFrom" name="DateFrom">
+                                            <input type="date" asp-for="DOE" class="form-control" id="DOE" name="DOE">
                                     </div>
                                 </div>
                             </td>
@@ -735,7 +777,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <label asp-for="DateTo">DateTo</label>
-                                        <input type="date" asp-for="DateTo" class="form-control" id="DateTo" name="DateTo">
+                                            <input type="date" asp-for="DOE" class="form-control" id="DOE2" name="DOE">
                                     </div>
                                 </div>
                             </td>
@@ -751,7 +793,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button> &nbsp;&nbsp;&nbsp;
+                                        <button type="submit" id="btn_find_BankStatement" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button> &nbsp;&nbsp;&nbsp;
                                         <button type="submit" class="btn btn-outline-primary"><i class="fa fa-file-excel"></i> Export</button>
                                     </div>
 
@@ -760,7 +802,7 @@
                         </tr>
 
                     </table>
-
+                       
                     <table id="tblbankDetails" class="table table-hover table-bordered">
 
                         <thead class="thead-dark">
@@ -774,7 +816,7 @@
                                 <th>BALANCE</th>
                                 <th>BRANCH</th>
                                 <th>RECEIVE ID</th>
-                                
+
                             </tr>
                         </thead>
 
@@ -792,7 +834,7 @@
                                         <td>@item.CR<br />@item.Curr_Rate</td>
                                         <td>@item.BALANCE</td>
                                         <td>@item.Branch</td>
-                                        <td>@item.ReceiveID</td>                                        
+                                        <td>@item.ReceiveID</td>
                                     </tr>
                                 }
                             }
@@ -803,13 +845,60 @@
             </div>
         </div>
     </div>
+    </form>
 
-<style>
+    <script>
+        $(document).ready(function () {
+            $("#btn_find_BankStatement").click(function (e) {
+                e.preventDefault();
+                var formData = $("#ModelForm").serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/NationalGangotri/SankalpSiddhi/SearchBankStatementUsingPara",
+                    data: formData,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (response) {
+                        // Assuming response is an array of BankStatements
+                        var bankStatements = response.data;
+
+                        // Clear existing table rows
+                        $("#tblbankDetails tbody").empty();
+
+                        // Append new rows based on the response
+                        for (var i = 0; i < bankStatements.length; i++) {
+                            var item = bankStatements[i];
+                            var newRow = "<tr>" +
+                                "<td>" + item.banK_Code + "</td>" +
+                                "<td>" + (item.doe ? new Date(item.doe).toLocaleDateString() : "") + "</td>" +
+                                "<td>" + item.bank_Name + "</td>" +
+                                "<td>" + item.particular + "</td>" +
+                                "<td>" + item.chqNo + "</td>" +
+                                "<td>" + parseFloat(item.cr).toFixed(2) + "<br />" + parseFloat(item.curr_Rate).toFixed(2) + "</td>" +
+                                "<td>" + parseFloat(item.balance).toFixed(2) + "</td>" +
+                                "<td>" + item.branch + "</td>" +
+                                "<td>" + item.receiveID + "</td>" +
+                                "</tr>";
+
+                            $("#tblbankDetails tbody").append(newRow);
+                        }
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+    <style>
         .modal-full {
             min-width: 80%;
         }
 
-</style>
+    </style>
     <script>
         $(document).ready(function () {
             var hiddenField = $('#hdnMapWithBankIDList');

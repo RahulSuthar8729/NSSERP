@@ -58,7 +58,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         [HttpPost]
         public IActionResult InsertData([FromBody] BackOfficeModel model)
         {
-            string DepositeList = HttpContext.Request.Headers["DepositeList"];         
+            string DepositeList = HttpContext.Request.Headers["DepositeList"];
             List<DepositeDetailsModel> DepostiteDetailsList = string.IsNullOrEmpty(DepositeList) ? new List<DepositeDetailsModel>() : JsonConvert.DeserializeObject<List<DepositeDetailsModel>>(DepositeList);
 
             try
@@ -78,15 +78,15 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 {
                                     var DepositesParams = new DynamicParameters();
                                     DepositesParams.Add("@REF_NO", model.ReceiveID);
-                                    DepositesParams.Add("@REF_NO_BANK", depositedetils.refNo); 
+                                    DepositesParams.Add("@REF_NO_BANK", depositedetils.refNo);
                                     DepositesParams.Add("@DepositeMode", depositedetils.mode);
-                                    DepositesParams.Add("@DepositBank", depositedetils.DepositeBank); 
+                                    DepositesParams.Add("@DepositBank", depositedetils.DepositeBank);
                                     DepositesParams.Add("@DepositeDate", depositedetils.date);
                                     DepositesParams.Add("@CurrencyCode", depositedetils.currencyCode);
                                     DepositesParams.Add("@DepositeAmount", depositedetils.amount);
                                     DepositesParams.Add("@BankID", depositedetils.bankID);
                                     DepositesParams.Add("@TransactionID", depositedetils.TrasactionID);
-                                    DepositesParams.Add("@DocPayInSlip", depositedetils.TempDoc); 
+                                    DepositesParams.Add("@DocPayInSlip", depositedetils.TempDoc);
                                     DepositesParams.Add("@CreatedBy", model.UserName);
 
                                     connection.Execute("InsertDonationReceiveBORTMultiDeposite", DepositesParams, transaction, commandType: CommandType.StoredProcedure);
@@ -97,7 +97,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             var updateParams = new DynamicParameters();
                             updateParams.Add("@ReceiveID", model.ReceiveID);
                             updateParams.Add("@Status", "Addresing");
-                            updateParams.Add("@DocPayInSlip", model.Doc3);                           
+                            updateParams.Add("@DocPayInSlip", model.Doc3);
                             updateParams.Add("@ModifiedBy", model.UserName);
                             connection.Execute("UpdateDonationReceiveMasterAtBORT", updateParams, transaction, commandType: CommandType.StoredProcedure);
 
@@ -110,14 +110,14 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             connection.Execute("InsertDmsMovement", movementParams, transaction, commandType: CommandType.StoredProcedure);
 
                             transaction.Commit();
-                          
+
                         }
 
                         catch (Exception)
                         {
                             // If an exception occurs, roll back the transaction
                             transaction.Rollback();
-                           
+
                         }
                     }
                 }
@@ -125,11 +125,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             catch (Exception ex)
             {
 
-               
+
             }
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
-            
+
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.masterDetails = _dbFunctions.GetDonationReciveDetails();

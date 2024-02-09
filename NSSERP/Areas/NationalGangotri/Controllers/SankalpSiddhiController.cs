@@ -6,6 +6,7 @@ using NSSERP.DbFunctions;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace NSSERP.Areas.NationalGangotri.Controllers
 {
@@ -32,12 +33,60 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> Index(SankalpSiddhiDetails model)
+        public async Task<IActionResult> Index(SankalpSiddhiDetails model, string formName)
         {
             try
             {
                 if (HttpContext.Request.Method == "POST")
                 {
+                    if (formName == "ModelForm")
+                    {
+
+                        try
+                        {
+                            var parameters = new
+                            {
+                                @Bank_Code = model.BANK_Code,
+                                @DR = model.DR,
+                                @CR = model.CR,
+                                @BALANCE = model.BALANCE,
+                                @ReceiveAmt = model.ReceiveAmt,
+                                @Curr_Rate = model.Curr_Rate,
+                                @Bank_Name = model.Bank_Name,
+                                @Particular = model.Particular,
+                                @ChqNo = model.ChqNo,
+                                @ReceiveId = model.ReceiveID,
+                                @Branch = model.Branch,
+                                @Data_Flag = model.DataFlag,
+                                @MobileNo = model.MobileNo
+                            };
+
+                            string requestBody = System.Text.Json.JsonSerializer.Serialize(parameters);
+                            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+                            var responsebank = await _apiClient.PostAsync("api/SankalpSiddhi/SearchBankStatementByPara", content);
+                            responsebank.EnsureSuccessStatusCode();
+
+                            var jsonResponse = await responsebank.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<SankalpSiddhiDetails>(jsonResponse);
+
+                            if (TempData.ContainsKey("msg"))
+                            {
+                                string messageFromFirstController = TempData["msg"] as string;
+                                result.msg = messageFromFirstController;
+                                TempData.Remove("msg");
+                            }
+
+                            return View(result);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "An error occurred in the Index action.");
+
+                            return BadRequest($"An error occurred during the search operation: {ex.Message}");
+                        }
+                    }
+
                     try
                     {
                         var parameters = new
@@ -217,7 +266,48 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SearchBankStatementUsingPara(SankalpSiddhiDetails model)        
+        {
+            try
+            {
+                var parameters = new
+                {
+                    @Bank_Code = model.BANK_Code,
+                    @DR = model.DR,
+                    @CR = model.CR,
+                    @BALANCE = model.BALANCE,
+                    @ReceiveAmt = model.ReceiveAmt,
+                    @Curr_Rate = model.Curr_Rate,
+                    @Bank_Name = model.Bank_Name,
+                    @Particular =    model.Particular,
+                    @ChqNo = model.ChqNo,
+                    @ReceiveId = model.ReceiveID,
+                    @Branch = model.Branch,
+                    @Data_Flag = model.DataFlag,
+                    @MobileNo = model.MobileNo,
+                    @DateFrom=model.DateFrom, 
+                    @DateTo=model.DateTo,
+                };
 
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(parameters);
+                var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+                var response = await _apiClient.PostAsync("api/SankalpSiddhi/SearchBankStatementByPara", content);
+                response.EnsureSuccessStatusCode();
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                //var result = JsonConvert.DeserializeObject<SankalpSiddhiDetails>(jsonResponse);
+                var result = jsonResponse;                          
+
+                return Content($"{{\"data\": {result}}}", "application/json");
+            }
+            catch (Exception ex)            {
+               
+
+                return BadRequest($"An error occurred during the search operation: {ex.Message}");
+            }
+        }
 
     }
 }

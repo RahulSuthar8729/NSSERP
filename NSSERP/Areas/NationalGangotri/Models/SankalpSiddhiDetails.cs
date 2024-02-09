@@ -13,14 +13,14 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public List<PaymentModeMaster> paymentModes { get; set; }
         public IEnumerable<DepositBankmaster> DepositBankList { get; set; }
         public IEnumerable<BankStatement> BankStatementsList { get; set; }
-        public class DepositBankmaster()
+        public class DepositBankmaster
         {
-            public int bank_code { get; set; }
-            public string Bank_Name { get; set; }
-            public string FullName { get; set; }
-
+            public int? bank_code { get; set; }
+            public string? Bank_Name { get; set; }
+            public string? FullName { get; set; }
         }
-       public class BankStatement()
+
+        public class BankStatement
         {
             public int? BANK_Code { get; set; }
             public DateTime? DOE { get; set; }
@@ -35,7 +35,6 @@ namespace NSSERP.Areas.NationalGangotri.Models
             public string? DataFlag { get; set; }
             public int? ReceiveID { get; set; }
             public decimal? ReceiveAmt { get; set; }
-
         }
 
         public string DepositeDetailsListJson { get; set; }
@@ -71,6 +70,24 @@ namespace NSSERP.Areas.NationalGangotri.Models
 
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
- 
+
+
+        public int? BANK_Code { get; set; }
+        public int? BankID { get; set; }
+        public DateTime? DOE { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
+        public string? Bank_Name { get; set; }
+        public string? Particular { get; set; }
+        public string? ChqNo { get; set; }
+        public decimal? DR { get; set; }
+        public decimal? CR { get; set; }
+        public decimal? BALANCE { get; set; }
+        public decimal? Curr_Rate { get; set; }
+        public string? Branch { get; set; }
+        public string? MobileNo { get; set; }
+        public string? DataFlag { get; set; } 
+        public decimal? ReceiveAmt { get; set; }
+
     }
 }

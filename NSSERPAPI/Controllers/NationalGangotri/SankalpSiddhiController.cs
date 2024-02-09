@@ -145,5 +145,13 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             return Ok(msg);
         }
 
+        [HttpPost]
+        public IActionResult SearchBankStatementByPara([FromBody] BankStatement model)        {
+
+            var result = _dbFunctions.SearchBankStatementWithPara(model);        
+            return Ok(result);
+
+        }
+
     }
 }

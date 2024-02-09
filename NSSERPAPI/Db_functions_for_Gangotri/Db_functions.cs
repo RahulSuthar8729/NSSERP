@@ -440,6 +440,37 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return result;
             }
         }
+        public IEnumerable<BankStatement> SearchBankStatementWithPara(BankStatement model)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var parameters = new DynamicParameters();
+                parameters.AddDynamicParams(new
+                {
+                    Bank_Code = model.BANK_Code,                  
+                    DR = model.DR,
+                    CR = model.CR,
+                    BALANCE = model.BALANCE,
+                    ReceiveAmt = model.ReceiveAmt,
+                    Curr_Rate = model.Curr_Rate,
+                    Bank_Name = model.Bank_Name,
+                    Particular = model.Particular,
+                    ChqNo = model.ChqNo,
+                    ReceiveId = model.ReceiveID,          
+                    Branch = model.Branch,
+                    Data_Flag = model.DataFlag,              
+                    MobileNo = model.MobileNo,
+                    DateFrom=model.DateFrom,
+                    DateTo=model.DateTo
+                });
+
+                var result = connection.Query<BankStatement>("[GetBankStatementsWithPara]", parameters, commandType: CommandType.StoredProcedure);
+
+                return result;
+            }
+        }
 
     }
 }

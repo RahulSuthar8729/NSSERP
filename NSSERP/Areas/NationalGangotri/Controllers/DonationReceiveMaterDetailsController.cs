@@ -60,9 +60,7 @@ public class DonationReceiveMaterDetailsController : Controller
                         model.FullName,
                         model.PaymentModeID,
                         model.IfDetailsNotComplete,                      
-                    };
-
-                    //var parameterList = new List<object> { parameters };
+                    };                   
                    
                     string requestBody = System.Text.Json.JsonSerializer.Serialize(parameters);
                     var content = new StringContent(requestBody, Encoding.UTF8, "application/json");

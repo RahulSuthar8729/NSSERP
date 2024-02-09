@@ -85,10 +85,19 @@
                                 <label for="FullName" class="mb-2">Full Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <select class="custom-select" disabled id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
+                                        <select class="custom-select" id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
                                             <option value="" selected disabled>Select</option>
                                             <option value="Mr." @(Model != null && Model.NamePrefix == "Mr." ? "selected" : "")>Mr.</option>
                                             <option value="Mrs." @(Model != null && Model.NamePrefix == "Mrs." ? "selected" : "")>Mrs.</option>
+                                            <option value="Miss" @(Model != null && Model.NamePrefix == "Miss" ? "selected" : "")>Miss</option>
+                                            <option value="Ms." @(Model != null && Model.NamePrefix == "Ms." ? "selected" : "")>Ms.</option>
+                                            <option value="Dr." @(Model != null && Model.NamePrefix == "Dr." ? "selected" : "")>Dr.</option>
+                                            <option value="Prof." @(Model != null && Model.NamePrefix == "Prof." ? "selected" : "")>Prof.</option>
+                                            <option value="Rev." @(Model != null && Model.NamePrefix == "Rev." ? "selected" : "")>Rev.</option>
+                                            <option value="Hon." @(Model != null && Model.NamePrefix == "Hon." ? "selected" : "")>Hon.</option>
+                                            <option value="Capt." @(Model != null && Model.NamePrefix == "Capt." ? "selected" : "")>Capt.</option>
+                                            <option value="Sgt." @(Model != null && Model.NamePrefix == "Sgt." ? "selected" : "")>Sgt.</option>
+                                            <!-- Add more options as needed -->
                                         </select>
                                     </div>
                                     <input type="text" readonly value="@Model.FullName" class="form-control" asp-for="FullName" placeholder="PRASANT KUMAR AGRAWAL" id="FullName" name="FullName" oninput="convertToUpperCase(this)">
@@ -175,7 +184,22 @@
                                 </table>
                             </div>
                         </div>
-
+                        <div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="filePreviewModalLabel">File Preview</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img id="previewImage" src="" alt="File Preview" style="max-width: 100%; max-height: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
                         <script>
                             $(document).ready(function () {
 
@@ -231,13 +255,14 @@
                                         "<td>" + bankDetails.CurrencyCode + "</td>" +
                                         "<td>" + bankDetails.Amount + "</td>" +
                                         "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
-                                        "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                       "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +                                       
                                         "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
                                         // "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                         "</tr>";
 
-                                    $("#bankDetailsTable tbody").append(newRow);
-                                }
+                                    $("#bankDetailsTable tbody").append(newRow);                               }
+
+                          
 
                                 $("#bankDetailsTable").on("click", ".delete-row", function () {
                                     // Reset the flag and added donation mode when a row is deleted

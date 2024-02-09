@@ -466,7 +466,17 @@
                                             <option value="" selected disabled>Select</option>
                                             <option value="Mr." @(Model != null && Model.NamePrefix == "Mr." ? "selected" : "")>Mr.</option>
                                             <option value="Mrs." @(Model != null && Model.NamePrefix == "Mrs." ? "selected" : "")>Mrs.</option>
+                                            <option value="Miss" @(Model != null && Model.NamePrefix == "Miss" ? "selected" : "")>Miss</option>
+                                            <option value="Ms." @(Model != null && Model.NamePrefix == "Ms." ? "selected" : "")>Ms.</option>
+                                            <option value="Dr." @(Model != null && Model.NamePrefix == "Dr." ? "selected" : "")>Dr.</option>
+                                            <option value="Prof." @(Model != null && Model.NamePrefix == "Prof." ? "selected" : "")>Prof.</option>
+                                            <option value="Rev." @(Model != null && Model.NamePrefix == "Rev." ? "selected" : "")>Rev.</option>
+                                            <option value="Hon." @(Model != null && Model.NamePrefix == "Hon." ? "selected" : "")>Hon.</option>
+                                            <option value="Capt." @(Model != null && Model.NamePrefix == "Capt." ? "selected" : "")>Capt.</option>
+                                            <option value="Sgt." @(Model != null && Model.NamePrefix == "Sgt." ? "selected" : "")>Sgt.</option>
+                                            <!-- Add more options as needed -->
                                         </select>
+
 
                                     </div>
 
@@ -482,11 +492,19 @@
                                     <div class="input-group-prepend">
                                         <select class="custom-select" id="PrefixToFullName" asp-for="PrefixToFullName" name="PrefixToFullName">
                                             <option value="" selected disabled>Select</option>
-                                            <option value="S/o" @(Model != null && Model.PrefixToFullName == "S/o" ? "selected" : "")>S/o</option>
-                                            <option value="D/o" @(Model != null && Model.PrefixToFullName == "D/o" ? "selected" : "")>D/o</option>
-                                            <option value="W/o" @(Model != null && Model.PrefixToFullName == "W/o" ? "selected" : "")>W/o</option>
-                                            <!-- Add more options as needed -->
+                                            <option value="S/o" @(Model != null && Model.PrefixToFullName == "S/o" ? "selected" : "")>(S/o)</option>
+                                            <option value="D/o" @(Model != null && Model.PrefixToFullName == "D/o" ? "selected" : "")>(D/o)</option>
+                                            <option value="W/o" @(Model != null && Model.PrefixToFullName == "W/o" ? "selected" : "")>(W/o)</option>
+                                            <option value="H/o" @(Model != null && Model.PrefixToFullName == "H/o" ? "selected" : "")>(H/o)</option>
+                                            <option value="F/o" @(Model != null && Model.PrefixToFullName == "F/o" ? "selected" : "")>(F/o)</option>
+                                            <option value="M/o" @(Model != null && Model.PrefixToFullName == "M/o" ? "selected" : "")>(M/o)</option>
+                                            <option value="Bro. of" @(Model != null && Model.PrefixToFullName == "Bro. of" ? "selected" : "")>(Bro. of)</option>
+                                            <option value="Sis. of" @(Model != null && Model.PrefixToFullName == "Sis. of" ? "selected" : "")>(Sis. of)</option>
+                                            <option value="Uncle of" @(Model != null && Model.PrefixToFullName == "Uncle of" ? "selected" : "")>(Uncle of)</option>
+                                            <option value="Aunt of" @(Model != null && Model.PrefixToFullName == "Aunt of" ? "selected" : "")>(Aunt of)</option>
+                                            <option value="Cousin of" @(Model != null && Model.PrefixToFullName == "Cousin of" ? "selected" : "")>(Cousin of)</option>                                           
                                         </select>
+
                                     </div>
 
                                     <!-- Reference Input -->
