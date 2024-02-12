@@ -45,6 +45,9 @@
         public int? DonorID { get; set; }
         public string? NamePrefix { get; set; }
         public string? FullName { get; set; }
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
         public string? PrefixToFullName { get; set; }
         public string? RelationToFullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -96,6 +99,10 @@
 
         public string? PersonName { get; set; }
         public string? EventName { get; set; }
+        public int? OrderTypeID { get; set; }
+        public string? OrderTypeName { get; set; }
+        public string? OrderNumber { get; set; }
+       
         public decimal? Amount { get; set; } = 0;
         public decimal? TotalAmount { get; set; }= 0;
         public string? MaterialDepositID { get; set; }

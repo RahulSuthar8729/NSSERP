@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                         </div>
-                       
+
                         <script>
                             $(document).ready(function () {
 
@@ -255,14 +255,15 @@
                                         "<td>" + bankDetails.CurrencyCode + "</td>" +
                                         "<td>" + bankDetails.Amount + "</td>" +
                                         "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
-                                       "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +                                       
+                                        "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
                                         "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
                                         // "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                         "</tr>";
 
-                                    $("#bankDetailsTable tbody").append(newRow);                               }
+                                    $("#bankDetailsTable tbody").append(newRow);
+                                }
 
-                          
+
 
                                 $("#bankDetailsTable").on("click", ".delete-row", function () {
                                     // Reset the flag and added donation mode when a row is deleted
@@ -321,10 +322,10 @@
                             <div class="form-group col-lg-2">
                                 <label for="DepositePaymentMode">Deposit Mode</label>
                                 <select id="DepositePaymentMode" required class="form-control" name="DepositePaymentMode" asp-for="DepositePaymentMode">
-                                    <option value="" selected disabled>Select Deposit Mode</option>                                   
+                                    <option value="" selected disabled>Select Deposit Mode</option>
                                     <option value="pay-in-slip" data-paymentmode="PAY-IN-SLIP">PAY-IN-SLIP</option>
                                     <option value="debit-to-shadhak" data-paymentmode="Debit To Shadhak">Debit To Shadhak</option>
-                                    <option value="debit-to-person" data-paymentmode="Debit to Person">Debit to Person</option>                                  
+                                    <option value="debit-to-person" data-paymentmode="Debit to Person">Debit to Person</option>
                                 </select>
 
                             </div>
@@ -458,7 +459,7 @@
 
                                     // Check if donation mode is CASH
                                     if (depositMode.toUpperCase() === 'CASH') {
-                                       // refNo = '0';
+                                        // refNo = '0';
                                     } else {
                                         // Validate RefNo
                                         if (!refNo) {
@@ -562,7 +563,7 @@
                                         var rowData = {
                                             refNo: $(this).find('td:eq(0)').text(),
                                             mode: $(this).find('td:eq(1)').text(),
-                                            DepositeBank: $(this).find('td:eq(2)').text(),                                           
+                                            DepositeBank: $(this).find('td:eq(2)').text(),
                                             date: $(this).find('td:eq(3)').text(),
                                             currencyCode: $(this).find('td:eq(4)').text(),
                                             amount: parseFloat($(this).find('td:eq(5)').text()),

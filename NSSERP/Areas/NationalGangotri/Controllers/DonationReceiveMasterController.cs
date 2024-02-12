@@ -105,7 +105,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             return View(detail);
 
-        } 
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetStatesByCountry(int countryId)
@@ -357,7 +357,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             string FinYear = User.FindFirst("FinYear")?.Value ?? string.Empty;
             string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
             string DataFlag = User.FindFirst("DataFlag")?.Value ?? string.Empty;
-          
+
 
             string Doc1 = string.Empty;
             string Doc2 = string.Empty;
@@ -377,7 +377,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                     var tempFilePath = Path.Combine(tempFolderPath, fileName);
                     var mainFilePath = Path.Combine(mainFolderPath, fileName);
 
-                    // Check if the file exists in the temporary folder before attempting to move it
                     if (System.IO.File.Exists(tempFilePath))
                     {
                         // Move the file from the temporary folder to the main folder
@@ -386,23 +385,41 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 }
             }
 
-
-            if (model.DocPayInSlip != null)
+            if (model.DocProvisonal != null && model.DocProvisonal.Count > 0)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DocPayInSlip.FileName);
-                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
 
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-                var filePath = Path.Combine(folderPath, fileName);
+                var fileNamesBuilder = new StringBuilder();
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                foreach (var file in model.DocProvisonal)
                 {
-                    Doc3 = fileName;
-                    model.DocPayInSlip.CopyTo(stream);
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocDonationReceive");
+
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath);
+                        }
+
+                        var filePath = Path.Combine(folderPath, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+
+                            if (fileNamesBuilder.Length > 0)
+                            {
+                                fileNamesBuilder.Append(",");
+                            }
+
+                            fileNamesBuilder.Append(fileName);
+
+                            file.CopyTo(stream);
+                        }
+                    }
                 }
+
+                Doc1 = fileNamesBuilder.ToString();
             }
 
             var requestData = new
@@ -422,6 +439,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 InMemory = model.InMemory,
                 NamePrefix = model.NamePrefix,
                 FullName = model.FullName,
+                FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
+                LastName = model.LastName,
                 PrefixToFullName = model.PrefixToFullName,
                 RelationToFullName = model.RelationToFullName,
                 DateOfBirth = dob,
@@ -463,6 +483,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 PersonName = model.PersonName,
                 paymentModeID = model.PaymentModeID,
                 PaymentModeName = model.PaymentModeName,
+                OrderTypeID = model.OrderTypeID,
+                OrderTypeName = model.OrderTypeName,
+                OrderNumber = model.OrderNumber,
                 CurrencyID = model.CurrencyID,
                 CurrencyCode = model.CurrencyCode,
                 Amount = Amount,
@@ -476,7 +499,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 Doc1 = Doc1,
                 Doc2 = Doc2,
                 Doc3 = Doc3,
-                DataFlag= DataFlag
+                DataFlag = DataFlag
             };
 
 

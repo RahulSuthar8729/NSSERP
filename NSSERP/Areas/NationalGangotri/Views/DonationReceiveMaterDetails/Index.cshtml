@@ -16,8 +16,9 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <!-- Select2 CSS and JS -->
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <!-- DataTables CSS and JS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
@@ -27,6 +28,7 @@
         <script>
             $(document).ready(function () {
                 $('#CityID').select2();
+
                 $('#StateID').select2();
                 $('#tableDetails').DataTable({
                     "order": [[2, "desc"]],
@@ -36,11 +38,11 @@
                     "info": true, // Enable table information display
                     "responsive": true, // Enable responsive design
                     "columnDefs": [
-                        { "targets": [0,1], "orderable": false } // Disable sorting for the first column (icons)
+                        { "targets": [0, 1], "orderable": false } // Disable sorting for the first column (icons)
                     ]
 
                 });
-                $('#CityID').select2();
+
             });
 
         </script>
@@ -270,7 +272,7 @@
                             <label asp-for="CityID" class="control-label">City</label>
                             <div class="form-group">
                                 <select id="CityID" asp-for="CityID" name="CityID" class="form-control">
-                                    <option value="">Select City</option>
+                                    <option value="0">Select City</option>
                                     @foreach (var city in Model.CityMasterList)
                                     {
                                         <option value="@city.CityID">@city.CityName</option>
@@ -296,7 +298,7 @@
                                     }
                                 </select>
                                 <input type="hidden" id="hdnStateName" name="StateName" asp-for="StateName" />
-                                <!-- Include a hidden field for StateID -->
+
                                 <input type="hidden" id="hdnStateID" name="StateID" asp-for="StateID" />
                             </div>
                         </div>
@@ -371,7 +373,7 @@
                             <th>PAYMENT MODE</th>
                             <th>STATUS</th>
                             <th>IF DETAILS NOT COMPLETE</th>
-                          
+
                             @*     <th>IF UPDATION IN ADDRESS</th>
 
                             <th>IF ANNOUNCE DUE IN FUTURE</th>
@@ -415,7 +417,6 @@
                                         }
                                         else
                                         {
-
                                             <span class="text-warning">@item.AppStatus</span>
                                         }
                                     </td>
@@ -429,8 +430,7 @@
                                             <span class="text-success">Details Completed</span>
                                         }
                                     </td>
-                                  
-                                    @*            <td>@(item.IfUpdationInAddress ? "Yes" : "No")</td>
+                                    @*            <td>@(iatem.IfUpdationInAddress ? "Yes" : "No")</td>
 
                             <td>@(item.IfAnnounceDueInFuture ? "Yes" : "No")</td> *@
                                 </tr>

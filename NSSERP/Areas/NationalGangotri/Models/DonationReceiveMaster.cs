@@ -43,6 +43,9 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public int? DonorID { get; set; } 
         public string NamePrefix { get; set; } = "";
         public string FullName { get; set; }
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
         public string PrefixToFullName { get; set; }
         public string RelationToFullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -97,6 +100,15 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public decimal Amount { get; set; }
         public decimal? TotalAmount { get; set; }
         public string MaterialDepositID { get; set; } = "";
+        public  int? OrderTypeID { get; set; }
+        public string? OrderTypeName { get; set; }
+        public string OrderNumber { get; set; }
+        public List<OrderTypes> ordertypelist { get; set; }
+        public class OrderTypes()
+        {
+           public int OrderTypeID { get; set; }
+            public string OrderTypeName { get; set; }
+        }
         public string Material { get; set; } = "";
         public bool? IsManavaFormulaRequire { get; set; }
         public bool? IsPatientsPhotoRequire { get; set; }
@@ -108,7 +120,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string Instructions { get; set; } = "";
         public string ReceiptRemarks { get; set; } = "";
         public bool IfAnnounceDueInFuture { get; set; }
-        public IFormFile DocProvisonal { get; set; }
+        public List<IFormFile> DocProvisonal { get; set; }        
         public IFormFile DocCheque { get; set; }
         public IFormFile DocPayInSlip { get; set; }
         public string Doc1 { get; set; } = "";

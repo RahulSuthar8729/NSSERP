@@ -29,9 +29,9 @@
 
     <style>
         .card-header.sticky-top {
-            background-color: #fff; /* Set a background color for the sticky header */
-            z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
-            border-bottom: 1px solid #dee2e6; /* Add a border to separate it from the content */
+            background-color: #fff;
+            z-index: 1000;
+            border-bottom: 1px solid #dee2e6;
         }
     </style>
     @section scripts {
@@ -91,7 +91,7 @@
                 @Html.AntiForgeryToken()
                 <div class="col-lg-3">
 
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check-inline" style="display:none;">
                         <input class="form-check-input" id="IsReceiveHeadDiffrent" name="IsReceiveHeadDiffrent" type="checkbox" value="true" @(Model.IsReceiveHeadDiffrent.GetValueOrDefault() ? "checked" : "") />
                         <label class="form-check-label" for="IsReceiveHeadDiffrent">
                             <span style="color: darkblue; font-weight: bold">Is ReceiveHead Different</span>
@@ -303,7 +303,9 @@
                                                     }
 
                                                     selectOptionByText('#PrefixToFullName', jsonData.PrefixToFullName);
-                                                    $('#FullName').val(jsonData.FullName);
+                                                    $('#FirstName').val(jsonData.FirstName);
+                                                    $('#MiddleName').val(jsonData.MiddleName);
+                                                    $('#LastName').val(jsonData.LastName);
                                                     $('#RelationToFullName').val(jsonData.RelationToFullName);
 
                                                     // Format date using moment.js (make sure to include moment.js in your project)
@@ -381,6 +383,7 @@
                                             $.each(mobileList, function (index, item) {
                                                 // Add a new row to the table
                                                 var newRowmobile = $("<tr>");
+                                                newRowmobile.append("<td>" + item.ContactType + "</td>");
                                                 newRowmobile.append("<td>" + item.CountryCode + "</td>");
                                                 newRowmobile.append("<td>" + item.MobileNumber + "</td>");
                                                 newRowmobile.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
@@ -453,14 +456,11 @@
 
 
                                 });
-                            </script>
-
-
+                            </script>                           
 
                             <div class="form-group col-md-3">
-                                <label for="FullName" class="mb-2">Full Name<span style="color: red;">*</span></label>
+                                <label for="FirstName" class="mb-2">First Name<span style="color: red;">*</span></label>
                                 <div class="input-group">
-                                    <!-- Prefix Selection Dropdown -->
                                     <div class="input-group-prepend">
                                         <select class="custom-select" id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
                                             <option value="" selected disabled>Select</option>
@@ -476,41 +476,20 @@
                                             <option value="Sgt." @(Model != null && Model.NamePrefix == "Sgt." ? "selected" : "")>Sgt.</option>
                                             <!-- Add more options as needed -->
                                         </select>
-
-
                                     </div>
-
-                                    <input type="text" value="@Model.FullName" required class="form-control" asp-for="FullName" placeholder="PRASANT KUMAR AGRAWAL" id="FullName" name="FullName" oninput="convertToUpperCase(this)">
+                                    <input type="text" value="@Model.FirstName" required class="form-control" asp-for="FirstName" placeholder="Enter first name" id="FirstName" name="FirstName" oninput="convertToUpperCase(this)">
                                 </div>
                             </div>
-
 
                             <div class="form-group col-lg-3">
-                                <label for="Reference" class="mb-2">S/o/D/oW/o</label>
-                                <div class="input-group">
-                                    <!-- Prefix Selection Dropdown -->
-                                    <div class="input-group-prepend">
-                                        <select class="custom-select" id="PrefixToFullName" asp-for="PrefixToFullName" name="PrefixToFullName">
-                                            <option value="" selected disabled>Select</option>
-                                            <option value="S/o" @(Model != null && Model.PrefixToFullName == "S/o" ? "selected" : "")>(S/o)</option>
-                                            <option value="D/o" @(Model != null && Model.PrefixToFullName == "D/o" ? "selected" : "")>(D/o)</option>
-                                            <option value="W/o" @(Model != null && Model.PrefixToFullName == "W/o" ? "selected" : "")>(W/o)</option>
-                                            <option value="H/o" @(Model != null && Model.PrefixToFullName == "H/o" ? "selected" : "")>(H/o)</option>
-                                            <option value="F/o" @(Model != null && Model.PrefixToFullName == "F/o" ? "selected" : "")>(F/o)</option>
-                                            <option value="M/o" @(Model != null && Model.PrefixToFullName == "M/o" ? "selected" : "")>(M/o)</option>
-                                            <option value="Bro. of" @(Model != null && Model.PrefixToFullName == "Bro. of" ? "selected" : "")>(Bro. of)</option>
-                                            <option value="Sis. of" @(Model != null && Model.PrefixToFullName == "Sis. of" ? "selected" : "")>(Sis. of)</option>
-                                            <option value="Uncle of" @(Model != null && Model.PrefixToFullName == "Uncle of" ? "selected" : "")>(Uncle of)</option>
-                                            <option value="Aunt of" @(Model != null && Model.PrefixToFullName == "Aunt of" ? "selected" : "")>(Aunt of)</option>
-                                            <option value="Cousin of" @(Model != null && Model.PrefixToFullName == "Cousin of" ? "selected" : "")>(Cousin of)</option>                                           
-                                        </select>
-
-                                    </div>
-
-                                    <!-- Reference Input -->
-                                    <input type="text" value="@Model.RelationToFullName" oninput="convertToUpperCase(this)" class="form-control" id="RelationToFullName" name="RelationToFullName">
-                                </div>
+                                <label for="MiddleName" class="mb-2">Middle Name</label>
+                                <input type="text" name="MiddleName" value="@Model.MiddleName" class="form-control" oninput="convertToUpperCase(this)" id="MiddleName" placeholder="Enter middle name" asp-for="MiddleName">
                             </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="LastName" class="mb-2">Last Name</label>
+                                <input type="text" name="LastName" value="@Model.LastName" class="form-control" oninput="convertToUpperCase(this)" id="LastName" placeholder="Enter last name" asp-for="LastName">
+                            </div>                         
 
 
                             <div class="form-group col-lg-3">
@@ -761,7 +740,6 @@
                                 $(document).ready(function () {
                                     $('#DistrictID').change(function () {
                                         var selectedDistrictId = $(this).val();
-
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
                                             type: 'GET',
@@ -783,7 +761,6 @@
                             </script>
 
 
-
                             <div class="form-group col-lg-3">
                                 <label for="CityID">City<span style="color: red;">*</span></label>
                                 <select class="form-control" required asp-for="CityID" id="CityID" name="CityID">
@@ -792,18 +769,12 @@
                             </div>
 
                             <div class="card-header text-center">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="updation" name="IfUpdationInAddress" type="checkbox" value="true" @(Model.IfUpdationInAddress.GetValueOrDefault() ? "checked" : "") />
-                                    <label class="form-check-label" for="updation"> If Updation in Addressing</label>
-                                </div>
+                          
                                 <div class="form-check form-check-inline">
                                     <input type="checkbox" class="form-check-input" name="IsPermanentAddressDiff" value="true" id="sameasabove" @(Model.IsPermanentAddressDiff.GetValueOrDefault() ? "checked" : "") />
                                     <label class="form-check-label" for="sameasabove">Is Permanent Address Different</label>
                                 </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
-                                    <label class="form-check-label" for="detailsnot">If Details Not Complete</label>
-                                </div>
+                           
                             </div>
 
 
@@ -1054,57 +1025,40 @@
                                         <option value="WhatsApp">WhatsApp No.</option>
                                         <option value="Phone(O)">Office Phone</option>
                                         <option value="Phone(R)">Residence Phone</option>
+                                        <option value="Email">Email ID</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group col-lg-3">
-                                    <label for="mobileNumber" class="mr-2">Contact No.<span style="color: red;">*</span></label>
+                                    <label for="contactDetail" class="mr-2">Contact Detail<span style="color: red;">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
                                                 <option value="" selected disabled>Select</option>
                                                 @if (Model != null)
                                                 {
-
                                                     @foreach (var countrycode in Model.CountryList)
                                                     {
                                                         <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
                                                     }
-
                                                 }
                                             </select>
-
                                         </div>
-                                        <script>
-                                            $(document).ready(function () {
-                                                // Attach change event to the Country dropdown
-                                                $("#CountryID").change(function () {
-                                                    // Get the selected Country ID
-                                                    var selectedCountryId = $(this).val();
 
-                                                    // Set the corresponding Country Code in the second dropdown
-                                                    $("#countryCode").val(selectedCountryId);
-                                                });
-                                            });
-                                        </script>
-                                        <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" placeholder="Enter your number">
+                                        <input type="text" class="form-control" id="contactDetail" name="contactDetail" placeholder="Enter your contact detail">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" id="addNumber"><i class="fas fa-plus"></i>Add</button>
+                                            <button class="btn btn-primary" type="button" id="addDetail"><i class="fas fa-plus"></i>Add</button>
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
-
-
                             }
-                            <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="mobileNumbersTable">
+
+                            <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="contactDetailsTable">
                                 <thead>
                                     <tr>
                                         <th>Contact Type</th>
                                         <th>Country Code</th>
-                                        <th>Contact Number</th>
+                                        <th>Contact Detail</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -1112,11 +1066,27 @@
                                     <!-- Table rows will be dynamically added here -->
                                 </tbody>
                             </table>
+
                             <input type="hidden" asp-for="MobileList" name="MobileList" id="mobileListField" />
 
                             <script>
                                 $(document).ready(function () {
-                                    // Parse the JSON data from the model
+                                    // Declare donorid variable at the beginning
+                                    var donorid = $("#DonorID").val();
+
+                                    $("#contactType").change(function () {
+                                        var selectedContactType = $(this).val();
+                                        if (selectedContactType === 'Email') {
+                                            $("#countryCode").hide();
+                                            $("#countryCodeHeader").hide();
+                                            $("#contactDetail").attr("placeholder", "Enter your email");
+                                        } else {
+                                            $("#countryCode").show();
+                                            $("#countryCodeHeader").show();
+                                            $("#contactDetail").attr("placeholder", "Enter your contact detail");
+                                        }
+                                    });
+
                                     var mobileListJson = @Html.Raw(Model.MobileListJson);
 
                                     // If MobileListJson is null, use data from the model directly
@@ -1138,121 +1108,97 @@
                                             // Add a special class to identify rows from MobileListJson
                                             newRowmobilelist.addClass("json-data-row");
 
-                                            updateMobileNumbersHiddenField();
-                                            $("#mobileNumbersTable tbody").append(newRowmobilelist);
+                                            updateContactDetailsHiddenField();
+                                            $("#contactDetailsTable tbody").append(newRowmobilelist);
 
                                             // Show the table
-                                            $("#mobileNumbersTable").css("visibility", "visible");
+                                            $("#contactDetailsTable").css("visibility", "visible");
                                         });
                                     }
 
-                                    // Add Number button click event
-                                    $("#addNumber").on("click", function () {
+                                    $("#addDetail").on("click", function () {
                                         var ContactType = $("#contactType").val();
                                         var countryCode = $("#countryCode").find(':selected').text();
-                                        var mobileNumber = $("#mobileNumber").val();
-                                        var donorid = $("#DonorID").val();
-                                        var ReceiveHeadName = '';
+                                        var contactDetail = $("#contactDetail").val();
+                                        var ReceiveHeadName = $('#IsReceiveHeadDiffrent').is(':checked') ?
+                                            $("#ReceiveHeadName").find(':selected').text() :
+                                            "@UserDepartment";
 
-                                        if ($('#IsReceiveHeadDiffrent').is(':checked')) {
-                                            ReceiveHeadName = $("#ReceiveHeadName").find(':selected').text();
+                                        var contactDetailPattern;
+
+                                        if (ContactType === 'Email') {
+                                            contactDetailPattern = /^[^\s]+[^\s]+\.[^\s]+$/;
+                                            if (!contactDetailPattern.test(contactDetail)) {
+                                                alert("Invalid email format. Please enter a valid email address.");
+                                                return;
+                                            }
+                                        } else if (ContactType === 'Mobile') {
+                                            // Check if the country code is +91 (India)
+                                            if (countryCode === '+91') {
+                                                contactDetailPattern = /^\d{10}$/; // 10 digits for India
+                                            } else {
+                                                // For other countries, remove validation or add specific validation patterns
+                                                contactDetailPattern = /^\d+$/; // Example: Any number of digits
+                                            }
+
+                                            if (!contactDetailPattern.test(contactDetail)) {
+                                                alert("Invalid mobile number format for the selected country code. Please enter a valid mobile number.");
+                                                return;
+                                            }
                                         } else {
-                                            ReceiveHeadName = "@UserDepartment";
+                                            // Add additional validation for other contact types if needed
                                         }
 
-                                        // Validate mobile number format based on the country code
-                                        var mobileNumberPattern;
+                                        var newRowContactDetails = $("<tr>");
+                                        newRowContactDetails.append("<td>" + ContactType + "</td>");
+                                        newRowContactDetails.append("<td>" + (ContactType === 'Email' ? '' : countryCode) + "</td>");
+                                        newRowContactDetails.append("<td>" + contactDetail + "</td>");
+                                        newRowContactDetails.append("<td style='display:none'>" + donorid + "</td>");
+                                        newRowContactDetails.append("<td style='display:none'>" + ReceiveHeadName + "</td>");
+                                        newRowContactDetails.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
 
-                                        // Check if the country code is +91 (India)
-                                        if (countryCode === '+91') {
-                                            mobileNumberPattern = /^\d{10}$/; // 10 digits for India
-                                        } else {
-                                            // For other countries, remove validation or add specific validation patterns
-                                            mobileNumberPattern = /^\d+$/; // Example: Any number of digits
-                                        }
+                                        newRowContactDetails.addClass("manual-data-row");
 
-                                        if (!mobileNumberPattern.test(mobileNumber)) {
-                                            alert("Invalid mobile number format for the selected country code. Please enter a valid mobile number.");
-                                            return;
-                                        }
-
-                                        // Add a new row to the table
-                                        var newRowmobilenumberlist = $("<tr>");
-                                        newRowmobilenumberlist.append("<td>" + ContactType + "</td>");
-                                        newRowmobilenumberlist.append("<td>" + countryCode + "</td>");
-                                        newRowmobilenumberlist.append("<td>" + mobileNumber + "</td>");
-                                        newRowmobilenumberlist.append("<td style='display:none'>" + donorid + "</td>");
-                                        newRowmobilenumberlist.append("<td style='display:none'>" + ReceiveHeadName + "</td>");
-                                        newRowmobilenumberlist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
-
-                                        // Add a special class to identify manually added rows
-                                        newRowmobilenumberlist.addClass("manual-data-row");
-
-                                        $("#mobileNumbersTable tbody").append(newRowmobilenumberlist);
-
-                                        updateMobileNumbersHiddenField();
-                                        // Show the table
-                                        $("#mobileNumbersTable").css("visibility", "visible");
-
-                                        // Clear input fields
-                                        $("#mobileNumber").val("");
+                                        $("#contactDetailsTable tbody").append(newRowContactDetails);
+                                        updateContactDetailsHiddenField();
+                                        $("#contactDetailsTable").css("visibility", "visible");
+                                        $("#contactDetail").val("");
                                     });
 
-
-                                    // Delete row when the delete button is clicked
-                                    $("#mobileNumbersTable").on("click", ".delete-row", function () {
+                                    $("#contactDetailsTable").on("click", ".delete-row", function () {
                                         var row = $(this).closest("tr");
-
-                                        // Remove the row
                                         row.remove();
-                                        updateMobileNumbersHiddenField();
-                                        // Hide the table if no rows are left
-                                        if ($("#mobileNumbersTable tbody tr").length === 0) {
-                                            $("#mobileNumbersTable").css("visibility", "hidden");
+                                        updateContactDetailsHiddenField();
+
+                                        if ($("#contactDetailsTable tbody tr").length === 0) {
+                                            $("#contactDetailsTable").css("visibility", "hidden");
                                         }
                                     });
 
-                                    function updateMobileNumbersHiddenField() {
-                                        var tableDatamobile = [];
+                                    function updateContactDetailsHiddenField() {
+                                        var tableDataContactDetails = [];
 
-                                        // Loop through each row in the table
-                                        $("#mobileNumbersTable tbody tr").each(function () {
-                                            var rowDatamobile = {};
+                                        $("#contactDetailsTable tbody tr").each(function () {
+                                            var rowDataContactDetails = {};
                                             $(this).find("td").each(function (index, element) {
                                                 if (index === 0) {
-                                                    rowDatamobile.ContactType = $(element).text();
+                                                    rowDataContactDetails.ContactType = $(element).text();
                                                 } else if (index === 1) {
-                                                    rowDatamobile.CountryCode = $(element).text();
+                                                    rowDataContactDetails.CountryCode = $(element).text();
                                                 } else if (index === 2) {
-                                                    rowDatamobile.MobileNumber = $(element).text();
+                                                    rowDataContactDetails.ContactDetail = $(element).text();
                                                 }
                                             });
-                                            tableDatamobile.push(rowDatamobile);
+
+                                            tableDataContactDetails.push(rowDataContactDetails);
                                         });
 
-                                        // Store the JSON data in the hidden input field
-                                        $("#mobileListField").val(JSON.stringify(tableDatamobile));
+                                        $("#mobileListField").val(JSON.stringify(tableDataContactDetails));
                                     }
                                 });
                             </script>
 
-
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-3">
-                                <label for="EmailID">Email ID<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.EmailID" type="text" id="EmailID" required name="EmailID" asp-for="EmailID" />
-                            </div>
-                            <div class="form-group col-lg-3" style="display:none;">
-                                <label for="StdCode">STD Code</label>
-                                <input class="form-control" id="StdCode" value="@Model.StdCode" type="text" name="StdCode" asp-for="StdCode" />
-                            </div>
-                            <div class="form-group col-lg-3" style="display:none">
-                                <label for="Phoneno">Phone (R)</label>
-                                <input class="form-control" id="PhoneR" value="@Model.PhoneR" type="text" name="PhoneR" asp-for="PhoneR" />
-                            </div>
-
-                        </div>
+                        </div>                   
                     </div>
                 </fieldset>
 
@@ -1533,17 +1479,15 @@
 
                 </script>
 
-
                 <fieldset class="show border rounded p-3">
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
-                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donationDetailsContent" aria-expanded="false" aria-controls="donationDetailsContent">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#DivProvisonalDetails" aria-expanded="false" aria-controls="DivProvisonalDetails">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Donation Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Provisional Details</span>
                         </button>
                     </legend>
 
-                    <div id="donationDetailsContent" class="nested-form-container collapse show">
-
+                    <div id="DivProvisonalDetails" class="nested-form-container collapse">
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Prov. No">Prov. No<span style="color: red;">*</span></label>
@@ -1557,8 +1501,51 @@
                                 <label for="">Person Name</label>
                                 <input class="form-control" value="@Model.PersonName" id="PersonName" type="text" name="PersonName" asp-for="PersonName" />
                             </div>
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-3" data-input-id="file1">
+
+                                @if (!string.IsNullOrEmpty(Model.Doc1))
+                                {
+                                    <label for="file1">Attached Provisional</label>
+
+
+                                    var fileNames = Model.Doc1.Split(',').Select(x => x.Trim()).ToList();
+                                    for (int i = 0; i < fileNames.Count; i++)
+                                    {
+                                        var simplifiedFileName = $"File {i + 1}";
+                                        <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <label for="file1">Attach Provisional</label>
+
+                                    <input type="file" name="DocProvisonal" multiple asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf" />
+                                }
                             </div>
+                            <script>
+                                $(document).ready(function () {
+                                    // Attach a click event to dynamically generated view buttons
+                                    $(document).on('click', '.view-btn', function () {
+                                        var fileName = $(this).data('file-name');
+                                        window.open('/DocDonationReceive/' + fileName, '_blank');
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#donationDetailsContent" aria-expanded="false" aria-controls="donationDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Donation Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="donationDetailsContent" class="nested-form-container collapse show">
+
+                        <div class="row">
 
                             <div class="form-group col-lg-3">
                                 <label for="PaymentMode">Donation Mode<span style="color: red;">*</span></label>
@@ -1658,13 +1645,39 @@
                                             });
                                         </script>
 
-                                    </div>
-
-
-
-                                    <!-- Amount Input -->
+                                    </div>                                  
                                     <input type="number" placeholder="Amount" value="@((Model.TotalAmount.GetValueOrDefault() == 0) ? "" : Model.TotalAmount.GetValueOrDefault())" asp-for="Amount" name="Amount" class="form-control" id="Amount">
                                 </div>
+                            </div>
+
+                             <div class="form-group col-lg-3" id="DivOrderType" style="display: none;">
+                                <label for="">Order Type</label>
+                                <select class="custom-select" asp-for="OrderTypeID" id="OrderType" name="OrderTypeID">
+                                    <option value="">Select</option>
+                                    @if (Model.ordertypelist != null)
+                                    {
+                                        @foreach (var order in Model.ordertypelist)
+                                        {
+                                            <option value="@order.OrderTypeID" data-currencycode="@order.OrderTypeName" @(Model.OrderTypeID.GetValueOrDefault() == order.OrderTypeID ? "selected" : "")>@order.OrderTypeName</option>
+                                        }
+                                    }
+                                   
+                                </select>
+                                <input type="hidden" id="hdnorderType" name="OrderTypeName">
+                                <script>
+                                    $(document).ready(function () {
+                                      
+                                        $('#OrderType').change(function () {                                        
+                                            var selectedText = $('#OrderType option:selected').text();
+                                            var selectedValue = $('#OrderType').val();                                          
+                                            $('#hdnorderType').val(selectedText);
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="form-group col-lg-3" id="DivOrderNumber" style="display: none;">
+                                <label for="">Order Number</label>
+                                <input class="form-control" value="@Model.OrderNumber" id="OrderNumber" placeholder="please enter order no." type="text" name="OrderNumber" asp-for="OrderNumber" required />
                             </div>
                             <div class="form-group col-lg-3" id="materialDepositFields" style="display: none;">
                                 <label for="MaterialDepositID">Material Deposit ID<span style="color: red;">*</span></label>
@@ -1683,69 +1696,58 @@
 
 
                             <script>
-                                function toggleMaterialFields() {
-                                    var paymentModeDropdown = document.getElementById('PaymentMode');
-                                    var materialDepositFields = document.getElementById('materialDepositFields');
-                                    var materialFields = document.getElementById('materialFields');
-                                    var currencyAmountFields = document.getElementById('currencyAmountFields');
-                                    var materialDepositIDTextbox = document.getElementById('MaterialDepositID');
-                                    var materialInputTextarea = document.getElementById('materialInput');
-                                    var currencyDropdown = document.getElementById('CurrencyID');
-                                    var amountInput = document.getElementById('Amount');
-                                    var divbankdetails = document.getElementById('divbankdetails');
-                                    var TotalAmount = document.getElementById('DivTotalAmount');
-                                    var divMultiCheque = document.getElementById('divMultiCheque');
-                                    var lbl_multiDoc = document.getElementById('lbl_doc_multi');
+                                $(document).ready(function () {
+                                    // Function to toggle material fields based on payment mode
+                                    function toggleMaterialFields() {
+                                        var paymentModeDropdown = $('#PaymentMode');
+                                        var materialDepositFields = $('#materialDepositFields');
+                                        var materialFields = $('#materialFields');
+                                        var currencyAmountFields = $('#currencyAmountFields');
+                                        var materialDepositIDTextbox = $('#MaterialDepositID');
+                                        var materialInputTextarea = $('#materialInput');
+                                        var currencyDropdown = $('#CurrencyID');
+                                        var amountInput = $('#Amount');
+                                        var divbankdetails = $('#divbankdetails');
+                                        var TotalAmount = $('#DivTotalAmount');
+                                        var divMultiCheque = $('#divMultiCheque');
+                                        var lbl_multiDoc = $('#lbl_doc_multi');
+                                        var divOrderType = $('#DivOrderType');
+                                        var divOrderNumber = $('#DivOrderNumber');
 
-                                    // Get the selected text instead of the value
-                                    var selectedText = paymentModeDropdown.options[paymentModeDropdown.selectedIndex].text;
+                                        // Get the selected text instead of the value
+                                        var selectedText = paymentModeDropdown.find('option:selected').text();
 
-                                    // Check if the selected text is "MATERIAL"
-                                    if (selectedText === 'MATERIAL') {
-                                        materialDepositFields.style.display = 'block';
-                                        materialFields.style.display = 'block';
-                                        currencyAmountFields.style.display = 'none';
-                                        TotalAmount.style.display = 'none';
+                                        // Toggle material fields based on payment mode
+                                        materialDepositFields.toggle(selectedText === 'MATERIAL');
+                                        materialFields.toggle(selectedText === 'MATERIAL');
+                                        currencyAmountFields.toggle(selectedText !== 'MATERIAL');
 
-                                        // Set required attribute dynamically
-                                        materialDepositIDTextbox.required = true;
-                                        materialInputTextarea.required = true;
-                                        currencyDropdown.required = false;
-                                        amountInput.required = false;
-                                        materialDepositIDTextbox.focus(); // Focus on Material Deposit ID textbox
+                                        // Set/Remove required attribute dynamically
+                                        materialDepositIDTextbox.prop('required', selectedText === 'MATERIAL');
+                                        materialInputTextarea.prop('required', selectedText === 'MATERIAL');
+                                        currencyDropdown.prop('required', selectedText !== 'MATERIAL');
+                                        amountInput.prop('required', selectedText !== 'MATERIAL');
 
-                                    } else {
-                                        materialDepositFields.style.display = 'none';
-                                        materialFields.style.display = 'none';
-                                        currencyAmountFields.style.display = 'block';
+                                        // Toggle bank details based on payment mode
+                                        divbankdetails.toggle(selectedText !== 'MATERIAL' && selectedText !== 'CASH');
 
-                                        // Remove required attribute dynamically
-                                        materialDepositIDTextbox.required = false;
-                                        materialInputTextarea.required = false;
-                                        currencyDropdown.required = true;
-                                        amountInput.required = true;
+                                        // Toggle multi-cheque fields based on payment mode
+                                        divMultiCheque.toggle(selectedText === 'CHEQUE' || selectedText === 'PAY-IN-SLIP');
+                                        lbl_multiDoc.text(selectedText === 'CHEQUE' ? 'Attach Cheque Doc' : 'Attach Pay-In-Slip Doc');
 
-                                    }
-                                    if (selectedText === 'MATERIAL' || selectedText === 'CASH') {
-                                        divbankdetails.style.display = 'none';
-                                    } else {
-                                        divbankdetails.style.display = 'block';
+                                        // Toggle Order Type and Order Number based on payment mode
+                                        divOrderType.toggle(selectedText === 'ONLINE');
+                                        divOrderNumber.toggle(selectedText === 'ONLINE');
                                     }
 
-                                    if (selectedText === 'CHEQUE') {
-                                        divMultiCheque.style.display = 'block';
-                                        lbl_multiDoc.innerText = 'Attach Cheque Doc';
-                                    } else if (selectedText === 'PAY-IN-SLIP') {
-                                        divMultiCheque.style.display = 'block';
-                                        lbl_multiDoc.innerText = 'Attach Pay-In-Slip Doc';
-                                    } else {
-                                        divMultiCheque.style.display = 'none';
-                                    }
+                                    // Call the function initially to set the initial state
+                                    toggleMaterialFields();
 
-                                }
-
-                                // Call the function initially to set the initial state
-                                toggleMaterialFields();
+                                    // Attach change event to payment mode dropdown
+                                    $('#PaymentMode').change(function () {
+                                        toggleMaterialFields();
+                                    });
+                                });
                             </script>
 
                             <div id="divbankdetails" style="display:none;">
@@ -1952,7 +1954,6 @@
                                         $("#receiveamount").val(totalAmount.toFixed(2));
 
                                     }
-
 
 
                                     // Flag to check if a row with a donation mode has been added
@@ -2528,14 +2529,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                            </tr>`;
+                                                                                                                                                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
@@ -2971,7 +2972,7 @@
                     });
                 </script>
 
-                <fieldset class="show border rounded p-3">
+                <fieldset class="show border rounded p-3" style="display:none">
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#scanCopyContent" aria-expanded="false" aria-controls="scanCopyContent">
                             <span id="collapseIcon" class="">&#43;</span>
@@ -3002,18 +3003,7 @@
                         </style>
 
                         <div class="row">
-                            <div class="form-group col-lg-4" data-input-id="file1">
-                                <label for="file1">Attach Provisional</label>
 
-                                @if (!string.IsNullOrEmpty(Model.Doc1))
-                                {
-                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc1"><i class="fa fa-eye"></i>View</a></div>
-                                }
-                                else
-                                {
-                                    <input type="file" name="DocProvisonal" asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf" />
-                                }
-                            </div>
 
 
                             <div class="form-group col-lg-4" style="display:none;" data-input-id="file2">

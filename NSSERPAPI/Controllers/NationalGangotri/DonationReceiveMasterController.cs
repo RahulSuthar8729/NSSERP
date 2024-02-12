@@ -54,7 +54,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
-
+            firstDetail.ordertypelist=_dbFunctions.GetORderTypes();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(receiveID);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(receiveID);
@@ -95,7 +95,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
-
+            firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(id);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(id);
@@ -317,6 +317,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@DonorID", model.DonorID);
                             parameters.Add("@NamePrefix", model.NamePrefix);
                             parameters.Add("@FullName", model.FullName);
+                            parameters.Add("@FirstName", model.FirstName);
+                            parameters.Add("@MiddleName", model.MiddleName);
+                            parameters.Add("@LastName", model.LastName);
                             parameters.Add("@PrefixToFullName", model.PrefixToFullName);
                             parameters.Add("@RelationToFullName", model.RelationToFullName);
                             parameters.Add("@DateOfBirth", model.DateOfBirth);
@@ -360,6 +363,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@DonEventName", model.EventName);
                             parameters.Add("@PaymentModeID", model.PaymentModeID);
                             parameters.Add("@PaymentModeName", model.PaymentModeName);
+                            parameters.Add("@OrderTypeID", model.OrderTypeID);
+                            parameters.Add("@OrderTypeName", model.OrderTypeName);
+                            parameters.Add("@OrderNumber", model.OrderNumber);
                             parameters.Add("@CurrencyID", model.CurrencyID);
                             parameters.Add("@CurrencyCode", model.CurrencyCode);
                             parameters.Add("@Amount", model.TotalAmount);
@@ -407,7 +413,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     mobileParams.Add("@DonorID", model.DonorID);
                                     mobileParams.Add("@ContactType", mobileNumber.ContactType);
                                     mobileParams.Add("@CountryCode", mobileNumber.CountryCode);
-                                    mobileParams.Add("@MobileNo", mobileNumber.MobileNumber);
+                                    mobileParams.Add("@MobileNo", mobileNumber.ContactDetail);
                                     mobileParams.Add("@DataFlag", model.DataFlag);
                                     mobileParams.Add("@CreatedBy", model.UserID);
                                     connection.Execute("InsertMultiMobileInDonationReceiveMaster", mobileParams, transaction, commandType: CommandType.StoredProcedure);
@@ -683,7 +689,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     var mobileParams = new DynamicParameters();
                                     mobileParams.Add("@REF_NO", model.ReceiveID);
                                     mobileParams.Add("@CountryCode", mobileNumber.CountryCode);
-                                    mobileParams.Add("@MobileNo", mobileNumber.MobileNumber);
+                                    mobileParams.Add("@MobileNo", mobileNumber.ContactDetail);
                                     mobileParams.Add("@CreatedBy", model.UserID);
                                     connection.Execute("InsertMultiMobileInDonationReceiveMaster", mobileParams, transaction, commandType: CommandType.StoredProcedure);
                                 }

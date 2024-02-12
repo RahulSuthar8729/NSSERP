@@ -62,9 +62,9 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                
-                var result=connection.Query("GetPaymentModes", commandType: CommandType.StoredProcedure);
-            return result.AsList();
+
+                var result = connection.Query("GetPaymentModes", commandType: CommandType.StoredProcedure);
+                return result.AsList();
             }
         }
         public List<dynamic> GetStates()
@@ -145,6 +145,15 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetAllBankMasters", commandType: CommandType.StoredProcedure);
             }
         }
+        public IEnumerable<dynamic> GetORderTypes()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                return connection.Query<dynamic>("GetOrderTypes", commandType: CommandType.StoredProcedure);
+            }
+        }
 
         public IEnumerable<dynamic> CurrencyList()
         {
@@ -164,7 +173,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetDepositeBankMaster", commandType: CommandType.StoredProcedure);
             }
         }
-        public IEnumerable<dynamic>GetProvisionalReceiptbyId(int id)
+        public IEnumerable<dynamic> GetProvisionalReceiptbyId(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -200,22 +209,22 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetEvents", commandType: CommandType.StoredProcedure);
             }
         }
-        public IEnumerable<dynamic> GetSubHeadByHead(int HeadID,string DataFlag,int CurrencyID)
+        public IEnumerable<dynamic> GetSubHeadByHead(int HeadID, string DataFlag, int CurrencyID)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var parameters = new { PurposeId = HeadID, DataFlag = DataFlag, CurrencyId=CurrencyID };
+                var parameters = new { PurposeId = HeadID, DataFlag = DataFlag, CurrencyId = CurrencyID };
                 return connection.Query<dynamic>("[GetSubHeadByHeadid]", parameters, commandType: CommandType.StoredProcedure);
 
             }
         }
-        public IEnumerable<dynamic> GetQtyAmtBySubHead(int yojnaid,string DataFlag,int CurrencyID)
+        public IEnumerable<dynamic> GetQtyAmtBySubHead(int yojnaid, string DataFlag, int CurrencyID)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var parameters = new { YojnaID = yojnaid,DataFlag= DataFlag, CurrencyID = CurrencyID };
+                var parameters = new { YojnaID = yojnaid, DataFlag = DataFlag, CurrencyID = CurrencyID };
                 return connection.Query<dynamic>("GetQtyAmtBySubHead", parameters, commandType: CommandType.StoredProcedure);
 
             }
@@ -287,7 +296,6 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.QueryFirstOrDefault<dynamic>("GetDonationReceiveDataByDonorID", parameters, commandType: CommandType.StoredProcedure);
             }
         }
-
         public string GetDonationReceiveMasterJsonById(int ref_id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -411,7 +419,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             }
         }
 
-        public  IEnumerable<DonationReceiveDetailsWithParaModel> SearchDonationDetailsByPara(DonationReceiveDetailsWithParaModel model)
+        public IEnumerable<DonationReceiveDetailsWithParaModel> SearchDonationDetailsByPara(DonationReceiveDetailsWithParaModel model)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -435,7 +443,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                     model.IfDetailsNotComplete
                 });
 
-                var result =  connection.Query<DonationReceiveDetailsWithParaModel>("SearchDonationReceiveDataBYPara", parameters, commandType: CommandType.StoredProcedure);
+                var result = connection.Query<DonationReceiveDetailsWithParaModel>("SearchDonationReceiveDataBYPara", parameters, commandType: CommandType.StoredProcedure);
 
                 return result;
             }
@@ -449,7 +457,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 var parameters = new DynamicParameters();
                 parameters.AddDynamicParams(new
                 {
-                    Bank_Code = model.BANK_Code,                  
+                    Bank_Code = model.BANK_Code,
                     DR = model.DR,
                     CR = model.CR,
                     BALANCE = model.BALANCE,
@@ -458,12 +466,12 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                     Bank_Name = model.Bank_Name,
                     Particular = model.Particular,
                     ChqNo = model.ChqNo,
-                    ReceiveId = model.ReceiveID,          
+                    ReceiveId = model.ReceiveID,
                     Branch = model.Branch,
-                    Data_Flag = model.DataFlag,              
+                    Data_Flag = model.DataFlag,
                     MobileNo = model.MobileNo,
-                    DateFrom=model.DateFrom,
-                    DateTo=model.DateTo
+                    DateFrom = model.DateFrom,
+                    DateTo = model.DateTo
                 });
 
                 var result = connection.Query<BankStatement>("[GetBankStatementsWithPara]", parameters, commandType: CommandType.StoredProcedure);
