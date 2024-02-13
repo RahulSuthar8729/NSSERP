@@ -181,12 +181,78 @@
                                             <option value="Aadhar">Aadhar</option>
                                             <option value="PAN">PAN</option>
                                             <option value="Mobile">Mobile</option>
-                                            <option value="Name">Name</option>
+                                            <option value="DonorID">DonorID</option>
+                                            <option value="Email">Email</option>
                                         </select>
                                         <input type="text" class="form-control col-8" id="SearchData" name="SearchData" placeholder="Search data...">
                                         <button type="button" class="btn btn-primary col-2" id="searchBtn"><i class="fas fa-search"></i> Search</button>
                                     </div>
                                 </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        // $("#SearchData").on('blur', function () {
+                                        //     performSearch();
+                                        // });
+
+                                        $("#searchBtn").on('click', function () {
+                                            performSearch();
+                                        });
+
+                                        function performSearch() {
+                                            var searchType = $("#SearchParaType").val();
+                                            var searchData = $("#SearchData").val();
+
+                                            if (searchType && searchData) {
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: '/NationalGangotri/DonationReceiveMaster/SearchData',
+                                                    data: { searchType: searchType, searchData: searchData },
+                                                    success: function (response) {
+                                                        if (response != null) {
+                                                            var jsonData = JSON.parse(response.data);
+
+                                                            selectOptionByText('#NamePrefix', jsonData.DShri);
+
+
+                                                            $('#FirstName').val(jsonData.DName);
+                                                            $('#MiddleName').val(jsonData.MiddleName);
+                                                            $('#LastName').val(jsonData.DLName);
+                                                            $('#DateOfBirth').val(moment(jsonData.DOB).format('YYYY-MM-DD'));
+
+                                                            $('#Company').val(jsonData.Company);
+                                                            $('#Address1').val(jsonData.Add1);
+                                                            $('#Address2').val(jsonData.Add2);
+                                                            $('#Address3').val(jsonData.Add3);
+                                                            $('#PinCode1').val(jsonData.Pincode);
+
+                                                            //Fill Second Permanet Address
+                                                            $('#P_Address1').val(jsonData.OffAdd1);
+                                                            $('#P_Address2').val(jsonData.OffAdd2);
+                                                            $('#P_Address3').val(jsonData.OffAdd3);
+
+
+                                                        } else {
+                                                            console.log("No data found for the entered DonorID");
+                                                        }
+                                                    },
+                                                    error: function (error) {
+                                                        // Handle error, display error message or perform other actions
+                                                        console.error(error);
+                                                    }
+                                                });
+                                            }
+                                        }
+
+                                        function selectOptionByText(selectId, text) {
+                                            var select = $(selectId);
+                                            if (text !== undefined && text !== null) {
+                                                text = text.trim();
+                                            }
+
+                                            select.find('option:contains("' + text + '")').prop('selected', true);
+                                        }
+                                    });
+                                </script>
 
                                 <script>
                                     $(document).ready(function () {
@@ -456,26 +522,39 @@
 
 
                                 });
-                            </script>                           
+                            </script>
 
                             <div class="form-group col-md-3">
                                 <label for="FirstName" class="mb-2">First Name<span style="color: red;">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <select class="custom-select" id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
-                                            <option value="" selected disabled>Select</option>
-                                            <option value="Mr." @(Model != null && Model.NamePrefix == "Mr." ? "selected" : "")>Mr.</option>
-                                            <option value="Mrs." @(Model != null && Model.NamePrefix == "Mrs." ? "selected" : "")>Mrs.</option>
-                                            <option value="Miss" @(Model != null && Model.NamePrefix == "Miss" ? "selected" : "")>Miss</option>
-                                            <option value="Ms." @(Model != null && Model.NamePrefix == "Ms." ? "selected" : "")>Ms.</option>
-                                            <option value="Dr." @(Model != null && Model.NamePrefix == "Dr." ? "selected" : "")>Dr.</option>
-                                            <option value="Prof." @(Model != null && Model.NamePrefix == "Prof." ? "selected" : "")>Prof.</option>
-                                            <option value="Rev." @(Model != null && Model.NamePrefix == "Rev." ? "selected" : "")>Rev.</option>
-                                            <option value="Hon." @(Model != null && Model.NamePrefix == "Hon." ? "selected" : "")>Hon.</option>
-                                            <option value="Capt." @(Model != null && Model.NamePrefix == "Capt." ? "selected" : "")>Capt.</option>
-                                            <option value="Sgt." @(Model != null && Model.NamePrefix == "Sgt." ? "selected" : "")>Sgt.</option>
+                                            <option value="Select" @(Model != null && Model.NamePrefix == "Select" ? "selected" : "")>Select</option>
+                                            <option value="MR." @(Model != null && Model.NamePrefix == "MR." ? "selected" : "")>MR.</option>
+                                            <option value="MS." @(Model != null && Model.NamePrefix == "MS." ? "selected" : "")>MS.</option>
+                                            <option value="SHRI" @(Model != null && Model.NamePrefix == "SHRI" ? "selected" : "")>SHRI</option>
+                                            <option value="MRS." @(Model != null && Model.NamePrefix == "MRS." ? "selected" : "")>MRS.</option>
+                                            <option value="SMT." @(Model != null && Model.NamePrefix == "SMT." ? "selected" : "")>SMT.</option>
+                                            <option value="MISS" @(Model != null && Model.NamePrefix == "MISS" ? "selected" : "")>MISS</option>
+                                            <option value="M/s" @(Model != null && Model.NamePrefix == "M/s" ? "selected" : "")>M/s</option>
+                                            <option value="DR." @(Model != null && Model.NamePrefix == "DR." ? "selected" : "")>DR.</option>
+                                            <option value="ER." @(Model != null && Model.NamePrefix == "ER." ? "selected" : "")>ER.</option>
+                                            <option value="COL." @(Model != null && Model.NamePrefix == "COL." ? "selected" : "")>COL.</option>
+                                            <option value="LT. COL." @(Model != null && Model.NamePrefix == "LT. COL." ? "selected" : "")>LT. COL.</option>
+                                            <option value="CAPT." @(Model != null && Model.NamePrefix == "CAPT." ? "selected" : "")>CAPT.</option>
+                                            <option value="MAJOR" @(Model != null && Model.NamePrefix == "MAJOR" ? "selected" : "")>MAJOR</option>
+                                            <option value="SUBEDAR" @(Model != null && Model.NamePrefix == "SUBEDAR" ? "selected" : "")>SUBEDAR</option>
+                                            <option value="PROF." @(Model != null && Model.NamePrefix == "PROF." ? "selected" : "")>PROF.</option>
+                                            <option value="Master" @(Model != null && Model.NamePrefix == "Master" ? "selected" : "")>Master</option>
+                                            <option value="BY" @(Model != null && Model.NamePrefix == "BY" ? "selected" : "")>BY</option>
+                                            <option value="PANDIT" @(Model != null && Model.NamePrefix == "PANDIT" ? "selected" : "")>PANDIT</option>
+                                            <option value="BRIGADIER" @(Model != null && Model.NamePrefix == "BRIGADIER" ? "selected" : "")>BRIGADIER</option>
+                                            <option value="ACHARYA" @(Model != null && Model.NamePrefix == "ACHARYA" ? "selected" : "")>ACHARYA</option>
+                                            <option value="WING COMMANDER" @(Model != null && Model.NamePrefix == "WING COMMANDER" ? "selected" : "")>WING C.</option>
+                                            <option value="EX.SUB.MAJ" @(Model != null && Model.NamePrefix == "EX.SUB.MAJ" ? "selected" : "")>EX.SUB.MAJ</option>
                                             <!-- Add more options as needed -->
                                         </select>
+
                                     </div>
                                     <input type="text" value="@Model.FirstName" required class="form-control" asp-for="FirstName" placeholder="Enter first name" id="FirstName" name="FirstName" oninput="convertToUpperCase(this)">
                                 </div>
@@ -489,7 +568,7 @@
                             <div class="form-group col-lg-3">
                                 <label for="LastName" class="mb-2">Last Name</label>
                                 <input type="text" name="LastName" value="@Model.LastName" class="form-control" oninput="convertToUpperCase(this)" id="LastName" placeholder="Enter last name" asp-for="LastName">
-                            </div>                         
+                            </div>
 
 
                             <div class="form-group col-lg-3">
@@ -539,7 +618,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="PinCode">PinCode<span style="color: red;">*</span></label>
-                                <input type="text" value="@Model.PinCode" required id="PinCode1" name="PinCode" asp-for="PinCode" class="form-control" />
+                                <input type="number" value="@Model.PinCode" required id="PinCode1" name="PinCode" asp-for="PinCode" class="form-control" />
                             </div>
                             <script>
                                 $(document).ready(function () {
@@ -769,12 +848,12 @@
                             </div>
 
                             <div class="card-header text-center">
-                          
+
                                 <div class="form-check form-check-inline">
                                     <input type="checkbox" class="form-check-input" name="IsPermanentAddressDiff" value="true" id="sameasabove" @(Model.IsPermanentAddressDiff.GetValueOrDefault() ? "checked" : "") />
                                     <label class="form-check-label" for="sameasabove">Is Permanent Address Different</label>
                                 </div>
-                           
+
                             </div>
 
 
@@ -817,24 +896,24 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
-                                <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.P_Address1</textarea>
+                                <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="P_Address1" rows="1">@Model.P_Address1</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
-                                <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address2" rows="1">@Model.P_Address2</textarea>
+                                <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="P_Address2" rows="1">@Model.P_Address2</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
-                                <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.P_Address3</textarea>
+                                <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="P_Address3" rows="1">@Model.P_Address3</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="PinCode">PinCode</label>
-                                <input type="text" value="@Model.P_PinCode" id="PinCode2" name="P_PinCode" asp-for="P_PinCode" class="form-control" />
+                                <input type="number" value="@Model.P_PinCode" id="PinCode2" name="P_PinCode" asp-for="P_PinCode" class="form-control" />
                             </div>
                             <script>
                                 $(document).ready(function () {
@@ -1198,7 +1277,7 @@
                                 });
                             </script>
 
-                        </div>                   
+                        </div>
                     </div>
                 </fieldset>
 
@@ -1491,7 +1570,7 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Prov. No">Prov. No<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.ProvNo" required id="ProvNo" type="text" name="ProvNo" asp-for="ProvNo" />
+                                <input class="form-control" value="@Model.ProvNo" required id="ProvNo" type="number" name="ProvNo" asp-for="ProvNo" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Prov. Date">Prov. Date<span style="color: red;">*</span></label>
@@ -1645,12 +1724,12 @@
                                             });
                                         </script>
 
-                                    </div>                                  
+                                    </div>
                                     <input type="number" placeholder="Amount" value="@((Model.TotalAmount.GetValueOrDefault() == 0) ? "" : Model.TotalAmount.GetValueOrDefault())" asp-for="Amount" name="Amount" class="form-control" id="Amount">
                                 </div>
                             </div>
 
-                             <div class="form-group col-lg-3" id="DivOrderType" style="display: none;">
+                            <div class="form-group col-lg-3" id="DivOrderType" style="display: none;">
                                 <label for="">Order Type</label>
                                 <select class="custom-select" asp-for="OrderTypeID" id="OrderType" name="OrderTypeID">
                                     <option value="">Select</option>
@@ -1661,15 +1740,15 @@
                                             <option value="@order.OrderTypeID" data-currencycode="@order.OrderTypeName" @(Model.OrderTypeID.GetValueOrDefault() == order.OrderTypeID ? "selected" : "")>@order.OrderTypeName</option>
                                         }
                                     }
-                                   
+
                                 </select>
                                 <input type="hidden" id="hdnorderType" name="OrderTypeName">
                                 <script>
                                     $(document).ready(function () {
-                                      
-                                        $('#OrderType').change(function () {                                        
+
+                                        $('#OrderType').change(function () {
                                             var selectedText = $('#OrderType option:selected').text();
-                                            var selectedValue = $('#OrderType').val();                                          
+                                            var selectedValue = $('#OrderType').val();
                                             $('#hdnorderType').val(selectedText);
                                         });
                                     });
@@ -1774,7 +1853,7 @@
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="cheuqueno">Cheque/Draft No</label>
-                                        <input class="form-control" id="cheuqueno" type="text" name="cheuqueno" />
+                                        <input class="form-control" id="cheuqueno" type="number" name="cheuqueno" />
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="depositBank">Deposit Bank</label>
@@ -2402,11 +2481,11 @@
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="ReceiptAmount">Receive Amount</label>
-                                        <input class="form-control" id="receiveamount" type="text" name="receiveamount">
+                                        <input class="form-control" id="receiveamount" type="number" name="receiveamount">
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="ReceiptAmount">Announce Amount</label>
-                                        <input class="form-control" id="announceamount" type="text" name="announceamount">
+                                        <input class="form-control" id="announceamount" type="number" name="announceamount">
                                     </div>
 
                                     <div class="form-group col-lg-1">
@@ -2529,14 +2608,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                            </tr>`;
+                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
@@ -2546,7 +2625,7 @@
 
                                     // Function to clear input fields
                                     function clearInputFields() {
-                                        $("#headInput, #subHeadInput, #autoQuantityInput, #ReceiptAmount, #receiveamount, #announceamount, #DonationMode").val("");
+                                        $("#ReceiptAmount, #receiveamount, #announceamount, #DonationMode").val("");
                                     }
 
                                     // Function to update the hidden field with JSON data

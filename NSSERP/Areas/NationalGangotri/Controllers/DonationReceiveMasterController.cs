@@ -346,6 +346,37 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchData(string searchType, string searchData)
+        {
+            try
+            {
+                string apiUrl = $"api/Search/SearchDonorDataByPara?searchType={searchType}&searchData={searchData}";
+
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {                    
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    return Json(new { data = responseData });
+                   // return Content($"{{\"data\": {responseData}}}", "application/json");
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Home(DonationReceiveMaster model)
         {
