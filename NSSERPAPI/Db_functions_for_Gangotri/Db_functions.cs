@@ -38,12 +38,12 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query("GetDonationReceiveDetails", commandType: CommandType.StoredProcedure);
             }
         }
-        public IEnumerable<dynamic> GetBankStatement()
+        public IEnumerable<dynamic> GetBankStatement(DateTime datefrom,DateTime dateTo)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.Query("GetBankStatementOnSankalpSiddhi", commandType: CommandType.StoredProcedure);
+                return connection.Query("[GetBankStatementOnSankalpSiddhiByDate]", new {DateFrom=datefrom,DateTo=dateTo}, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -86,6 +86,15 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
                 // Use Dapper to call the stored procedure
                 return connection.Query<dynamic>("GetStatesByCountry", new { CountryID = countryId }, commandType: CommandType.StoredProcedure);
+            }
+        }
+        public IEnumerable<dynamic> GetBankByDataFlag(string DataFlag)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+              
+                return connection.Query<dynamic>("GetBankMasterByDataFlag", new { DataFlag = DataFlag }, commandType: CommandType.StoredProcedure);
             }
         }
         public IEnumerable<dynamic> GetDistrictsByState(int stateId)
@@ -154,7 +163,24 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetOrderTypes", commandType: CommandType.StoredProcedure);
             }
         }
+        public IEnumerable<dynamic> GetEmployeeDetils()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
+                return connection.Query<dynamic>("GetEmployeeDetails", commandType: CommandType.StoredProcedure);
+            }
+        }
+        public IEnumerable<dynamic> GEtPersonDetails ()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                return connection.Query<dynamic>("GetPersonDetails", commandType: CommandType.StoredProcedure);
+            }
+        }
         public IEnumerable<dynamic> CurrencyList()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

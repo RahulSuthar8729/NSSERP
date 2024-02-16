@@ -40,7 +40,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             {
                 firstDetail = new ExpandoObject();
             }
-
+            firstDetail.PersonDetails = _dbFunctions.GEtPersonDetails();
+            firstDetail.EmployeeDetils = _dbFunctions.GetEmployeeDetils();
+            firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
             firstDetail.depositBankmaster = _dbFunctions.GetDepositBankMaster();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
@@ -130,6 +132,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
 
+          
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.masterDetails = _dbFunctions.GetDonationReciveDetails();

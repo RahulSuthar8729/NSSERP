@@ -106,8 +106,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 ReceiveID = model.ReceiveID,
                 UserID = UserID,
                 UserName = User.FindFirst(ClaimTypes.Name)?.Value,
-
-
             };
             string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
             string apiUrl = "api/BackOfficeWork/InsertData";

@@ -611,7 +611,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
-                                <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.Address2</textarea>
+                                <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.Address3</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
@@ -1364,6 +1364,7 @@
 
                 <script>
                     $(document).ready(function () {
+                        var donorid = $("#DonorID").val();
                         var identityListJson = @Html.Raw(Model.IdentityListJson);
 
                         // If IdentityListJson is null, use data from the model directly
@@ -1416,8 +1417,7 @@
                         $("#addIdentity").on("click", function () {
                             // Get selected identity type and number
                             var selectedIdentityType = $("#identityType").val();
-                            var identityNumber = $("#identityNumber").val().trim();
-                            var donorid = $("#DonorID").val();
+                            var identityNumber = $("#identityNumber").val().trim();                         
 
                             // Validate input and identity number based on type
                             var isValid = validateIdentity(selectedIdentityType, identityNumber);
@@ -1570,11 +1570,11 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Prov. No">Prov. No<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.ProvNo" required id="ProvNo" type="number" name="ProvNo" asp-for="ProvNo" />
+                                <input class="form-control" value="@Model.ProvNo"  id="ProvNo" type="number" name="ProvNo" asp-for="ProvNo" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Prov. Date">Prov. Date<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.ProvDate?.ToString("yyyy-MM-dd")" required id="ProvDate" type="date" name="ProvDate" asp-for="ProvDate" />
+                                <input class="form-control" value="@Model.ProvDate?.ToString("yyyy-MM-dd")"  id="ProvDate" type="date" name="ProvDate" asp-for="ProvDate" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Person Name</label>
@@ -1641,6 +1641,86 @@
                                 <input type="hidden" id="hdnpaymentmode" name="PaymentModeName" asp-for="PaymentModeName" />
                                 <!-- Include a hidden field for PaymentModeID -->
                                 <input type="hidden" id="hdnpaymentmodeid" name="PaymentModeID" asp-for="PaymentModeID" />
+
+                                <script>
+                                
+                                    function toggleMaterialFields() {
+                                        var paymentModeDropdown = document.getElementById('PaymentMode');
+                                        var materialDepositFields = document.getElementById('materialDepositFields');
+                                        var materialFields = document.getElementById('materialFields');
+                                        var currencyAmountFields = document.getElementById('currencyAmountFields');
+                                        var materialDepositIDTextbox = document.getElementById('MaterialDepositID');
+                                        var materialInputTextarea = document.getElementById('materialInput');
+                                        var currencyDropdown = document.getElementById('CurrencyID');
+                                        var amountInput = document.getElementById('Amount');
+                                        var divbankdetails = document.getElementById('divbankdetails');
+                                        var TotalAmount = document.getElementById('DivTotalAmount');
+                                        var divMultiCheque = document.getElementById('divMultiCheque');
+                                        var lbl_multiDoc = document.getElementById('lbl_doc_multi');
+                                        var divordertype = document.getElementById('DivOrderType');
+                                        var divordernumber = document.getElementById('DivOrderNumber');
+
+
+                                        // Get the selected text instead of the value
+                                        var selectedText = paymentModeDropdown.options[paymentModeDropdown.selectedIndex].text;
+
+                                        // Check if the selected text is "MATERIAL"
+                                        if (selectedText === 'MATERIAL') {
+                                            materialDepositFields.style.display = 'block';
+                                            materialFields.style.display = 'block';
+                                            currencyAmountFields.style.display = 'none';
+                                            TotalAmount.style.display = 'none';
+                                            // Set required attribute dynamically
+                                            materialDepositIDTextbox.required = true;
+                                            materialInputTextarea.required = true;
+                                            currencyDropdown.required = false;
+                                            amountInput.required = false;
+                                            materialDepositIDTextbox.focus(); // Focus on Material Deposit ID textbox
+
+                                        } else {
+                                            materialDepositFields.style.display = 'none';
+                                            materialFields.style.display = 'none';
+                                            currencyAmountFields.style.display = 'block';
+                                           // TotalAmount.style.display = 'block';
+                                            // Remove required attribute dynamically
+                                            materialDepositIDTextbox.required = false;
+                                            materialInputTextarea.required = false;
+                                            currencyDropdown.required = true;
+                                            amountInput.required = true;
+
+                                        }
+                                        if (selectedText === 'MATERIAL' || selectedText === 'CASH') {
+                                            divbankdetails.style.display = 'none';
+                                        } else {
+                                            divbankdetails.style.display = 'block';
+                                        }
+
+                                        if (selectedText === 'CHEQUE') {
+                                            divMultiCheque.style.display = 'block';
+                                            lbl_multiDoc.innerText = 'Attach Cheque Doc';
+                                        } 
+                                        else if (selectedText === 'PAY-IN-SLIP') 
+                                        {
+                                            divMultiCheque.style.display = 'block';
+                                            lbl_multiDoc.innerText = 'Attach Pay-In-Slip Doc';
+                                          
+                                        } 
+                                        else if (selectedText === 'ONLINE') {
+                                            divordernumber.style.display = 'block';
+                                            divordertype.style.display = 'block';
+                                        } 
+                                        else
+                                        {
+                                            divMultiCheque.style.display = 'none';
+                                            divordernumber.style.display = 'none';
+                                            divordertype.style.display = 'none';
+                                        }
+
+                                    }
+
+                                    // Call the function initially to set the initial state
+                                    toggleMaterialFields();
+                                </script>
 
                                 <script>
                                     $(document).ready(function () {
@@ -1756,7 +1836,7 @@
                             </div>
                             <div class="form-group col-lg-3" id="DivOrderNumber" style="display: none;">
                                 <label for="">Order Number</label>
-                                <input class="form-control" value="@Model.OrderNumber" id="OrderNumber" placeholder="please enter order no." type="text" name="OrderNumber" asp-for="OrderNumber" required />
+                                <input class="form-control" value="@Model.OrderNumber" id="OrderNumber" placeholder="please enter order no." type="text" name="OrderNumber" asp-for="OrderNumber"  />
                             </div>
                             <div class="form-group col-lg-3" id="materialDepositFields" style="display: none;">
                                 <label for="MaterialDepositID">Material Deposit ID<span style="color: red;">*</span></label>
@@ -1773,62 +1853,7 @@
                                 <input value="@Model.TotalAmount" id="hdnTotalAmount" type="hidden" name="TotalAmount" asp-for="TotalAmount" />
                             </div>
 
-
-                            <script>
-                                $(document).ready(function () {
-                                    // Function to toggle material fields based on payment mode
-                                    function toggleMaterialFields() {
-                                        var paymentModeDropdown = $('#PaymentMode');
-                                        var materialDepositFields = $('#materialDepositFields');
-                                        var materialFields = $('#materialFields');
-                                        var currencyAmountFields = $('#currencyAmountFields');
-                                        var materialDepositIDTextbox = $('#MaterialDepositID');
-                                        var materialInputTextarea = $('#materialInput');
-                                        var currencyDropdown = $('#CurrencyID');
-                                        var amountInput = $('#Amount');
-                                        var divbankdetails = $('#divbankdetails');
-                                        var TotalAmount = $('#DivTotalAmount');
-                                        var divMultiCheque = $('#divMultiCheque');
-                                        var lbl_multiDoc = $('#lbl_doc_multi');
-                                        var divOrderType = $('#DivOrderType');
-                                        var divOrderNumber = $('#DivOrderNumber');
-
-                                        // Get the selected text instead of the value
-                                        var selectedText = paymentModeDropdown.find('option:selected').text();
-
-                                        // Toggle material fields based on payment mode
-                                        materialDepositFields.toggle(selectedText === 'MATERIAL');
-                                        materialFields.toggle(selectedText === 'MATERIAL');
-                                        currencyAmountFields.toggle(selectedText !== 'MATERIAL');
-
-                                        // Set/Remove required attribute dynamically
-                                        materialDepositIDTextbox.prop('required', selectedText === 'MATERIAL');
-                                        materialInputTextarea.prop('required', selectedText === 'MATERIAL');
-                                        currencyDropdown.prop('required', selectedText !== 'MATERIAL');
-                                        amountInput.prop('required', selectedText !== 'MATERIAL');
-
-                                        // Toggle bank details based on payment mode
-                                        divbankdetails.toggle(selectedText !== 'MATERIAL' && selectedText !== 'CASH');
-
-                                        // Toggle multi-cheque fields based on payment mode
-                                        divMultiCheque.toggle(selectedText === 'CHEQUE' || selectedText === 'PAY-IN-SLIP');
-                                        lbl_multiDoc.text(selectedText === 'CHEQUE' ? 'Attach Cheque Doc' : 'Attach Pay-In-Slip Doc');
-
-                                        // Toggle Order Type and Order Number based on payment mode
-                                        divOrderType.toggle(selectedText === 'ONLINE');
-                                        divOrderNumber.toggle(selectedText === 'ONLINE');
-                                    }
-
-                                    // Call the function initially to set the initial state
-                                    toggleMaterialFields();
-
-                                    // Attach change event to payment mode dropdown
-                                    $('#PaymentMode').change(function () {
-                                        toggleMaterialFields();
-                                    });
-                                });
-                            </script>
-
+                           
                             <div id="divbankdetails" style="display:none;">
                                 <div class="row">
                                     <div class="form-group col-lg-2">
@@ -1837,13 +1862,10 @@
                                             <option value="" selected disabled>Select Bank</option>
                                             @if (Model != null)
                                             {
-
-
                                                 @foreach (var bank in Model.bankmasterlist)
                                                 {
                                                     <option value="@bank.BankID">@bank.BankName</option>
                                                 }
-
                                             }
                                         </select>
                                     </div>
@@ -1857,19 +1879,18 @@
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="depositBank">Deposit Bank</label>
+                                 
                                         <select class="form-control" name="BankID" id="BankID2" asp-for="BankID">
                                             <option value="" selected disabled>Select Bank</option>
                                             @if (Model != null)
                                             {
-
-
-                                                @foreach (var bank in Model.bankmasterlist)
+                                                @foreach (var bank in Model.depositBankmaster)
                                                 {
-                                                    <option value="@bank.BankID">@bank.BankName</option>
+                                                    <option value="@bank.bank_code">@bank.Bank_Name</option>
                                                 }
-
                                             }
                                         </select>
+
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="depositDate">Deposit Date</label>
@@ -2238,7 +2259,7 @@
                                 <tr>
 
                                     <th>Deposit Mode</th>
-                                    <th>Deposit Bank</th>
+                                    <th>Deposit Bank/Debit To Person/Shadhak</th>
                                     <th>Deposit Date</th>
                                     <th>Currency Code</th>
                                     <th>Deposit Amount</th>

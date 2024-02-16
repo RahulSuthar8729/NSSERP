@@ -48,13 +48,14 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.CountryList = _dbFunctions.GetCountries();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
-            firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
+            firstDetail.bankmasterlist = _dbFunctions.GetBankByDataFlag("GANGOTRI");
+            firstDetail.depositBankmaster = _dbFunctions.GetDepositBankMaster();
             firstDetail.SubHeadList = _dbFunctions.getSubHeads();
             firstDetail.ReceiveHeadList = _dbFunctions.getReceiveHeads();
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
-            firstDetail.ordertypelist=_dbFunctions.GetORderTypes();
+            firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(receiveID);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(receiveID);
@@ -88,7 +89,8 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.CountryList = _dbFunctions.GetCountries();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
-            firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
+            firstDetail.bankmasterlist = _dbFunctions.GetBankByDataFlag("GANGOTRI");
+            firstDetail.depositBankmaster = _dbFunctions.GetDepositBankMaster();
             firstDetail.HeadList = _dbFunctions.getHeads();
             // firstDetail.SubHeadList = _dbFunctions.getSubHeads();
             firstDetail.ReceiveHeadList = _dbFunctions.getReceiveHeads();
@@ -525,7 +527,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             //ViewBag.msg = "Receive ID:" + maxReceiveID + " is Generated Successfully";
                         }
 
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             // If an exception occurs, roll back the transaction
                             transaction.Rollback();

@@ -52,6 +52,29 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string BankDetailsList { get; set; }
         public string BankDetailsListJson { get; set; }
        public string DonationDetails { get; set; }
+       public int? OrderTypeID { get; set; }
+       public string OrderTypeName { get; set; }
+       public string OrderNumber { get; set; }
 
+        public List<OrderTypes> ordertypelist { get; set; } 
+      
+        public class OrderTypes()
+        {
+            public int OrderTypeID { get; set; }
+            public string OrderTypeName { get; set; }
+        }
+
+        public List<PersonMaster> PersonDetails { get; set; }
+        public List<EmployeMaster> EmployeeDetils { get; set; }
+        public class PersonMaster()
+        {
+            public int PersonID { get; set; }
+            public string PersonName { get; set; }
+        }
+        public class EmployeMaster()
+        {
+            public int EmpID { get; set; }
+            public string EmpName { get; set; }
+        }
     }
 }

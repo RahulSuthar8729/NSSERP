@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using NSSERP.Areas.Masters.Models;
 using System.ComponentModel.DataAnnotations;
+using static NSSERP.Areas.NationalGangotri.Models.BackOfficeModel;
 
 namespace NSSERP.Areas.NationalGangotri.Models
 {
@@ -138,7 +139,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public IEnumerable<DonationReceiveMaster> ReceiveHeadList { get; set; }
         public IEnumerable<DonationReceiveMaster> HeadList { get; set; }
         public IEnumerable<DonationReceiveMaster> SubHeadList { get; set; }
-        public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }     
+        public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }
+        public IEnumerable<DepositBankmaster> depositBankmaster { get; set; }
 
         public int? ReceiveInEventID { get; set; }
         public string? ReceiveInEventName { get; set; }

@@ -25,7 +25,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetDataOnPageLoad()
+        public IActionResult GetDataOnPageLoad([FromBody]DateTime DateFrom,DateTime DateTo)
         {
             var result = _dbFunctions.GetDonationReciveDetails();
             dynamic firstDetail;
@@ -35,7 +35,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.paymentModes = _dbFunctions.GetPaymentModes();
             firstDetail.statelist = _dbFunctions.GetStates();
             firstDetail.DepositBankList = _dbFunctions.GetDepositBankMaster();
-            firstDetail.BankStatementsList = _dbFunctions.GetBankStatement();
+            firstDetail.BankStatementsList = _dbFunctions.GetBankStatement(DateFrom,DateTo);
             return Ok(firstDetail);
         }
 
@@ -47,9 +47,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetBankStatement()
+        public IActionResult GetBankStatement([FromBody]DateTime DateFrom,DateTime DateTo)
         {
-            var result = _dbFunctions.GetBankStatement();
+            var result = _dbFunctions.GetBankStatement(DateFrom,DateTo);
             return Ok(result);
         }
 

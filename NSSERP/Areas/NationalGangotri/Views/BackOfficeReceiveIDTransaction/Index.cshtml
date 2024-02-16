@@ -82,25 +82,37 @@
                                 <input type="text" readonly value="@Model.ReceiveDate.GetValueOrDefault().ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
                             </div>
                             <div class="form-group col-lg-3">
-                                <label for="FullName" class="mb-2">Full Name</label>
+                                <label for="FullName" class="mb-2">Donor Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <select class="custom-select" id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
-                                            <option value="" selected disabled>Select</option>
-                                            <option value="Mr." @(Model != null && Model.NamePrefix == "Mr." ? "selected" : "")>Mr.</option>
-                                            <option value="Mrs." @(Model != null && Model.NamePrefix == "Mrs." ? "selected" : "")>Mrs.</option>
-                                            <option value="Miss" @(Model != null && Model.NamePrefix == "Miss" ? "selected" : "")>Miss</option>
-                                            <option value="Ms." @(Model != null && Model.NamePrefix == "Ms." ? "selected" : "")>Ms.</option>
-                                            <option value="Dr." @(Model != null && Model.NamePrefix == "Dr." ? "selected" : "")>Dr.</option>
-                                            <option value="Prof." @(Model != null && Model.NamePrefix == "Prof." ? "selected" : "")>Prof.</option>
-                                            <option value="Rev." @(Model != null && Model.NamePrefix == "Rev." ? "selected" : "")>Rev.</option>
-                                            <option value="Hon." @(Model != null && Model.NamePrefix == "Hon." ? "selected" : "")>Hon.</option>
-                                            <option value="Capt." @(Model != null && Model.NamePrefix == "Capt." ? "selected" : "")>Capt.</option>
-                                            <option value="Sgt." @(Model != null && Model.NamePrefix == "Sgt." ? "selected" : "")>Sgt.</option>
+                                        <select class="custom-select" disabled id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
+                                            <option value="Select" @(Model != null && Model.NamePrefix == "Select" ? "selected" : "")>Select</option>
+                                            <option value="MR." @(Model != null && Model.NamePrefix == "MR." ? "selected" : "")>MR.</option>
+                                            <option value="MS." @(Model != null && Model.NamePrefix == "MS." ? "selected" : "")>MS.</option>
+                                            <option value="SHRI" @(Model != null && Model.NamePrefix == "SHRI" ? "selected" : "")>SHRI</option>
+                                            <option value="MRS." @(Model != null && Model.NamePrefix == "MRS." ? "selected" : "")>MRS.</option>
+                                            <option value="SMT." @(Model != null && Model.NamePrefix == "SMT." ? "selected" : "")>SMT.</option>
+                                            <option value="MISS" @(Model != null && Model.NamePrefix == "MISS" ? "selected" : "")>MISS</option>
+                                            <option value="M/s" @(Model != null && Model.NamePrefix == "M/s" ? "selected" : "")>M/s</option>
+                                            <option value="DR." @(Model != null && Model.NamePrefix == "DR." ? "selected" : "")>DR.</option>
+                                            <option value="ER." @(Model != null && Model.NamePrefix == "ER." ? "selected" : "")>ER.</option>
+                                            <option value="COL." @(Model != null && Model.NamePrefix == "COL." ? "selected" : "")>COL.</option>
+                                            <option value="LT. COL." @(Model != null && Model.NamePrefix == "LT. COL." ? "selected" : "")>LT. COL.</option>
+                                            <option value="CAPT." @(Model != null && Model.NamePrefix == "CAPT." ? "selected" : "")>CAPT.</option>
+                                            <option value="MAJOR" @(Model != null && Model.NamePrefix == "MAJOR" ? "selected" : "")>MAJOR</option>
+                                            <option value="SUBEDAR" @(Model != null && Model.NamePrefix == "SUBEDAR" ? "selected" : "")>SUBEDAR</option>
+                                            <option value="PROF." @(Model != null && Model.NamePrefix == "PROF." ? "selected" : "")>PROF.</option>
+                                            <option value="Master" @(Model != null && Model.NamePrefix == "Master" ? "selected" : "")>Master</option>
+                                            <option value="BY" @(Model != null && Model.NamePrefix == "BY" ? "selected" : "")>BY</option>
+                                            <option value="PANDIT" @(Model != null && Model.NamePrefix == "PANDIT" ? "selected" : "")>PANDIT</option>
+                                            <option value="BRIGADIER" @(Model != null && Model.NamePrefix == "BRIGADIER" ? "selected" : "")>BRIGADIER</option>
+                                            <option value="ACHARYA" @(Model != null && Model.NamePrefix == "ACHARYA" ? "selected" : "")>ACHARYA</option>
+                                            <option value="WING COMMANDER" @(Model != null && Model.NamePrefix == "WING COMMANDER" ? "selected" : "")>WING C.</option>
+                                            <option value="EX.SUB.MAJ" @(Model != null && Model.NamePrefix == "EX.SUB.MAJ" ? "selected" : "")>EX.SUB.MAJ</option>
                                             <!-- Add more options as needed -->
                                         </select>
                                     </div>
-                                    <input type="text" readonly value="@Model.FullName" class="form-control" asp-for="FullName" placeholder="PRASANT KUMAR AGRAWAL" id="FullName" name="FullName" oninput="convertToUpperCase(this)">
+                                    <input type="text" readonly value="@Model.FullName" class="form-control" asp-for="FullName" id="FullName" name="FullName" oninput="convertToUpperCase(this)">
                                 </div>
                             </div>
 
@@ -117,7 +129,7 @@
                                 <input class="form-control" readonly value="@Model.PersonName" id="PersonName" type="text" name="PersonName" asp-for="PersonName" />
                             </div>
 
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-3" style="display:none">
                                 <label for="PaymentMode">Donation Mode</label>
                                 <select id="PaymentMode" disabled class="form-control" name="PaymentMode" asp-for="PaymentMode">
                                     <option value="" selected disabled>Select Donation Mode</option>
@@ -157,6 +169,39 @@
                                 <label for="">Amount In Words</label>
                                 <textarea readonly class="form-control" id="TotalAmountInWords" name="TotalAmountInWords" rows="1">@Model.TotalAmountInWords</textarea>
                             </div>
+                            @if (Model.OrderTypeName != null)
+                            {
+
+                                <div class="form-group col-lg-3" id="DivOrderType">
+                                    <label for="">Order Type</label>
+                                    <select disabled class="custom-select" asp-for="OrderTypeID" id="OrderType" name="OrderTypeID">
+                                        <option value="">Select</option>
+                                        @if (Model.ordertypelist != null)
+                                        {
+                                            @foreach (var order in Model.ordertypelist)
+                                            {
+                                                <option value="@order.OrderTypeID" data-currencycode="@order.OrderTypeName" @(Model.OrderTypeID.GetValueOrDefault() == order.OrderTypeID ? "selected" : "")>@order.OrderTypeName</option>
+                                            }
+                                        }
+
+                                    </select>
+                                    <input type="hidden" id="hdnorderType" name="OrderTypeName">
+                                    <script>
+                                        $(document).ready(function () {
+
+                                            $('#OrderType').change(function () {
+                                                var selectedText = $('#OrderType option:selected').text();
+                                                var selectedValue = $('#OrderType').val();
+                                                $('#hdnorderType').val(selectedText);
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <div class="form-group col-lg-3" id="DivOrderNumber">
+                                    <label for="">Order Number</label>
+                                    <input class="form-control" readonly value="@Model.OrderNumber" id="OrderNumber" placeholder="please enter order no." type="text" name="OrderNumber" asp-for="OrderNumber" />
+                                </div>
+                            }
 
                         </div>
 
@@ -327,10 +372,9 @@
                                     <option value="debit-to-shadhak" data-paymentmode="Debit To Shadhak">Debit To Shadhak</option>
                                     <option value="debit-to-person" data-paymentmode="Debit to Person">Debit to Person</option>
                                 </select>
-
                             </div>
 
-                            <div class="form-group col-lg-2">
+                            <div class="form-group col-lg-2" id="bankNameContainer">
                                 <label for="bankName">Deposit Bank Name</label>
                                 <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
                                     <option value="" selected disabled>Select Bank</option>
@@ -343,6 +387,59 @@
                                     }
                                 </select>
                             </div>
+
+                            <div class="form-group col-lg-2" id="shadhakContainer" style="display: none;">
+                                <label for="shadhak">Select Shadhak</label>
+                                <select class="form-control" name="Shadhak" id="Shadhak">
+
+                                    <option value="">Select</option>
+                                    @if (Model.EmployeeDetils != null)
+                                    {
+                                        @foreach (var order in Model.EmployeeDetils)
+                                        {
+                                            <option value="@order.EmpID" data-currencycode="@order.EmpName">@order.EmpName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-2" id="personContainer" style="display: none;">
+                                <label for="person">Select Person</label>
+                                <select class="form-control" name="Person" id="Person">
+                                    <option value="">Select</option>
+                                    @if (Model.PersonDetails != null)
+                                    {
+                                        @foreach (var order in Model.PersonDetails)
+                                        {
+                                            <option value="@order.PersonID" data-currencycode="@order.PersonName">@order.PersonName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('#DepositePaymentMode').change(function () {
+                                        var selectedOption = $(this).val();
+                                        if (selectedOption === 'debit-to-shadhak') {
+                                            $('#bankNameContainer').hide();
+                                            $('#shadhakContainer').show();
+                                            $('#personContainer').hide();
+                                        } else if (selectedOption === 'debit-to-person') {
+                                            $('#bankNameContainer').hide();
+                                            $('#shadhakContainer').hide();
+                                            $('#personContainer').show();
+                                        } else {
+                                            $('#bankNameContainer').show();
+                                            $('#shadhakContainer').hide();
+                                            $('#personContainer').hide();
+                                        }
+                                    });
+                                });
+                            </script>
+
+
                             <div class="form-group col-lg-2">
                                 <label for="DepositeDate">Deposit Date</label>
                                 <input class="form-control" id="DepositeDate" type="date" name="DepositeDate" asp-for="DepositeDate" />
@@ -368,11 +465,11 @@
                             </div>
                             <div class="form-group col-lg-1">
                                 <label for="">BankID</label>
-                                <input class="form-control" value="" id="DepositeBankID" type="text" name="DepositeBankID" asp-for="DepositeBankID" />
+                                <input class="form-control" value="" id="DepositeBankID" type="text" placeholder="BankID" name="DepositeBankID" asp-for="DepositeBankID" />
                             </div>
                             <div class="form-group col-lg-1">
                                 <label>Transaction ID</label>
-                                <input class="form-control" id="DepositeTrasactionID" type="text" name="DepositeTrasactionID" asp-for="DepositeTrasactionID" />
+                                <input class="form-control" id="DepositeTrasactionID" type="text" placeholder="Tranx.ID" name="DepositeTrasactionID" asp-for="DepositeTrasactionID" />
                             </div>
                             <div class="form-group col-lg-1" id="divMultiPayInSlip">
                                 <label for="MultiPayInSlip" id="lbl_MultiPayInSlip">Pay-In-Slip</label>
@@ -424,7 +521,7 @@
                                 <tr>
                                     <td>Ref No</td>
                                     <th>Deposit Mode</th>
-                                    <th>Deposit Bank</th>
+                                    <th>Deposit Bank/Debit To Person/Sadhak</th>
                                     <th>Deposit Date</th>
                                     <th>Currency Code</th>
                                     <th>Deposit Amount</th>
@@ -469,7 +566,18 @@
                                     }
 
                                     var mode = $('#DepositePaymentMode option:selected').data('paymentmode');
-                                    var DepositeBank = $("#BankID1 option:selected").text();
+                                    var DepositeBank = '';
+                                    var selectedPersonShadhak = '';
+
+                                    if (mode === 'Debit To Shadhak') {
+                                        DepositeBank = $("#Shadhak option:selected").text();
+                                    } else if (mode === 'Debit to Person') {
+                                        DepositeBank = $("#Person option:selected").text();
+                                    } else {
+                                        // For PAY-IN-SLIP mode, the bank name can be selected from the bank dropdown
+                                        DepositeBank = $("#BankID1 option:selected").text();
+                                    }
+
                                     var date = $('#DepositeDate').val();
                                     var currencyCode = $('#DepositeCurrencyID option:selected').data('currencycode');
                                     var amount = parseFloat($('#DepositeAmount').val());
@@ -578,6 +686,7 @@
                                 }
                             });
                         </script>
+
 
                     </div>
                 </fieldset>
