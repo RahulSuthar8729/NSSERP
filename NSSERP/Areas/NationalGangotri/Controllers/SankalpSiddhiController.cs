@@ -135,7 +135,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 var baseAddress = _apiClient.BaseAddress;
 
                 // Make a GET request to the GetDonationReceiveDetails endpoint
-                var response = await _apiClient.GetAsync($"api/SankalpSiddhi/GetDataOnPageLoad?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
+                var response = await _apiClient.GetAsync($"api/SankalpSiddhi/GetDataOnPageLoad?DateFrom={model.PageNumber}&PageSize={model.PageSize}");
                 response.EnsureSuccessStatusCode();
 
                 var jsonres= await response.Content.ReadAsStringAsync();

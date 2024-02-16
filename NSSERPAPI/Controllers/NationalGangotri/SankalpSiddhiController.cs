@@ -25,8 +25,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         }
 
         [HttpGet]
-        public IActionResult GetDataOnPageLoad([FromBody]DateTime DateFrom,DateTime DateTo)
+        public IActionResult GetDataOnPageLoad()
         {
+            DateTime backdate = DateTime.Now.AddDays(-2);
+            DateTime nextdate = DateTime.Now.AddDays(2);
             var result = _dbFunctions.GetDonationReciveDetails();
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
@@ -35,7 +37,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.paymentModes = _dbFunctions.GetPaymentModes();
             firstDetail.statelist = _dbFunctions.GetStates();
             firstDetail.DepositBankList = _dbFunctions.GetDepositBankMaster();
-            firstDetail.BankStatementsList = _dbFunctions.GetBankStatement(DateFrom,DateTo);
+            firstDetail.BankStatementsList = _dbFunctions.GetBankStatement(backdate,nextdate);
             return Ok(firstDetail);
         }
 
