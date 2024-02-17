@@ -537,7 +537,13 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             try
             {
                 string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
-                string apiUrl = "api/DonationReceiveMaster/InsertData";
+                string apiUrl=string.Empty;
+                if (model.ReceiveID != null)                
+                  apiUrl  = "api/DonationReceiveMaster/UpdateData";
+                else
+                apiUrl = "api/DonationReceiveMaster/InsertData";
+
+
                 var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
                 requestContent.Headers.Add("MobileList", model.MobileList);

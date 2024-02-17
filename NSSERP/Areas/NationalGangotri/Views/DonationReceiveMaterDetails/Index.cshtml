@@ -388,12 +388,12 @@
                             {
                                 <tr>
                                     <td>
-                                        <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID })" title="View Details">
+                                        <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID,view=true })" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("Edit", "DonationReceiveMaster", new { id = item.ReceiveID })" title="Edit ReceiveID">
+                                        <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID,edit=true})" title="Edit ReceiveID">
                                             <i style="color: orange;" class="fas fa-edit"></i>
                                         </a>
                                     </td>

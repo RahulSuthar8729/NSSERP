@@ -167,11 +167,11 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label for="Receive ID">Receive ID</label>
-                                    <input type="text" disabled class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
+                                    <input type="text" readonly class="form-control" id="ReceiveID" value="@Model.ReceiveID" asp-for="ReceiveID" name="ReceiveID">
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="Receive Date">Receive Date</label>
-                                    <input type="text" disabled value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
+                                    <input type="text"  readonly value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
                                 </div>
                                 <div class="col-lg-6">
                                     <label>Search BY</label>
@@ -1840,12 +1840,12 @@
                             </div>
                             <div class="form-group col-lg-3" id="materialDepositFields" style="display: none;">
                                 <label for="MaterialDepositID">Material Deposit ID<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.MaterialDepositID" id="MaterialDepositID" type="text" name="MaterialDepositID" asp-for="MaterialDepositID" required />
+                                <input class="form-control" value="@Model.MaterialDepositID" id="MaterialDepositID" type="text" name="MaterialDepositID" asp-for="MaterialDepositID" />
                             </div>
 
                             <div class="form-group col-lg-3" id="materialFields" style="display: none;">
                                 <label for="materialInput">Material Description<span style="color: red;">*</span></label>
-                                <textarea class="form-control" oninput="convertToUpperCase(this)" id="materialInput" rows="2" name="Material" asp-for="Material" required>@Model.Material</textarea>
+                                <textarea class="form-control" oninput="convertToUpperCase(this)" id="materialInput" rows="2" name="Material" asp-for="Material">@Model.Material</textarea>
                             </div>
                             <div class="form-group col-lg-3" id="DivTotalAmount" style="display: none;">
                                 <label for="Amount">Total Amount</label>
@@ -3221,11 +3221,31 @@
                             }
                         </script>
 
-                        @if (Model.ReceiveID == null)
-                        {
-                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Submit</button>
+                        @{
+                            string BtnName = string.Empty;
+                            string viewParam = Context.Request.Query["view"];
+                            bool isViewEnabled = !string.IsNullOrEmpty(viewParam) && viewParam.ToLower() == "true";
 
+                            string editParam = Context.Request.Query["edit"];
+                            bool isEditEnabled = !string.IsNullOrEmpty(editParam) && editParam.ToLower() == "true";
+
+                            if (isEditEnabled)
+                            {
+                                BtnName = "Update";
+                            }
+                            else
+                            {
+                                BtnName = "Submit";
+                            }
                         }
+
+                        <button type="submit" class="btn btn-success" style="@(isViewEnabled ? "display:none;" : "")">
+                            <i class="fas fa-check"></i>@BtnName
+                        </button>
+
+
+
+
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">
                             <i class="fas fa-print"></i> Print
                         </a>  <button type="reset" class="btn btn-warning"><i class="fas fa-undo"></i> CIT</button>
