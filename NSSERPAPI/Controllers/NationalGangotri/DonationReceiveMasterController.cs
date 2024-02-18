@@ -305,6 +305,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                         try
                         {
                             var parameters = new DynamicParameters();
+                            parameters.Add("@ReceiveID",model.ReceiveID);
                             parameters.Add("@AppStatus", "");
                             parameters.Add("@FinYear", model.FinYear);
                             parameters.Add("@ReceiveDate", model.ReceiveDate);
@@ -540,7 +541,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
             catch (Exception ex)
             {
-
+                dynamic msg;
+                msg = new ExpandoObject();
+                msg.emsg = ex.Message;
+                return Ok(msg);
                 ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
             dynamic firstDetail;
@@ -595,7 +599,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                         try
                         {
                             var parameters = new DynamicParameters();
-                            parameters.Add("@ReceiveID", model.ReceiveID);
+                            parameters.Add("@ReceiveID",model.ReceiveID);
                             parameters.Add("@AppStatus", "");
                             parameters.Add("@FinYear", model.FinYear);
                             parameters.Add("@ReceiveDate", model.ReceiveDate);
@@ -610,11 +614,17 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@DonorID", model.DonorID);
                             parameters.Add("@NamePrefix", model.NamePrefix);
                             parameters.Add("@FullName", model.FullName);
+                            parameters.Add("@FirstName", model.FirstName);
+                            parameters.Add("@MiddleName", model.MiddleName);
+                            parameters.Add("@LastName", model.LastName);
                             parameters.Add("@PrefixToFullName", model.PrefixToFullName);
                             parameters.Add("@RelationToFullName", model.RelationToFullName);
                             parameters.Add("@DateOfBirth", model.DateOfBirth);
                             parameters.Add("@Company", model.Company);
                             parameters.Add("@FullAddress", model.FullAddress);
+                            parameters.Add("@Address1", model.Address1);
+                            parameters.Add("@Address2", model.Address2);
+                            parameters.Add("@Address3", model.Address3);
                             parameters.Add("@PinCode", model.PinCode);
                             parameters.Add("@CountryID", model.CountryId);
                             parameters.Add("@CountryName", model.CountryName);
@@ -628,6 +638,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@IsPermanentAddressDiff", model.IsPermanentAddressDiff);
                             parameters.Add("@IfDetailsNotComplete", model.IfDetailsNotComplete);
                             parameters.Add("@P_FullAddress", model.P_FullAddress);
+                            parameters.Add("@P_Address1", model.P_Address1);
+                            parameters.Add("@P_Address2", model.P_Address2);
+                            parameters.Add("@P_Address3", model.P_Address3);
                             parameters.Add("@P_PinCode", model.P_PinCode);
                             parameters.Add("@P_CountryID", model.P_CountryID);
                             parameters.Add("@P_CountryName", model.P_CountryName);
@@ -647,6 +660,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@DonEventName", model.EventName);
                             parameters.Add("@PaymentModeID", model.PaymentModeID);
                             parameters.Add("@PaymentModeName", model.PaymentModeName);
+                            parameters.Add("@OrderTypeID", model.OrderTypeID);
+                            parameters.Add("@OrderTypeName", model.OrderTypeName);
+                            parameters.Add("@OrderNumber", model.OrderNumber);
                             parameters.Add("@CurrencyID", model.CurrencyID);
                             parameters.Add("@CurrencyCode", model.CurrencyCode);
                             parameters.Add("@Amount", model.TotalAmount);
@@ -666,10 +682,11 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@TotalAmount", model.Amount);
                             parameters.Add("@CampaignID", model.CampaignID);
                             parameters.Add("@CampaignName", model.CampaignName);
+                            parameters.Add("@DataFlag", model.DataFlag);
 
                             connection.Execute("[UpdateDonationReceiveMaster]", parameters, transaction, commandType: CommandType.StoredProcedure);
 
-                            connection.Execute("[InsertDonationReceiveMasterUpadteLogs]", parameters, transaction, commandType: CommandType.StoredProcedure);
+                            connection.Execute("[InsertDonationReceiveMasterLogs]", parameters, transaction, commandType: CommandType.StoredProcedure);
 
 
                             var movementParams = new DynamicParameters();
@@ -684,14 +701,16 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (MobileList != null)
                             {
-
-
                                 foreach (var mobileNumber in MobileList)
                                 {
                                     var mobileParams = new DynamicParameters();
                                     mobileParams.Add("@REF_NO", model.ReceiveID);
+                                    mobileParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    mobileParams.Add("@DonorID", model.DonorID);
+                                    mobileParams.Add("@ContactType", mobileNumber.ContactType);
                                     mobileParams.Add("@CountryCode", mobileNumber.CountryCode);
                                     mobileParams.Add("@MobileNo", mobileNumber.ContactDetail);
+                                    mobileParams.Add("@DataFlag", model.DataFlag);
                                     mobileParams.Add("@CreatedBy", model.UserID);
                                     connection.Execute("InsertMultiMobileInDonationReceiveMaster", mobileParams, transaction, commandType: CommandType.StoredProcedure);
                                 }
@@ -701,27 +720,31 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             if (IdentityList != null)
                             {
-
                                 foreach (var identity in IdentityList)
                                 {
                                     var identityParams = new DynamicParameters();
                                     identityParams.Add("@REF_NO", model.ReceiveID);
+                                    identityParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    identityParams.Add("@DonorID", model.DonorID);
                                     identityParams.Add("@IdentityType", identity.IdentityType);
                                     identityParams.Add("@IdentityNumber", identity.IdentityNumber);
+                                    identityParams.Add("@DataFlag", model.DataFlag);
                                     identityParams.Add("@CreatedBy", model.UserID);
 
                                     connection.Execute("InsertMultiIdentityInDonationReceiveMaster", identityParams, transaction, commandType: CommandType.StoredProcedure);
                                 }
                             }
-                            connection.Execute("[DeleteBankDetailsInDonationReceiveMultiBank]", new { REF_NO = model.ReceiveID }, transaction, commandType: CommandType.StoredProcedure);
 
+                            connection.Execute("[DeleteBankDetailsInDonationReceiveMultiBank]", new { REF_NO = model.ReceiveID }, transaction, commandType: CommandType.StoredProcedure);
                             if (bankDetailslist != null)
                             {
-
                                 foreach (var bankDetail in bankDetailslist)
                                 {
                                     var bankParams = new DynamicParameters();
                                     bankParams.Add("@REF_NO", model.ReceiveID);
+                                    bankParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    bankParams.Add("@DonorID", model.DonorID);
+                                    bankParams.Add("@DataFlag", model.DataFlag);
                                     bankParams.Add("@BankID", bankDetail.BankID);
                                     bankParams.Add("@BankName", bankDetail.BankName);
                                     bankParams.Add("@ChequeOrDraftDate", bankDetail.ChequeDate);
@@ -739,23 +762,25 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     connection.Execute("InsertBankDetailsInDonationReceiveMultiBank", bankParams, transaction, commandType: CommandType.StoredProcedure);
                                 }
                             }
+
                             connection.Execute("[DeleteDonationReceiveMultiHead]", new { REF_NO = model.ReceiveID }, transaction, commandType: CommandType.StoredProcedure);
-
-
                             if (Receiptdetailslist != null)
                             {
                                 foreach (var receiptDetail in Receiptdetailslist)
                                 {
                                     var rparameters = new DynamicParameters();
                                     rparameters.Add("@REF_NO", model.ReceiveID);
+                                    rparameters.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    rparameters.Add("@DonorID", model.DonorID);
+                                    rparameters.Add("@DataFlag", model.DataFlag);
                                     rparameters.Add("@HeadID", receiptDetail.HeadID);
-                                    rparameters.Add("@Campaign", receiptDetail.Campaign);
                                     rparameters.Add("@HeadName", receiptDetail.HeadName);
                                     rparameters.Add("@SubHeadID", receiptDetail.SubHeadID);
                                     rparameters.Add("@SubHeadName", receiptDetail.Purpose);
-                                    rparameters.Add("@Purpose", receiptDetail.Purpose);
                                     rparameters.Add("@Quantity", receiptDetail.Quantity);
                                     rparameters.Add("@Amount", receiptDetail.Amount);
+                                    rparameters.Add("@ReceiveAmount", receiptDetail.ReceiveAmount);
+                                    rparameters.Add("@AnnounceAmount", receiptDetail.AnnounceAmount);
                                     rparameters.Add("@CreatedOn", DateTime.Now);
                                     rparameters.Add("@CreatedBy", model.UserID);
 
@@ -764,15 +789,18 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 }
                             }
 
+
                             connection.Execute("[DeleteDonationReceiveMultiDonorInstruc]", new { REF_NO = model.ReceiveID }, transaction, commandType: CommandType.StoredProcedure);
 
                             if (donorInstructionLists != null)
                             {
-
                                 foreach (var instruction in donorInstructionLists)
                                 {
                                     var instructionParams = new DynamicParameters();
                                     instructionParams.Add("@REF_NO", model.ReceiveID);
+                                    instructionParams.Add("@ReceiveHeadName", model.ReceiveHeadName);
+                                    instructionParams.Add("@DonorID", model.DonorID);
+                                    instructionParams.Add("@DataFlag", model.DataFlag);
                                     instructionParams.Add("@InstructionID", instruction.InstructionId);
                                     instructionParams.Add("@InstructionName", instruction.InstructionName);
                                     instructionParams.Add("@Remarks", instruction.Remarks);
@@ -784,9 +812,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                             connection.Execute("[DeleteDonationReceiveAnnunceDue]", new { REF_NO = model.ReceiveID }, transaction, commandType: CommandType.StoredProcedure);
 
+
                             if (announcelist != null)
                             {
-
                                 foreach (var announce in announcelist)
                                 {
                                     var Announcepara = new DynamicParameters();
@@ -800,18 +828,17 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     connection.Execute("InsertDonationReceiveAnnunceDue", Announcepara, transaction, commandType: CommandType.StoredProcedure);
                                 }
                             }
+
                             transaction.Commit();
 
-                            //ViewBag.msg = "Receive ID:" + model.ReceiveID + " is Generated Successfully";
                         }
 
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-                            // If an exception occurs, roll back the transaction
+                          
                             transaction.Rollback();
-                            ViewBag.emsg = "An error occurred during the transaction.";
-
-                            return View();
+                           
+                          
                         }
                     }
                 }

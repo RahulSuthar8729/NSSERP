@@ -171,7 +171,7 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="Receive Date">Receive Date</label>
-                                    <input type="text"  readonly value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
+                                    <input type="text" readonly value="@Model.ReceiveDate.ToString("dd-MM-yyyy")" class="form-control" id="ReceiveDate" asp-for="ReceiveDate" name="ReceiveDate">
                                 </div>
                                 <div class="col-lg-6">
                                     <label>Search BY</label>
@@ -572,8 +572,8 @@
 
 
                             <div class="form-group col-lg-3">
-                                <label for="Dateofbirth">Date Of Birth <span style="color: red;">*</span></label>
-                                <input type="date" required value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
+                                <label for="Dateofbirth">Date Of Birth </label>
+                                <input type="date"  value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="InMemory">In Memory/Occession</label>
@@ -1417,7 +1417,7 @@
                         $("#addIdentity").on("click", function () {
                             // Get selected identity type and number
                             var selectedIdentityType = $("#identityType").val();
-                            var identityNumber = $("#identityNumber").val().trim();                         
+                            var identityNumber = $("#identityNumber").val().trim();
 
                             // Validate input and identity number based on type
                             var isValid = validateIdentity(selectedIdentityType, identityNumber);
@@ -1570,11 +1570,11 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Prov. No">Prov. No<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.ProvNo"  id="ProvNo" type="number" name="ProvNo" asp-for="ProvNo" />
+                                <input class="form-control" value="@Model.ProvNo" id="ProvNo" type="number" name="ProvNo" asp-for="ProvNo" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Prov. Date">Prov. Date<span style="color: red;">*</span></label>
-                                <input class="form-control" value="@Model.ProvDate?.ToString("yyyy-MM-dd")"  id="ProvDate" type="date" name="ProvDate" asp-for="ProvDate" />
+                                <input class="form-control" value="@Model.ProvDate?.ToString("yyyy-MM-dd")" id="ProvDate" type="date" name="ProvDate" asp-for="ProvDate" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Person Name</label>
@@ -1643,7 +1643,7 @@
                                 <input type="hidden" id="hdnpaymentmodeid" name="PaymentModeID" asp-for="PaymentModeID" />
 
                                 <script>
-                                
+
                                     function toggleMaterialFields() {
                                         var paymentModeDropdown = document.getElementById('PaymentMode');
                                         var materialDepositFields = document.getElementById('materialDepositFields');
@@ -1681,7 +1681,7 @@
                                             materialDepositFields.style.display = 'none';
                                             materialFields.style.display = 'none';
                                             currencyAmountFields.style.display = 'block';
-                                           // TotalAmount.style.display = 'block';
+                                            // TotalAmount.style.display = 'block';
                                             // Remove required attribute dynamically
                                             materialDepositIDTextbox.required = false;
                                             materialInputTextarea.required = false;
@@ -1698,19 +1698,17 @@
                                         if (selectedText === 'CHEQUE') {
                                             divMultiCheque.style.display = 'block';
                                             lbl_multiDoc.innerText = 'Attach Cheque Doc';
-                                        } 
-                                        else if (selectedText === 'PAY-IN-SLIP') 
-                                        {
+                                        }
+                                        else if (selectedText === 'PAY-IN-SLIP') {
                                             divMultiCheque.style.display = 'block';
                                             lbl_multiDoc.innerText = 'Attach Pay-In-Slip Doc';
-                                          
-                                        } 
+
+                                        }
                                         else if (selectedText === 'ONLINE') {
                                             divordernumber.style.display = 'block';
                                             divordertype.style.display = 'block';
-                                        } 
-                                        else
-                                        {
+                                        }
+                                        else {
                                             divMultiCheque.style.display = 'none';
                                             divordernumber.style.display = 'none';
                                             divordertype.style.display = 'none';
@@ -1751,10 +1749,9 @@
                                         var selectedPaymentMode = $('#PaymentMode option:selected').data('paymentmode');
                                         var amount = parseFloat($('#Amount').val()) || 0;
 
-                                        if (selectedPaymentMode === 'CASH') {
-                                            $('#TotalAmount').val(amount.toFixed(2));
-                                            $('#receiveamount').val(amount.toFixed(2));
-                                        }
+                                        $('#TotalAmount').val(amount.toFixed(2));
+                                        $('#receiveamount').val(amount.toFixed(2));
+
                                     }
 
                                     function validateAmount() {
@@ -1836,7 +1833,7 @@
                             </div>
                             <div class="form-group col-lg-3" id="DivOrderNumber" style="display: none;">
                                 <label for="">Order Number</label>
-                                <input class="form-control" value="@Model.OrderNumber" id="OrderNumber" placeholder="please enter order no." type="text" name="OrderNumber" asp-for="OrderNumber"  />
+                                <input class="form-control" value="@Model.OrderNumber" id="OrderNumber" placeholder="please enter order no." type="text" name="OrderNumber" asp-for="OrderNumber" />
                             </div>
                             <div class="form-group col-lg-3" id="materialDepositFields" style="display: none;">
                                 <label for="MaterialDepositID">Material Deposit ID<span style="color: red;">*</span></label>
@@ -1853,7 +1850,7 @@
                                 <input value="@Model.TotalAmount" id="hdnTotalAmount" type="hidden" name="TotalAmount" asp-for="TotalAmount" />
                             </div>
 
-                           
+
                             <div id="divbankdetails" style="display:none;">
                                 <div class="row">
                                     <div class="form-group col-lg-2">
@@ -1879,7 +1876,7 @@
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="depositBank">Deposit Bank</label>
-                                 
+
                                         <select class="form-control" name="BankID" id="BankID2" asp-for="BankID">
                                             <option value="" selected disabled>Select Bank</option>
                                             @if (Model != null)
@@ -2629,14 +2626,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                            </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();

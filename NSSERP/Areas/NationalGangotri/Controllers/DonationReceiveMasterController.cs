@@ -382,9 +382,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             bool? isDifferent = model.IsReceiveHeadDiffrent;
             string ReceiveDepartment = isDifferent == true ? model.ReceiveHeadName : User.FindFirst("Department")?.Value;
-            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount.GetValueOrDefault();
-            DateTime dob = model.DateOfBirth ?? DateTime.MinValue;
-            DateTime provdate = model.ProvDate ?? DateTime.MinValue;
+            decimal Amount = model.PaymentModeName == "CASH" ? model.Amount : model.TotalAmount.GetValueOrDefault();         
             string FinYear = User.FindFirst("FinYear")?.Value ?? string.Empty;
             string UserID = User.FindFirst("UserID")?.Value ?? string.Empty;
             string DataFlag = User.FindFirst("DataFlag")?.Value ?? string.Empty;
@@ -455,6 +453,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
             var requestData = new
             {
+                ReceiveID=model.ReceiveID,
                 IsReceiveHeadDiffrent = isDifferent,
                 ReceiveDepartment = ReceiveDepartment,
                 FinYear = FinYear,
@@ -475,7 +474,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 LastName = model.LastName,
                 PrefixToFullName = model.PrefixToFullName,
                 RelationToFullName = model.RelationToFullName,
-                DateOfBirth = dob,
+                DateOfBirth = model.DateOfBirth,
                 Company = model.Company,
                 FullAddress = model.FullAddress,
                 Address1 = model.Address1,
@@ -510,7 +509,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 StdCode = model.StdCode,
                 PhoneR = model.PhoneR,
                 ProvNo = model.ProvNo,
-                provdate = provdate,
+                provdate = model.ProvDate,
                 PersonName = model.PersonName,
                 paymentModeID = model.PaymentModeID,
                 PaymentModeName = model.PaymentModeName,

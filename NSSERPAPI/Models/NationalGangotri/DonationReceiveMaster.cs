@@ -30,7 +30,7 @@
         //public int ReceiveID { get; set; }
 
         public string? DataFlag { get; set; }
-        public DateTime ReceiveDate { get; set; }
+        public DateTime? ReceiveDate { get; set; }
 
         public DonationReceiveMaster()
         {
@@ -121,77 +121,6 @@
         public string? Doc3 { get; set; }
         public string? DonationDetails { get; set; }
 
-        //public List<MobileDetail> MobileList { get; set; }    
-
-        //public class MobileDetail
-        //{
-        //    public string? CountryCode { get; set; }
-        //    public string? MobileNumber { get; set; }
-        //}
-        //public List<IdentityDetail> IdentityList { get; set; }  
-
-        //public class IdentityDetail
-        //{
-        //    public string? HeadName { get; set; }
-        //    public string? Purpose { get; set; }
-        //    public string? Quantity { get; set; }
-        //    public decimal? Amount { get; set; }
-        //}
-        //public List<BankDetail> BankDetailsList { get; set; }        
-
-        //public class BankDetail
-        //{
-        //    public string? DonationMode { get; set; }
-        //    public string? BankName { get; set; }
-        //    public DateTime ChequeDate { get; set; }
-        //    public string? ChequeNo { get; set; }
-        //    public string? DepositBank { get; set; }
-        //    public DateTime DepositDate { get; set; }
-        //    public string? Currency { get; set; }
-        //    public decimal? Amount { get; set; }
-        //    public string? PdcCheque { get; set; }
-        //}
-
-        //public List<ReceiptDetail> receiptdetailslist { get; set; }     
-
-        //public class ReceiptDetail
-        //{
-        //    public string? HeadName { get; set; }
-        //    public string? Purpose { get; set; }
-        //    public string? Quantity { get; set; }
-        //    public decimal? Amount { get; set; }
-        //}
-
-        //public List<AnnounceDetail> AnnounceDetsilsList { get; set; }      
-
-        //public class AnnounceDetail
-        //{
-        //    public decimal? TotalPurposeAmount { get; set; }
-        //    public decimal? ReceiveAmount { get; set; }
-        //    public decimal? DueAmount { get; set; }
-        //    public int? AnnounceId { get; set; }
-        //    public decimal? Amount { get; set; }
-        //    public DateTime Date { get; set; }
-        //}
-        //public List<DonorInstruction> donorInstructionjsonList { get; set; }
-
-        //// ... other properties
-
-        //public class DonorInstruction
-        //{
-        //    public int? InstructionId { get; set; }
-        //    public string? InstructionName { get; set; }
-        //    public string? Remarks { get; set; }
-        //}
-
-        //public string? IdentityListJson { get; set; }
-
-        ////public string? IdentityList { get; set; }
-
-        ////public string BankDetailsList { get; set; }
-        ////public string receiptdetailslist { get; set; }
-        ////public string AnnounceDetsilsList { get; set; }
-        //public string? DonorInstructionsListJson { get; set; }
-        //public string? AnnounceDetailsListJson { get; set; }
+   
     }
 }
