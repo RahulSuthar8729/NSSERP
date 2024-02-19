@@ -573,7 +573,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="Dateofbirth">Date Of Birth </label>
-                                <input type="date"  value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
+                                <input type="date" value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="InMemory">In Memory/Occession</label>
@@ -600,18 +600,18 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
-                                <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address1" rows="1">@Model.Address1</textarea>
+                                <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1">@Model.Address1</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
-                                <textarea class="form-control" name="Address2" asp-for="Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address2" rows="1">@Model.Address2</textarea>
+                                <textarea class="form-control" name="Address2" asp-for="Address2" oninput="convertToUpperCase(this)" placeholder="E.g. Street Name" id="Address2" rows="1">@Model.Address2</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
-                                <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="Address3" rows="1">@Model.Address3</textarea>
+                                <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="E.g.Area, Landmark" id="Address3" rows="1">@Model.Address3</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
@@ -896,18 +896,18 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
-                                <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="P_Address1" rows="1">@Model.P_Address1</textarea>
+                                <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="P_Address1" rows="1">@Model.P_Address1</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
-                                <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="P_Address2" rows="1">@Model.P_Address2</textarea>
+                                <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="E.g.Street Name" id="P_Address2" rows="1">@Model.P_Address2</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
-                                <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="483,SEVADHAM SEWA NAGAR,SEC.4 HIRAN MAGRI" id="P_Address3" rows="1">@Model.P_Address3</textarea>
+                                <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="E.g. Area, Landmark" id="P_Address3" rows="1">@Model.P_Address3</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
                             </div>
 
@@ -1569,8 +1569,58 @@
                     <div id="DivProvisonalDetails" class="nested-form-container collapse">
                         <div class="row">
                             <div class="form-group col-lg-3">
+                                <label>Receipt Book Type</label>
+                                <select id="RbType" class="form-control" name="RbTpe" asp-for="RbTpe">
+                                    <option value="" selected disabled>Select</option>
+                                    @if (Model != null)
+                                    {
+                                        foreach (var rbtype in Model.ReceiptBookTypeList)
+                                        {
+                                            <option value="@rbtype.RB_Type_Code" data-rbtype="@rbtype.RB_Type" @(Model.RBType == rbtype.RB_Type ? "selected" : "")>@rbtype.RB_Type</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
                                 <label for="Prov. No">Prov. No<span style="color: red;">*</span></label>
                                 <input class="form-control" value="@Model.ProvNo" id="ProvNo" type="number" name="ProvNo" asp-for="ProvNo" />
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#ProvNo').change(function () {
+                                           
+                                            var receiptNo = $('#ProvNo').val();
+                                            var tp = $('#RbType option:selected').text();
+                                            var dataFlag = 'GANGOTRI'; 
+
+                                            if (tp === null || tp === undefined || tp.trim() === "") {
+                                                alert('Please select Provisional Book Type first.');
+                                                return;
+                                            }                                      
+                                                
+                                            $.ajax({
+                                                url: '/NationalGangotri/DonationReceiveMaster/GetPersonbyProvisonal',
+                                                type: 'GET',
+                                                data: {
+                                                    ReceiptNo: receiptNo,
+                                                    TP: tp,
+                                                    DataFlag: dataFlag
+                                                },
+                                                contentType: 'application/json',
+                                                success: function (response) {
+                                                   
+                                                    var personName = response.personName;
+
+                                                   
+                                                    $('#PersonName').val(personName);
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.log(error);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Prov. Date">Prov. Date<span style="color: red;">*</span></label>
@@ -2626,14 +2676,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                                                            </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();

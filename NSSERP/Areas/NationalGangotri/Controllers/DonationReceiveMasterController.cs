@@ -279,6 +279,43 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetPersonbyProvisonal(string receiptNo, string tp, string dataflag)
+        {
+            try
+            {
+                // Construct the API endpoint URL with the pincode parameter
+                string apiUrl = $"api/Search/GetPersonbyProvisonal?receiptNo={receiptNo}&tp={tp}&DataFlag={dataflag}";
+
+                // Make a GET request to the API endpoint
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the JSON content from the response
+                    var json = await response.Content.ReadAsStringAsync();                    
+
+                    // Return JsonResult with structured data
+                    return Json(new { data = json });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Handle the case where the resource was not found
+                    return NotFound();
+                }
+                else
+                {
+                    // Handle other error cases if needed
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetLocationDetailsByPinCode(string pincode)
         {
             try

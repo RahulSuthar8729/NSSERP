@@ -39,5 +39,21 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
         }
 
+
+        [HttpGet]
+        public IActionResult GetPersonbyProvisonal(string ReceiptNo, string TP, string DataFlag)
+        {
+            try
+            {
+                var data = _dbFunctions.GetPersonNameByProvisonal(Convert.ToInt32(ReceiptNo), TP, DataFlag);
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error retrieving states.");
+            }
+        }
+
     }
 }

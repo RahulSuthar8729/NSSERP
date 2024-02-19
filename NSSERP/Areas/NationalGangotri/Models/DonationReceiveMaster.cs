@@ -30,6 +30,14 @@ namespace NSSERP.Areas.NationalGangotri.Models
 
         public DateTime ReceiveDate { get; set; }
 
+        public string RBType { get; set; }
+        public List<ReceiptBookType> ReceiptBookTypeList { get; set; }
+        public class ReceiptBookType()
+        {
+            public string RB_Type_Code { get; set; }
+            public string RB_Type { get; set; }
+        }
+
         public DonationReceiveMaster()
         {
             IsReceiveHeadDiffrent = false;

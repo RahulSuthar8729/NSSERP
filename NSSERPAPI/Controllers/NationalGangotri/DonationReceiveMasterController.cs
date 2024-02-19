@@ -56,6 +56,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
             firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
+            firstDetail.ReceiptBookTypeList = _dbFunctions.GetReceiptBookType();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(receiveID);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(receiveID);
@@ -98,6 +99,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
             firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
+            firstDetail.ReceiptBookTypeList = _dbFunctions.GetReceiptBookType();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(id);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(id);
@@ -146,6 +148,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 return BadRequest("Error retrieving states.");
             }
         }
+       
 
         [HttpGet]
         public IActionResult GetPurposeHead()
@@ -305,7 +308,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                         try
                         {
                             var parameters = new DynamicParameters();
-                            parameters.Add("@ReceiveID",model.ReceiveID);
+                            parameters.Add("@ReceiveID", model.ReceiveID);
                             parameters.Add("@AppStatus", "");
                             parameters.Add("@FinYear", model.FinYear);
                             parameters.Add("@ReceiveDate", model.ReceiveDate);
@@ -599,7 +602,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                         try
                         {
                             var parameters = new DynamicParameters();
-                            parameters.Add("@ReceiveID",model.ReceiveID);
+                            parameters.Add("@ReceiveID", model.ReceiveID);
                             parameters.Add("@AppStatus", "");
                             parameters.Add("@FinYear", model.FinYear);
                             parameters.Add("@ReceiveDate", model.ReceiveDate);
@@ -835,10 +838,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                         catch (Exception ex)
                         {
-                          
+
                             transaction.Rollback();
-                           
-                          
+
+
                         }
                     }
                 }

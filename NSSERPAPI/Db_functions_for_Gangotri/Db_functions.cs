@@ -46,7 +46,6 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query("[GetBankStatementOnSankalpSiddhiByDate]", new {DateFrom=datefrom,DateTo=dateTo}, commandType: CommandType.StoredProcedure);
             }
         }
-
         public List<dynamic> GetActiveCities()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -55,6 +54,16 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
                 // Execute stored procedure to get active cities
                 return connection.Query("GetActiveCities", commandType: CommandType.StoredProcedure).AsList();
+            }
+        }
+
+        public List<dynamic> GetReceiptBookType()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+           
+                return connection.Query("GetReceiptBookType", commandType: CommandType.StoredProcedure).AsList();
             }
         }
         public List<dynamic> GetPaymentModes()
@@ -85,7 +94,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 connection.Open();
 
                 // Use Dapper to call the stored procedure
-                return connection.Query<dynamic>("GetStatesByCountry", new { CountryID = countryId }, commandType: CommandType.StoredProcedure);
+                return connection.Query<dynamic>("GetStatesByCountry", new { CountryID = countryId,DataFlag="" }, commandType: CommandType.StoredProcedure);
             }
         }
         public IEnumerable<dynamic> GetBankByDataFlag(string DataFlag)
@@ -245,6 +254,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
             }
         }
+
         public IEnumerable<dynamic> GetQtyAmtBySubHead(int yojnaid, string DataFlag, int CurrencyID)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -255,6 +265,18 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
             }
         }
+
+        public IEnumerable<dynamic> GetPersonNameByProvisonal(int ReceiptNo, string TP, string DataFlag)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { ReceiptNo = ReceiptNo, TP = TP, DataFlag = DataFlag };
+                return connection.Query<dynamic>("[GetPersonDetailsByProvisioanlNo]", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
         public IEnumerable<dynamic> getSubHeads()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
