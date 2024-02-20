@@ -97,6 +97,15 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetStatesByCountry", new { CountryID = countryId,DataFlag="" }, commandType: CommandType.StoredProcedure);
             }
         }
+        public IEnumerable<dynamic> GetCity()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+            
+                return connection.Query<dynamic>("[GetCity]", commandType: CommandType.StoredProcedure);
+            }
+        }
         public IEnumerable<dynamic> GetBankByDataFlag(string DataFlag)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -150,7 +159,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             {
                 connection.Open();
 
-                var parameters = new { InputPincode = pinCode };
+                var parameters = new { PinCode = pinCode };
                 return connection.QueryFirstOrDefault<dynamic>("GetLocationDetailsByPincode", parameters, commandType: CommandType.StoredProcedure);
             }
         }

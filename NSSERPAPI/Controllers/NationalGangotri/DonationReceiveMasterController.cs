@@ -57,6 +57,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
             firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
             firstDetail.ReceiptBookTypeList = _dbFunctions.GetReceiptBookType();
+            firstDetail.CityList = _dbFunctions.GetCity();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(receiveID);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(receiveID);
@@ -100,6 +101,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
             firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
             firstDetail.ReceiptBookTypeList = _dbFunctions.GetReceiptBookType();
+            firstDetail.CityList = _dbFunctions.GetCity();
             // Set JSON properties
             firstDetail.MovementMasterListJson = _dbFunctions.GetMovementMasterListJsonById(id);
             firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonById(id);

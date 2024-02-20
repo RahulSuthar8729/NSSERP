@@ -96,6 +96,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\SearchableDrop\docsupport\init.js" />
+    <None Include="wwwroot\SearchableDrop\docsupport\init.proto.js" />
+    <None Include="wwwroot\SearchableDrop\docsupport\jquery-1.12.4.min.js" />
+    <None Include="wwwroot\SearchableDrop\docsupport\jquery-3.2.1.min.js" />
+    <None Include="wwwroot\SearchableDrop\docsupport\prism.js" />
+    <None Include="wwwroot\SearchableDrop\docsupport\prototype-1.7.0.0.js" />
     <None Include="wwwroot\TempDocDonationReceive\0704e0c3-65e6-4e1f-84eb-3af9cef0b45a" />
     <None Include="wwwroot\TempDocDonationReceive\19572909-b586-42b7-bc13-77620fcfa48f_CrystalReportViewer1 %281%29_page-0001.jpg" />
     <None Include="wwwroot\TempDocDonationReceive\275c7e41-235b-465f-8896-f37c7a57b74c_ProvisionalReceipt40.pdf" />

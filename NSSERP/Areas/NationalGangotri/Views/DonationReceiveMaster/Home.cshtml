@@ -601,18 +601,18 @@
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
                                 <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1">@Model.Address1</textarea>
-                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
                                 <textarea class="form-control" name="Address2" asp-for="Address2" oninput="convertToUpperCase(this)" placeholder="E.g. Street Name" id="Address2" rows="1">@Model.Address2</textarea>
-                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
                                 <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="E.g.Area, Landmark" id="Address3" rows="1">@Model.Address3</textarea>
-                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
 
 
@@ -641,14 +641,17 @@
                                                 // Populate District dropdown
                                                 $('#DistrictID').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
 
-                                                // Populate City dropdown
-                                                $('#CityID').empty().append('<option value="' + jsonData.CityID + '">' + jsonData.CityName + '</option>');
-                                                $('#countryCode').val(jsonData.CountryID);
+                                                var selectedCountryCode = jsonData.CountryCode;
 
+                                                // Set the selected value in the dropdown based on text
+                                                $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
+
+                                         
                                                 // If the value is not in the dropdown, set it to an empty string
                                                 if ($('#countryCode').val() == null) {
                                                     $('#countryCode').val('');
                                                 }
+
 
                                                 var selectedCountry = jsonData.CountryID;
 
@@ -815,7 +818,7 @@
                             </script>
 
 
-                            <script>
+                           @*  <script>
                                 $(document).ready(function () {
                                     $('#DistrictID').change(function () {
                                         var selectedDistrictId = $(this).val();
@@ -837,13 +840,21 @@
                                         });
                                     });
                                 });
-                            </script>
+                            </script> *@
 
 
                             <div class="form-group col-lg-3">
                                 <label for="CityID">City<span style="color: red;">*</span></label>
-                                <select class="form-control" required asp-for="CityID" id="CityID" name="CityID">
-                                    <option value="" selected disabled>Select City</option>
+
+                                <select class="form-control" id="CityID" asp-for="CityID" name="CityID">
+                                    <option selected disabled>Select City</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var city in Model.CityList)
+                                        {
+                                            <option value="@city.CityID">@city.CityName</option>
+                                        }
+                                    }
                                 </select>
                             </div>
 
@@ -897,18 +908,18 @@
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
                                 <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="P_Address1" rows="1">@Model.P_Address1</textarea>
-                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address2</label>
                                 <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="E.g.Street Name" id="P_Address2" rows="1">@Model.P_Address2</textarea>
-                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address3</label>
                                 <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="E.g. Area, Landmark" id="P_Address3" rows="1">@Model.P_Address3</textarea>
-                                <div style="color:#1cb8a1;font-weight:bold" id="suggestions"></div>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -936,8 +947,7 @@
                                                 // Populate District dropdown
                                                 $('#DistrictID2').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
 
-                                                // Populate City dropdown
-                                                $('#CityID2').empty().append('<option value="' + jsonData.CityID + '">' + jsonData.CityName + '</option>');
+                                               
                                             },
                                             error: function (xhr, status, error) {
                                                 console.log(error);
@@ -1044,7 +1054,7 @@
                             </script>
 
 
-                            <script>
+                    @*         <script>
                                 $(document).ready(function () {
                                     $('#DistrictID2').change(function () {
                                         var selectedDistrictId = $(this).val();
@@ -1067,7 +1077,7 @@
                                         });
                                     });
                                 });
-                            </script>
+                            </script> *@
 
 
 
@@ -1587,16 +1597,16 @@
                                 <script>
                                     $(document).ready(function () {
                                         $('#ProvNo').change(function () {
-                                           
+
                                             var receiptNo = $('#ProvNo').val();
                                             var tp = $('#RbType option:selected').text();
-                                            var dataFlag = 'GANGOTRI'; 
+                                            var dataFlag = 'GANGOTRI';
 
                                             if (tp === null || tp === undefined || tp.trim() === "") {
                                                 alert('Please select Provisional Book Type first.');
                                                 return;
-                                            }                                      
-                                                
+                                            }
+
                                             $.ajax({
                                                 url: '/NationalGangotri/DonationReceiveMaster/GetPersonbyProvisonal',
                                                 type: 'GET',
@@ -1607,10 +1617,10 @@
                                                 },
                                                 contentType: 'application/json',
                                                 success: function (response) {
-                                                   
+
                                                     var personName = response.personName;
 
-                                                   
+
                                                     $('#PersonName').val(personName);
                                                 },
                                                 error: function (xhr, status, error) {
@@ -2410,9 +2420,29 @@
                                     // Apply Select2 to your dropdown element by its ID
                                     $('#subHeadInput').select2();
                                     $('#Campaign').select2();
+                                    $('#CityID').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+                                        
+                                    });
+                                    $(document).on('select2:open', function (e) {
+                                        document.querySelector(`[aria-controls="select2-${e.target.id}-results"]`).focus();
+                                    });
+                                    $('#CityID2').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    });
                                 });
 
                             </script>
+
+                            <style>
+                                .select2-container--default .select2-selection--single {
+                                    width: 100% !important; /* Adjust the width as needed */
+                                    box-sizing: border-box;
+                                }
+                            </style>
                             <script>
                                 $(document).ready(function () {
                                     var initialAmount = 0; // Variable to store the initial amount
@@ -2676,14 +2706,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
@@ -3289,8 +3319,6 @@
                         <button type="submit" class="btn btn-success" style="@(isViewEnabled ? "display:none;" : "")">
                             <i class="fas fa-check"></i>@BtnName
                         </button>
-
-
 
 
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">

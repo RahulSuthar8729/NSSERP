@@ -150,6 +150,13 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public IEnumerable<DonationReceiveMaster> ReceiveInEventList { get; set; }
         public IEnumerable<DepositBankmaster> depositBankmaster { get; set; }
 
+        public IEnumerable<Citys> CityList { get; set; }
+
+        public class Citys()
+        {
+            public int CityID { get; set; }
+            public string CityName { get; set; }
+        }
         public int? ReceiveInEventID { get; set; }
         public string? ReceiveInEventName { get; set; }
        public string pinCodeMasterList { get; set; } = "";
