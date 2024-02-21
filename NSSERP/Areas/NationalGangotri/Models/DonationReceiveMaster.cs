@@ -30,7 +30,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
 
         public DateTime ReceiveDate { get; set; }
 
-        public string RBType { get; set; }
+        public string RBType { get; set; } = "INDIA";
         public List<ReceiptBookType> ReceiptBookTypeList { get; set; }
         public class ReceiptBookType()
         {

@@ -363,6 +363,28 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.QueryFirstOrDefault<dynamic>("[SearchDonorMasterDataByPara]", parameters, commandType: CommandType.StoredProcedure);
             }
         }
+
+        public dynamic SearchDonorIdentityDetails(SearchDonorDetails model)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
+                return connection.QueryFirstOrDefault<dynamic>("[SearchDonorIdentityDetailsBYPara]", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public dynamic SearchDonorContactDetailsDetails(SearchDonorDetails model)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
+                return connection.QueryFirstOrDefault<dynamic>("[SearchDonorContactDetailsBYPara]", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
         public string GetDonationReceiveMasterJsonById(int ref_id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
