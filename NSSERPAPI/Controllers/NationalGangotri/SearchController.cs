@@ -29,6 +29,17 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             try
             {                
                 var Data = _dbFunctions.SearchDonorDetails(new SearchDonorDetails { SearchType = searchType, searchData = searchData });
+                if (Data.Pincode != null)
+                {
+                    var locationDetails = _dbFunctions.GetLocationDetailsByPinCodeJson(Convert.ToString(Data.Pincode));
+                    var mobilelist = _dbFunctions.GetMobileListJsonByDonorID(Convert.ToInt32(Data.DonorID));
+                    var identityList = _dbFunctions.GetIdentityListJsonByDonorID(Convert.ToInt32(Data.DonorID));
+
+                    Data.pinCodeMasterList = locationDetails;
+                    Data.MobileListJson = mobilelist;
+                    Data.IdentityListJson = identityList;
+
+                }
 
                 return Ok(Data);
             }

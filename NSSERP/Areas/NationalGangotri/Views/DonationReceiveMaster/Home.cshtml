@@ -35,31 +35,31 @@
         }
     </style>
     @section scripts {
-            <script>
-                function convertToUpperCase(input) {
-                    input.value = input.value.toUpperCase();
-                }
-            </script>
-            <script>
-                $(document).ready(function () {
-                    $('#submitButton').click(function (event) {
-                        // Prevent the default form submission
-                        event.preventDefault();
+        <script>
+            function convertToUpperCase(input) {
+                input.value = input.value.toUpperCase();
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#submitButton').click(function (event) {
+                    // Prevent the default form submission
+                    event.preventDefault();
 
-                        // Trigger HTML5 form validation
-                        $('#donationForm')[0].reportValidity();
+                    // Trigger HTML5 form validation
+                    $('#donationForm')[0].reportValidity();
 
-                        // Check if the form is valid
-                        if ($('#donationForm')[0].checkValidity()) {
-                            // If valid, submit the form
-                            $('#donationForm').submit();
-                        } else {
-                            // If not valid, focus on the first invalid field
-                            $('#donationForm :invalid').first().focus();
-                        }
-                    });
+                    // Check if the form is valid
+                    if ($('#donationForm')[0].checkValidity()) {
+                        // If valid, submit the form
+                        $('#donationForm').submit();
+                    } else {
+                        // If not valid, focus on the first invalid field
+                        $('#donationForm :invalid').first().focus();
+                    }
                 });
-            </script>
+            });
+        </script>
     }
 </head>
 <body>
@@ -141,9 +141,9 @@
                                         <option value="" selected disabled>Select Receive Head</option>
                                         @foreach (var receivehead in Model.ReceiveHeadList)
                                         {
-                                                <option value="@receivehead.ReceiveHeadID" data-receiveheadname="@receivehead.ReceiveHeadName">
+                                            <option value="@receivehead.ReceiveHeadID" data-receiveheadname="@receivehead.ReceiveHeadName">
                                                 @receivehead.ReceiveHeadName
-                                                </option>
+                                            </option>
                                         }
                                     </select>
                                     <input type="hidden" name="ReceiveHeadName" asp-for="ReceiveHeadName" id="receiveHeadHidden" />
@@ -190,10 +190,6 @@
                                 </div>
                                 <script>
                                     $(document).ready(function () {
-                                        // $("#SearchData").on('blur', function () {
-                                        //     performSearch();
-                                        // });
-
                                         $("#searchBtn").on('click', function () {
                                             performSearch();
                                         });
@@ -209,42 +205,107 @@
                                                     data: { searchType: searchType, searchData: searchData },
                                                     success: function (response) {
                                                         if (response != null) {
-                                                            var jsonData = JSON.parse(response.data);
+                                                            var jsonData = response.data;
 
-                                                            selectOptionByText('#NamePrefix', jsonData.DShri);
-
-
-                                                            $('#DonorID').val(jsonData.DonorID);
-                                                            $('#FirstName').val(jsonData.DName);
-                                                            $('#MiddleName').val(jsonData.MiddleName);
-                                                            $('#LastName').val(jsonData.DLName);
-                                                            $('#DateOfBirth').val(moment(jsonData.DateOfBirth).format('YYYY-MM-DD'));
-
-                                                            $('#Company').val(jsonData.Company);
-                                                            $('#Address1').val(jsonData.Add1);
-                                                            $('#Address2').val(jsonData.Add2);
-                                                            $('#Address3').val(jsonData.Add3);
-                                                            $('#PinCode1').val(jsonData.Pincode);
-
-                                                           
-
-                                                            //Fill Second Permanet Address
-                                                            $('#P_Address1').val(jsonData.OffAdd1);
-                                                            $('#P_Address2').val(jsonData.OffAdd2);
-                                                            $('#P_Address3').val(jsonData.OffAdd3);
-
-
+                                                            if (jsonData && Object.keys(jsonData).length > 0) {
+                                                                // If there is data, check if it's a single row or multiple rows
+                                                                if (Array.isArray(jsonData)) {
+                                                                    // If there are multiple rows, open the modal
+                                                                    openSearchResultsModal(jsonData);
+                                                                } else {
+                                                                    // If there is only one row, fill the form directly
+                                                                    fillForm(jsonData);
+                                                                }
+                                                            } else {
+                                                                console.log("No data found for the entered criteria.");
+                                                            }
                                                         } else {
-                                                            console.log("No data found for the entered DonorID");
+                                                            console.log("No data found for the entered criteria.");
                                                         }
                                                     },
                                                     error: function (error) {
-                                                        // Handle error, display error message or perform other actions
                                                         console.error(error);
                                                     }
                                                 });
                                             }
                                         }
+
+                                        function fillForm(data) {
+                                            selectOptionByText('#NamePrefix', data.DShri);
+
+                                            $('#DonorID').val(data.DonorID);
+                                            $('#FirstName').val(data.DName);
+                                            $('#MiddleName').val(data.MiddleName);
+                                            $('#LastName').val(data.DLName);
+                                            $('#DateOfBirth').val(moment(data.DateOfBirth).format('YYYY-MM-DD'));
+
+                                            $('#Company').val(data.Company);
+                                            $('#Address1').val(data.Add1);
+                                            $('#Address2').val(data.Add2);
+                                            $('#Address3').val(data.Add3);
+                                            $('#PinCode1').val(data.Pincode);
+
+                                            // Fill Second Permanent Address
+                                            $('#P_Address1').val(data.OffAdd1);
+                                            $('#P_Address2').val(data.OffAdd2);
+                                            $('#P_Address3').val(data.OffAdd3);
+
+                                            var placeText = data.Place;
+                                            $('#CityID option:contains("' + placeText + '")').prop('selected', true);
+                                            $('#CityID').trigger('change');
+
+                                            // Parse pinCodeMasterList
+                                            var pinCodeMaster = JSON.parse(data.pinCodeMasterList);
+
+                                            // Bind the CountryID dropdown
+                                            $('#CountryID').val(pinCodeMaster.CountryID);
+
+                                            // Bind the StateID dropdown
+                                            $('#StateID').empty().append('<option value="' + pinCodeMaster.StateID + '">' + pinCodeMaster.StateName + '</option>');
+
+                                            // Populate District dropdown
+                                            $('#DistrictID').empty().append('<option value="' + pinCodeMaster.DistrictID + '">' + pinCodeMaster.DistrictName + '</option>');
+
+                                            // Bind the mobile numbers table
+                                            bindMobileNumbersTable(data.MobileListJson);
+
+                                            // Bind the identity details
+                                            bindIdentityDetails(data.IdentityListJson);
+                                  
+
+                                        }
+
+
+                                        function openSearchResultsModal(searchResults) {
+                                            // Clear previous search results
+                                            $('#searchResultsTableBody').empty();
+
+                                            // Populate the modal table with search results
+                                            searchResults.forEach(function (data) {
+                                                $('#searchResultsTableBody').append(
+                                                    '<tr>' +
+                                                    '<td>' + data.DonorID + '</td>' +
+                                                    '<td>' + data.DName + ' ' + data.MiddleName + ' ' + data.DLName + '</td>' +
+                                                    '<td><button class="btn btn-primary select-row" data-donorid="' + data.DonorID + '">Select</button></td>' +
+                                                    '</tr>'
+                                                );
+                                            });
+
+                                            // Show the modal
+                                            $('#searchResultsModal').modal('show');
+                                        }
+
+                                        // Add a click event handler for the "Select" button in the modal
+                                        $(document).on('click', '.select-row', function () {
+                                            var donorID = $(this).data('donorid');
+
+                                            // You can perform additional actions based on the selected donorID
+                                            // For now, let's log the selected donorID
+                                            console.log("Selected Donor ID:", donorID);
+
+                                            // Close the modal after selecting a row
+                                            $('#searchResultsModal').modal('hide');
+                                        });
 
                                         function selectOptionByText(selectId, text) {
                                             var select = $(selectId);
@@ -254,17 +315,154 @@
 
                                             select.find('option:contains("' + text + '")').prop('selected', true);
                                         }
+                                        // Function to bind the mobile numbers table
+                                        function bindMobileNumbersTable(mobileListJson, DonorID, ReceiveHeadName) {
+                                            var mobileNumbersTable = $("#contactDetailsTable tbody");
+                                            mobileNumbersTable.empty(); // Clear existing rows
+
+                                            // Parse the JSON string in mobileListJson if it's a string
+                                            var mobileList = Array.isArray(mobileListJson) ? mobileListJson : JSON.parse(mobileListJson);
+
+                                            if (mobileList && mobileList.length > 0) {
+                                                // Loop through each item in the JSON array
+                                                $.each(mobileList, function (index, item) {
+                                                    // Add a new row to the table
+                                                    var newRowContactDetails = $("<tr>");
+                                                    newRowContactDetails.append("<td>" + item.ContactType + "</td>");
+                                                    newRowContactDetails.append("<td>" + item.CountryCode + "</td>");
+                                                    newRowContactDetails.append("<td>" + item.MobileNumber + "</td>");
+                                                    newRowContactDetails.append("<td style='display:none'>" + DonorID + "</td>");
+                                                    newRowContactDetails.append("<td style='display:none'>" + ReceiveHeadName + "</td>");
+                                                    newRowContactDetails.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+
+                                                    // Add a special class to identify rows from MobileListJson
+                                                    newRowContactDetails.addClass("json-data-row");
+
+                                                    mobileNumbersTable.append(newRowContactDetails);
+                                                    updateContactDetailsHiddenField();
+                                                });
+
+                                                // Show the table
+                                                $("#contactDetailsTable").css("visibility", "visible");
+                                                $("#contactDetail").val(""); 
+                                            }
+                                        }
+
+                                        // Function to bind the identity details
+                                        function bindIdentityDetails(identityListJson) {
+                                            var addedIdentities = $("#addedIdentities");
+
+                                            // Clear existing identities
+                                            addedIdentities.empty();
+
+                                            // Check if identityListJson is not an empty string
+                                            if (identityListJson.trim() === "") {
+                                                return;
+                                            }
+
+                                            // Parse the JSON string in identityListJson
+                                            var identityList = Array.isArray(identityListJson) ? identityListJson : JSON.parse(identityListJson);
+
+                                            if (identityList && identityList.length > 0) {
+                                                // Loop through each item in the JSON array
+                                                $.each(identityList, function (index, identity) {
+                                                    // Create a new row for the added identity
+                                                    var newRowIdentity = $("<div class='form-group col-lg-3'>");
+                                                    newRowIdentity.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                                    newRowIdentity.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                                    newRowIdentity.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+
+                                                    // Append the new row to the container
+                                                    addedIdentities.append(newRowIdentity);
+
+                                                    // Show the added identities section
+                                                    addedIdentities.css("display", "flex");
+                                                });
+
+                                                // Update the hidden field value with the current identities after binding
+                                                updateHiddenField();
+                                            }
+                                        }
+
+                                        // Function to update the hidden field with the current identities displayed in the UI
+                                        function updateHiddenField() {
+                                            var currentIdentities = [];
+
+                                            // Loop through each item in the addedIdentities section
+                                            $("#addedIdentities .form-group").each(function () {
+                                                var identityType = $(this).find("label").text();
+                                                var identityNumber = $(this).find("input").val();
+
+                                                currentIdentities.push({
+                                                    IdentityType: identityType,
+                                                    IdentityNumber: identityNumber
+                                                });
+                                            });
+
+                                            // Update the hidden field value with the current identities as a JSON string
+                                            $("#identityDetails").val(JSON.stringify(currentIdentities));
+                                        }
+
+                                        function updateContactDetailsHiddenField() {
+                                            var tableDataContactDetails = [];
+
+                                            $("#contactDetailsTable tbody tr").each(function () {
+                                                var rowDataContactDetails = {};
+                                                $(this).find("td").each(function (index, element) {
+                                                    if (index === 0) {
+                                                        rowDataContactDetails.ContactType = $(element).text();
+                                                    } else if (index === 1) {
+                                                        rowDataContactDetails.CountryCode = $(element).text();
+                                                    } else if (index === 2) {
+                                                        rowDataContactDetails.ContactDetail = $(element).text();
+                                                    }
+                                                });
+
+                                                tableDataContactDetails.push(rowDataContactDetails);
+                                            });
+
+                                            $("#mobileListField").val(JSON.stringify(tableDataContactDetails));
+                                        }
+
                                     });
+
                                 </script>
 
-                                <script>
-                                    $(document).ready(function () {
-                                        // Apply Select2 to your dropdown element by its ID
-                                        $('#ID').select2();
-                                        $('#headInput').select2();
-                                        //$('#Instruction').select2();
-                                    });
-                                </script>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="searchResultsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Search Results</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <!-- Add table headers based on your response structure -->
+                                                            <th>Donor ID</th>
+                                                            <th>Name</th>
+                                                            <!-- Add more headers as needed -->
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="searchResultsTableBody">
+                                                        <!-- Search results rows will be appended here dynamically -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
                                 <div class="form-group col-lg-3" style="display:none;">
                                     <label for="ID">Receive in Event:</label>
 
@@ -272,9 +470,9 @@
                                         <option value="" selected disabled>Select Event</option>
                                         @foreach (var eventlist in Model.ReceiveInEventList)
                                         {
-                                                <option value="@eventlist.ID" data-eventname="@eventlist.EventName">
+                                            <option value="@eventlist.ID" data-eventname="@eventlist.EventName">
                                                 @eventlist.EventName
-                                                </option>
+                                            </option>
                                         }
                                     </select>
                                     <input type="hidden" name="EventName" asp-for="EventName" id="EventNameHidden" />
@@ -301,7 +499,7 @@
                                         {
                                             foreach (var mod in Model.campaignlist)
                                             {
-                                                        <option value="@mod.REF_ID" data-campaignname="@mod.CampaignName">@mod.CampaignName</option>
+                                                <option value="@mod.REF_ID" data-campaignname="@mod.CampaignName">@mod.CampaignName</option>
                                             }
                                         }
                                     </select>
@@ -387,16 +585,9 @@
                                                     $('#Address3').val(jsonData.Address3);
                                                     $('#PinCode1').val(jsonData.PinCode);
                                                     $('#CountryID').val(jsonData.CountryID);
-                                                    // Assuming jsonData is the parsed JSON data
+
                                                     var selectedCountry = jsonData.CountryID;
 
-                                                    // $("#CurrencyID option").each(function () {
-                                                    //     if ($(this).val() == selectedCountry) {
-                                                    //         $(this).prop("selected", true);
-                                                    //     } else {
-                                                    //         $(this).prop("selected", false);
-                                                    //     }
-                                                    // });
 
 
                                                     var pinCodeMaster = JSON.parse(jsonData.pinCodeMasterList);
@@ -440,7 +631,7 @@
                                     }
                                     // Function to bind the mobile numbers table
                                     function bindMobileNumbersTable(mobileListJson) {
-                                        var mobileNumbersTable = $("#mobileNumbersTable tbody");
+                                        var mobileNumbersTable = $("#contactDetailsTable tbody");
                                         mobileNumbersTable.empty(); // Clear existing rows
 
                                         // Parse the JSON string in mobileListJson if it's a string
@@ -464,7 +655,7 @@
                                             });
 
                                             // Show the table
-                                            $("#mobileNumbersTable").css("visibility", "visible");
+                                            $("#contactDetailsTable").css("visibility", "visible");
                                         }
                                     }
                                     // Function to bind the identity details
@@ -683,7 +874,7 @@
                                         handlePinCodeChange(enteredPinCode);
                                     });
 
-                                   
+
                                 });
 
                             </script>
@@ -696,7 +887,7 @@
                                     {
                                         @foreach (var country in Model.CountryList)
                                         {
-                                                    <option value="@country.CountryId" data-countryname="@country.CountryName">@country.CountryName</option>
+                                            <option value="@country.CountryId" data-countryname="@country.CountryName">@country.CountryName</option>
                                         }
                                     }
                                 </select>
@@ -821,27 +1012,27 @@
 
 
                             @*  <script>
-                                $(document).ready(function () {
-                                    $('#DistrictID').change(function () {
-                                        var selectedDistrictId = $(this).val();
-                                        $.ajax({
-                                            url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
-                                            type: 'GET',
-                                            data: { districtId: selectedDistrictId },
-                                            success: function (response) {
-                                                var data = JSON.parse(response.data);
-                                                // Populate city dropdown with retrieved cities
-                                                $('#CityID').empty().append('<option value="" selected disabled>Select City</option>');
-                                                $.each(data, function (index, city) {
-                                                    $('#CityID').append('<option value="' + city.CityID + '">' + city.CityName + '</option>');
-                                                });
-                                            },
-                                            error: function (xhr, status, error) {
-                                                console.log(error); // Handle errors if any
-                                            }
-                                        });
-                                    });
-                                });
+                            $(document).ready(function () {
+                            $('#DistrictID').change(function () {
+                            var selectedDistrictId = $(this).val();
+                            $.ajax({
+                            url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
+                            type: 'GET',
+                            data: { districtId: selectedDistrictId },
+                            success: function (response) {
+                            var data = JSON.parse(response.data);
+                            // Populate city dropdown with retrieved cities
+                            $('#CityID').empty().append('<option value="" selected disabled>Select City</option>');
+                            $.each(data, function (index, city) {
+                            $('#CityID').append('<option value="' + city.CityID + '">' + city.CityName + '</option>');
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                            console.log(error); // Handle errors if any
+                            }
+                            });
+                            });
+                            });
                             </script> *@
 
 
@@ -854,9 +1045,9 @@
                                     {
                                         @foreach (var city in Model.CityList)
                                         {
-                                                    <option value="@city.CityID" @(Model.CityID == city.CityID ? "selected" : "")>
+                                            <option value="@city.CityID" @(Model.CityID == city.CityID ? "selected" : "")>
                                                 @city.CityName
-                                                    </option>
+                                            </option>
                                         }
                                     }
                                 </select>
@@ -993,7 +1184,7 @@
                                     {
                                         @foreach (var country in Model.CountryList)
                                         {
-                                                    <option value="@country.CountryId">@country.CountryName</option>
+                                            <option value="@country.CountryId">@country.CountryName</option>
                                         }
 
                                     }
@@ -1068,28 +1259,28 @@
 
 
                             @*         <script>
-                                $(document).ready(function () {
-                                    $('#DistrictID2').change(function () {
-                                        var selectedDistrictId = $(this).val();
+                            $(document).ready(function () {
+                            $('#DistrictID2').change(function () {
+                            var selectedDistrictId = $(this).val();
 
-                                        $.ajax({
-                                            url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
-                                            type: 'GET',
-                                            data: { districtId: selectedDistrictId },
-                                            success: function (response) {
-                                                var data = JSON.parse(response.data);
-                                                // Populate city dropdown with retrieved cities
-                                                $('#CityID2').empty().append('<option value="" selected disabled>Select City</option>');
-                                                $.each(data, function (index, city) {
-                                                    $('#CityID2').append('<option value="' + city.CityID + '">' + city.CityName + '</option>');
-                                                });
-                                            },
-                                            error: function (xhr, status, error) {
-                                                console.log(error); // Handle errors if any
-                                            }
-                                        });
-                                    });
-                                });
+                            $.ajax({
+                            url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
+                            type: 'GET',
+                            data: { districtId: selectedDistrictId },
+                            success: function (response) {
+                            var data = JSON.parse(response.data);
+                            // Populate city dropdown with retrieved cities
+                            $('#CityID2').empty().append('<option value="" selected disabled>Select City</option>');
+                            $.each(data, function (index, city) {
+                            $('#CityID2').append('<option value="' + city.CityID + '">' + city.CityName + '</option>');
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                            console.log(error); // Handle errors if any
+                            }
+                            });
+                            });
+                            });
                             </script> *@
 
 
@@ -1102,7 +1293,7 @@
                                     {
                                         @foreach (var city in Model.CityList)
                                         {
-                                                    <option value="@city.CityID" @(Model.P_CityID == city.CityID ? "selected" : "")>@city.CityName</option>
+                                            <option value="@city.CityID" @(Model.P_CityID == city.CityID ? "selected" : "")>@city.CityName</option>
                                         }
                                     }
                                 </select>
@@ -1110,8 +1301,8 @@
 
                                 <script>
                                     // Add a change event listener to the select element using jQuery
-                                    $('#CityID2').change(function () {                                       
-                                        var selectedCityName = $(this).find('option:selected').text();                                     
+                                    $('#CityID2').change(function () {
+                                        var selectedCityName = $(this).find('option:selected').text();
                                         $('#P_CityName').val(selectedCityName);
                                     });
                                 </script>
@@ -1136,39 +1327,39 @@
                         <div class="row">
                             @if (Model.ReceiveID == null)
                             {
-                                    <div class="form-group col-lg-3">
-                                        <label for="contactType" class="mr-2">Contact Type<span style="color: red;">*</span></label>
-                                        <select class="form-control" id="contactType" name="contactType">
-                                            <option value="Mobile">Mobile No.</option>
-                                            <option value="WhatsApp">WhatsApp No.</option>
-                                            <option value="Phone(O)">Office Phone</option>
-                                            <option value="Phone(R)">Residence Phone</option>
-                                            <option value="Email">Email ID</option>
-                                        </select>
-                                    </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="contactType" class="mr-2">Contact Type<span style="color: red;">*</span></label>
+                                    <select class="form-control" id="contactType" name="contactType">
+                                        <option value="Mobile">Mobile No.</option>
+                                        <option value="WhatsApp">WhatsApp No.</option>
+                                        <option value="Phone(O)">Office Phone</option>
+                                        <option value="Phone(R)">Residence Phone</option>
+                                        <option value="Email">Email ID</option>
+                                    </select>
+                                </div>
 
-                                    <div class="form-group col-lg-3">
-                                        <label for="contactDetail" class="mr-2">Contact Detail<span style="color: red;">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
-                                                    <option value="" selected disabled>Select</option>
+                                <div class="form-group col-lg-3">
+                                    <label for="contactDetail" class="mr-2">Contact Detail<span style="color: red;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
+                                                <option value="" selected disabled>Select</option>
                                                 @if (Model != null)
                                                 {
                                                     @foreach (var countrycode in Model.CountryList)
                                                     {
-                                                                    <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
+                                                        <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
                                                     }
                                                 }
-                                                </select>
-                                            </div>
+                                            </select>
+                                        </div>
 
-                                            <input type="text" class="form-control" id="contactDetail" name="contactDetail" placeholder="Enter your contact detail">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button" id="addDetail"><i class="fas fa-plus"></i>Add</button>
-                                            </div>
+                                        <input type="text" class="form-control" id="contactDetail" name="contactDetail" placeholder="Enter your contact detail">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" id="addDetail"><i class="fas fa-plus"></i>Add</button>
                                         </div>
                                     </div>
+                                </div>
                             }
 
                             <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="contactDetailsTable">
@@ -1331,68 +1522,68 @@
                     <div id="identityDetailsContent" class="nested-form-container collapse">
                         @if (Model.ReceiveID == null)
                         {
-                                <div class="row">
-                                    <div class="form-group col-lg-3">
-                                        <label for="IdentityType">Identity Type</label>
-                                        <select class="form-control" id="identityType">
-                                            <option value="0">Select</option>
-                                            <option value="Aadhar">Aadhar</option>
-                                            <option value="PAN">PAN</option>
-                                            <option value="Passport">Passport</option>
-                                            <option value="DrivingLicence">Driving Licence</option>
-                                            <option value="RationCard">Ration Card</option>
-                                            <option value="VoterID">Voter ID</option>
-                                            <option value="TaxID">Tax Identification</option>
-                                            <!-- Add more identity types as needed -->
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-lg-3">
-                                        <label for="IdentityNumber">Identity Number</label>
-                                        <input class="form-control" id="identityNumber" type="text" name="" />
-                                    </div>
-                                    <script>
-                                        $(document).ready(function () {
-                                            // Add an event listener for identity type change
-                                            $('#identityType').change(function () {
-                                                // Get the selected identity type
-                                                var selectedIdentityType = $(this).val();
-
-                                                // Set the watermark text based on the selected identity type
-                                                var watermarkText = getWatermarkText(selectedIdentityType);
-
-                                                // Apply the watermark to the identity number input
-                                                $('#identityNumber').attr('placeholder', watermarkText);
-                                            });
-
-                                            // Function to get watermark text based on identity type
-                                            function getWatermarkText(identityType) {
-                                                switch (identityType) {
-                                                    case 'Aadhar':
-                                                        return 'Enter Aadhar Number';
-                                                    case 'PAN':
-                                                        return 'Enter PAN Number';
-                                                    case 'Passport':
-                                                        return 'Enter Passport Number';
-                                                    case 'DrivingLicence':
-                                                        return 'Enter Driving Licence Number';
-                                                    case 'RationCard':
-                                                        return 'Enter Ration Card Number';
-                                                    case 'VoterID':
-                                                        return 'Enter Voter ID Number';
-                                                    case 'TaxID':
-                                                        return 'Enter Tax Identification Number';
-                                                    default:
-                                                        return 'Enter Identity Number';
-                                                }
-                                            }
-                                        });
-                                    </script>
-                                    <div class="form-group col-lg-3">
-                                        <br />
-                                        <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
-                                    </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label for="IdentityType">Identity Type</label>
+                                    <select class="form-control" id="identityType">
+                                        <option value="0">Select</option>
+                                        <option value="Aadhar">Aadhar</option>
+                                        <option value="PAN">PAN</option>
+                                        <option value="Passport">Passport</option>
+                                        <option value="DrivingLicence">Driving Licence</option>
+                                        <option value="RationCard">Ration Card</option>
+                                        <option value="VoterID">Voter ID</option>
+                                        <option value="TaxID">Tax Identification</option>
+                                        <!-- Add more identity types as needed -->
+                                    </select>
                                 </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="IdentityNumber">Identity Number</label>
+                                    <input class="form-control" id="identityNumber" type="text" name="" />
+                                </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        // Add an event listener for identity type change
+                                        $('#identityType').change(function () {
+                                            // Get the selected identity type
+                                            var selectedIdentityType = $(this).val();
+
+                                            // Set the watermark text based on the selected identity type
+                                            var watermarkText = getWatermarkText(selectedIdentityType);
+
+                                            // Apply the watermark to the identity number input
+                                            $('#identityNumber').attr('placeholder', watermarkText);
+                                        });
+
+                                        // Function to get watermark text based on identity type
+                                        function getWatermarkText(identityType) {
+                                            switch (identityType) {
+                                                case 'Aadhar':
+                                                    return 'Enter Aadhar Number';
+                                                case 'PAN':
+                                                    return 'Enter PAN Number';
+                                                case 'Passport':
+                                                    return 'Enter Passport Number';
+                                                case 'DrivingLicence':
+                                                    return 'Enter Driving Licence Number';
+                                                case 'RationCard':
+                                                    return 'Enter Ration Card Number';
+                                                case 'VoterID':
+                                                    return 'Enter Voter ID Number';
+                                                case 'TaxID':
+                                                    return 'Enter Tax Identification Number';
+                                                default:
+                                                    return 'Enter Identity Number';
+                                            }
+                                        }
+                                    });
+                                </script>
+                                <div class="form-group col-lg-3">
+                                    <br />
+                                    <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
+                                </div>
+                            </div>
                         }
                         <div class="row" id="addedIdentities" style="display: none;">
                             <!-- Added identities will be dynamically inserted here -->
@@ -1615,7 +1806,7 @@
                                     {
                                         foreach (var rbtype in Model.ReceiptBookTypeList)
                                         {
-                                                    <option value="@rbtype.RB_Type_Code" data-rbtype="@rbtype.RB_Type" @(Model.RBType == rbtype.RB_Type ? "selected" : "")>@rbtype.RB_Type</option>
+                                            <option value="@rbtype.RB_Type_Code" data-rbtype="@rbtype.RB_Type" @(Model.RBType == rbtype.RB_Type ? "selected" : "")>@rbtype.RB_Type</option>
                                         }
                                     }
                                 </select>
@@ -1673,24 +1864,28 @@
 
                                 @if (!string.IsNullOrEmpty(Model.Doc1))
                                 {
-                                        <label for="file1">Attached Provisional</label>
+                                    <label for="file1">Attached Provisional</label>
 
 
                                     var fileNames = Model.Doc1.Split(',').Select(x => x.Trim()).ToList();
                                     for (int i = 0; i < fileNames.Count; i++)
                                     {
                                         var simplifiedFileName = $"File {i + 1}";
-                                                <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
+                                        <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
                                     }
 
                                 }
                                 else
                                 {
-                                        <label for="file1">Attach Provisional</label>
+                                    <label for="file1" data-browse="Browse">Attach Provisional</label>
 
-                                        <input type="file" name="DocProvisonal" multiple asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf" />
+                                    <input type="file" name="DocProvisonal" multiple asp-for="DocProvisonal" id="file1" accept="image/*,application/pdf">
+
+
+
                                 }
                             </div>
+
                             <script>
                                 $(document).ready(function () {
                                     // Attach a click event to dynamically generated view buttons
@@ -1723,7 +1918,7 @@
                                     {
                                         foreach (var paymentmode in Model.paymentModeList)
                                         {
-                                                    <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
+                                            <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
                                         }
                                     }
                                 </select>
@@ -1732,6 +1927,9 @@
                                 <input type="hidden" id="hdnpaymentmodeid" name="PaymentModeID" asp-for="PaymentModeID" />
 
                                 <script>
+                                    window.onload = function () {
+                                        toggleMaterialFields();
+                                    };
 
                                     function toggleMaterialFields() {
                                         var paymentModeDropdown = document.getElementById('PaymentMode');
@@ -1749,7 +1947,6 @@
                                         var divordertype = document.getElementById('DivOrderType');
                                         var divordernumber = document.getElementById('DivOrderNumber');
 
-
                                         // Get the selected text instead of the value
                                         var selectedText = paymentModeDropdown.options[paymentModeDropdown.selectedIndex].text;
 
@@ -1765,7 +1962,6 @@
                                             currencyDropdown.required = false;
                                             amountInput.required = false;
                                             materialDepositIDTextbox.focus(); // Focus on Material Deposit ID textbox
-
                                         } else {
                                             materialDepositFields.style.display = 'none';
                                             materialFields.style.display = 'none';
@@ -1776,38 +1972,31 @@
                                             materialInputTextarea.required = false;
                                             currencyDropdown.required = true;
                                             amountInput.required = true;
-
                                         }
-                                        if (selectedText === 'MATERIAL' || selectedText === 'CASH') {
-                                            divbankdetails.style.display = 'none';
+
+                                        // Simplify the condition for divbankdetails display
+                                        divbankdetails.style.display = selectedText === 'MATERIAL' || selectedText === 'CASH' ? 'none' : 'block';
+
+                                        if (selectedText === 'CHEQUE' || selectedText === 'PAY-IN-SLIP') {
+                                            divMultiCheque.style.display = 'block';
+                                            lbl_multiDoc.innerText = selectedText === 'CHEQUE' ? 'Attach Cheque Doc' : 'Attach Pay-In-Slip Doc';
                                         } else {
-                                            divbankdetails.style.display = 'block';
+                                            divMultiCheque.style.display = 'none';
                                         }
 
-                                        if (selectedText === 'CHEQUE') {
-                                            divMultiCheque.style.display = 'block';
-                                            lbl_multiDoc.innerText = 'Attach Cheque Doc';
-                                        }
-                                        else if (selectedText === 'PAY-IN-SLIP') {
-                                            divMultiCheque.style.display = 'block';
-                                            lbl_multiDoc.innerText = 'Attach Pay-In-Slip Doc';
-
-                                        }
-                                        else if (selectedText === 'ONLINE') {
+                                        if (selectedText === 'ONLINE') {
                                             divordernumber.style.display = 'block';
                                             divordertype.style.display = 'block';
-                                        }
-                                        else {
-                                            divMultiCheque.style.display = 'none';
+                                        } else {
                                             divordernumber.style.display = 'none';
                                             divordertype.style.display = 'none';
                                         }
-
                                     }
 
                                     // Call the function initially to set the initial state
                                     toggleMaterialFields();
                                 </script>
+
 
                                 <script>
                                     $(document).ready(function () {
@@ -1868,7 +2057,7 @@
                                             {
                                                 @foreach (var currency in Model.currenciesList)
                                                 {
-                                                            <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
+                                                    <option value="@currency.CurrencyID" data-currencycode="@currency.CurrencyCode" @(Model.CurrencyID == currency.CurrencyID ? "selected" : "")>@currency.CurrencyCode</option>
                                                 }
                                             }
                                         </select>
@@ -1903,7 +2092,7 @@
                                     {
                                         @foreach (var order in Model.ordertypelist)
                                         {
-                                                    <option value="@order.OrderTypeID" data-currencycode="@order.OrderTypeName" @(Model.OrderTypeID.GetValueOrDefault() == order.OrderTypeID ? "selected" : "")>@order.OrderTypeName</option>
+                                            <option value="@order.OrderTypeID" data-currencycode="@order.OrderTypeName" @(Model.OrderTypeID.GetValueOrDefault() == order.OrderTypeID ? "selected" : "")>@order.OrderTypeName</option>
                                         }
                                     }
 
@@ -1950,7 +2139,7 @@
                                             {
                                                 @foreach (var bank in Model.bankmasterlist)
                                                 {
-                                                            <option value="@bank.BankID">@bank.BankName</option>
+                                                    <option value="@bank.BankID">@bank.BankName</option>
                                                 }
                                             }
                                         </select>
@@ -1972,7 +2161,7 @@
                                             {
                                                 @foreach (var bank in Model.depositBankmaster)
                                                 {
-                                                            <option value="@bank.bank_code">@bank.Bank_Name</option>
+                                                    <option value="@bank.bank_code">@bank.Bank_Name</option>
                                                 }
                                             }
                                         </select>
@@ -2447,8 +2636,39 @@
                             <script>
                                 $(document).ready(function () {
                                     // Apply Select2 to your dropdown element by its ID
-                                    $('#subHeadInput').select2();
+                                    $('#subHeadInput').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    }); 
+                                    $('#autoQuantityInput').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    });  
+                                    $('#BankID1').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    }); 
+                                    $('#BankID2').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    });    
+                                    $('#Instruction').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    });
+                                   
                                     $('#Campaign').select2();
+                                    $('#ID').select2();
+                                    $('#headInput').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    });
                                     $('#CityID').select2({
                                         theme: 'classic',
                                         width: '100%',
@@ -2502,6 +2722,7 @@
                                                     if (data[0].Start === 0) {
                                                         // Disable quantity input if data.start is 0
                                                         $('#autoQuantityInput').prop('disabled', true);
+                                                        enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
                                                     } else {
                                                         // Enable quantity input if data.start is not 0
                                                         $('#autoQuantityInput').prop('disabled', false);
@@ -2510,6 +2731,8 @@
                                                         for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
                                                             $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
                                                         }
+
+                                                        enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
                                                     }
 
                                                     // Set the initial amount in the ReceiptAmount input field
@@ -2536,12 +2759,20 @@
                                         // Set the total amount in the ReceiptAmount input field
                                         $('#ReceiptAmount').val(totalAmount.toFixed(2));
                                         updateAnnounce();
-
                                     });
 
                                     $('#receiveamount').on('input', function () {
                                         updateAnnounce();
                                     });
+
+                                    function enableReceiptAmount() {
+                                        // Check if the initial amount is 1, then enable the ReceiptAmount input field
+                                        if (initialAmount === 1) {
+                                            $('#ReceiptAmount').prop('readonly', false);
+                                        } else {
+                                            $('#ReceiptAmount').prop('readonly', true);
+                                        }
+                                    }
 
                                     function updateAnnounce() {
                                         // Get the value of the receiveamount input
@@ -2562,64 +2793,62 @@
                                             $('#announceamount').val("0.00");
                                         }
                                     }
-
-
                                 });
-
                             </script>
+
 
                             @if (Model.ReceiveID == null)
                             {
-                                    <div class="row">
-                                        <div class="form-group col-lg-2">
-                                            <label for="head">Head</label>
-                                            <select class="form-control" id="headInput" asp-for="Purpose_ID" name="Purpose_ID">
-                                                <option value="0">Select Head</option>
+                                <div class="row">
+                                    <div class="form-group col-lg-2">
+                                        <label for="head">Head</label>
+                                        <select class="form-control" id="headInput" asp-for="Purpose_ID" name="Purpose_ID">
+                                            <option value="0">Select Head</option>
                                             @if (Model != null)
                                             {
                                                 @foreach (var heads in Model.HeadList)
                                                 {
-                                                                <option value="@heads.Purpose_ID">@heads.Purpose</option>
+                                                    <option value="@heads.Purpose_ID">@heads.Purpose</option>
                                                 }
 
                                             }
-                                            </select>
+                                        </select>
 
-                                        </div>
-
-                                        <div class="form-group col-lg-2">
-                                            <label for="subHead">Purpose</label>
-                                            <select class="form-control" id="subHeadInput" name="subHead">
-                                                <option value="0">Select Purpose</option>
-                                            </select>
-                                        </div>
-
-
-                                        <div class="form-group col-lg-1">
-                                            <label for="autoQuantity">Quantity</label>
-                                            <select class="form-control" id="autoQuantityInput" name="autoQuantity">
-                                                <option value="0">Select Qty</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group col-lg-2">
-                                            <label for="ReceiptAmount">Amount</label>
-                                            <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
-                                        </div>
-                                        <div class="form-group col-lg-2">
-                                            <label for="ReceiptAmount">Receive Amount</label>
-                                            <input class="form-control" id="receiveamount" type="number" name="receiveamount">
-                                        </div>
-                                        <div class="form-group col-lg-2">
-                                            <label for="ReceiptAmount">Announce Amount</label>
-                                            <input class="form-control" id="announceamount" type="number" name="announceamount">
-                                        </div>
-
-                                        <div class="form-group col-lg-1">
-                                            <br>
-                                            <button class="btn btn-primary" id="addBtnReceipt"><i class="fas fa-plus"></i>Add</button>
-                                        </div>
                                     </div>
+
+                                    <div class="form-group col-lg-2">
+                                        <label for="subHead">Purpose</label>
+                                        <select class="form-control" id="subHeadInput" name="subHead">
+                                            <option value="0">Select Purpose</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="form-group col-lg-1">
+                                        <label for="autoQuantity">Quantity</label>
+                                        <select class="form-control" id="autoQuantityInput" name="autoQuantity">
+                                            <option value="0">Select Qty</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-2">
+                                        <label for="ReceiptAmount">Amount</label>
+                                        <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
+                                    </div>
+                                    <div class="form-group col-lg-2">
+                                        <label for="ReceiptAmount">Receive Amount</label>
+                                        <input class="form-control" id="receiveamount" type="number" name="receiveamount">
+                                    </div>
+                                    <div class="form-group col-lg-2">
+                                        <label for="ReceiptAmount">Announce Amount</label>
+                                        <input class="form-control" id="announceamount" type="number" name="announceamount">
+                                    </div>
+
+                                    <div class="form-group col-lg-1">
+                                        <br>
+                                        <button class="btn btn-primary" id="addBtnReceipt"><i class="fas fa-plus"></i>Add</button>
+                                    </div>
+                                </div>
                             }
                             <div id="tableContainer" style="display: none;">
                                 <table class="table table-bordered">
@@ -2735,14 +2964,14 @@
                                     // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
@@ -2859,31 +3088,31 @@
                             @if (Model.ReceiveID == null)
                             {
 
-                                    <div class="form-group col-lg-5">
-                                        <label for="instruction">Donor Instruction</label>
-                                        <select class="form-control" asp-for="Instructions" id="Instruction" name="Instructions">
-                                            <option value="0">Select Donor Instructions</option>
+                                <div class="form-group col-lg-5">
+                                    <label for="instruction">Donor Instruction</label>
+                                    <select class="form-control" asp-for="Instructions" id="Instruction" name="Instructions">
+                                        <option value="0">Select Donor Instructions</option>
                                         @if (Model != null)
                                         {
                                             @foreach (var mod in Model.donorInstructionList)
                                             {
-                                                            <option value="@mod.REF_ID">@mod.InstructionName</option>
+                                                <option value="@mod.REF_ID">@mod.InstructionName</option>
                                             }
 
                                         }
-                                        </select>
-                                    </div>
+                                    </select>
+                                </div>
 
-                                    <div class="form-group col-lg-5">
-                                        <label for="remarks">Remarks</label>
-                                        <textarea class="form-control" rows="1" asp-for="ReceiptRemarks" name="ReceiptRemarks" oninput="convertToUpperCase(this)" typeof="text" id="remarks"></textarea>
+                                <div class="form-group col-lg-5">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" rows="1" asp-for="ReceiptRemarks" name="ReceiptRemarks" oninput="convertToUpperCase(this)" typeof="text" id="remarks"></textarea>
 
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <br />
-                                        <button type="button" id="addRowBtn" class="btn btn-primary"><i class="fas fa-plus"></i>Add</button>
+                                </div>
+                                <div class="col-lg-2">
+                                    <br />
+                                    <button type="button" id="addRowBtn" class="btn btn-primary"><i class="fas fa-plus"></i>Add</button>
 
-                                    </div>
+                                </div>
 
                             }
                             <table class="table table-bordered" id="instructionTable" style="display: none;">
@@ -3050,29 +3279,29 @@
 
                         @if (Model.ReceiveID == null)
                         {
-                                <div class="row">
-                                    <div class="form-group col-lg-3">
-                                        <label for="announceId">Announce ID</label>
-                                        <input type="number" class="form-control" id="announceIdAnnounce" />
-                                    </div>
-                                    <div class="form-group col-lg-3">
-                                        <label>Announcer Name</label>
-                                        <input type="text" class="form-control" id="AnnouncerName" />
-                                    </div>
-                                    <div class="form-group col-lg-3">
-                                        <label for="dueAmount">Due Amount</label>
-                                        <input type="number" class="form-control" id="dueAmountAnnounce" />
-                                    </div>
-
-                                    <div class="form-group col-lg-2">
-                                        <label for="date1">Due Date</label>
-                                        <input type="date" class="form-control" id="dateAnnounce" />
-                                    </div>
-                                    <div class="form-group col-lg-1">
-                                        <br />
-                                        <button class="btn btn-primary" id="btnAddAnnounce"><span class="fa fa-plus"></span>Add</button>
-                                    </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label for="announceId">Announce ID</label>
+                                    <input type="number" class="form-control" id="announceIdAnnounce" />
                                 </div>
+                                <div class="form-group col-lg-3">
+                                    <label>Announcer Name</label>
+                                    <input type="text" class="form-control" id="AnnouncerName" />
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="dueAmount">Due Amount</label>
+                                    <input type="number" class="form-control" id="dueAmountAnnounce" />
+                                </div>
+
+                                <div class="form-group col-lg-2">
+                                    <label for="date1">Due Date</label>
+                                    <input type="date" class="form-control" id="dateAnnounce" />
+                                </div>
+                                <div class="form-group col-lg-1">
+                                    <br />
+                                    <button class="btn btn-primary" id="btnAddAnnounce"><span class="fa fa-plus"></span>Add</button>
+                                </div>
+                            </div>
                         }
                         <div class="row">
                             <table class="table table-bordered" id="announceTable" style="display: none;">
@@ -3217,11 +3446,11 @@
 
                                 @if (!string.IsNullOrEmpty(Model.Doc2))
                                 {
-                                        <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc2"><i class="fa fa-eye"></i>View</a></div>
+                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc2"><i class="fa fa-eye"></i>View</a></div>
                                 }
                                 else
                                 {
-                                        <input type="file" name="DocCheque" asp-for="DocCheque" id="file2" accept="image/*,application/pdf" />
+                                    <input type="file" name="DocCheque" asp-for="DocCheque" id="file2" accept="image/*,application/pdf" />
                                 }
                             </div>
 
@@ -3230,11 +3459,11 @@
 
                                 @if (!string.IsNullOrEmpty(Model.Doc3))
                                 {
-                                        <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc3"><i class="fa fa-eye"></i>View</a></div>
+                                    <div><a class="btn btn-outline-primary" target="_blank" href="/DocDonationReceive/@Model.Doc3"><i class="fa fa-eye"></i>View</a></div>
                                 }
                                 else
                                 {
-                                        <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file3" accept="image/*,application/pdf" />
+                                    <input type="file" name="DocPayInSlip" asp-for="DocPayInSlip" id="file3" accept="image/*,application/pdf" />
                                 }
                             </div>
 
@@ -3245,66 +3474,66 @@
                 </fieldset>
                 @if (Model.ReceiveID != null)
                 {
-                        <fieldset class="show border rounded p-3 your-custom-class">
-                            <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
-                                <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiveIdMovementDetailsContent" aria-expanded="false" aria-controls="receiveIdMovementDetailsContent">
-                                    <span id="collapseIcon" class="">&#43;</span>
-                                    <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">ReceiveID Movement Details</span>
-                                </button>
-                            </legend>
+                    <fieldset class="show border rounded p-3 your-custom-class">
+                        <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                            <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiveIdMovementDetailsContent" aria-expanded="false" aria-controls="receiveIdMovementDetailsContent">
+                                <span id="collapseIcon" class="">&#43;</span>
+                                <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">ReceiveID Movement Details</span>
+                            </button>
+                        </legend>
 
-                            <div id="receiveIdMovementDetailsContent" class="row nested-form-container collapse">
+                        <div id="receiveIdMovementDetailsContent" class="row nested-form-container collapse">
 
-                                <table id="movementTable" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Sr.No.</th>
-                                            <th>Receive ID</th>
-                                            <th>Movement From</th>
-                                            <th>Movement To</th>
-                                            <th>User ID</th>
-                                            <th>User Name</th>
-                                            <th>Created On</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Table rows will be added dynamically here -->
-                                    </tbody>
-                                </table>
-                                <script>
-                                    $(document).ready(function () {
-                                        function fillTableFromJson() {
-                                            var jsonData = @Html.Raw(Model.MovementMasterListJson); // Parse JSON
-                                            var tableBody = $('#movementTable tbody');
+                            <table id="movementTable" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>Receive ID</th>
+                                        <th>Movement From</th>
+                                        <th>Movement To</th>
+                                        <th>User ID</th>
+                                        <th>User Name</th>
+                                        <th>Created On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table rows will be added dynamically here -->
+                                </tbody>
+                            </table>
+                            <script>
+                                $(document).ready(function () {
+                                    function fillTableFromJson() {
+                                        var jsonData = @Html.Raw(Model.MovementMasterListJson); // Parse JSON
+                                        var tableBody = $('#movementTable tbody');
 
-                                            // Clear existing rows
-                                            tableBody.empty();
-                                            var srno = 1;
-                                            // Iterate through JSON data and add rows to the table
-                                            jsonData.forEach(function (item) {
-                                                var newRowMovement = '<tr>' +
-                                                    '<td>' + srno++ + '</td>' +
-                                                    '<td>' + item.ReceiveID + '</td>' +
-                                                    '<td>' + item.MovementFrom + '</td>' +
-                                                    '<td>' + item.MovementTo + '</td>' +
-                                                    '<td>' + item.UserID + '</td>' +
-                                                    '<td>' + item.UserName + '</td>' +
-                                                    '<td>' + new Date(item.CreatedOn).toLocaleString() + '</td>' +
-                                                    '</tr>';
-                                                tableBody.append(newRowMovement);
-                                            });
+                                        // Clear existing rows
+                                        tableBody.empty();
+                                        var srno = 1;
+                                        // Iterate through JSON data and add rows to the table
+                                        jsonData.forEach(function (item) {
+                                            var newRowMovement = '<tr>' +
+                                                '<td>' + srno++ + '</td>' +
+                                                '<td>' + item.ReceiveID + '</td>' +
+                                                '<td>' + item.MovementFrom + '</td>' +
+                                                '<td>' + item.MovementTo + '</td>' +
+                                                '<td>' + item.UserID + '</td>' +
+                                                '<td>' + item.UserName + '</td>' +
+                                                '<td>' + new Date(item.CreatedOn).toLocaleString() + '</td>' +
+                                                '</tr>';
+                                            tableBody.append(newRowMovement);
+                                        });
 
-                                            // Show the table
-                                            $('#movementTable').show();
-                                        }
+                                        // Show the table
+                                        $('#movementTable').show();
+                                    }
 
-                                        // Call the function to fill the table on page load
-                                        fillTableFromJson();
-                                    });
-                                </script>
+                                    // Call the function to fill the table on page load
+                                    fillTableFromJson();
+                                });
+                            </script>
 
-                            </div>
-                        </fieldset>
+                        </div>
+                    </fieldset>
 
                 }
 

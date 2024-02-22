@@ -395,8 +395,8 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 if (response.IsSuccessStatusCode)
                 {                    
                     string responseData = await response.Content.ReadAsStringAsync();
-                    return Json(new { data = responseData });
-                   // return Content($"{{\"data\": {responseData}}}", "application/json");
+                  //  return Json(new { data = responseData });
+                   return Content($"{{\"data\": {responseData}}}", "application/json");
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {

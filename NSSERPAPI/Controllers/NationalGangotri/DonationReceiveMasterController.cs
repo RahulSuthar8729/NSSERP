@@ -150,7 +150,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 return BadRequest("Error retrieving states.");
             }
         }
-       
+
 
         [HttpGet]
         public IActionResult GetPurposeHead()

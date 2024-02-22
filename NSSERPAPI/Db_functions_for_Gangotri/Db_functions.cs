@@ -428,6 +428,28 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             }
         }
 
+        public string GetMobileListJsonByDonorID(int ref_id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { DonorID = ref_id };
+                var result = connection.Query<dynamic>("GetDonationReceiveMultiMobilebyID", parameters, commandType: CommandType.StoredProcedure);
+                return JsonConvert.SerializeObject(result);
+            }
+        }
+
+        public string GetIdentityListJsonByDonorID(int ref_id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { DonorID = ref_id };
+                var result = connection.Query<dynamic>("GetDonationReceiveMultiIdentitybyID", parameters, commandType: CommandType.StoredProcedure);
+                return JsonConvert.SerializeObject(result);
+            }
+        }
+
         public string GetBankDetailsListJsonById(int ref_id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -489,7 +511,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             {
                 connection.Open();
 
-                var parameters = new { InputPincode = pinCode };
+                var parameters = new { PinCode = pinCode };
                 var result = connection.QueryFirstOrDefault<dynamic>("GetLocationDetailsByPincode", parameters, commandType: CommandType.StoredProcedure);
 
                 // Assuming you want to return JSON
