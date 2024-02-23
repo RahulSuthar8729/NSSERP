@@ -1,0 +1,1523 @@
+﻿@using System.Security.Claims;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.IO;
+
+@model NSSERP.Areas.NationalGangotri.Models.DonorMaster;
+@{
+    ViewData["Title"] = "Donor Master";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var temporaryFolder = Href("/TempDocDonationReceive");
+    var rootUrl = Url.Content("~");
+    var UserDepartment = User.FindFirst("Department")?.Value;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <style>
+        .card-header.sticky-top {
+            background-color: #fff;
+            z-index: 1000;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+    @section scripts {
+        <script>
+            function convertToUpperCase(input) {
+                input.value = input.value.toUpperCase();
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#submitButton').click(function (event) {
+                    // Prevent the default form submission
+                    event.preventDefault();
+
+                    // Trigger HTML5 form validation
+                    $('#donationForm')[0].reportValidity();
+
+                    // Check if the form is valid
+                    if ($('#donationForm')[0].checkValidity()) {
+                        // If valid, submit the form
+                        $('#donationForm').submit();
+                    } else {
+                        // If not valid, focus on the first invalid field
+                        $('#donationForm :invalid').first().focus();
+                    }
+                });
+            });
+        </script>
+    }
+</head>
+<body>
+    <div class="card">
+
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">DONOR</span>
+                        <span style="color:#28166f">MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="donationForm" action="/NationalGangotri/DonationReceiveMaster/Home" enctype="multipart/form-data" method="post">
+                @Html.AntiForgeryToken()
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#personalDetailsContent" aria-expanded="false" aria-controls="personalDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Personal Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="personalDetailsContent" class="nested-form-container collapse show">
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <input type="checkbox" id="anonymousdonor" name="anonymousdonor">
+                                <label class="form-check-label font-weight-bold fs-5" for="anonymousdonor">Anonymous Donor</label>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="groupNgCode">Group NgCode:</label>
+                                <input type="text" class="form-control" id="GroupNGCode" name="GroupNGCode">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="onlineCustId">Online CustId:</label>
+                                <input type="text" class="form-control" id="onlineCustId" name="onlineCustId">
+                            </div>
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="upiId">UPI ID:</label>
+                                <input type="text" readonly class="form-control" id="upiId" name="upiId">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="mailingNo">Mailing No.</label>
+                                <input type="text" class="form-control" id="mailingNo" name="mailingNo">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="referenceNo">Reference No.</label>
+                                <input type="text" class="form-control" id="referenceNo" name="referenceNo">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dateOfEntry">Date of Entry</label>
+                                <input type="date" class="form-control" id="dateOfEntry" name="dateOfEntry">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="category">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="donor">Donor</option>
+                                    <option value="sample">Sample</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="appShree" name="appShree">
+                                    <label class="form-check-label fs-5" for="appShree">App Shree ka Purn Vivran Received</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="FirstName" class="mb-2">First Name<span style="color: red;">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select" id="NamePrefix" required name="NamePrefix" asp-for="NamePrefix">
+                                            <option value="Select" @(Model != null && Model.NamePrefix == "Select" ? "selected" : "")>Select</option>
+                                            <option value="MR." @(Model != null && Model.NamePrefix == "MR." ? "selected" : "")>MR.</option>
+                                            <option value="MS." @(Model != null && Model.NamePrefix == "MS." ? "selected" : "")>MS.</option>
+                                            <option value="SHRI" @(Model != null && Model.NamePrefix == "SHRI" ? "selected" : "")>SHRI</option>
+                                            <option value="MRS." @(Model != null && Model.NamePrefix == "MRS." ? "selected" : "")>MRS.</option>
+                                            <option value="SMT." @(Model != null && Model.NamePrefix == "SMT." ? "selected" : "")>SMT.</option>
+                                            <option value="MISS" @(Model != null && Model.NamePrefix == "MISS" ? "selected" : "")>MISS</option>
+                                            <option value="M/s" @(Model != null && Model.NamePrefix == "M/s" ? "selected" : "")>M/s</option>
+                                            <option value="DR." @(Model != null && Model.NamePrefix == "DR." ? "selected" : "")>DR.</option>
+                                            <option value="ER." @(Model != null && Model.NamePrefix == "ER." ? "selected" : "")>ER.</option>
+                                            <option value="COL." @(Model != null && Model.NamePrefix == "COL." ? "selected" : "")>COL.</option>
+                                            <option value="LT. COL." @(Model != null && Model.NamePrefix == "LT. COL." ? "selected" : "")>LT. COL.</option>
+                                            <option value="CAPT." @(Model != null && Model.NamePrefix == "CAPT." ? "selected" : "")>CAPT.</option>
+                                            <option value="MAJOR" @(Model != null && Model.NamePrefix == "MAJOR" ? "selected" : "")>MAJOR</option>
+                                            <option value="SUBEDAR" @(Model != null && Model.NamePrefix == "SUBEDAR" ? "selected" : "")>SUBEDAR</option>
+                                            <option value="PROF." @(Model != null && Model.NamePrefix == "PROF." ? "selected" : "")>PROF.</option>
+                                            <option value="Master" @(Model != null && Model.NamePrefix == "Master" ? "selected" : "")>Master</option>
+                                            <option value="BY" @(Model != null && Model.NamePrefix == "BY" ? "selected" : "")>BY</option>
+                                            <option value="PANDIT" @(Model != null && Model.NamePrefix == "PANDIT" ? "selected" : "")>PANDIT</option>
+                                            <option value="BRIGADIER" @(Model != null && Model.NamePrefix == "BRIGADIER" ? "selected" : "")>BRIGADIER</option>
+                                            <option value="ACHARYA" @(Model != null && Model.NamePrefix == "ACHARYA" ? "selected" : "")>ACHARYA</option>
+                                            <option value="WING COMMANDER" @(Model != null && Model.NamePrefix == "WING COMMANDER" ? "selected" : "")>WING C.</option>
+                                            <option value="EX.SUB.MAJ" @(Model != null && Model.NamePrefix == "EX.SUB.MAJ" ? "selected" : "")>EX.SUB.MAJ</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+
+                                    </div>
+                                    <input type="text" value="@Model.FirstName" required class="form-control" asp-for="FirstName" placeholder="Enter first name" id="FirstName" name="FirstName" oninput="convertToUpperCase(this)">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="MiddleName" class="mb-2">Middle Name</label>
+                                <input type="text" name="MiddleName" value="@Model.MiddleName" class="form-control" oninput="convertToUpperCase(this)" id="MiddleName" placeholder="Enter middle name" asp-for="MiddleName">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="LastName" class="mb-2">Last Name</label>
+                                <input type="text" name="LastName" value="@Model.LastName" class="form-control" oninput="convertToUpperCase(this)" id="LastName" placeholder="Enter last name" asp-for="LastName">
+                            </div>
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="Dateofbirth">Date Of Birth </label>
+                                <input type="date" value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="SoWoDo" class="mb-2">So/Wo/Do<span style="color: red;">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select" id="" required name="" asp-for="">
+                                            <option value="Select" @(Model != null && Model.NamePrefix == "Select" ? "selected" : "")>Select</option>
+                                            <option value="MR." @(Model != null && Model.NamePrefix == "MR." ? "selected" : "")>MR.</option>
+                                            <option value="MS." @(Model != null && Model.NamePrefix == "MS." ? "selected" : "")>MS.</option>
+                                            <option value="SHRI" @(Model != null && Model.NamePrefix == "SHRI" ? "selected" : "")>SHRI</option>
+                                            <option value="MRS." @(Model != null && Model.NamePrefix == "MRS." ? "selected" : "")>MRS.</option>
+                                            <option value="SMT." @(Model != null && Model.NamePrefix == "SMT." ? "selected" : "")>SMT.</option>
+                                            <option value="MISS" @(Model != null && Model.NamePrefix == "MISS" ? "selected" : "")>MISS</option>
+                                            <option value="M/s" @(Model != null && Model.NamePrefix == "M/s" ? "selected" : "")>M/s</option>
+                                            <option value="DR." @(Model != null && Model.NamePrefix == "DR." ? "selected" : "")>DR.</option>
+                                            <option value="ER." @(Model != null && Model.NamePrefix == "ER." ? "selected" : "")>ER.</option>
+                                            <option value="COL." @(Model != null && Model.NamePrefix == "COL." ? "selected" : "")>COL.</option>
+                                            <option value="LT. COL." @(Model != null && Model.NamePrefix == "LT. COL." ? "selected" : "")>LT. COL.</option>
+                                            <option value="CAPT." @(Model != null && Model.NamePrefix == "CAPT." ? "selected" : "")>CAPT.</option>
+                                            <option value="MAJOR" @(Model != null && Model.NamePrefix == "MAJOR" ? "selected" : "")>MAJOR</option>
+                                            <option value="SUBEDAR" @(Model != null && Model.NamePrefix == "SUBEDAR" ? "selected" : "")>SUBEDAR</option>
+                                            <option value="PROF." @(Model != null && Model.NamePrefix == "PROF." ? "selected" : "")>PROF.</option>
+                                            <option value="Master" @(Model != null && Model.NamePrefix == "Master" ? "selected" : "")>Master</option>
+                                            <option value="BY" @(Model != null && Model.NamePrefix == "BY" ? "selected" : "")>BY</option>
+                                            <option value="PANDIT" @(Model != null && Model.NamePrefix == "PANDIT" ? "selected" : "")>PANDIT</option>
+                                            <option value="BRIGADIER" @(Model != null && Model.NamePrefix == "BRIGADIER" ? "selected" : "")>BRIGADIER</option>
+                                            <option value="ACHARYA" @(Model != null && Model.NamePrefix == "ACHARYA" ? "selected" : "")>ACHARYA</option>
+                                            <option value="WING COMMANDER" @(Model != null && Model.NamePrefix == "WING COMMANDER" ? "selected" : "")>WING C.</option>
+                                            <option value="EX.SUB.MAJ" @(Model != null && Model.NamePrefix == "EX.SUB.MAJ" ? "selected" : "")>EX.SUB.MAJ</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+
+                                    </div>
+                                    <input type="text" value="" required class="form-control" asp-for="" id="" name="" oninput="convertToUpperCase(this)">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Date Of Anniversary</label>
+                                <input type="date" class="form-control" id="" name="">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Company</label>
+                                <input type="text" class="form-control" id="" name="">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Your Company</label>
+                                <input type="text" class="form-control" id="" name="">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Bussiness/Job Type</label>
+                                <select class="form-control" id="event" name="event">
+                                    <option value="0">select</option>
+                                    <option value="event">event 2</option>
+                                    <option value="event">event 3</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label class="d-block">Profession</label>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" id="naOption" name="profession" value="na" onchange="updateProfessionHiddenField()" checked>
+                                    <label class="form-check-label" for="naOption">N/A</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" id="serviceOption" name="profession" value="service" onchange="updateProfessionHiddenField()">
+                                    <label class="form-check-label" for="serviceOption">Service</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" id="businessOption" name="profession" value="business" onchange="updateProfessionHiddenField()">
+                                    <label class="form-check-label" for="businessOption">Business</label>
+                                </div>
+
+                                <input type="hidden" id="hdnProfession" name="Profession" />
+                            </div>
+
+                            <script>
+                                function updateProfessionHiddenField() {
+                                    var selectedProfession = document.querySelector('input[name="profession"]:checked').value;
+                                    document.getElementById('hdnProfession').value = selectedProfession;
+                                }
+                            </script>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Working In</label>
+                                <input type="text" class="form-control" id="" name="">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Your Designation</label>
+                                <input type="text" class="form-control" id="" name="">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">C/O</label>
+                                <input type="text" class="form-control" id="" name="">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Toatl Donation</label>
+                                <input type="text" class="form-control" id="" name="">
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="letteraddress" class="show border rounded p-3">
+                    <div class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon modal-header" type="button" data-toggle="collapse" data-target="#letteraddressContent" aria-expanded="false" aria-controls="letteraddressContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Letter Communication Address Details</span>
+                        </button>
+                    </div>
+
+                    <div id="letteraddressContent" class="nested-form-container collapse show">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1<span style="color: red;">*</span></label>
+                                <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1"></textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address2</label>
+                                <textarea class="form-control" name="Address2" asp-for="Address2" oninput="convertToUpperCase(this)" placeholder="E.g. Street Name" id="Address2" rows="1"></textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address3</label>
+                                <textarea class="form-control" name="Address3" asp-for="Address3" oninput="convertToUpperCase(this)" placeholder="E.g.Area, Landmark" id="Address3" rows="1"></textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
+                            </div>
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="PinCode">PinCode<span style="color: red;">*</span></label>
+                                <input type="number" required id="PinCode1" name="PinCode" asp-for="PinCode" class="form-control" />
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    // Function to handle pin code change
+                                    function handlePinCodeChange(enteredPinCode) {
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetLocationDetailsByPinCode',
+                                            type: 'GET',
+                                            data: { pincode: enteredPinCode },
+                                            success: function (response) {
+                                                // Parse the nested JSON string inside the 'data' property
+                                                var jsonData = JSON.parse(response.data);
+
+                                                // Access the correct property names
+                                                $('#CountryID').val(jsonData.CountryID);
+                                                //$("#CurrencyID").val(jsonData.CountryID);
+                                                // Populate State dropdown
+                                                $('#StateID').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
+
+                                                // Populate District dropdown
+                                                $('#DistrictID').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
+
+                                                var selectedCountryCode = jsonData.CountryCode;
+
+                                                // Set the selected value in the dropdown based on text
+                                                $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
+
+
+                                                // If the value is not in the dropdown, set it to an empty string
+                                                if ($('#countryCode').val() == null) {
+                                                    $('#countryCode').val('');
+                                                }
+
+
+                                                var selectedCountry = jsonData.CountryID;
+
+                                                $("#CurrencyID option").each(function () {
+                                                    if ($(this).val() == selectedCountry) {
+                                                        $(this).prop("selected", true);
+                                                    } else {
+                                                        $(this).prop("selected", false);
+                                                    }
+                                                });
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(error);
+                                            }
+                                        });
+                                    }
+
+                                    var initialPinCode = $('#PinCode1').val();
+                                    if (initialPinCode) {
+                                        handlePinCodeChange(initialPinCode);
+                                    }
+
+                                    // Bind blur event for PinCode input
+                                    $('#PinCode1').blur(function () {
+                                        var enteredPinCode = $(this).val();
+                                        handlePinCodeChange(enteredPinCode);
+                                    });
+
+
+                                });
+
+                            </script>
+
+                            <div class="form-group col-lg-3">
+                                <label for="CountryID">Country<span style="color: red;">*</span></label>
+                                <select class="form-control" required id="CountryID" asp-for="CountryID" name="CountryID">
+                                    <option value="" selected disabled>Select Country</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var country in Model.CountryList)
+                                        {
+                                            <option value="@country.CountryId" data-countryname="@country.CountryName">@country.CountryName</option>
+                                        }
+                                    }
+                                </select>
+                                <input type="hidden" name="CountryName" asp-for="CountryName" id="country1hidden" />
+                                <script>
+                                    $(document).ready(function () {
+                                        // Function to set selected item and update hidden field
+                                        function setSelectedCountry() {
+                                            var selectedCountryName = $("#CountryId").find("option:selected").data("countryname");
+                                            $("#country1hidden").val(selectedCountryName);
+                                            $('#countryCode').val($("#CountryId").val());
+                                        }
+
+                                        // Attach change event to the dropdown
+                                        $("#CountryId").change(function () {
+                                            setSelectedCountry();
+                                        });
+
+                                        // Set the selected item based on model's CountryID when the page loads
+                                        var modelCountryID = parseInt('@Model.CountryId'); // Convert to number
+                                        // Convert to string for comparison
+                                        if (modelCountryID) {
+                                            $("#CountryID").val(modelCountryID);
+                                            setSelectedCountry(); // Update the hidden field
+                                        }
+                                    });
+                                </script>
+                            </div>
+
+
+                            <script>
+                                $(document).ready(function () {
+                                    // Set the initial state of the currency dropdown
+                                    updateCurrencyDropdown();
+
+                                    // Handle change event on the country dropdown
+                                    $("#CountryID").on("change", function () {
+                                        updateCurrencyDropdown();
+                                    });
+
+                                    function updateCurrencyDropdown() {
+                                        var selectedCountry = $('#CountryID').val();
+                                        $("#CurrencyID option").each(function () {
+                                            if ($(this).val() == selectedCountry) {
+                                                $(this).prop("selected", true);
+                                            } else {
+                                                $(this).prop("selected", false);
+                                            }
+                                        });
+                                    }
+                                });
+                            </script>
+
+                            <div class="form-group col-lg-3">
+                                <label for="StateID">State<span style="color: red;">*</span></label>
+                                <select class="form-control" required asp-for="StateID" id="StateID" name="StateID">
+                                    <option value="" selected disabled>Select State</option>
+                                </select>
+                            </div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('#CountryID').change(function () {
+                                        var selectedCountryId = $(this).val();
+
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetStatesByCountry',
+                                            type: 'GET',
+                                            data: { countryId: selectedCountryId },
+                                            success: function (response) {
+                                                var data = JSON.parse(response.data);
+                                                // Clear and populate state dropdown with retrieved states
+                                                $('#StateID').empty().append('<option value="" selected disabled>Select State</option>');
+                                                $.each(data, function (index, state) {
+                                                    $('#StateID').append('<option value="' + state.StateId + '">' + state.StateName + '</option>');
+                                                });
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(error); // Handle errors if any
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="DistrictID">District<span style="color: red;">*</span></label>
+                                <select class="form-control" required asp-for="DistrictID" id="DistrictID" name="DistrictID">
+                                    <option value="" selected disabled>Select District</option>
+                                </select>
+                            </div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('#StateID').change(function () {
+                                        var selectedStateId = $(this).val();
+
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetDistrictsByState',
+                                            type: 'GET',
+                                            data: { stateId: selectedStateId },
+                                            success: function (response) {
+                                                var districtData = JSON.parse(response.data);
+                                                // Clear and populate district dropdown with retrieved districts
+                                                $('#DistrictID').empty().append('<option value="" selected disabled>Select District</option>');
+                                                $.each(districtData, function (index, district) {
+                                                    $('#DistrictID').append('<option value="' + district.DistrictID + '">' + district.DistrictName + '</option>');
+                                                });
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(error); // Handle errors if any
+                                            }
+                                        });
+
+                                        // Also, trigger an AJAX request here to fetch cities based on the selected state if needed
+                                    });
+                                });
+                            </script>
+
+
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="CityID">City<span style="color: red;">*</span></label>
+
+                                <select class="form-control" id="CityID" asp-for="CityID" name="CityID">
+                                    <option selected disabled>Select City</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var city in Model.CityList)
+                                        {
+                                            <option value="@city.CityID" @(Model.CityID == city.CityID ? "selected" : "")>
+                                                @city.CityName
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                                <input type="hidden" id="CityName" name="CityName" />
+
+                                <script>
+                                    // Add a change event listener to the select element using jQuery
+                                    $('#CityID').change(function () {
+                                        var selectedCityName = $(this).find('option:selected').text();
+                                        $('#CityName').val(selectedCityName);
+                                    });
+                                </script>
+                            </div>
+
+                            <div class="card-header text-center">
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" name="IsPermanentAddressDiff" value="true" id="sameasabove" @(Model.IsPermanentAddressDiff.GetValueOrDefault() ? "checked" : "") />
+                                    <label class="form-check-label" for="sameasabove">Is Permanent Address Different</label>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Function to toggle visibility based on checkbox state
+                            function togglePermanentAddress() {
+                                var permanentAddressFieldset = document.getElementById('permanentAddressFieldset');
+                                var isDifferentCheckbox = document.getElementById('sameasabove');
+
+                                // Check if the checkbox is checked
+                                if (isDifferentCheckbox.checked) {
+                                    permanentAddressFieldset.style.display = 'block';  // Show the fieldset
+                                } else {
+                                    permanentAddressFieldset.style.display = 'none';   // Hide the fieldset
+                                }
+                            }
+
+                            // Attach the function to the checkbox change event
+                            document.getElementById('sameasabove').addEventListener('change', togglePermanentAddress);
+
+                            // Initial call to set the initial state on page load
+                            togglePermanentAddress();
+                        });
+                    </script>
+
+                </div>
+                <fieldset id="permanentAddressFieldset" class="show border rounded p-3" style="display: none;">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#permanentAddressContent" aria-expanded="false" aria-controls="permanentAddressContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Permanent Address Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="permanentAddressContent" class="nested-form-container collapse show">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address1<span style="color: red;">*</span></label>
+                                <textarea class="form-control" name="P_Address1" asp-for="P_Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="P_Address1" rows="1">@Model.P_Address1</textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address2</label>
+                                <textarea class="form-control" name="P_Address2" asp-for="P_Address2" oninput="convertToUpperCase(this)" placeholder="E.g.Street Name" id="P_Address2" rows="1">@Model.P_Address2</textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="Address1">Address3</label>
+                                <textarea class="form-control" name="P_Address3" asp-for="P_Address3" oninput="convertToUpperCase(this)" placeholder="E.g. Area, Landmark" id="P_Address3" rows="1">@Model.P_Address3</textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="PinCode">PinCode</label>
+                                <input type="number" value="@Model.P_PinCode" id="PinCode2" name="P_PinCode" asp-for="P_PinCode" class="form-control" />
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    // Function to handle pin code change
+                                    function handlePinCodeChange(enteredPinCode, countryID) {
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetLocationDetailsByPinCode',
+                                            type: 'GET',
+                                            data: { pinCode: enteredPinCode },
+                                            success: function (response) {
+                                                // Parse the nested JSON string inside the 'data' property
+                                                var jsonData = JSON.parse(response.data);
+
+                                                // Populate Country dropdown
+                                                $('#CountryID2').val(jsonData.CountryID);
+
+                                                // Populate State dropdown
+                                                $('#StateID2').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
+
+                                                // Populate District dropdown
+                                                $('#DistrictID2').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
+
+
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(error);
+                                            }
+                                        });
+                                    }
+
+                                    // Trigger blur event if the initial pin code has a value
+                                    var initialPinCode2 = $('#PinCode2').val();
+                                    if (initialPinCode2) {
+                                        handlePinCodeChange(initialPinCode2);
+                                    }
+
+                                    // Bind blur event for PinCode2 input
+                                    $('#PinCode2').blur(function () {
+                                        var enteredPinCode2 = $(this).val();
+                                        handlePinCodeChange(enteredPinCode2);
+                                    });
+
+                                    // Write additional logic here for the change events if needed
+                                });
+
+                            </script>
+
+                            <div class="form-group col-lg-3">
+                                <label for="CountryID">Country:</label>
+                                <select class="form-control" id="CountryID2" asp-for="CountryID" name="CountryID">
+                                    <option value="" selected disabled>Select Country</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var country in Model.CountryList)
+                                        {
+                                            <option value="@country.CountryId">@country.CountryName</option>
+                                        }
+
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="StateID">State</label>
+                                <select class="form-control" id="StateID2" name="StateID">
+                                    <option value="" selected disabled>Select State</option>
+                                </select>
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#CountryID2').change(function () {
+                                        var selectedCountryId = $(this).val();
+
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetStatesByCountry',
+                                            type: 'GET',
+                                            data: { countryId: selectedCountryId },
+                                            success: function (response) {
+                                                var data = JSON.parse(response.data);
+                                                // Clear and populate state dropdown with retrieved states
+                                                $('#StateID2').empty().append('<option value="" selected disabled>Select State</option>');
+                                                $.each(data, function (index, state) {
+                                                    $('#StateID2').append('<option value="' + state.StateId + '">' + state.StateName + '</option>');
+                                                });
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(error); // Handle errors if any
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="DistrictID">District</label>
+                                <select class="form-control" id="DistrictID2" name="DistrictID">
+                                    <option value="" selected disabled>Select District</option>
+                                </select>
+                            </div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('#StateID2').change(function () {
+                                        var selectedStateId = $(this).val();
+
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetDistrictsByState',
+                                            type: 'GET',
+                                            data: { stateId: selectedStateId },
+                                            success: function (response) {
+                                                var districtData = JSON.parse(response.data);
+                                                // Clear and populate district dropdown with retrieved districts
+                                                $('#DistrictID2').empty().append('<option value="" selected disabled>Select District</option>');
+                                                $.each(districtData, function (index, district) {
+                                                    $('#DistrictID2').append('<option value="' + district.DistrictID + '">' + district.DistrictName + '</option>');
+                                                });
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(error); // Handle errors if any
+                                            }
+                                        });
+
+                                        // Also, trigger an AJAX request here to fetch cities based on the selected state if needed
+                                    });
+                                });
+                            </script>
+
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="CityID">City</label>
+                                <select class="form-control" id="CityID2" name="CityID">
+                                    <option selected disabled>Select City</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var city in Model.CityList)
+                                        {
+                                            <option value="@city.CityID" @(Model.P_CityID == city.CityID ? "selected" : "")>@city.CityName</option>
+                                        }
+                                    }
+                                </select>
+                                <input type="hidden" id="P_CityName" name="P_CityName" />
+
+                                <script>
+                                    // Add a change event listener to the select element using jQuery
+                                    $('#CityID2').change(function () {
+                                        var selectedCityName = $(this).find('option:selected').text();
+                                        $('#P_CityName').val(selectedCityName);
+                                    });
+                                </script>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#contactDetailsContent" aria-expanded="false" aria-controls="contactDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Contact Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="contactDetailsContent" class="nested-form-container collapse show">
+                        <div class="row">
+                            <!-- Call -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block">
+                                    Call:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsCallActive" value="yes" checked>
+                                    Yes
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsCallActive" value="no">
+                                    No
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block">
+                                    Messages:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsMsgActive" value="yes" checked>
+                                    Yes
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsMsgActive" value="no">
+                                    No
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block">
+                                    WhatsApp:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsWhatsAppActive" value="yes" checked>
+                                    Yes
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsWhatsAppActive" value="no">
+                                    No
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block">
+                                    Email:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsEmailActive" value="yes" checked>
+                                    Yes
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsEmailActive" value="no">
+                                    No
+                                </div>
+                            </div>
+
+                            <!-- Letter Communication -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block">
+                                    Letter Communication:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsLetterCommunicationActive" value="yes" checked>
+                                    Yes
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsLetterCommunicationActive" value="no">
+                                    No
+                                </div>
+                            </div>
+
+                            <!-- Send Operation Photo -->
+                            <div class="col-md-2 mb-3">
+                                <label class="form-check-label d-block">
+                                    Send Operation Photo:
+                                </label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsSendoperationPhotoActive" value="yes" checked>
+                                    Yes
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="IsSendoperationPhotoActive" value="no">
+                                    No
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <div class="form-group col-lg-3">
+                                <label for="contactType" class="mr-2">Contact Type<span style="color: red;">*</span></label>
+                                <select class="form-control" id="contactType" name="contactType">
+                                    <option value="Mobile">Mobile No.</option>
+                                    <option value="WhatsApp">WhatsApp No.</option>
+                                    <option value="Phone(O)">Office Phone</option>
+                                    <option value="Phone(R)">Residence Phone</option>
+                                    <option value="Email">Email ID</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="contactDetail" class="mr-2">Contact Detail<span style="color: red;">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
+                                            <option value="" selected disabled>Select</option>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var countrycode in Model.CountryList)
+                                                {
+                                                    <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <input type="text" class="form-control" id="contactDetail" name="contactDetail" placeholder="Enter your contact detail">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="addDetail"><i class="fas fa-plus"></i>Add</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="contactDetailsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Contact Type</th>
+                                        <th>Country Code</th>
+                                        <th>Contact Detail</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table rows will be dynamically added here -->
+                                </tbody>
+                            </table>
+
+                            <input type="hidden" asp-for="MobileList" name="MobileList" id="mobileListField" />
+
+                            <script>
+                                $(document).ready(function () {
+                                    // Declare donorid variable at the beginning
+                                    var donorid = $("#DonorID").val();
+
+                                    $("#contactType").change(function () {
+                                        var selectedContactType = $(this).val();
+                                        if (selectedContactType === 'Email') {
+                                            $("#countryCode").hide();
+                                            $("#countryCodeHeader").hide();
+                                            $("#contactDetail").attr("placeholder", "Enter your email");
+                                        } else {
+                                            $("#countryCode").show();
+                                            $("#countryCodeHeader").show();
+                                            $("#contactDetail").attr("placeholder", "Enter your contact detail");
+                                        }
+                                    });
+
+                                    var mobileListJson = @Html.Raw(Model.MobileListJson);
+
+                                    // If MobileListJson is null, use data from the model directly
+                                    if (!mobileListJson) {
+                                        // Use data from the model
+                                        mobileListJson = @Html.Raw(JsonConvert.SerializeObject(Model.MobileList));
+                                    }
+
+                                    if (mobileListJson) {
+                                        // Loop through each item in the JSON array
+                                        $.each(mobileListJson, function (index, item) {
+                                            // Add a new row to the table
+                                            var newRowmobilelist = $("<tr>");
+                                            newRowmobilelist.append("<td>" + item.ContactType + "</td>");
+                                            newRowmobilelist.append("<td>" + item.CountryCode + "</td>");
+                                            newRowmobilelist.append("<td>" + item.MobileNumber + "</td>");
+                                            newRowmobilelist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+
+                                            // Add a special class to identify rows from MobileListJson
+                                            newRowmobilelist.addClass("json-data-row");
+
+                                            updateContactDetailsHiddenField();
+                                            $("#contactDetailsTable tbody").append(newRowmobilelist);
+
+                                            // Show the table
+                                            $("#contactDetailsTable").css("visibility", "visible");
+                                        });
+                                    }
+
+                                    $("#addDetail").on("click", function () {
+                                        var ContactType = $("#contactType").val();
+                                        var countryCode = $("#countryCode").find(':selected').text();
+                                        var contactDetail = $("#contactDetail").val();
+                                        var ReceiveHeadName = $('#IsReceiveHeadDiffrent').is(':checked') ?
+                                            $("#ReceiveHeadName").find(':selected').text() :
+                                            "@UserDepartment";
+
+                                        var contactDetailPattern;
+
+                                        if (ContactType === 'Email') {
+                                            contactDetailPattern = /^[^\s]+[^\s]+\.[^\s]+$/;
+                                            if (!contactDetailPattern.test(contactDetail)) {
+                                                alert("Invalid email format. Please enter a valid email address.");
+                                                return;
+                                            }
+                                        } else if (ContactType === 'Mobile') {
+                                            // Check if the country code is +91 (India)
+                                            if (countryCode === '+91') {
+                                                contactDetailPattern = /^\d{10}$/; // 10 digits for India
+                                            } else {
+                                                // For other countries, remove validation or add specific validation patterns
+                                                contactDetailPattern = /^\d+$/; // Example: Any number of digits
+                                            }
+
+                                            if (!contactDetailPattern.test(contactDetail)) {
+                                                alert("Invalid mobile number format for the selected country code. Please enter a valid mobile number.");
+                                                return;
+                                            }
+                                        } else {
+                                            // Add additional validation for other contact types if needed
+                                        }
+
+                                        var newRowContactDetails = $("<tr>");
+                                        newRowContactDetails.append("<td>" + ContactType + "</td>");
+                                        newRowContactDetails.append("<td>" + (ContactType === 'Email' ? '' : countryCode) + "</td>");
+                                        newRowContactDetails.append("<td>" + contactDetail + "</td>");
+                                        newRowContactDetails.append("<td style='display:none'>" + donorid + "</td>");
+                                        newRowContactDetails.append("<td style='display:none'>" + ReceiveHeadName + "</td>");
+                                        newRowContactDetails.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+
+                                        newRowContactDetails.addClass("manual-data-row");
+
+                                        $("#contactDetailsTable tbody").append(newRowContactDetails);
+                                        updateContactDetailsHiddenField();
+                                        $("#contactDetailsTable").css("visibility", "visible");
+                                        $("#contactDetail").val("");
+                                    });
+
+                                    $("#contactDetailsTable").on("click", ".delete-row", function () {
+                                        var row = $(this).closest("tr");
+                                        row.remove();
+                                        updateContactDetailsHiddenField();
+
+                                        if ($("#contactDetailsTable tbody tr").length === 0) {
+                                            $("#contactDetailsTable").css("visibility", "hidden");
+                                        }
+                                    });
+
+                                    function updateContactDetailsHiddenField() {
+                                        var tableDataContactDetails = [];
+
+                                        $("#contactDetailsTable tbody tr").each(function () {
+                                            var rowDataContactDetails = {};
+                                            $(this).find("td").each(function (index, element) {
+                                                if (index === 0) {
+                                                    rowDataContactDetails.ContactType = $(element).text();
+                                                } else if (index === 1) {
+                                                    rowDataContactDetails.CountryCode = $(element).text();
+                                                } else if (index === 2) {
+                                                    rowDataContactDetails.ContactDetail = $(element).text();
+                                                }
+                                            });
+
+                                            tableDataContactDetails.push(rowDataContactDetails);
+                                        });
+
+                                        $("#mobileListField").val(JSON.stringify(tableDataContactDetails));
+                                    }
+                                });
+                            </script>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#identityDetailsContent" aria-expanded="false" aria-controls="identityDetailsContent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Identity Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="identityDetailsContent" class="nested-form-container collapse show">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="IdentityType">Identity Type</label>
+                                <select class="form-control" id="identityType">
+                                    <option value="0">Select</option>
+                                    <option value="Aadhar">Aadhar</option>
+                                    <option value="PAN">PAN</option>
+                                    <option value="Passport">Passport</option>
+                                    <option value="DrivingLicence">Driving Licence</option>
+                                    <option value="RationCard">Ration Card</option>
+                                    <option value="VoterID">Voter ID</option>
+                                    <option value="TaxID">Tax Identification</option>
+                                    <!-- Add more identity types as needed -->
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="IdentityNumber">Identity Number</label>
+                                <input class="form-control" id="identityNumber" type="text" name="" />
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    // Add an event listener for identity type change
+                                    $('#identityType').change(function () {
+                                        // Get the selected identity type
+                                        var selectedIdentityType = $(this).val();
+
+                                        // Set the watermark text based on the selected identity type
+                                        var watermarkText = getWatermarkText(selectedIdentityType);
+
+                                        // Apply the watermark to the identity number input
+                                        $('#identityNumber').attr('placeholder', watermarkText);
+                                    });
+
+                                    // Function to get watermark text based on identity type
+                                    function getWatermarkText(identityType) {
+                                        switch (identityType) {
+                                            case 'Aadhar':
+                                                return 'Enter Aadhar Number';
+                                            case 'PAN':
+                                                return 'Enter PAN Number';
+                                            case 'Passport':
+                                                return 'Enter Passport Number';
+                                            case 'DrivingLicence':
+                                                return 'Enter Driving Licence Number';
+                                            case 'RationCard':
+                                                return 'Enter Ration Card Number';
+                                            case 'VoterID':
+                                                return 'Enter Voter ID Number';
+                                            case 'TaxID':
+                                                return 'Enter Tax Identification Number';
+                                            default:
+                                                return 'Enter Identity Number';
+                                        }
+                                    }
+                                });
+                            </script>
+                            <div class="form-group col-lg-3">
+                                <br />
+                                <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
+                            </div>
+                        </div>
+
+                        <div class="row" id="addedIdentities" style="display: none;">
+                            <!-- Added identities will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </fieldset>
+                <input type="hidden" id="identityDetails" name="IdentityList" asp-for="IdentityList" />
+
+                <script>
+                    $(document).ready(function () {
+                        var donorid = $("#DonorID").val();
+                        var identityListJson = @Html.Raw(Model.IdentityListJson);
+
+                        // If IdentityListJson is null, use data from the model directly
+                        if (!identityListJson) {
+                            // Use data from the model
+                            identityListJson = @Html.Raw(JsonConvert.SerializeObject(Model.IdentityList));
+                        }
+
+                        if (identityListJson) {
+                            // Log the parsed JSON for debugging
+                            console.log("Parsed Identity List:", identityListJson);
+
+                            // Loop through each item in the JSON array
+                            $.each(identityListJson, function (index, identity) {
+                                // Log each identity for debugging
+                                console.log("Identity:", identity);
+
+                                // Ensure that identityType and identityNumber are accessed correctly
+                                var type = identity.identityType;
+                                var number = identity.identityNumber;
+
+                                var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
+
+                                // Add the new identity to the array
+                                existingIdentities.push(identity);
+
+                                // Set the JSON stringified identities to the hidden input
+                                $("#identityDetails").val(JSON.stringify(existingIdentities));
+
+                                // Create a new row for the added identity
+                                var newRowidentityList = $("<div class='form-group col-lg-3'>");
+                                newRowidentityList.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                newRowidentityList.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                // newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+
+                                // Append the new row to the container
+                                $("#addedIdentities").append(newRowidentityList);
+
+                                // Show the added identities section
+                                $("#addedIdentities").css("display", "flex");
+                            });
+
+                            // Update the hidden field value with the existing identities
+                            updateHiddenField(identityListJson);
+
+                            // Show the added identities section
+                            $("#addedIdentities").css("display", "flex");
+                        }
+
+                        $("#addIdentity").on("click", function () {
+                            // Get selected identity type and number
+                            var selectedIdentityType = $("#identityType").val();
+                            var identityNumber = $("#identityNumber").val().trim();
+
+                            // Validate input and identity number based on type
+                            var isValid = validateIdentity(selectedIdentityType, identityNumber);
+
+                            if (!isValid) {
+                                return;
+                            }
+                            var ReceiveHeadName = '';
+
+                            if ($('#IsReceiveHeadDiffrent').is(':checked')) {
+                                ReceiveHeadName = $("#ReceiveHeadName").find(':selected').text();
+                            } else {
+                                ReceiveHeadName = "@UserDepartment";
+                            }
+                            // Check if an identity of the same type already exists
+                            var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
+                            var existingIdentity = existingIdentities.find(function (identity) {
+                                return identity.IdentityType === selectedIdentityType;
+                            });
+
+                            if (existingIdentity) {
+                                alert("Identity of type " + selectedIdentityType + " already exists. You cannot add it again.");
+                                return;
+                            }
+
+                            // Create a new object for the added identity
+                            var identity = {
+                                IdentityType: selectedIdentityType,
+                                IdentityNumber: identityNumber,
+                                DonorID: donorid,
+                                ReceiveHead: ReceiveHeadName
+                            };
+
+                            // Append the new identity to the container
+                            appendIdentityToContainer(identity);
+
+                            // Update the hidden field value with the updated identities
+                            updateHiddenField();
+
+                            // Clear input fields
+                            $("#identityType").val("0");
+                            $("#identityNumber").val("");
+                            $("#identityNumber").attr("placeholder", "");
+                        });
+
+                        // Delete Identity button click event
+                        $(document).on("click", ".delete-identity", function (event) {
+                            // Prevent the default action (e.g., form submission)
+                            event.preventDefault();
+
+                            // Your existing delete logic here...
+
+                            // For example, you can get the parent div and remove it
+                            var parentDiv = $(this).closest(".form-group");
+                            parentDiv.remove();
+
+                            // Update the hidden field value with the updated identities
+                            updateHiddenField();
+
+                            // Your existing logic to update the hidden input and other actions...
+                        });
+
+                        // Function to validate identity number based on the selected identity type
+                        // Function to validate identity number based on the selected identity type
+                        function validateIdentity(identityType, identityNumber) {
+                            // Validate based on identity type
+                            switch (identityType) {
+                                case 'Aadhar':
+                                    // Aadhar validation: 12 digits
+                                    if (!/^\d{12}$/.test(identityNumber)) {
+                                        alert("Invalid Aadhar number format. Please enter 12 digits.");
+                                        return false;
+                                    }
+                                    break;
+                                case 'PAN':
+                                    // PAN validation: Uppercase letters and numbers, total 10 characters
+                                    if (!/^[A-Z]{5}\d{4}[A-Z]{1}$/.test(identityNumber)) {
+                                        alert("Invalid PAN number format. Please enter a valid PAN.");
+                                        return false;
+                                    }
+                                    break;
+                                // Add more cases for other identity types if needed
+                            }
+
+                            // Validation passed
+                            return true;
+                        }
+
+
+                        // Function to append an identity to the addedIdentities section
+                        function appendIdentityToContainer(identity) {
+                            // Collect existing identities from the hidden field
+                            var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
+
+                            // Add the new identity to the array
+                            existingIdentities.push(identity);
+
+                            // Set the JSON stringified identities to the hidden input
+                            $("#identityDetails").val(JSON.stringify(existingIdentities));
+
+                            // Create a new row for the added identity
+                            var newRowidentitydetails = $("<div class='form-group col-lg-3'>");
+                            newRowidentitydetails.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
+                            newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
+                            newRowidentitydetails.append("<input style='display:none'  id='" + identity.IdentityType + "' type='text' value='" + identity.DonorID + "' readonly />");
+                            newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "' type='text' value='" + identity.ReceiveHead + "' readonly />");
+                            newRowidentitydetails.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+
+                            // Append the new row to the container
+                            $("#addedIdentities").append(newRowidentitydetails);
+
+                            // Show the added identities section
+                            $("#addedIdentities").css("display", "flex");
+                        }
+
+                        // Function to update the hidden field value with the current identities
+                        function updateHiddenField() {
+                            var currentIdentities = [];
+
+                            // Loop through each item in the addedIdentities section
+                            $("#addedIdentities .form-group").each(function () {
+                                var identityType = $(this).find("label").text();
+                                var identityNumber = $(this).find("input").val();
+
+                                currentIdentities.push({
+                                    IdentityType: identityType,
+                                    IdentityNumber: identityNumber,
+                                    DonorID: donorid,
+                                    ReceiveHead: ReceiveHeadName
+                                });
+                            });
+
+                            // Update the hidden field value with the current identities
+                            $("#identityDetails").val(JSON.stringify(currentIdentities));
+                        }
+                    });
+
+
+                </script>
+
+
+                <fieldset class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#OtherDetails" aria-expanded="false" aria-controls="OtherDetails">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Other Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="OtherDetails" class="nested-form-container collapse show">
+                        <div class="row">
+
+                            <div class="col-lg-3">
+                                <label class="form-check-label d-block">
+                                    Send Sandipan
+                                </label>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="no"> No
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9">
+                                <label for="language">Select Language(s)</label>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="hindi" name="language" value="hindi">
+                                    <label class="form-check-label" for="hindi">Hindi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="english" name="language" value="english">
+                                    <label class="form-check-label" for="english">English</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="gujarati" name="language" value="gujarati">
+                                    <label class="form-check-label" for="gujarati">Gujarati</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="punjabi" name="language" value="punjabi">
+                                    <label class="form-check-label" for="punjabi">Punjabi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="marathi" name="language" value="marathi">
+                                    <label class="form-check-label" for="marathi">Marathi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="oriya" name="language" value="oriya">
+                                    <label class="form-check-label" for="oriya">Oriya</label>
+                                </div>
+                                <input type="hidden" id="Languages" name="Languages" />
+                            </div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('input[name="language"]').change(function () {
+                                        var selectedLanguages = $('input[name="language"]:checked').map(function () {
+                                            return this.value;
+                                        }).get().join(',');
+
+                                        $('#Languages').val(selectedLanguages);
+                                    });
+                                });
+                            </script>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Sandipan</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Sandipan Remarks</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Receipt Copy Require</label>
+                                <select class="form-control" id="" name="">
+                                    <option value="0">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-check-label fw-bolder d-lg-flex">
+                                    Visit
+                                </label>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="call" value="no"> No
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Visit Year</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Forgin NgCode Refrence</label>
+                                <input class="form-control" id="" type="text" name="" />
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">If Changes then enter Reason </label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label for="">Remarks</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <br />
+                <div class="container-lg">
+                    <div class="text-center">
+                        <script>
+                            function validateAmount() {
+                                var totalAmount = parseFloat($("#hdnTotalAmount").val());
+                                var purposeTotalAmount = parseFloat($("#hdnPurposetotalamount").val());
+
+                                // Check if the totalAmount is neither less nor greater than purposeTotalAmount
+                                if (totalAmount === purposeTotalAmount) {
+
+                                    return true; // Allow form submission
+                                } else {
+                                    alert("Total Donation amount must be equal to the purpose total amount.");
+                                    return false; // Prevent form submission
+                                }
+                            }
+                        </script>
+
+                        @{
+                            string BtnName = string.Empty;
+                            string viewParam = Context.Request.Query["view"];
+                            bool isViewEnabled = !string.IsNullOrEmpty(viewParam) && viewParam.ToLower() == "true";
+
+                            string editParam = Context.Request.Query["edit"];
+                            bool isEditEnabled = !string.IsNullOrEmpty(editParam) && editParam.ToLower() == "true";
+
+                            if (isEditEnabled)
+                            {
+                                BtnName = "Update";
+                            }
+                            else
+                            {
+                                BtnName = "Submit";
+                            }
+                        }
+
+                        <button type="submit" class="btn btn-success" style="@(isViewEnabled ? "display:none;" : "")">
+                            <i class="fas fa-check"></i>@BtnName
+                        </button>
+
+                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
