@@ -151,6 +151,20 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
         }
 
+        [HttpGet]
+        public IActionResult GetOperationAmountByQty(int Qty, string DataFlag, string CurrencyId)
+        {
+            try
+            {
+                var data = _dbFunctions.GetOperationAmountByQty(Qty, DataFlag, Convert.ToInt32(CurrencyId));
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error retrieving states.");
+            }
+        }
 
         [HttpGet]
         public IActionResult GetPurposeHead()
@@ -489,6 +503,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     rparameters.Add("@AnnounceAmount", receiptDetail.AnnounceAmount);
                                     rparameters.Add("@CreatedOn", DateTime.Now);
                                     rparameters.Add("@CreatedBy", model.UserID);
+                                    rparameters.Add("@BhojanMitiDate", receiptDetail.BhojanMitiDate);
 
 
                                     connection.Execute("InsertDonationReceiveMultiHead", rparameters, transaction, commandType: CommandType.StoredProcedure);
@@ -788,6 +803,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     rparameters.Add("@AnnounceAmount", receiptDetail.AnnounceAmount);
                                     rparameters.Add("@CreatedOn", DateTime.Now);
                                     rparameters.Add("@CreatedBy", model.UserID);
+                                    rparameters.Add("@BhojanMitiDate", receiptDetail.BhojanMitiDate);
 
 
                                     connection.Execute("InsertDonationReceiveMultiHead", rparameters, transaction, commandType: CommandType.StoredProcedure);

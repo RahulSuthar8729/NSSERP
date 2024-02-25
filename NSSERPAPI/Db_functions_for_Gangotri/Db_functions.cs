@@ -263,6 +263,16 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
             }
         }
+        public IEnumerable<dynamic> GetOperationAmountByQty(int Qty, string DataFlag, int CurrencyID)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new { Qty = Qty, DataFlag = DataFlag, CurrencyID = CurrencyID };
+                return connection.Query<dynamic>("[GetOperationAmountBYQty]", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
 
         public IEnumerable<dynamic> GetQtyAmtBySubHead(int yojnaid, string DataFlag, int CurrencyID)
         {

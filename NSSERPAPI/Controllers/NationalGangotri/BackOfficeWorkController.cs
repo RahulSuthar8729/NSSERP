@@ -132,7 +132,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
 
-          
+
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();
             firstDetail.currenciesList = _dbFunctions.GetCurrencyListWithCountry();
             firstDetail.masterDetails = _dbFunctions.GetDonationReciveDetails();

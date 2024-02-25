@@ -276,6 +276,42 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 // Log the exception or handle it as needed
                 return BadRequest("An error occurred while retrieving location details.");
             }
+        } 
+        [HttpGet]
+        public async Task<IActionResult> GetOperationAmountByQty(string Qty, string DataFlag, string CurrencyID)
+        {
+            try
+            {
+                // Construct the API endpoint URL with the pincode parameter
+                string apiUrl = $"api/DonationReceiveMaster/GetOperationAmountByQty?Qty={Convert.ToInt32(Qty)}&DataFlag={DataFlag}&CurrencyId={CurrencyID}";
+
+                // Make a GET request to the API endpoint
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the JSON content from the response
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    // Return JsonResult with structured data
+                    return Content($"{{\"data\": {json}}}", "application/json");
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Handle the case where the resource was not found
+                    return NotFound();
+                }
+                else
+                {
+                    // Handle other error cases if needed
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("An error occurred while retrieving location details.");
+            }
         }
 
         [HttpGet]

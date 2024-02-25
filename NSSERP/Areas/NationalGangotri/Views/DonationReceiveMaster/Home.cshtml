@@ -271,7 +271,7 @@
 
                                             // Bind the identity details
                                             bindIdentityDetails(data.IdentityListJson);
-                                  
+
 
                                         }
 
@@ -344,7 +344,7 @@
 
                                                 // Show the table
                                                 $("#contactDetailsTable").css("visibility", "visible");
-                                                $("#contactDetail").val(""); 
+                                                $("#contactDetail").val("");
                                             }
                                         }
 
@@ -1005,35 +1005,10 @@
                                             }
                                         });
 
-                                        // Also, trigger an AJAX request here to fetch cities based on the selected state if needed
+
                                     });
                                 });
                             </script>
-
-
-                            @*  <script>
-                            $(document).ready(function () {
-                            $('#DistrictID').change(function () {
-                            var selectedDistrictId = $(this).val();
-                            $.ajax({
-                            url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
-                            type: 'GET',
-                            data: { districtId: selectedDistrictId },
-                            success: function (response) {
-                            var data = JSON.parse(response.data);
-                            // Populate city dropdown with retrieved cities
-                            $('#CityID').empty().append('<option value="" selected disabled>Select City</option>');
-                            $.each(data, function (index, city) {
-                            $('#CityID').append('<option value="' + city.CityID + '">' + city.CityName + '</option>');
-                            });
-                            },
-                            error: function (xhr, status, error) {
-                            console.log(error); // Handle errors if any
-                            }
-                            });
-                            });
-                            });
-                            </script> *@
 
 
                             <div class="form-group col-lg-3">
@@ -1083,9 +1058,9 @@
 
                                 // Check if the checkbox is checked
                                 if (isDifferentCheckbox.checked) {
-                                    permanentAddressFieldset.style.display = 'block';  // Show the fieldset
+                                    permanentAddressFieldset.style.display = 'block';
                                 } else {
-                                    permanentAddressFieldset.style.display = 'none';   // Hide the fieldset
+                                    permanentAddressFieldset.style.display = 'none';
                                 }
                             }
 
@@ -1248,42 +1223,14 @@
                                                 });
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error); // Handle errors if any
+                                                console.log(error);
                                             }
                                         });
 
-                                        // Also, trigger an AJAX request here to fetch cities based on the selected state if needed
+
                                     });
                                 });
                             </script>
-
-
-                            @*         <script>
-                            $(document).ready(function () {
-                            $('#DistrictID2').change(function () {
-                            var selectedDistrictId = $(this).val();
-
-                            $.ajax({
-                            url: '/NationalGangotri/DonationReceiveMaster/GetCitiesByDistrictID',
-                            type: 'GET',
-                            data: { districtId: selectedDistrictId },
-                            success: function (response) {
-                            var data = JSON.parse(response.data);
-                            // Populate city dropdown with retrieved cities
-                            $('#CityID2').empty().append('<option value="" selected disabled>Select City</option>');
-                            $.each(data, function (index, city) {
-                            $('#CityID2').append('<option value="' + city.CityID + '">' + city.CityName + '</option>');
-                            });
-                            },
-                            error: function (xhr, status, error) {
-                            console.log(error); // Handle errors if any
-                            }
-                            });
-                            });
-                            });
-                            </script> *@
-
-
 
                             <div class="form-group col-lg-3">
                                 <label for="CityID">City</label>
@@ -1325,42 +1272,41 @@
                     <div id="contactDetailsContent" class="nested-form-container collapse">
 
                         <div class="row">
-                            @if (Model.ReceiveID == null)
-                            {
-                                <div class="form-group col-lg-3">
-                                    <label for="contactType" class="mr-2">Contact Type<span style="color: red;">*</span></label>
-                                    <select class="form-control" id="contactType" name="contactType">
-                                        <option value="Mobile">Mobile No.</option>
-                                        <option value="WhatsApp">WhatsApp No.</option>
-                                        <option value="Phone(O)">Office Phone</option>
-                                        <option value="Phone(R)">Residence Phone</option>
-                                        <option value="Email">Email ID</option>
-                                    </select>
-                                </div>
 
-                                <div class="form-group col-lg-3">
-                                    <label for="contactDetail" class="mr-2">Contact Detail<span style="color: red;">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
-                                                <option value="" selected disabled>Select</option>
-                                                @if (Model != null)
+                            <div class="form-group col-lg-3">
+                                <label for="contactType" class="mr-2">Contact Type<span style="color: red;">*</span></label>
+                                <select class="form-control" id="contactType" name="contactType">
+                                    <option value="Mobile">Mobile No.</option>
+                                    <option value="WhatsApp">WhatsApp No.</option>
+                                    <option value="Phone(O)">Office Phone</option>
+                                    <option value="Phone(R)">Residence Phone</option>
+                                    <option value="Email">Email ID</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="contactDetail" class="mr-2">Contact Detail<span style="color: red;">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="form-control" id="countryCode" asp-for="CountryCode" name="CountryCode">
+                                            <option value="" selected disabled>Select</option>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var countrycode in Model.CountryList)
                                                 {
-                                                    @foreach (var countrycode in Model.CountryList)
-                                                    {
-                                                        <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
-                                                    }
+                                                    <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
                                                 }
-                                            </select>
-                                        </div>
+                                            }
+                                        </select>
+                                    </div>
 
-                                        <input type="text" class="form-control" id="contactDetail" name="contactDetail" placeholder="Enter your contact detail">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" id="addDetail"><i class="fas fa-plus"></i>Add</button>
-                                        </div>
+                                    <input type="text" class="form-control" id="contactDetail" name="contactDetail" placeholder="Enter your contact detail">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="addDetail"><i class="fas fa-plus"></i>Add</button>
                                     </div>
                                 </div>
-                            }
+                            </div>
+
 
                             <table class="table table-bordered col-lg-3" style="visibility: hidden;" id="contactDetailsTable">
                                 <thead>
@@ -1520,71 +1466,70 @@
                     </legend>
 
                     <div id="identityDetailsContent" class="nested-form-container collapse">
-                        @if (Model.ReceiveID == null)
-                        {
-                            <div class="row">
-                                <div class="form-group col-lg-3">
-                                    <label for="IdentityType">Identity Type</label>
-                                    <select class="form-control" id="identityType">
-                                        <option value="0">Select</option>
-                                        <option value="Aadhar">Aadhar</option>
-                                        <option value="PAN">PAN</option>
-                                        <option value="Passport">Passport</option>
-                                        <option value="DrivingLicence">Driving Licence</option>
-                                        <option value="RationCard">Ration Card</option>
-                                        <option value="VoterID">Voter ID</option>
-                                        <option value="TaxID">Tax Identification</option>
-                                        <!-- Add more identity types as needed -->
-                                    </select>
-                                </div>
 
-                                <div class="form-group col-lg-3">
-                                    <label for="IdentityNumber">Identity Number</label>
-                                    <input class="form-control" id="identityNumber" type="text" name="" />
-                                </div>
-                                <script>
-                                    $(document).ready(function () {
-                                        // Add an event listener for identity type change
-                                        $('#identityType').change(function () {
-                                            // Get the selected identity type
-                                            var selectedIdentityType = $(this).val();
-
-                                            // Set the watermark text based on the selected identity type
-                                            var watermarkText = getWatermarkText(selectedIdentityType);
-
-                                            // Apply the watermark to the identity number input
-                                            $('#identityNumber').attr('placeholder', watermarkText);
-                                        });
-
-                                        // Function to get watermark text based on identity type
-                                        function getWatermarkText(identityType) {
-                                            switch (identityType) {
-                                                case 'Aadhar':
-                                                    return 'Enter Aadhar Number';
-                                                case 'PAN':
-                                                    return 'Enter PAN Number';
-                                                case 'Passport':
-                                                    return 'Enter Passport Number';
-                                                case 'DrivingLicence':
-                                                    return 'Enter Driving Licence Number';
-                                                case 'RationCard':
-                                                    return 'Enter Ration Card Number';
-                                                case 'VoterID':
-                                                    return 'Enter Voter ID Number';
-                                                case 'TaxID':
-                                                    return 'Enter Tax Identification Number';
-                                                default:
-                                                    return 'Enter Identity Number';
-                                            }
-                                        }
-                                    });
-                                </script>
-                                <div class="form-group col-lg-3">
-                                    <br />
-                                    <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
-                                </div>
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="IdentityType">Identity Type</label>
+                                <select class="form-control" id="identityType">
+                                    <option value="0">Select</option>
+                                    <option value="Aadhar">Aadhar</option>
+                                    <option value="PAN">PAN</option>
+                                    <option value="Passport">Passport</option>
+                                    <option value="DrivingLicence">Driving Licence</option>
+                                    <option value="RationCard">Ration Card</option>
+                                    <option value="VoterID">Voter ID</option>
+                                    <option value="TaxID">Tax Identification</option>
+                                    <!-- Add more identity types as needed -->
+                                </select>
                             </div>
-                        }
+
+                            <div class="form-group col-lg-3">
+                                <label for="IdentityNumber">Identity Number</label>
+                                <input class="form-control" id="identityNumber" type="text" name="" />
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    // Add an event listener for identity type change
+                                    $('#identityType').change(function () {
+                                        // Get the selected identity type
+                                        var selectedIdentityType = $(this).val();
+
+                                        // Set the watermark text based on the selected identity type
+                                        var watermarkText = getWatermarkText(selectedIdentityType);
+
+                                        // Apply the watermark to the identity number input
+                                        $('#identityNumber').attr('placeholder', watermarkText);
+                                    });
+
+                                    // Function to get watermark text based on identity type
+                                    function getWatermarkText(identityType) {
+                                        switch (identityType) {
+                                            case 'Aadhar':
+                                                return 'Enter Aadhar Number';
+                                            case 'PAN':
+                                                return 'Enter PAN Number';
+                                            case 'Passport':
+                                                return 'Enter Passport Number';
+                                            case 'DrivingLicence':
+                                                return 'Enter Driving Licence Number';
+                                            case 'RationCard':
+                                                return 'Enter Ration Card Number';
+                                            case 'VoterID':
+                                                return 'Enter Voter ID Number';
+                                            case 'TaxID':
+                                                return 'Enter Tax Identification Number';
+                                            default:
+                                                return 'Enter Identity Number';
+                                        }
+                                    }
+                                });
+                            </script>
+                            <div class="form-group col-lg-3">
+                                <br />
+                                <button class="btn btn-primary" type="button" id="addIdentity"><i class="fas fa-plus"></i>Add Identity</button>
+                            </div>
+                        </div>
+
                         <div class="row" id="addedIdentities" style="display: none;">
                             <!-- Added identities will be dynamically inserted here -->
                         </div>
@@ -2600,6 +2545,9 @@
                                 $(document).ready(function () {
                                     $('#headInput').change(function () {
                                         var selectedHead = $(this).val();
+                                        $('#DivBhojanmitiDate').toggle(selectedHead === '150');
+
+
                                         var curid = $('#CurrencyID').val();
                                         if (curid === null || curid === undefined || curid.trim() === "") {
                                             alert('Please select Currency first.');
@@ -2610,9 +2558,8 @@
                                             type: 'GET',
                                             data: { HeadID: selectedHead, DataFlag: "GANGOTRI", CurrencyID: curid },
                                             success: function (response) {
-                                                var data = response.data; // Extract the 'data' array from the response
+                                                var data = response.data;
 
-                                                // Clear and populate subhead dropdown with retrieved subheads
                                                 $('#subHeadInput').empty();
                                                 $('#subHeadInput').append('<option value="0">Select Purpose</option>');
                                                 $.each(data, function (index, head) {
@@ -2640,28 +2587,28 @@
                                         theme: 'classic',
                                         width: '100%',
 
-                                    }); 
+                                    });
                                     $('#autoQuantityInput').select2({
                                         theme: 'classic',
                                         width: '100%',
 
-                                    });  
+                                    });
                                     $('#BankID1').select2({
                                         theme: 'classic',
                                         width: '100%',
 
-                                    }); 
+                                    });
                                     $('#BankID2').select2({
                                         theme: 'classic',
                                         width: '100%',
 
-                                    });    
+                                    });
                                     $('#Instruction').select2({
                                         theme: 'classic',
                                         width: '100%',
 
                                     });
-                                   
+
                                     $('#Campaign').select2();
                                     $('#ID').select2();
                                     $('#headInput').select2({
@@ -2695,10 +2642,10 @@
                             <script>
                                 $(document).ready(function () {
                                     var initialAmount = 0; // Variable to store the initial amount
+                                    var curid = $('#CurrencyID').val();
 
                                     $('#subHeadInput').change(function () {
                                         var yojnaid = $(this).val();
-                                        var curid = $('#CurrencyID').val();
 
                                         if (curid === null || curid === undefined || curid.trim() === "") {
                                             alert('Please select Currency first.');
@@ -2712,35 +2659,7 @@
                                             success: function (response) {
                                                 var data = JSON.parse(response.data);
 
-                                                // Clear existing options
-                                                $('#autoQuantityInput').empty();
-
-                                                if (data.length > 0) {
-                                                    // Store the initial amount for later use
-                                                    initialAmount = parseFloat(data[0].Amt);
-
-                                                    if (data[0].Start === 0) {
-                                                        // Disable quantity input if data.start is 0
-                                                        $('#autoQuantityInput').prop('disabled', true);
-                                                        enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
-                                                    } else {
-                                                        // Enable quantity input if data.start is not 0
-                                                        $('#autoQuantityInput').prop('disabled', false);
-
-                                                        // Generate options in multiples of data.start
-                                                        for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
-                                                            $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
-                                                        }
-
-                                                        enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
-                                                    }
-
-                                                    // Set the initial amount in the ReceiptAmount input field
-                                                    $('#ReceiptAmount').val(initialAmount.toFixed(2));
-                                                    updateAnnounce();
-                                                } else {
-                                                    $('#ReceiptAmount').val('');
-                                                }
+                                                handleQtyAmtResponse(data);
                                             },
                                             error: function (xhr, status, error) {
                                                 console.log("AJAX error: " + error);
@@ -2748,31 +2667,78 @@
                                         });
                                     });
 
-                                    // Add event listener for the autoQuantityInput change event
-                                    $('#autoQuantityInput').change(function () {
-                                        // Get the selected quantity
-                                        var selectedQuantity = parseInt($(this).val());
-
-                                        // Calculate the total amount by multiplying quantity with the initial amount
-                                        var totalAmount = selectedQuantity * initialAmount;
-
-                                        // Set the total amount in the ReceiptAmount input field
-                                        $('#ReceiptAmount').val(totalAmount.toFixed(2));
-                                        updateAnnounce();
-                                    });
-
                                     $('#receiveamount').on('input', function () {
                                         updateAnnounce();
                                     });
+
+                                    $('#autoQuantityInput').change(function () {
+                                        var selectedQuantityIndex = $(this).val();
+                                        var selectedYojnaId = $('#subHeadInput').val();
+
+                                        if (selectedYojnaId === "9" || selectedYojnaId === "662") {
+                                            // If purpose ID is 2 or purpose text includes "operation"
+                                            GetAmountForOperationHead(selectedQuantityIndex);
+                                        } else {
+                                            handleRegularQuantityChange(selectedQuantityIndex);
+                                        }
+                                        updateAnnounce();
+                                    });
+
+                                    function handleQtyAmtResponse(data) {
+                                        // Clear existing options
+                                        $('#autoQuantityInput').empty();
+
+                                        if (data.length > 0) {
+                                            // Store the initial amount for later use
+                                            initialAmount = parseFloat(data[0].Amt);
+
+                                            if (data[0].Start === 0) {
+                                                // Disable quantity input if data.start is 0
+                                                $('#autoQuantityInput').prop('disabled', true);
+                                                enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
+                                            } else {
+                                                // Enable quantity input if data.start is not 0
+                                                $('#autoQuantityInput').prop('disabled', false);
+
+                                                // Generate options in multiples of data.start
+                                                for (var i = data[0].Start; i <= 1500; i += data[0].Start) {
+                                                    $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
+                                                }
+
+                                                enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
+                                            }
+
+                                            // Set the initial amount in the ReceiptAmount input field
+                                            $('#ReceiptAmount').val(initialAmount.toFixed(2));
+                                            updateAnnounce();
+                                        } else {
+                                            $('#ReceiptAmount').val('');
+                                        }
+                                    }
+
+                                    function handleRegularQuantityChange(selectedQuantityIndex) {
+                                        var Qty = selectedQuantityIndex;
+                                        var startingIndexText = $('#autoQuantityInput option:first').text();
+
+                                        var SLimit = startingIndexText;
+                                        var Amount = ((Qty / SLimit) * initialAmount).toFixed(2);
+                                        $('#ReceiptAmount').val(Amount);
+                                        updateAnnounce();
+                                    }
+
 
                                     function enableReceiptAmount() {
                                         // Check if the initial amount is 1, then enable the ReceiptAmount input field
                                         if (initialAmount === 1) {
                                             $('#ReceiptAmount').prop('readonly', false);
+                                            $('#autoQuantityInput').prop('disabled', true);
                                         } else {
                                             $('#ReceiptAmount').prop('readonly', true);
+                                            $('#autoQuantityInput').prop('disabled', false);
                                         }
                                     }
+
+
 
                                     function updateAnnounce() {
                                         // Get the value of the receiveamount input
@@ -2793,7 +2759,40 @@
                                             $('#announceamount').val("0.00");
                                         }
                                     }
+
+                                    function GetAmountForOperationHead(quantityIndex) {
+                                        $.ajax({
+                                            url: '/NationalGangotri/DonationReceiveMaster/GetOperationAmountByQty',
+                                            type: 'GET',
+                                            data: { Qty: quantityIndex, DataFlag: "GANGOTRI", CurrencyID: curid },
+                                            success: function (response) {
+
+                                                if (Array.isArray(response.data) && response.data.length > 0) {
+                                                    var amountFromApi = response.data[0].Amount;
+                                                    $('#ReceiptAmount').val(amountFromApi.toFixed(2));
+                                                    updateAnnounce();
+                                                } else {
+
+                                                    var rate = 3610;
+                                                    var Qty1 = quantityIndex - 101;
+                                                    var startingIndexText = $('#autoQuantityInput option:first').text();
+
+                                                    var Slimit = startingIndexText;
+                                                    var Amount = (Math.floor(rate * (Qty1 / Slimit)) + 361000).toFixed(2);
+
+                                                    $('#ReceiptAmount').val(Amount);
+                                                    updateAnnounce();
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log("AJAX error: " + error);
+                                            }
+                                        });
+                                    }
+
+
                                 });
+
                             </script>
 
 
@@ -2823,18 +2822,22 @@
                                         </select>
                                     </div>
 
-
                                     <div class="form-group col-lg-1">
                                         <label for="autoQuantity">Quantity</label>
                                         <select class="form-control" id="autoQuantityInput" name="autoQuantity">
                                             <option value="0">Select Qty</option>
                                         </select>
                                     </div>
+                                    <div class="form-group col-lg-2" id="DivBhojanmitiDate" style="display:none">
+                                        <label for="ReceiptAmount">Bhojan Miti Date</label>
+                                        <input class="form-control" id="bhojanMitiDate" type="date" name="bhojanMitiDate">
+                                    </div>
 
                                     <div class="form-group col-lg-2">
                                         <label for="ReceiptAmount">Amount</label>
                                         <input class="form-control" readonly id="ReceiptAmount" type="text" name="ReceiptAmount">
                                     </div>
+
                                     <div class="form-group col-lg-2">
                                         <label for="ReceiptAmount">Receive Amount</label>
                                         <input class="form-control" id="receiveamount" type="number" name="receiveamount">
@@ -2850,7 +2853,7 @@
                                     </div>
                                 </div>
                             }
-                            <div id="tableContainer" style="display: none;">
+                            <div id="tableContainerPurpose" style="display: none;">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -2860,10 +2863,11 @@
                                             <th>Purpose Amount</th>
                                             <th>Receive Amount</th>
                                             <th>Announce Amount</th>
+                                            <th></th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="dataTableBody"></tbody>
+                                    <tbody id="dataTablePurposeBody"></tbody>
                                 </table>
                             </div>
 
@@ -2873,8 +2877,8 @@
 
                             <script>
                                 $(document).ready(function () {
-                                    var tableBody = $("#dataTableBody");
-                                    var tableContainer = $("#tableContainer");
+                                    var tableBody = $("#dataTablePurposeBody");
+                                    var tableContainer = $("#tableContainerPurpose");
                                     var jsonDataField = $("#jsonData");
                                     var totalAmountInput = $("#TotalAmount");
                                     var announceTotalInput = $("#hdnAnnounceTotalAmount");
@@ -2891,7 +2895,11 @@
                                     var receiptsListJson = @Html.Raw(Model.ReceiptsListJson);
                                     if (receiptsListJson) {
                                         $.each(receiptsListJson, function (index, item) {
-                                            addTableRow(item.HeadName, item.SubHeadName, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount);
+                                            var dateObject = item.BhojanMitiDate ? new Date(item.BhojanMitiDate) : null;
+
+                                            var formattedDate = dateObject ? dateObject.toISOString().split('T')[0] : '';
+
+                                            addTableRow(item.HeadName, item.SubHeadName, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount, formattedDate);
                                         });
                                         toggleTableVisibility();
                                         updateAnnounceTotal();
@@ -2907,12 +2915,13 @@
                                         var receiveAmount = parseFloat($("#receiveamount").val()) || 0;
                                         var announceAmount = parseFloat($("#announceamount").val()) || 0;
                                         var TotalDonation = parseFloat(totalAmountInput.val()) || 0;
+                                        var bhojanDate = $("#bhojanMitiDate").val();
 
                                         // Check if the sum of amounts is not greater than TotalAmount
                                         var currentTotal = getCurrentTotalAmount();
                                         var materialDepositId = $("#MaterialDepositID").val();
 
-                                        addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount);
+                                        addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate);
                                         clearInputFields();
                                         updateHiddenField();
                                         updateAnnounceTotal();
@@ -2962,16 +2971,17 @@
                                     }
 
                                     // Function to add a new row
-                                    function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount) {
+                                    function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>`;
+                                                                                                                      <td>${head}</td>
+                                                                                                                      <td>${purpose}</td>
+                                                                                                                      <td>${quantity}</td>
+                                                                                                                      <td>${amount.toFixed(2)}</td>
+                                                                                                                      <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                      <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                      <td>${bhojandate}</td>
+                                                                                                                      <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
@@ -2981,7 +2991,7 @@
 
                                     // Function to clear input fields
                                     function clearInputFields() {
-                                        $("#ReceiptAmount, #receiveamount, #announceamount, #DonationMode").val("");
+                                        $("#ReceiptAmount, #receiveamount, #announceamount, #DonationMode,#bhojanMitiDate").val("");
                                     }
 
                                     // Function to update the hidden field with JSON data
@@ -2997,7 +3007,8 @@
                                                 "Quantity": columns.eq(2).text(),
                                                 "Amount": columns.eq(3).text(),
                                                 "ReceiveAmount": columns.eq(4).text(),
-                                                "AnnounceAmount": columns.eq(5).text()
+                                                "AnnounceAmount": columns.eq(5).text(),
+                                                "BhojanMitiDate": columns.eq(6).text()
                                             };
                                             data.push(item);
 
@@ -3251,13 +3262,12 @@
                                     announceCheckbox.on("change", function () {
                                         announceFieldset.toggle(this.checked);
 
-                                        // Hide the table if there are no rows
+
                                         if (!this.checked) {
                                             $("#announceTable").hide();
                                         }
                                     });
 
-                                    // Trigger the change event to initialize the state
                                     announceCheckbox.change();
 
                                     var tableBody = $("#tableBody");
