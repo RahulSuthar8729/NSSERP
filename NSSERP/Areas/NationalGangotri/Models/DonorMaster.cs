@@ -6,16 +6,17 @@ namespace NSSERP.Areas.NationalGangotri.Models
     public class DonorMaster
     {
         public string DataFlag { get; set; }
-        public bool IsAnonymous { get; set; }
+        public bool? IsAnonymous { get; set; }
         public int DonorID { get; set; }
-        public string CustId { get; set; }
-        public string UpiID { get; set; }
-        public string MailingNo { get; set; }
+        public string onlineCustId { get; set; }
+        public string GroupNGCode { get; set; }
+        public string upiId { get; set; }
+        public string mailingNo { get; set; }
 
-        public string ReferenceNo { get; set; }
-        public DateTime DOE { get; set; }
+        public string referenceNo { get; set; }
+        public DateTime DOdateOfEntryE { get; set; }
         public string DonorCat { get; set; }
-        public bool IsAppShreekaPurnVivranReceived { get; }
+        public bool? IsAppShreekaPurnVivranReceived { get; }
 
         public string NamePrefix { get; set; } = "";
         public string? FirstName { get; set; }
@@ -28,6 +29,12 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string Company { get; set; } = "";
         public string YourCompany { get; set; } = "";
         public string BussinessOrJobType { get; set; } = "";
+        public IEnumerable<BussinessType> bussinessTypesList { get; set; }
+        public class BussinessType()
+        {
+            public int b_id { get; set; }         
+            public string b_type { get; set;}
+        }
         public string Profession { get; set; } = "";
         public string WorkingIn { get; set; } = "";
         public string Designation { get; set; } = "";
@@ -53,6 +60,12 @@ namespace NSSERP.Areas.NationalGangotri.Models
             public int CityID { get; set; }
             public string CityName { get; set; }
         }
+
+        public IEnumerable<DonorType> DonorTypes { get; set; }
+        public class DonorType()
+        {
+            public string Type { get; set; }
+        }
         public bool? IsPermanentAddressDiff { get; set; }
         public string P_FullAddress { get; set; } = "";
         public string P_Address1 { get; set; } = "";
@@ -69,7 +82,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public int? P_CityID { get; set; }
         public string P_CityName { get; set; } = "";
 
-        public bool IsCallActive { get; set; } = true;
+        public bool? IsCallActive { get; set; } = true;
 
         public bool IsMsgActive { get; set; } = true;
         public bool IsWhatsAppActive { get; set; } = true;
@@ -84,12 +97,13 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string IdentityListJson { get; set; } = "";
 
         public bool IsSandipanSend { get; set; }
-        public string Languages { get; set; } = "";
+        public string language { get; set; } = "";
         public string Sandipan { get; set; } = "";
+        public string SandipanRemarksReason { get; set; } = "";
         public string SandipanRemarks { get; set; } = "";
         public string ReceiptCopyRequireOptions { get; set; } = "";
 
-        public bool IsVisit { get; set; }
+        public bool? IsVisit { get; set; }
         public string VisitYear { get; set; } = "";
         public string ForginNgCodeRefrence { get; set; } = "";
         public string ChangesRemarks { get; set; } = "";

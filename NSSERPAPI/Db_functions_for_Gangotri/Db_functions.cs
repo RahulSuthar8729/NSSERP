@@ -601,5 +601,19 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             }
         }
 
+
+        #region DonorMaster
+        public IEnumerable<dynamic> GetDonorTypes()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                return connection.Query<dynamic>("GetDonorTypes", commandType: CommandType.StoredProcedure);
+            }
+        }
+        #endregion
+
+
     }
 }

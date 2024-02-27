@@ -97,8 +97,10 @@
                     <div id="personalDetailsContent" class="nested-form-container collapse show">
                         <div class="row">
                             <div class="form-group col-lg-3">
-                                <input type="checkbox" id="anonymousdonor" name="anonymousdonor">
-                                <label class="form-check-label font-weight-bold fs-5" for="anonymousdonor">Anonymous Donor</label>
+
+                                <input class="form-check-input" id="IsAnonymous" name="IsAnonymous" type="checkbox" value="true" @(Model.IsAnonymous.GetValueOrDefault() ? "checked" : "") />
+
+                                <label class="form-check-label font-weight-bold fs-5" for="IsAnonymous">Anonymous Donor</label>
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -132,15 +134,21 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="category">Category</label>
-                                <select class="form-control" id="category" name="category">
+                                <select class="form-control" id="DonorType" name="DonorCat">
                                     <option value="0">Select</option>
-                                    <option value="donor">Donor</option>
-                                    <option value="sample">Sample</option>
+                                    @if (Model.DonorTypes != null)
+                                    {
+                                        foreach (var donortype in Model.DonorTypes)
+                                        {
+                                            <option value="@donortype.Type">@donortype.Type</option>
+                                        }
+                                    }
                                 </select>
                             </div>
                             <div class="form-group col-lg-3">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="appShree" name="appShree">
+                                    <input class="form-check-input" id="IsAppShreekaPurnVivranReceived" name="IsAppShreekaPurnVivranReceived" type="checkbox" value="true" @(Model.IsAppShreekaPurnVivranReceived.GetValueOrDefault() ? "checked" : "") />
+
                                     <label class="form-check-label fs-5" for="appShree">App Shree ka Purn Vivran Received</label>
                                 </div>
                             </div>
@@ -201,7 +209,7 @@
                                 <label for="SoWoDo" class="mb-2">So/Wo/Do<span style="color: red;">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <select class="custom-select" id="" required name="" asp-for="">
+                                        <select class="custom-select" id="PrefixToRelation" required name="PrefixToRelation" asp-for="PrefixToRelation">
                                             <option value="Select" @(Model != null && Model.NamePrefix == "Select" ? "selected" : "")>Select</option>
                                             <option value="MR." @(Model != null && Model.NamePrefix == "MR." ? "selected" : "")>MR.</option>
                                             <option value="MS." @(Model != null && Model.NamePrefix == "MS." ? "selected" : "")>MS.</option>
@@ -225,31 +233,36 @@
                                             <option value="ACHARYA" @(Model != null && Model.NamePrefix == "ACHARYA" ? "selected" : "")>ACHARYA</option>
                                             <option value="WING COMMANDER" @(Model != null && Model.NamePrefix == "WING COMMANDER" ? "selected" : "")>WING C.</option>
                                             <option value="EX.SUB.MAJ" @(Model != null && Model.NamePrefix == "EX.SUB.MAJ" ? "selected" : "")>EX.SUB.MAJ</option>
-                                          
+
                                         </select>
 
                                     </div>
-                                    <input type="text" value="" required class="form-control" asp-for="" id="" name="" oninput="convertToUpperCase(this)">
+                                    <input type="text" value="@Model.RelationToFullName" required class="form-control" asp-for="RelationToFullName" id="RelationToFullName" name="" oninput="convertToUpperCase(this)">
                                 </div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Date Of Anniversary</label>
-                                <input type="date" class="form-control" id="" name="">
+                                <input type="date" class="form-control" id="DateOfAnniversary" name="DateOfAnniversary">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Company</label>
-                                <input type="text" class="form-control" id="" name="">
+                                <input type="text" value="@Model.Company" class="form-control" id="Company" name="Company">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Your Company</label>
-                                <input type="text" class="form-control" id="" name="">
+                                <input type="text" value="@Model.YourCompany" class="form-control" id="YourCompany" name="YourCompany">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Bussiness/Job Type</label>
-                                <select class="form-control" id="event" name="event">
+                                <select class="form-control" id="BussinessOrJobType" name="BussinessOrJobType">
                                     <option value="0">select</option>
-                                    <option value="event">event 2</option>
-                                    <option value="event">event 3</option>
+                                    @if (Model.bussinessTypesList != null)
+                                    {
+                                        foreach (var list in Model.bussinessTypesList)
+                                        {
+                                            <option value="@list.b_type">@list.b_type</option>
+                                        }
+                                    }
                                 </select>
                             </div>
 
@@ -257,17 +270,17 @@
                                 <label class="d-block">Profession</label>
 
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" id="naOption" name="profession" value="na" onchange="updateProfessionHiddenField()" checked>
+                                    <input type="radio" class="form-check-input" id="naOption" name="Profession" value="na" onchange="updateProfessionHiddenField()" checked>
                                     <label class="form-check-label" for="naOption">N/A</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" id="serviceOption" name="profession" value="service" onchange="updateProfessionHiddenField()">
+                                    <input type="radio" class="form-check-input" id="serviceOption" name="Profession" value="service" onchange="updateProfessionHiddenField()">
                                     <label class="form-check-label" for="serviceOption">Service</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" id="businessOption" name="profession" value="business" onchange="updateProfessionHiddenField()">
+                                    <input type="radio" class="form-check-input" id="businessOption" name="Profession" value="business" onchange="updateProfessionHiddenField()">
                                     <label class="form-check-label" for="businessOption">Business</label>
                                 </div>
 
@@ -283,20 +296,20 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="">Working In</label>
-                                <input type="text" class="form-control" id="" name="">
+                                <input type="text" value="@Model.WorkingIn" class="form-control" id="WorkingIn" name="WorkingIn">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Your Designation</label>
-                                <input type="text" class="form-control" id="" name="">
+                                <input type="text" value="@Model.Designation" class="form-control" id="Designation" name="Designation">
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="">C/O</label>
-                                <input type="text" class="form-control" id="" name="">
+                                <input type="text" value="@Model.CareOf" class="form-control" id="CareOf" name="CareOf">
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Toatl Donation</label>
-                                <input type="text" class="form-control" id="" name="">
+                                <input type="number" value="@Model.ToatlDonation" class="form-control" id="ToatlDonation" name="ToatlDonation">
                             </div>
 
 
@@ -1369,10 +1382,10 @@
                                     Send Sandipan
                                 </label>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                    <input type="radio" class="form-check-input" name="Sandipan" value="yes"> Yes
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="call" value="no"> No
+                                    <input type="radio" class="form-check-input" name="Sandipan" value="no"> No
                                 </div>
                             </div>
 
@@ -1418,24 +1431,35 @@
                             </script>
 
                             <div class="form-group col-lg-3">
-                                <label for="">Sandipan</label>
-                                <select class="form-control" id="category" name="category">
+                                <label for="Sandipan">Sandipan</label>
+                                <select class="form-control" id="SandipanRemarksReason" name="SandipanRemarksReason">
                                     <option value="0">Select</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option value="No Address">No Address</option>
+                                    <option value="Double Address">Double Address</option>
+                                    <option value="Multiple Member Same Address">Multiple Member Same Address</option>
+                                    <option value="Address Not Found">Address Not Found</option>
+                                    <option value="Not Require by Donor">Not Require by Donor</option>
+                                    <option value="Donor Death">Donor Death</option>
+                                    <option value="Address Changed">Address Changed</option>
+                                    <option value="Magazine Return">Magazine Return</option>
+                                    <option value="E-Copy">E-Copy</option>
+                                    <option value="Hard Copy">Hard Copy</option>
+                                    <option value="Both">Both</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="">Sandipan Remarks</label>
-                                <textarea class="form-control" rows="2"></textarea>
+                                <textarea class="form-control" rows="2" name="SandipanRemarks">@Model.SandipanRemarks</textarea>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Receipt Copy Require</label>
-                                <select class="form-control" id="" name="">
+                                <select class="form-control" id="ReceiptCopyRequireOptions" name="ReceiptCopyRequireOptions">
                                     <option value="0">Select</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option value="Hard Copy">Hard Copy</option>
+                                    <option value="Soft Copy">Soft Copy</option>
+                                    <option value="Both">Both</option>
+                                    <option value="Not Require">Not Require</option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
@@ -1443,27 +1467,26 @@
                                     Visit
                                 </label>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="call" value="yes"> Yes
+                                    <input class="form-check-input" id="IsVisit" name="IsVisit" type="checkbox" value="true" @(Model.IsVisit.GetValueOrDefault() ? "checked" : "") />
+
                                 </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="call" value="no"> No
-                                </div>
+
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Visit Year</label>
-                                <input class="form-control" id="" type="text" name="" />
+                                <input class="form-control" id="VisitYear" type="text" name="VisitYear" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Forgin NgCode Refrence</label>
-                                <input class="form-control" id="" type="text" name="" />
+                                <input class="form-control" id="ForginNgCodeRefrence" type="text" name="ForginNgCodeRefrence" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">If Changes then enter Reason </label>
-                                <textarea class="form-control" rows="2"></textarea>
+                                <textarea class="form-control" name="ChangesRemarks" rows="2">@Model.ChangesRemarks</textarea>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Remarks</label>
-                                <textarea class="form-control" rows="2"></textarea>
+                                <textarea class="form-control" rows="2" name="Remarks">@Model.Remarks</textarea>
                             </div>
                         </div>
                     </div>

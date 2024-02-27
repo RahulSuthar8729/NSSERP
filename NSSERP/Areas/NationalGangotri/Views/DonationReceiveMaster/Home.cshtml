@@ -794,7 +794,7 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
-                                <textarea required class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1">@Model.Address1</textarea>
+                                <textarea  class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1">@Model.Address1</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
                             <div class="form-group col-lg-3">
@@ -1974,6 +1974,7 @@
 
                                         $('#TotalAmount').val(amount.toFixed(2));
                                         $('#receiveamount').val(amount.toFixed(2));
+                                        $('#hdnTotalReceiveAmountInPurpose').val(amount.toFixed(2));
 
                                     }
 
@@ -2220,7 +2221,6 @@
 
                             <script>
                                 $(document).ready(function () {
-
                                     // Parse the JSON data from the model for bank details
                                     var bankDetailsListJson = @Html.Raw(Model.BankDetailsListJson);
 
@@ -2272,7 +2272,51 @@
                                         $("#TotalAmount").val(totalAmount.toFixed(2));
                                         $("#hdnTotalAmount").val(totalAmount.toFixed(2));
                                         $("#receiveamount").val(totalAmount.toFixed(2));
+                                        $("#hdnTotalReceiveAmountInPurpose").val(totalAmount.toFixed(2));
+                                    }
+                                    function OnModeladdBankDetailsRow(bankDetails) {
+                                        var MainFolder1 = '@rootUrl/DocDonationReceive'; // Change this to the appropriate value
+                                        var newRowModelaAdd = "<tr>" +
+                                            "<td>" + bankDetails.DonationMode + "</td>" +
+                                            "<td>" + bankDetails.BankName + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                            "<td>" + bankDetails.DepositeBankName + "</td>" +
+                                            "<td>" + bankDetails.DepositeDate + "</td>" +
+                                            "<td>" + bankDetails.CurrencyCode + "</td>" +
+                                            "<td>" + bankDetails.Amount + "</td>" +
+                                            "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                            "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
+                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                            "</tr>";
 
+                                        $("#bankDetailsTable tbody").append(newRowModelaAdd);
+                                        updateBankDetailsHiddenField();
+                                        // $("#DivTotalAmount").show();
+                                    }
+
+
+                                    function addBankDetailsRow(bankDetails) {
+                                        var temporaryFolder = '@temporaryFolder'; // Change this to the appropriate value
+                                        var newRowBankAdd = "<tr>" +
+                                            "<td>" + bankDetails.DonationMode + "</td>" +
+                                            "<td>" + bankDetails.BankName + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
+                                            "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                            "<td>" + bankDetails.DepositeBankName + "</td>" +
+                                            "<td>" + bankDetails.DepositeDate + "</td>" +
+                                            "<td>" + bankDetails.CurrencyCode + "</td>" +
+                                            "<td>" + bankDetails.Amount + "</td>" +
+                                            "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
+                                            "<td><a href='" + temporaryFolder + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
+                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
+                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
+                                            "</tr>";
+
+                                        $("#bankDetailsTable tbody").append(newRowBankAdd);
+                                        updateBankDetailsHiddenField();
+                                        $("#DivTotalAmount").show();
                                     }
 
 
@@ -2280,11 +2324,16 @@
                                     var donationModeAdded = false;
                                     var addedDonationMode = null;
 
-                                    //currency flag
+                                    // Currency flag
                                     var currencyAdded = false;
                                     var addedcurrency = null;
 
+                                    // Variable to track if the button was clicked
+                                    var buttonClicked = false;
+
+                                    // Bind the click event specifically to the button
                                     $("#BtnAddBankDetails").on("click", function (event) {
+                                        buttonClicked = true;
                                         event.preventDefault();
 
                                         // Get values from input fields
@@ -2373,53 +2422,7 @@
                                         $("#bankDetailsTable").show();
                                     });
 
-                                    // Your existing code for handling row deletion and showing/hiding the table
-                                    var temporaryFolder = '@temporaryFolder';
-
-                                    // Function to add a new row to the bank details table
-                                    function addBankDetailsRow(bankDetails) {
-                                        var newRowBankAdd = "<tr>" +
-                                            "<td>" + bankDetails.DonationMode + "</td>" +
-                                            "<td>" + bankDetails.BankName + "</td>" +
-                                            "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
-                                            "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
-                                            "<td>" + bankDetails.DepositeBankName + "</td>" +
-                                            "<td>" + bankDetails.DepositeDate + "</td>" +
-                                            "<td>" + bankDetails.CurrencyCode + "</td>" +
-                                            "<td>" + bankDetails.Amount + "</td>" +
-                                            "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
-                                            "<td><a href='" + temporaryFolder + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
-                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
-                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
-                                            "</tr>";
-
-                                        $("#bankDetailsTable tbody").append(newRowBankAdd);
-                                        updateBankDetailsHiddenField();
-                                        $("#DivTotalAmount").show();
-                                    }
-
-                                    function OnModeladdBankDetailsRow(bankDetails) {
-                                        var MainFolder1 = '@rootUrl/DocDonationReceive';
-                                        var newRowModelaAdd = "<tr>" +
-                                            "<td>" + bankDetails.DonationMode + "</td>" +
-                                            "<td>" + bankDetails.BankName + "</td>" +
-                                            "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
-                                            "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
-                                            "<td>" + bankDetails.DepositeBankName + "</td>" +
-                                            "<td>" + bankDetails.DepositeDate + "</td>" +
-                                            "<td>" + bankDetails.CurrencyCode + "</td>" +
-                                            "<td>" + bankDetails.Amount + "</td>" +
-                                            "<td>" + bankDetails.IsPdcCheque1 + "</td>" +
-                                            "<td><a href='" + MainFolder1 + "/" + bankDetails.Doc + "' target='_blank'>View</a></td>" +
-                                            "<td style='display:none;' class='filename'>" + bankDetails.Doc + "</td>" +
-                                            // "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
-                                            "</tr>";
-
-                                        $("#bankDetailsTable tbody").append(newRowModelaAdd);
-                                        updateBankDetailsHiddenField();
-                                        // $("#DivTotalAmount").show();
-                                    }
-
+                                    // Event listener for row deletion
                                     $("#bankDetailsTable").on("click", ".delete-row", function () {
                                         // Reset the flag and added donation mode when a row is deleted
                                         donationModeAdded = false;
@@ -2430,15 +2433,17 @@
                                         $(this).closest("tr").remove();
                                         updateTotalAmount();
                                         updateBankDetailsHiddenField();
+
                                         // Hide the table if there is no data after deletion
                                         if ($("#bankDetailsTable tbody tr").length === 0) {
                                             $("#bankDetailsTable").hide();
                                         }
                                     });
 
-
+                                    // Function to update the hidden bank details field
                                     function updateBankDetailsHiddenField() {
                                         var tableData = [];
+
                                         $("#bankDetailsTable tbody tr").each(function () {
                                             var rowDatabankdetails = {
                                                 DonationMode: $(this).find("td:eq(0)").text(),
@@ -2452,6 +2457,7 @@
                                                 PdcCheque: $(this).find("td:eq(8)").text(),
                                                 TempDoc: $(this).find("td:eq(10)").text()
                                             };
+
                                             tableData.push(rowDatabankdetails);
                                         });
 
@@ -2459,8 +2465,23 @@
                                         $("#hiddenBankDetails").val(JSON.stringify(tableData));
                                     }
 
+                                    // Event listener to prevent row addition when other input fields are focused
+                                    $("input, select, textarea").on("focus", function () {
+                                        buttonClicked = false;
+                                    });
+
+                                    // Event listener for key press (Enter) to prevent row addition
+                                    $(document).on("keypress", function (event) {
+                                        if (event.which === 13 && !buttonClicked) {
+                                            event.preventDefault();
+                                        }
+                                    });
                                 });
+
                             </script>
+
+
+
                         </div>
                     </div>
                 </fieldset>
@@ -2710,6 +2731,7 @@
 
                                             // Set the initial amount in the ReceiptAmount input field
                                             $('#ReceiptAmount').val(initialAmount.toFixed(2));
+                                            $('#receiveamount').val(initialAmount.toFixed(2));
                                             updateAnnounce();
                                         } else {
                                             $('#ReceiptAmount').val('');
@@ -2723,6 +2745,7 @@
                                         var SLimit = startingIndexText;
                                         var Amount = ((Qty / SLimit) * initialAmount).toFixed(2);
                                         $('#ReceiptAmount').val(Amount);
+                                        $('#receiveamount').val(Amount);
                                         updateAnnounce();
                                     }
 
@@ -2770,6 +2793,7 @@
                                                 if (Array.isArray(response.data) && response.data.length > 0) {
                                                     var amountFromApi = response.data[0].Amount;
                                                     $('#ReceiptAmount').val(amountFromApi.toFixed(2));
+                                                    $('#receiveamount').val(amountFromApi.toFixed(2));
                                                     updateAnnounce();
                                                 } else {
 
@@ -2781,6 +2805,7 @@
                                                     var Amount = (Math.floor(rate * (Qty1 / Slimit)) + 361000).toFixed(2);
 
                                                     $('#ReceiptAmount').val(Amount);
+                                                    $('#receiveamount').val(Amount);
                                                     updateAnnounce();
                                                 }
                                             },
@@ -2874,6 +2899,7 @@
                             <input type="hidden" id="jsonData" name="receiptdetailslist" asp-for="receiptdetailslist" />
                             <input type="hidden" id="hdnPurposetotalamount" />
                             <input type="hidden" id="hdnAnnounceTotalAmount" />
+                            <input type="hidden" id="hdnTotalReceiveAmountInPurpose" />
 
                             <script>
                                 $(document).ready(function () {
@@ -2905,6 +2931,8 @@
                                         updateAnnounceTotal();
                                     }
 
+
+
                                     // Add row event handler
                                     $("#addBtnReceipt").click(function () {
                                         event.preventDefault();
@@ -2914,18 +2942,18 @@
                                         var amount = parseFloat($("#ReceiptAmount").val()) || 0;
                                         var receiveAmount = parseFloat($("#receiveamount").val()) || 0;
                                         var announceAmount = parseFloat($("#announceamount").val()) || 0;
-                                        var TotalDonation = parseFloat(totalAmountInput.val()) || 0;
+                                        var TotalDonation = parseFloat($("#TotalAmount").val()) || 0;
                                         var bhojanDate = $("#bhojanMitiDate").val();
 
                                         // Check if the sum of amounts is not greater than TotalAmount
                                         var currentTotal = getCurrentTotalAmount();
                                         var materialDepositId = $("#MaterialDepositID").val();
-
+                                       
                                         addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate);
                                         clearInputFields();
                                         updateHiddenField();
                                         updateAnnounceTotal();
-
+                                        updateReceiveAmount();
                                     });
 
                                     // Delete row event handler
@@ -2959,6 +2987,36 @@
                                         tableContainer.toggle(tableBody.find("tr").length > 0);
                                     }
 
+                                    
+
+                                    function updateReceiveAmount() {
+                                        var totalDonation = parseFloat($("#hdnTotalReceiveAmountInPurpose").val()) || 0;
+                                        var purposeAmount = parseFloat($("#receiveamount").val()) || 0;
+
+
+                                        if (isNaN(totalDonation)) {
+                                            console.error("Total donation amount is not a valid number.");
+                                            return;
+                                        }
+
+                                        if (isNaN(purposeAmount)) {
+                                            console.error("Purpose amount is not a valid number.");
+                                            return;
+                                        }
+
+                                        var updatedReceiveAmount = totalDonation - purposeAmount;
+                                        console.log(totalDonation);
+                                        console.log(purposeAmount);
+                                        console.log(updatedReceiveAmount);
+                                        // Ensure that the updated receive amount is not negative
+                                        updatedReceiveAmount = Math.max(updatedReceiveAmount, 0);
+
+                                        // Update the receiveamount field with the calculated value
+                                        $("#receiveamount").val(updatedReceiveAmount.toFixed(2));
+                                        $("#hdnTotalReceiveAmountInPurpose").val(updatedReceiveAmount.toFixed(2));
+                                    }
+
+
                                     // Function to get the current total amount in the table
                                     function getCurrentTotalAmount() {
                                         var currentTotal = 0;
@@ -2991,7 +3049,7 @@
 
                                     // Function to clear input fields
                                     function clearInputFields() {
-                                        $("#ReceiptAmount, #receiveamount, #announceamount, #DonationMode,#bhojanMitiDate").val("");
+                                        $("#ReceiptAmount, #announceamount, #DonationMode,#bhojanMitiDate").val("");
                                     }
 
                                     // Function to update the hidden field with JSON data
@@ -3278,7 +3336,7 @@
                                         tableBody.append(newRowaddclick);
 
                                         // Clear input fields
-                                        $("#totalPurposeAmount, #receiveAmount, #dueAmount, #announceId, #amount, #date1").val("");
+                                        $("#totalPurposeAmount, #dueAmount, #announceId, #amount, #date1").val("");
 
                                         // Show the table
                                         $("#announceTable").show();

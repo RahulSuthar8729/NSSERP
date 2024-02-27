@@ -44,10 +44,11 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             _apiClient = clientFactory.CreateClient("WebApi");
             _httpClientFactory = clientFactory;
         }
+
         [HttpGet]
         public async Task<IActionResult> Home(int id)
         {
-            var response = await _apiClient.GetAsync($"api/DonationReceiveMaster/ViewDetails?id={id}");
+            var response = await _apiClient.GetAsync($"api/DonorMaster/Home");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -74,5 +75,14 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             return View(detail);
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult>Home(DonorMaster model)
+        {
+
+
+            return View(model);
+        }
+
     }
 }
