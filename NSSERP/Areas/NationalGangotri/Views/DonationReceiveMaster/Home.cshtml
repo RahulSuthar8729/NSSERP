@@ -794,7 +794,7 @@
                         <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="Address1">Address1<span style="color: red;">*</span></label>
-                                <textarea  class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1">@Model.Address1</textarea>
+                                <textarea class="form-control" name="Address1" asp-for="Address1" oninput="convertToUpperCase(this)" placeholder="E.g., House No. 123" id="Address1" rows="1">@Model.Address1</textarea>
                                 <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
                             <div class="form-group col-lg-3">
@@ -1974,7 +1974,7 @@
 
                                         $('#TotalAmount').val(amount.toFixed(2));
                                         $('#receiveamount').val(amount.toFixed(2));
-                                        $('#hdnTotalReceiveAmountInPurpose').val(amount.toFixed(2));
+                                        $('#hdnTotalAmount').val(amount.toFixed(2));
 
                                     }
 
@@ -2272,7 +2272,7 @@
                                         $("#TotalAmount").val(totalAmount.toFixed(2));
                                         $("#hdnTotalAmount").val(totalAmount.toFixed(2));
                                         $("#receiveamount").val(totalAmount.toFixed(2));
-                                        $("#hdnTotalReceiveAmountInPurpose").val(totalAmount.toFixed(2));
+                                        // $("#hdnTotalReceiveAmountInPurpose").val(totalAmount.toFixed(2));
                                     }
                                     function OnModeladdBankDetailsRow(bankDetails) {
                                         var MainFolder1 = '@rootUrl/DocDonationReceive'; // Change this to the appropriate value
@@ -2415,6 +2415,7 @@
 
                                         // Clear form fields
                                         $("#BankID1, #chequedate, #cheuqueno, #BankID2, #depositDate").val("");
+                                        $("#BankID1, #BankID2").val('').trigger('change');
                                         $("input[name='pdcCheque1']").prop("checked", false);
 
                                         updateTotalAmount();
@@ -2731,7 +2732,7 @@
 
                                             // Set the initial amount in the ReceiptAmount input field
                                             $('#ReceiptAmount').val(initialAmount.toFixed(2));
-                                            $('#receiveamount').val(initialAmount.toFixed(2));
+                                            // $('#receiveamount').val(initialAmount.toFixed(2));
                                             updateAnnounce();
                                         } else {
                                             $('#ReceiptAmount').val('');
@@ -2745,7 +2746,7 @@
                                         var SLimit = startingIndexText;
                                         var Amount = ((Qty / SLimit) * initialAmount).toFixed(2);
                                         $('#ReceiptAmount').val(Amount);
-                                        $('#receiveamount').val(Amount);
+                                        //  $('#receiveamount').val(Amount);
                                         updateAnnounce();
                                     }
 
@@ -2793,7 +2794,7 @@
                                                 if (Array.isArray(response.data) && response.data.length > 0) {
                                                     var amountFromApi = response.data[0].Amount;
                                                     $('#ReceiptAmount').val(amountFromApi.toFixed(2));
-                                                    $('#receiveamount').val(amountFromApi.toFixed(2));
+                                                    // $('#receiveamount').val(amountFromApi.toFixed(2));
                                                     updateAnnounce();
                                                 } else {
 
@@ -2805,7 +2806,7 @@
                                                     var Amount = (Math.floor(rate * (Qty1 / Slimit)) + 361000).toFixed(2);
 
                                                     $('#ReceiptAmount').val(Amount);
-                                                    $('#receiveamount').val(Amount);
+                                                    //  $('#receiveamount').val(Amount);
                                                     updateAnnounce();
                                                 }
                                             },
@@ -2930,10 +2931,6 @@
                                         toggleTableVisibility();
                                         updateAnnounceTotal();
                                     }
-
-
-
-                                    // Add row event handler
                                     $("#addBtnReceipt").click(function () {
                                         event.preventDefault();
                                         var head = $("#headInput option:selected").text();
@@ -2941,20 +2938,85 @@
                                         var quantity = $("#autoQuantityInput").val();
                                         var amount = parseFloat($("#ReceiptAmount").val()) || 0;
                                         var receiveAmount = parseFloat($("#receiveamount").val()) || 0;
-                                        var announceAmount = parseFloat($("#announceamount").val()) || 0;
-                                        var TotalDonation = parseFloat($("#TotalAmount").val()) || 0;
+                                        var totalDonation = parseFloat($("#hdnTotalAmount").val()) || 0;
                                         var bhojanDate = $("#bhojanMitiDate").val();
 
-                                        // Check if the sum of amounts is not greater than TotalAmount
+                                        // Calculate the remaining amount after adding the current purpose amount
                                         var currentTotal = getCurrentTotalAmount();
-                                        var materialDepositId = $("#MaterialDepositID").val();
-                                       
+                                        var remainingAmount = totalDonation - currentTotal;
+
+                                        // Calculate the announce amount
+                                        var announceAmount = 0;
+                                        if (amount > remainingAmount) {
+                                            announceAmount = Math.max(0, amount - remainingAmount);
+                                            receiveAmount = Math.min(receiveAmount, remainingAmount);
+                                        } else {
+                                            receiveAmount = Math.min(receiveAmount, remainingAmount);
+                                        }
+
+                                        // Check if purpose amount is less than or equal to the receive amount
+                                        if (amount <= remainingAmount) {
+                                            remainingAmount = remainingAmount - amount;
+                                            receiveAmount = amount;
+                                        }
+
+                                        // Calculate the total receive amount from each row
+                                        var totalReceiveFromRows = calculateTotalReceiveFromRows();
+
+                                        // Check if the total receive amount from rows exceeds the total donation
+                                        if (totalReceiveFromRows + receiveAmount > totalDonation) {
+                                            // If it exceeds, set receiveAmount to the remaining amount
+                                            console.log('exceed');
+                                            receiveAmount = Math.max(0, totalDonation - totalReceiveFromRows);
+                                            announceAmount = Math.max(0, totalReceiveFromRows + receiveAmount - totalDonation);
+                                        }
+
+                                        // Ensure that receiveAmount is not negative
+                                        receiveAmount = Math.max(0, receiveAmount);
+
                                         addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate);
                                         clearInputFields();
                                         updateHiddenField();
-                                        updateAnnounceTotal();
-                                        updateReceiveAmount();
+                                        updateAnnounceTotal(announceAmount);
+                                        updateReceiveAmount(remainingAmount, receiveAmount);
                                     });
+
+
+                                    // Rest of the functions remain unchanged
+
+
+
+                                    function calculateTotalReceiveFromRows() {
+                                        var totalReceive = 0;
+                                        tableBody.find("tr").each(function () {
+                                            var columns = $(this).find("td");
+                                            var receiveAmount = parseFloat(columns.eq(4).text()) || 0;
+                                            totalReceive += receiveAmount;
+                                        });
+                                        return totalReceive;
+                                    }
+
+                                    // Function to update the receive amount
+                                    function updateReceiveAmount(remainingAmount, currentReceiveAmount) {
+                                        // Ensure that the updated receive amount is not negative or greater than total donation
+                                        var updatedReceiveAmount = Math.min(Math.max(currentReceiveAmount, 0), remainingAmount);
+
+                                        // Update the receiveamount field with the calculated value
+                                        $("#receiveamount").val(updatedReceiveAmount.toFixed(2));
+                                        $("#hdnTotalReceiveAmountInPurpose").val(updatedReceiveAmount.toFixed(2));
+                                    }
+
+                                    // Function to get the current total amount in the table
+                                    function getCurrentTotalAmount() {
+                                        var currentTotal = 0;
+                                        tableBody.find("tr").each(function () {
+                                            var columns = $(this).find("td");
+                                            var amount = parseFloat(columns.eq(3).text()) || 0;
+                                            currentTotal += amount;
+                                        });
+                                        return currentTotal;
+                                    }
+
 
                                     // Delete row event handler
                                     tableBody.on("click", ".deleteBtn", function () {
@@ -2987,69 +3049,29 @@
                                         tableContainer.toggle(tableBody.find("tr").length > 0);
                                     }
 
-                                    
-
-                                    function updateReceiveAmount() {
-                                        var totalDonation = parseFloat($("#hdnTotalReceiveAmountInPurpose").val()) || 0;
-                                        var purposeAmount = parseFloat($("#receiveamount").val()) || 0;
 
 
-                                        if (isNaN(totalDonation)) {
-                                            console.error("Total donation amount is not a valid number.");
-                                            return;
-                                        }
 
-                                        if (isNaN(purposeAmount)) {
-                                            console.error("Purpose amount is not a valid number.");
-                                            return;
-                                        }
-
-                                        var updatedReceiveAmount = totalDonation - purposeAmount;
-                                        console.log(totalDonation);
-                                        console.log(purposeAmount);
-                                        console.log(updatedReceiveAmount);
-                                        // Ensure that the updated receive amount is not negative
-                                        updatedReceiveAmount = Math.max(updatedReceiveAmount, 0);
-
-                                        // Update the receiveamount field with the calculated value
-                                        $("#receiveamount").val(updatedReceiveAmount.toFixed(2));
-                                        $("#hdnTotalReceiveAmountInPurpose").val(updatedReceiveAmount.toFixed(2));
-                                    }
-
-
-                                    // Function to get the current total amount in the table
-                                    function getCurrentTotalAmount() {
-                                        var currentTotal = 0;
-                                        tableBody.find("tr").each(function () {
-                                            var columns = $(this).find("td");
-                                            var amount = parseFloat(columns.eq(3).text()) || 0;
-                                            currentTotal += amount;
-                                        });
-                                        return currentTotal;
-                                    }
-
-                                    // Function to add a new row
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate) {
                                         var newRowPurpose = `<tr>
-                                                                                                                      <td>${head}</td>
-                                                                                                                      <td>${purpose}</td>
-                                                                                                                      <td>${quantity}</td>
-                                                                                                                      <td>${amount.toFixed(2)}</td>
-                                                                                                                      <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                      <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                      <td>${bhojandate}</td>
-                                                                                                                      <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                    </tr>`;
+                                                                        <td>${head}</td>
+                                                                        <td>${purpose}</td>
+                                                                        <td>${quantity}</td>
+                                                                        <td>${amount.toFixed(2)}</td>
+                                                                        <td>${receiveAmount.toFixed(2)}</td>
+                                                                        <td>${announceAmount.toFixed(2)}</td>
+                                                                        <td>${bhojandate}</td>
+                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
-                                        updateHiddenField();
-                                        updateAnnounceTotal(announceAmount);
                                     }
 
                                     // Function to clear input fields
                                     function clearInputFields() {
-                                        $("#ReceiptAmount, #announceamount, #DonationMode,#bhojanMitiDate").val("");
+                                        $("#headInput,#subHeadInput,#autoQuantityInput,#announceamount,#bhojanMitiDate").val("");
+                                        $("#headInput, #subHeadInput, #autoQuantityInput").val(0).trigger('change');
                                     }
 
                                     // Function to update the hidden field with JSON data

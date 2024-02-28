@@ -31,7 +31,7 @@
 
                 $('#StateID').select2();
                 $('#tableDetails').DataTable({
-                    "order": [[2, "desc"]],
+                    "order": [[3, "desc"]],
                     "paging": true, // Enable pagination
                     "lengthMenu": [10, 25, 50, 75, 100], // Set custom page lengths
                     "searching": true, // Enable searching
@@ -361,6 +361,7 @@
                         <tr>
                             <th></th>
                             <th></th>
+                            <th></th>
                             <th>RECEIVE ID</th>
                             <th>RECEIVE BY</th>
                             <th>ENTRY BY</th>
@@ -395,6 +396,11 @@
                                     <td>
                                         <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID,edit=true})" title="Edit ReceiveID">
                                             <i style="color: orange;" class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                        <td>
+                                        <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = item.ReceiveID})" title="Print Provisional Receipt">
+                                            <i style="color: darkslategrey;" class="fas fa-print"></i>
                                         </a>
                                     </td>
 
