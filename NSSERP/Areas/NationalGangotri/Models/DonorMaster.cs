@@ -5,16 +5,19 @@ namespace NSSERP.Areas.NationalGangotri.Models
 {
     public class DonorMaster
     {
+        public string msg { get; set; }
         public string DataFlag { get; set; }
+        public string UserID { get; set; }
+        public string UserName { get; set; }
+
         public bool? IsAnonymous { get; set; }
         public int DonorID { get; set; }
         public string onlineCustId { get; set; }
         public string GroupNGCode { get; set; }
         public string upiId { get; set; }
         public string mailingNo { get; set; }
-
         public string referenceNo { get; set; }
-        public DateTime DOdateOfEntryE { get; set; }
+        public DateTime dateOfEntry { get; set; }
         public string DonorCat { get; set; }
         public bool? IsAppShreekaPurnVivranReceived { get; }
 
@@ -89,8 +92,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public bool IsEmailActive { get; set; }=true;
         public bool IsLetterCommunicationActive { get; set; }=true;
         public bool IsSendoperationPhotoActive { get; set; } = true;
-        public string MobileList { get; set; } = "";
-        public string IdentityList { get; set; } = "";
+        public string? MobileList { get; set; } = "";
+        public string? IdentityList { get; set; } = "";
 
         public string MobileListJson { get; set; } = "";
 

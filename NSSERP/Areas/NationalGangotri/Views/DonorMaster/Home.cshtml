@@ -40,26 +40,7 @@
                 input.value = input.value.toUpperCase();
             }
         </script>
-        <script>
-            $(document).ready(function () {
-                $('#submitButton').click(function (event) {
-                    // Prevent the default form submission
-                    event.preventDefault();
 
-                    // Trigger HTML5 form validation
-                    $('#donationForm')[0].reportValidity();
-
-                    // Check if the form is valid
-                    if ($('#donationForm')[0].checkValidity()) {
-                        // If valid, submit the form
-                        $('#donationForm').submit();
-                    } else {
-                        // If not valid, focus on the first invalid field
-                        $('#donationForm :invalid').first().focus();
-                    }
-                });
-            });
-        </script>
     }
 </head>
 <body>
@@ -84,7 +65,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form id="donationForm" action="/NationalGangotri/DonationReceiveMaster/Home" enctype="multipart/form-data" method="post">
+            <form id="DonorMaster" action="/NationalGangotri/DonorMaster/Home" enctype="multipart/form-data" method="post">
                 @Html.AntiForgeryToken()
                 <fieldset class="show border rounded p-3">
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
@@ -417,7 +398,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="CountryID">Country<span style="color: red;">*</span></label>
-                                <select class="form-control" required id="CountryID" asp-for="CountryID" name="CountryID">
+                                <select class="form-control" required id="CountryID" asp-for="CountryId" name="CountryId">
                                     <option value="" selected disabled>Select Country</option>
                                     @if (Model != null)
                                     {
@@ -764,7 +745,7 @@
                                             }
                                         });
 
-                                        // Also, trigger an AJAX request here to fetch cities based on the selected state if needed
+
                                     });
                                 });
                             </script>
@@ -974,34 +955,6 @@
                                         }
                                     });
 
-                                    var mobileListJson = @Html.Raw(Model.MobileListJson);
-
-                                    // If MobileListJson is null, use data from the model directly
-                                    if (!mobileListJson) {
-                                        // Use data from the model
-                                        mobileListJson = @Html.Raw(JsonConvert.SerializeObject(Model.MobileList));
-                                    }
-
-                                    if (mobileListJson) {
-                                        // Loop through each item in the JSON array
-                                        $.each(mobileListJson, function (index, item) {
-                                            // Add a new row to the table
-                                            var newRowmobilelist = $("<tr>");
-                                            newRowmobilelist.append("<td>" + item.ContactType + "</td>");
-                                            newRowmobilelist.append("<td>" + item.CountryCode + "</td>");
-                                            newRowmobilelist.append("<td>" + item.MobileNumber + "</td>");
-                                            newRowmobilelist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
-
-                                            // Add a special class to identify rows from MobileListJson
-                                            newRowmobilelist.addClass("json-data-row");
-
-                                            updateContactDetailsHiddenField();
-                                            $("#contactDetailsTable tbody").append(newRowmobilelist);
-
-                                            // Show the table
-                                            $("#contactDetailsTable").css("visibility", "visible");
-                                        });
-                                    }
 
                                     $("#addDetail").on("click", function () {
                                         var ContactType = $("#contactType").val();
@@ -1084,6 +1037,7 @@
                                     }
                                 });
                             </script>
+
 
                         </div>
                     </div>
@@ -1169,57 +1123,12 @@
                 </fieldset>
                 <input type="hidden" id="identityDetails" name="IdentityList" asp-for="IdentityList" />
 
+
                 <script>
                     $(document).ready(function () {
-                        var donorid = $("#DonorID").val();
-                        var identityListJson = @Html.Raw(Model.IdentityListJson);
+                        var donorid = $("#DonorID").val();                   
 
-                        // If IdentityListJson is null, use data from the model directly
-                        if (!identityListJson) {
-                            // Use data from the model
-                            identityListJson = @Html.Raw(JsonConvert.SerializeObject(Model.IdentityList));
-                        }
-
-                        if (identityListJson) {
-                            // Log the parsed JSON for debugging
-                            console.log("Parsed Identity List:", identityListJson);
-
-                            // Loop through each item in the JSON array
-                            $.each(identityListJson, function (index, identity) {
-                                // Log each identity for debugging
-                                console.log("Identity:", identity);
-
-                                // Ensure that identityType and identityNumber are accessed correctly
-                                var type = identity.identityType;
-                                var number = identity.identityNumber;
-
-                                var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
-
-                                // Add the new identity to the array
-                                existingIdentities.push(identity);
-
-                                // Set the JSON stringified identities to the hidden input
-                                $("#identityDetails").val(JSON.stringify(existingIdentities));
-
-                                // Create a new row for the added identity
-                                var newRowidentityList = $("<div class='form-group col-lg-3'>");
-                                newRowidentityList.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
-                                newRowidentityList.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                // newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
-
-                                // Append the new row to the container
-                                $("#addedIdentities").append(newRowidentityList);
-
-                                // Show the added identities section
-                                $("#addedIdentities").css("display", "flex");
-                            });
-
-                            // Update the hidden field value with the existing identities
-                            updateHiddenField(identityListJson);
-
-                            // Show the added identities section
-                            $("#addedIdentities").css("display", "flex");
-                        }
+                       
 
                         $("#addIdentity").on("click", function () {
                             // Get selected identity type and number
