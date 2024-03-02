@@ -99,13 +99,13 @@
                     </div>
 
                     <script>
-                        // Using jQuery for simplicity, ensure you include jQuery in your project
+
                         $(document).ready(function () {
-                            // Function to show/hide divReceiveHead based on checkbox state
+
                             function toggleDivBasedOnCheckboxState() {
                                 if ($('#IsReceiveHeadDiffrent').is(':checked')) {
                                     $('#divReceiveHead').show();
-                                    $('#ReceiveHeadName').focus(); // Focus on a specific element, adjust this according to your actual structure
+                                    $('#ReceiveHeadName').focus();
                                 } else {
                                     $('#divReceiveHead').hide();
                                 }
@@ -342,7 +342,7 @@
                                                     updateContactDetailsHiddenField();
                                                 });
 
-                                                // Show the table
+
                                                 $("#contactDetailsTable").css("visibility", "visible");
                                                 $("#contactDetail").val("");
                                             }
@@ -553,15 +553,13 @@
                                                 if (response != null) {
                                                     var jsonData = JSON.parse(response.data);
 
-                                                    // Populate form fields with JSON data
-                                                    // Populate form fields with JSON data
+
                                                     selectOptionByText('#NamePrefix', jsonData.NamePrefix);
 
-                                                    // Function to select option in a select element based on text
+
                                                     function selectOptionByText(selectId, text) {
                                                         var select = $(selectId);
 
-                                                        // Check if text is defined before using trim
                                                         if (text !== undefined && text !== null) {
                                                             text = text.trim();
                                                         }
@@ -575,7 +573,6 @@
                                                     $('#LastName').val(jsonData.LastName);
                                                     $('#RelationToFullName').val(jsonData.RelationToFullName);
 
-                                                    // Format date using moment.js (make sure to include moment.js in your project)
                                                     $('#DateOfBirth').val(moment(jsonData.DateOfBirth).format('YYYY-MM-DD'));
 
                                                     $('#Company').val(jsonData.Company);
@@ -614,47 +611,46 @@
                                                     console.log("No data found for the entered DonorID");
                                                 }
                                             },
-                                            // ... (rest of your code)
+
                                         });
                                     });
 
-                                    // Function to select option in a select element based on text
+
                                     function selectOptionByText(selectId, text) {
                                         var select = $(selectId);
 
-                                        // Check if text is defined before using trim
                                         if (text !== undefined && text !== null) {
                                             text = text.trim();
                                         }
 
                                         select.find('option:contains("' + text + '")').prop('selected', true);
                                     }
-                                    // Function to bind the mobile numbers table
+
                                     function bindMobileNumbersTable(mobileListJson) {
                                         var mobileNumbersTable = $("#contactDetailsTable tbody");
-                                        mobileNumbersTable.empty(); // Clear existing rows
+                                        mobileNumbersTable.empty();
 
-                                        // Parse the JSON string in mobileListJson if it's a string
+
                                         var mobileList = Array.isArray(mobileListJson) ? mobileListJson : JSON.parse(mobileListJson);
 
 
                                         if (mobileList && mobileList.length > 0) {
-                                            // Loop through each item in the JSON array
+
                                             $.each(mobileList, function (index, item) {
-                                                // Add a new row to the table
+
                                                 var newRowmobile = $("<tr>");
                                                 newRowmobile.append("<td>" + item.ContactType + "</td>");
                                                 newRowmobile.append("<td>" + item.CountryCode + "</td>");
                                                 newRowmobile.append("<td>" + item.MobileNumber + "</td>");
                                                 newRowmobile.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
 
-                                                // Add a special class to identify rows from MobileListJson
+
                                                 newRowmobile.addClass("json-data-row");
 
                                                 mobileNumbersTable.append(newRowmobile);
                                             });
 
-                                            // Show the table
+
                                             $("#contactDetailsTable").css("visibility", "visible");
                                         }
                                     }
@@ -1366,7 +1362,7 @@
                                             updateContactDetailsHiddenField();
                                             $("#contactDetailsTable tbody").append(newRowmobilelist);
 
-                                            // Show the table
+
                                             $("#contactDetailsTable").css("visibility", "visible");
                                         });
                                     }
@@ -1392,8 +1388,8 @@
                                             if (countryCode === '+91') {
                                                 contactDetailPattern = /^\d{10}$/; // 10 digits for India
                                             } else {
-                                                // For other countries, remove validation or add specific validation patterns
-                                                contactDetailPattern = /^\d+$/; // Example: Any number of digits
+
+                                                contactDetailPattern = /^\d+$/;
                                             }
 
                                             if (!contactDetailPattern.test(contactDetail)) {
@@ -1401,7 +1397,7 @@
                                                 return;
                                             }
                                         } else {
-                                            // Add additional validation for other contact types if needed
+
                                         }
 
                                         var newRowContactDetails = $("<tr>");
@@ -1531,7 +1527,6 @@
                         </div>
 
                         <div class="row" id="addedIdentities" style="display: none;">
-                            <!-- Added identities will be dynamically inserted here -->
                         </div>
                     </div>
                 </fieldset>
@@ -1542,50 +1537,49 @@
                         var donorid = $("#DonorID").val();
                         var identityListJson = @Html.Raw(Model.IdentityListJson);
 
-                        // If IdentityListJson is null, use data from the model directly
+
                         if (!identityListJson) {
-                            // Use data from the model
+
                             identityListJson = @Html.Raw(JsonConvert.SerializeObject(Model.IdentityList));
                         }
 
                         if (identityListJson) {
-                            // Log the parsed JSON for debugging
+
                             console.log("Parsed Identity List:", identityListJson);
 
-                            // Loop through each item in the JSON array
+
                             $.each(identityListJson, function (index, identity) {
-                                // Log each identity for debugging
+
                                 console.log("Identity:", identity);
 
-                                // Ensure that identityType and identityNumber are accessed correctly
+
                                 var type = identity.identityType;
                                 var number = identity.identityNumber;
 
                                 var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
 
-                                // Add the new identity to the array
+
                                 existingIdentities.push(identity);
 
-                                // Set the JSON stringified identities to the hidden input
+
                                 $("#identityDetails").val(JSON.stringify(existingIdentities));
 
-                                // Create a new row for the added identity
+
                                 var newRowidentityList = $("<div class='form-group col-lg-3'>");
                                 newRowidentityList.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
                                 newRowidentityList.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
                                 // newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
-                                // Append the new row to the container
+
                                 $("#addedIdentities").append(newRowidentityList);
 
-                                // Show the added identities section
+
                                 $("#addedIdentities").css("display", "flex");
                             });
 
-                            // Update the hidden field value with the existing identities
+
                             updateHiddenField(identityListJson);
 
-                            // Show the added identities section
                             $("#addedIdentities").css("display", "flex");
                         }
 
@@ -1640,23 +1634,16 @@
 
                         // Delete Identity button click event
                         $(document).on("click", ".delete-identity", function (event) {
-                            // Prevent the default action (e.g., form submission)
+
                             event.preventDefault();
 
-                            // Your existing delete logic here...
 
-                            // For example, you can get the parent div and remove it
                             var parentDiv = $(this).closest(".form-group");
                             parentDiv.remove();
-
-                            // Update the hidden field value with the updated identities
                             updateHiddenField();
 
-                            // Your existing logic to update the hidden input and other actions...
-                        });
 
-                        // Function to validate identity number based on the selected identity type
-                        // Function to validate identity number based on the selected identity type
+                        });
                         function validateIdentity(identityType, identityNumber) {
                             // Validate based on identity type
                             switch (identityType) {
@@ -1674,26 +1661,25 @@
                                         return false;
                                     }
                                     break;
-                                // Add more cases for other identity types if needed
+
                             }
 
-                            // Validation passed
                             return true;
                         }
 
 
-                        // Function to append an identity to the addedIdentities section
+
                         function appendIdentityToContainer(identity) {
-                            // Collect existing identities from the hidden field
+
                             var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
 
-                            // Add the new identity to the array
+
                             existingIdentities.push(identity);
 
-                            // Set the JSON stringified identities to the hidden input
+
                             $("#identityDetails").val(JSON.stringify(existingIdentities));
 
-                            // Create a new row for the added identity
+
                             var newRowidentitydetails = $("<div class='form-group col-lg-3'>");
                             newRowidentitydetails.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
                             newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
@@ -1701,18 +1687,18 @@
                             newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "' type='text' value='" + identity.ReceiveHead + "' readonly />");
                             newRowidentitydetails.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
-                            // Append the new row to the container
+
                             $("#addedIdentities").append(newRowidentitydetails);
 
-                            // Show the added identities section
+
                             $("#addedIdentities").css("display", "flex");
                         }
 
-                        // Function to update the hidden field value with the current identities
+
                         function updateHiddenField() {
                             var currentIdentities = [];
 
-                            // Loop through each item in the addedIdentities section
+
                             $("#addedIdentities .form-group").each(function () {
                                 var identityType = $(this).find("label").text();
                                 var identityNumber = $(this).find("input").val();
@@ -1725,7 +1711,6 @@
                                 });
                             });
 
-                            // Update the hidden field value with the current identities
                             $("#identityDetails").val(JSON.stringify(currentIdentities));
                         }
                     });
@@ -1833,7 +1818,7 @@
 
                             <script>
                                 $(document).ready(function () {
-                                    // Attach a click event to dynamically generated view buttons
+
                                     $(document).on('click', '.view-btn', function () {
                                         var fileName = $(this).data('file-name');
                                         window.open('/DocDonationReceive/' + fileName, '_blank');
@@ -1868,7 +1853,7 @@
                                     }
                                 </select>
                                 <input type="hidden" id="hdnpaymentmode" name="PaymentModeName" asp-for="PaymentModeName" />
-                                <!-- Include a hidden field for PaymentModeID -->
+
                                 <input type="hidden" id="hdnpaymentmodeid" name="PaymentModeID" asp-for="PaymentModeID" />
 
                                 <script>
@@ -1988,7 +1973,7 @@
                                             $('#Amount').val('');
                                         }
 
-                                        updateTotalAmount(); // Call updateTotalAmount to set TotalAmount if necessary
+                                        updateTotalAmount();
                                     }
                                 });
                             </script>
@@ -2140,11 +2125,10 @@
                                         var file = fileInput.files[0];
 
                                         if (file) {
-                                            // Create FormData object and append the file to it
+
                                             var formData = new FormData();
                                             formData.append('DocCheque', file);
 
-                                            // Perform AJAX request
                                             $.ajax({
                                                 url: '/NationalGangotri/DonationReceiveMaster/TemporaryUploadFile',
                                                 type: 'POST',
@@ -2155,11 +2139,11 @@
 
                                                     $('#hiddenTempFilename').val(response.uniqueFileName);
 
-                                                    // Handle success, if needed
+
                                                     console.log('File uploaded successfully:', response);
                                                 },
                                                 error: function (error) {
-                                                    // Handle error
+
                                                     console.log('Error uploading file:', error);
                                                 }
                                             });
@@ -2221,12 +2205,12 @@
 
                             <script>
                                 $(document).ready(function () {
-                                    // Parse the JSON data from the model for bank details
+
                                     var bankDetailsListJson = @Html.Raw(Model.BankDetailsListJson);
 
-                                    // If BankDetailsListJson is null, use data from the model directly
+
                                     if (!bankDetailsListJson) {
-                                        // Use data from the model
+
                                         bankDetailsListJson = @Html.Raw(JsonConvert.SerializeObject(Model.BankDetailsList));
                                     }
 
@@ -2252,19 +2236,19 @@
                                             OnModeladdBankDetailsRow(mappedBankDetails);
                                         });
 
-                                        // Show the table after adding data
+                                                                         after adding data
                                         $("#bankDetailsTable").show();
                                     }
 
                                     function updateTotalAmount() {
                                         var totalAmount = 0;
 
-                                        // Loop through each row in the bank details table
+
                                         $("#bankDetailsTable tbody tr").each(function () {
                                             // Get the amount from the "Amount" column in the current row
                                             var amount = parseFloat($(this).find("td:eq(7)").text());
 
-                                            // Add the amount to the total
+
                                             totalAmount += amount;
                                         });
 
@@ -2419,11 +2403,11 @@
                                         $("input[name='pdcCheque1']").prop("checked", false);
 
                                         updateTotalAmount();
-                                        // Show the table after adding data
+                                                                         after adding data
                                         $("#bankDetailsTable").show();
                                     });
 
-                                    // Event listener for row deletion
+
                                     $("#bankDetailsTable").on("click", ".delete-row", function () {
                                         // Reset the flag and added donation mode when a row is deleted
                                         donationModeAdded = false;
@@ -2441,7 +2425,7 @@
                                         }
                                     });
 
-                                    // Function to update the hidden bank details field
+
                                     function updateBankDetailsHiddenField() {
                                         var tableData = [];
 
@@ -2462,16 +2446,16 @@
                                             tableData.push(rowDatabankdetails);
                                         });
 
-                                        // Store tableData in a hidden field
+
                                         $("#hiddenBankDetails").val(JSON.stringify(tableData));
                                     }
 
-                                    // Event listener to prevent row addition when other input fields are focused
+
                                     $("input, select, textarea").on("focus", function () {
                                         buttonClicked = false;
                                     });
 
-                                    // Event listener for key press (Enter) to prevent row addition
+
                                     $(document).on("keypress", function (event) {
                                         if (event.which === 13 && !buttonClicked) {
                                             event.preventDefault();
@@ -2539,7 +2523,7 @@
                                         tableBody.append(newRowdepositeBank);
                                     });
 
-                                    // Show the table
+
                                     $('#depositTable').show();
                                     // Toggle the visibility of the fieldset based on the number of rows
                                     $('#backOfficeFieldset').toggle(tableBody.find('tr').length > 0);
@@ -2588,8 +2572,7 @@
                                                     $('#subHeadInput').append('<option value="' + head.yojna_ID + '">' + head.yojna + '</option>');
                                                 });
 
-                                                // Show the second dropdown if needed
-                                                // $('#subHeadInput').parent().show();
+
                                             },
                                             error: function (xhr, status, error) {
                                                 console.log("AJAX error: " + error);
@@ -2604,7 +2587,7 @@
 
                             <script>
                                 $(document).ready(function () {
-                                    // Apply Select2 to your dropdown element by its ID
+
                                     $('#subHeadInput').select2({
                                         theme: 'classic',
                                         width: '100%',
@@ -2663,7 +2646,7 @@
                             </style>
                             <script>
                                 $(document).ready(function () {
-                                    var initialAmount = 0; // Variable to store the initial amount
+                                    var initialAmount = 0;
                                     var curid = $('#CurrencyID').val();
 
                                     $('#subHeadInput').change(function () {
@@ -2727,10 +2710,10 @@
                                                     $('#autoQuantityInput').append('<option value="' + i + '">' + i + '</option>');
                                                 }
 
-                                                enableReceiptAmount(); // Check and enable/disable ReceiptAmount based on initial amount
+                                                enableReceiptAmount();
                                             }
 
-                                            // Set the initial amount in the ReceiptAmount input field
+
                                             $('#ReceiptAmount').val(initialAmount.toFixed(2));
                                             // $('#receiveamount').val(initialAmount.toFixed(2));
                                             updateAnnounce();
@@ -2765,21 +2748,21 @@
 
 
                                     function updateAnnounce() {
-                                        // Get the value of the receiveamount input
+
                                         var receiveAmount = parseFloat($('#receiveamount').val()) || 0;
 
-                                        // Get the value of the ReceiptAmount input
+
                                         var receiptAmount = parseFloat($('#ReceiptAmount').val()) || 0;
 
-                                        // Check if the receipt amount is greater than the receive amount
+
                                         if (receiptAmount > receiveAmount) {
-                                            // Calculate the announce amount as the difference between receipt amount and initial amount
+
                                             var announceAmount = receiptAmount - receiveAmount;
 
-                                            // Set the announce amount in the announceamount input field
+
                                             $('#announceamount').val(announceAmount.toFixed(2));
                                         } else {
-                                            // If the receipt amount is not greater than the receive amount, set announce amount to 0
+
                                             $('#announceamount').val("0.00");
                                         }
                                     }
@@ -2910,7 +2893,7 @@
                                     var totalAmountInput = $("#TotalAmount");
                                     var announceTotalInput = $("#hdnAnnounceTotalAmount");
 
-                                    // Constants
+
                                     var SELECT_OPTION = "Select";
                                     var ERROR_MESSAGES = {
                                         ADD_AMOUNT_FIRST: "Please Add Donation Amount First.",
@@ -2918,7 +2901,7 @@
                                         TOTAL_AMOUNT_EXCEED: "Total amount in the Purpose cannot exceed the specified Donation Total Amount...!!!"
                                     };
 
-                                    // Initialize table with data from the model
+
                                     var receiptsListJson = @Html.Raw(Model.ReceiptsListJson);
                                     if (receiptsListJson) {
                                         $.each(receiptsListJson, function (index, item) {
@@ -2941,11 +2924,10 @@
                                         var totalDonation = parseFloat($("#hdnTotalAmount").val()) || 0;
                                         var bhojanDate = $("#bhojanMitiDate").val();
 
-                                        // Calculate the remaining amount after adding the current purpose amount
+
                                         var currentTotal = getCurrentTotalAmount();
                                         var remainingAmount = totalDonation - currentTotal;
 
-                                        // Calculate the announce amount
                                         var announceAmount = 0;
                                         if (amount > remainingAmount) {
                                             announceAmount = Math.max(0, amount - remainingAmount);
@@ -2954,24 +2936,22 @@
                                             receiveAmount = Math.min(receiveAmount, remainingAmount);
                                         }
 
-                                        // Check if purpose amount is less than or equal to the receive amount
+
                                         if (amount <= remainingAmount) {
                                             remainingAmount = remainingAmount - amount;
                                             receiveAmount = amount;
                                         }
 
-                                        // Calculate the total receive amount from each row
                                         var totalReceiveFromRows = calculateTotalReceiveFromRows();
 
-                                        // Check if the total receive amount from rows exceeds the total donation
                                         if (totalReceiveFromRows + receiveAmount > totalDonation) {
-                                            // If it exceeds, set receiveAmount to the remaining amount
+
                                             console.log('exceed');
                                             receiveAmount = Math.max(0, totalDonation - totalReceiveFromRows);
                                             announceAmount = Math.max(0, totalReceiveFromRows + receiveAmount - totalDonation);
                                         }
 
-                                        // Ensure that receiveAmount is not negative
+
                                         receiveAmount = Math.max(0, receiveAmount);
 
                                         addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate);
@@ -2982,7 +2962,6 @@
                                     });
 
 
-                                    // Rest of the functions remain unchanged
 
 
 
@@ -2996,17 +2975,16 @@
                                         return totalReceive;
                                     }
 
-                                    // Function to update the receive amount
+
                                     function updateReceiveAmount(remainingAmount, currentReceiveAmount) {
-                                        // Ensure that the updated receive amount is not negative or greater than total donation
+
                                         var updatedReceiveAmount = Math.min(Math.max(currentReceiveAmount, 0), remainingAmount);
 
-                                        // Update the receiveamount field with the calculated value
+
                                         $("#receiveamount").val(updatedReceiveAmount.toFixed(2));
                                         $("#hdnTotalReceiveAmountInPurpose").val(updatedReceiveAmount.toFixed(2));
                                     }
 
-                                    // Function to get the current total amount in the table
                                     function getCurrentTotalAmount() {
                                         var currentTotal = 0;
                                         tableBody.find("tr").each(function () {
@@ -3018,18 +2996,17 @@
                                     }
 
 
-                                    // Delete row event handler
+
                                     tableBody.on("click", ".deleteBtn", function () {
                                         var announceAmount = parseFloat($(this).closest("tr").find("td:eq(5)").text()) || 0;
                                         $(this).closest("tr").remove();
 
-                                        // Toggle table visibility based on row count
                                         toggleTableVisibility();
 
-                                        // Update hidden field with JSON data
+
                                         updateHiddenField();
 
-                                        // Update announce total
+
                                         updateAnnounceTotal(-announceAmount);
                                     });
 
@@ -3037,14 +3014,14 @@
                                         tableBody.empty();
                                         toggleTableVisibility();
 
-                                        // Update hidden field with JSON data
+
                                         updateHiddenField();
 
-                                        // Reset announce total
+
                                         announceTotalInput.val(0);
                                     });
 
-                                    // Function to toggle table visibility based on row count
+
                                     function toggleTableVisibility() {
                                         tableContainer.toggle(tableBody.find("tr").length > 0);
                                     }
@@ -3054,27 +3031,26 @@
 
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate) {
                                         var newRowPurpose = `<tr>
-                                                                        <td>${head}</td>
-                                                                        <td>${purpose}</td>
-                                                                        <td>${quantity}</td>
-                                                                        <td>${amount.toFixed(2)}</td>
-                                                                        <td>${receiveAmount.toFixed(2)}</td>
-                                                                        <td>${announceAmount.toFixed(2)}</td>
-                                                                        <td>${bhojandate}</td>
-                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                    </tr>`;
+                                                                                                        <td>${head}</td>
+                                                                                                        <td>${purpose}</td>
+                                                                                                        <td>${quantity}</td>
+                                                                                                        <td>${amount.toFixed(2)}</td>
+                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                        <td>${announceAmount.toFixed(2)}</td>
+                                                                                                        <td>${bhojandate}</td>
+                                                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
                                     }
 
-                                    // Function to clear input fields
                                     function clearInputFields() {
                                         $("#headInput,#subHeadInput,#autoQuantityInput,#announceamount,#bhojanMitiDate").val("");
                                         $("#headInput, #subHeadInput, #autoQuantityInput").val(0).trigger('change');
                                     }
 
-                                    // Function to update the hidden field with JSON data
+
                                     function updateHiddenField() {
                                         var data = [];
                                         var totalAmount = 0;
@@ -3107,7 +3083,6 @@
                                         $("#hdnPurposetotalamount").val(totalAmount.toFixed(2));
                                     }
 
-                                    // Function to update announce total
                                     function updateAnnounceTotal(announceAmount = 0) {
                                         var currentTotal = parseFloat(announceTotalInput.val()) || 0;
                                         var newTotal = currentTotal + announceAmount;
@@ -3169,7 +3144,7 @@
                                     textbox.style.display = this.checked ? 'block' : 'none';
                                 });
 
-                                // Handle initial state when the page loads
+
                                 window.addEventListener('DOMContentLoaded', function () {
                                     var checkbox = document.getElementById('requireCheckbox');
                                     var textbox = document.getElementById('requireWithTextbox');
@@ -3215,14 +3190,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Rows will be dynamically added here -->
                                 </tbody>
                             </table>
                             <input type="hidden" id="jsonDatafordonorInstruction" asp-for="donorInstructionjsonList" name="donorInstructionjsonList" />
 
                             <script>
                                 $(document).ready(function () {
-                                    // Initialize the table with data from the model
+
                                     var donorInstructionsListJson = @Html.Raw(Model.DonorInstructionsListJson);
                                     var instructionTableBody = $("#instructionTable tbody");
                                     var jsonDataField = $("#jsonDatafordonorInstruction");
@@ -3239,20 +3213,20 @@
                                         toggleTableVisibility();
                                     }
 
-                                    // Button click event
+
                                     $("#addRowBtn").click(function () {
-                                        // Get selected values
+
                                         var selectedInstructionId = $("#Instruction").val();
                                         var selectedInstructionName = $("#Instruction option:selected").text();
                                         var remarks = $("#remarks").val();
 
-                                        // Validate
+
                                         if (selectedInstructionId === "0") {
                                             alert("Please select a Donor Instruction.");
                                             return;
                                         }
 
-                                        // Add row to the table
+
                                         var newRowDonorInstAdd = "<tr>" +
                                             "<td>" + selectedInstructionName + "<input type='hidden' name='SelectedInstructions' value='" + selectedInstructionId + "' /></td>" +
                                             "<td>" + remarks + "</td>" +
@@ -3261,29 +3235,25 @@
 
                                         instructionTableBody.append(newRowDonorInstAdd);
 
-                                        // Update hidden field with JSON data
+
                                         updateHiddenField();
 
-                                        // Clear input values
                                         $("#Instruction").val("0");
                                         $("#remarks").val("");
 
-                                        // Show the table
+
                                         toggleTableVisibility();
                                     });
 
-                                    // Handle delete button click within the table
+
                                     instructionTableBody.on("click", ".deleteRowBtn", function () {
                                         $(this).closest("tr").remove();
 
-                                        // Update hidden field with JSON data
                                         updateHiddenField();
 
-                                        // Hide the table if there are no rows
                                         toggleTableVisibility();
                                     });
 
-                                    // Function to update the hidden field with JSON data
                                     function updateHiddenField() {
                                         var data = [];
                                         instructionTableBody.find("tr").each(function () {
@@ -3296,14 +3266,12 @@
                                             data.push(item);
                                         });
 
-                                        // Convert data array to JSON string
+
                                         var jsonData = JSON.stringify(data);
 
-                                        // Set JSON data to hidden field
                                         jsonDataField.val(jsonData);
                                     }
 
-                                    // Function to toggle table visibility based on row count
                                     function toggleTableVisibility() {
                                         if (instructionTableBody.find("tr").length === 0) {
                                             $("#instructionTable").hide();
@@ -3360,7 +3328,7 @@
                                         // Clear input fields
                                         $("#totalPurposeAmount, #dueAmount, #announceId, #amount, #date1").val("");
 
-                                        // Show the table
+
                                         $("#announceTable").show();
                                     });
                                 });
@@ -3405,7 +3373,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBodyAnnounce">
-                                    <!-- Table rows will be added dynamically here -->
                                 </tbody>
                             </table>
                         </div>
@@ -3417,7 +3384,7 @@
                         var tableBody = $("#tableBodyAnnounce");
                         var jsonDataField = $("#announceData");
 
-                        // Initialize table with data from the model
+
                         var announceDetailsListJson = @Html.Raw(Model.AnnounceDetailsListJson);
                         if (announceDetailsListJson) {
                             $.each(announceDetailsListJson, function (index, item) {
@@ -3446,10 +3413,9 @@
                             // Clear input fields
                             $("#announceIdAnnounce, #AnnouncerName, #dueAmountAnnounce, #dateAnnounce").val("");
 
-                            // Show the table
+
                             $("#announceTable").show();
 
-                            // Update JSON in hidden field after row addition
                             updateHiddenField();
                         });
 
@@ -3457,14 +3423,13 @@
                         tableBody.on("click", ".delete-row-announce", function () {
                             $(this).closest("tr").remove();
 
-                            // Hide the table if there are no rows
+
                             toggleTableVisibility();
 
-                            // Update JSON in hidden field after row deletion
                             updateHiddenField();
                         });
 
-                        // Function to update the hidden field with JSON data
+
                         function updateHiddenField() {
                             var announceData = [];
 
@@ -3479,14 +3444,14 @@
                                 announceData.push(rowDataannounce);
                             });
 
-                            // Convert data array to JSON string
+
                             var jsonData = JSON.stringify(announceData);
 
-                            // Set JSON data to hidden field
+
                             jsonDataField.val(jsonData);
                         }
 
-                        // Function to toggle table visibility based on row count
+
                         function toggleTableVisibility() {
                             if (tableBody.find("tr").length === 0) {
                                 $("#announceTable").hide();
@@ -3515,14 +3480,14 @@
 
                             .img-preview {
                                 max-width: 100%;
-                                max-height: 200px; /* Set a fixed height for the image preview */
+                                max-height: 200px;
                                 display: none;
-                                margin: 0 auto; /* Center the image horizontally */
+                                margin: 0 auto;
                             }
 
                             .pdf-view {
                                 width: 100%;
-                                height: 200px; /* Set a fixed height for the PDF preview */
+                                height: 200px;
                                 display: none;
                             }
                         </style>
@@ -3587,7 +3552,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Table rows will be added dynamically here -->
                                 </tbody>
                             </table>
                             <script>
@@ -3599,7 +3563,7 @@
                                         // Clear existing rows
                                         tableBody.empty();
                                         var srno = 1;
-                                        // Iterate through JSON data and add rows to the table
+
                                         jsonData.forEach(function (item) {
                                             var newRowMovement = '<tr>' +
                                                 '<td>' + srno++ + '</td>' +
@@ -3613,11 +3577,10 @@
                                             tableBody.append(newRowMovement);
                                         });
 
-                                        // Show the table
+
                                         $('#movementTable').show();
                                     }
 
-                                    // Call the function to fill the table on page load
                                     fillTableFromJson();
                                 });
                             </script>

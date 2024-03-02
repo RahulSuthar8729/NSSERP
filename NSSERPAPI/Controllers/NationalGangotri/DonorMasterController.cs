@@ -46,14 +46,9 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         [HttpPost]
         public IActionResult InsertData([FromBody] DonorMaster model)
         {
-            string mobileListJson = HttpContext.Request.Headers["MobileList"];
-            string identityListJson = HttpContext.Request.Headers["IdentityList"];          
+            List<MobileDetails> MobileList = string.IsNullOrEmpty(model.MobileList) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(model.MobileList);
 
-
-            List<MobileDetails> MobileList = string.IsNullOrEmpty(mobileListJson) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(mobileListJson);
-
-            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(identityListJson) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(identityListJson);
-
+            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(model.IdentityList) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(model.IdentityList);
 
 
             try
@@ -62,120 +57,177 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 {
                     connection.Open();
 
-                    try
+                    // Start a transaction
+                    using (SqlTransaction transaction = connection.BeginTransaction())
                     {
-                        var parameters = new DynamicParameters();
+                        try
+                        {
+                            var parameters = new DynamicParameters();
 
-                        // Basic Information
-                        parameters.Add("@FinYear", model.FinYear);
-                        parameters.Add("@UserID", model.UserID);
-                        parameters.Add("@UserName", model.UserName);
-                        parameters.Add("@DataFlag", model.DataFlag);
-                        parameters.Add("@IsAnonymous", model.IsAnonymous);
-                        parameters.Add("@GroupNGCode", model.GroupNGCode);
-                        parameters.Add("@onlineCustId", model.onlineCustId);
-                        parameters.Add("@upiId", model.upiId);
-                        parameters.Add("@mailingNo", model.mailingNo);
-                        parameters.Add("@referenceNo", model.referenceNo);
-                        parameters.Add("@dateOfEntry", model.dateOfEntry);
+                            parameters.Add("@Anonymous", (model.IsAnonymous ?? false) ? "Y" : "N");
+                            parameters.Add("@Online_CustomerId", model.onlineCustId);
+                            parameters.Add("@NGCode", model.DonorID);
+                            parameters.Add("@Don_Id", model.DonorID);
+                            parameters.Add("@GType", model.GroupNGCode);
 
-                        // Donor Information
-                        parameters.Add("@DonorCat", model.DonorCat);
-                        parameters.Add("@IsAppShreekaPurnVivranReceived", model.IsAppShreekaPurnVivranReceived);
-                        parameters.Add("@NamePrefix", model.NamePrefix);
-                        parameters.Add("@FirstName", model.FirstName);
-                        parameters.Add("@MiddleName", model.MiddleName);
-                        parameters.Add("@LastName", model.LastName);
-                        parameters.Add("@DateOfBirth", model.DateOfBirth);
-                        parameters.Add("@RelationToFullName", model.PrefixToRelation + " " + model.RelationToFullName);
-                        parameters.Add("@DateOfAnniversary", model.DateOfAnniversary);
-                        parameters.Add("@Company", model.Company);
-                        parameters.Add("@YourCompany", model.YourCompany);
-                        parameters.Add("@BussinessOrJobType", model.BussinessOrJobType);
-                        parameters.Add("@Profession", model.Profession);
-                        parameters.Add("@WorkingIn", model.WorkingIn);
-                        parameters.Add("@Designation", model.Designation);
-                        parameters.Add("@CareOf", model.CareOf);
-                        parameters.Add("@ToatlDonation", model.ToatlDonation);
+                            parameters.Add("@Donor_Category", model.DonorCat);
+                            parameters.Add("@DONOR_TYPE", model.DonorType);
+                            parameters.Add("@Ref_No", model.referenceNo);
+                            parameters.Add("@DONOR_POST_TYPE", model.DonorType);
 
-                        // Address Information
-                        parameters.Add("@Address1", model.Address1);
-                        parameters.Add("@Address2", model.Address2);
-                        parameters.Add("@Address3", model.Address3);
-                        parameters.Add("@PinCode", model.PinCode);
-                        parameters.Add("@CountryID", model.CountryId);
-                        parameters.Add("@CountryName", model.CountryName);
-                        parameters.Add("@StateID", model.StateID);
-                        parameters.Add("@StateName", model.StateName);
-                        parameters.Add("@DistrictID", model.DistrictID);
-                        parameters.Add("@DistrictName", model.DistrictName);
-                        parameters.Add("@CityID", model.CityID);
-                        parameters.Add("@CityName", model.CityName);
+                            parameters.Add("@B_Type", model.BussinessOrJobType);
+                            parameters.Add("@UPI_ID", model.upiId);
+                            parameters.Add("@Receive_PostType", model.BussinessOrJobType);
+                            parameters.Add("@DShri", model.NamePrefix);
+                            parameters.Add("@DName", model.FirstName);
+                            parameters.Add("@MiddleName", model.MiddleName);
+                            parameters.Add("@DLName", model.LastName);
+                            parameters.Add("@DOB", model.DateOfBirth);
 
-                        // Permanent Address Information
-                        parameters.Add("@P_Address1", model.P_Address1);
-                        parameters.Add("@P_Address2", model.P_Address2);
-                        parameters.Add("@P_Address3", model.P_Address3);
-                        parameters.Add("@P_PinCode", model.P_PinCode);
-                        parameters.Add("@P_CountryID", model.P_CountryID);
-                        parameters.Add("@P_CountryName", model.P_CountryName);
-                        parameters.Add("@P_StateID", model.P_StateID);
-                        parameters.Add("@P_StateName", model.P_StateName);
-                        parameters.Add("@P_DistrictID", model.P_DistrictID);
-                        parameters.Add("@P_DistrictName", model.P_DistrictName);
-                        parameters.Add("@P_CityID", model.P_CityID);
-                        parameters.Add("@P_CityName", model.P_CityName);
+                            parameters.Add("@CO_Title", model.PrefixToRelation);
+                            parameters.Add("@DFatherName", model.RelationToFullName);
+                            parameters.Add("@DOA", model.DateOfAnniversary);
 
-                        // Communication Information
-                        parameters.Add("@IsCallActive", model.IsCallActive);
-                        parameters.Add("@IsMsgActive", model.IsMsgActive);
-                        parameters.Add("@IsWhatsAppActive", model.IsWhatsAppActive);
-                        parameters.Add("@IsEmailActive", model.IsEmailActive);
-                        parameters.Add("@IsLetterCommunicationActive", model.IsLetterCommunicationActive);
-                        parameters.Add("@IsSendoperationPhotoActive", model.IsSendoperationPhotoActive);
+                            parameters.Add("@ncity_id", model.CityID);
+                            parameters.Add("@IAddress", model.Address1);
+                            parameters.Add("@DOE", model.dateOfEntry);
+                            parameters.Add("@Category", model.DonorCat);
+                            parameters.Add("@Reference", model.referenceNo);
+                            parameters.Add("@Designation", model.Designation);
+                            parameters.Add("@Company", model.Company);
+                            parameters.Add("@Add1", model.Address1);
+                            parameters.Add("@Add2", model.Address2);
+                            parameters.Add("@Add3", model.Address3);
+                            parameters.Add("@COUNTRY_CODE", model.CountryId);
+                            parameters.Add("@country", model.CountryName);
+                            parameters.Add("@State_code", model.StateID);
+                            parameters.Add("@State", model.StateName);
+                            parameters.Add("@District_CODE", model.DistrictID);
+                            parameters.Add("@District", model.DistrictName);
+                            parameters.Add("@CITY_CODE", model.CityID);
+                            parameters.Add("@Place", model.CityName);
+                            parameters.Add("@Pincode", model.PinCode);
 
-                        // List Information
-                        parameters.Add("@MobileList", model.MobileList);
-                        parameters.Add("@IdentityList", model.IdentityList);
+                            parameters.Add("@Same_Add", (model.IsPermanentAddressDiff ?? false) ? "Y" : "N");
 
-                        // Other Information
-                        parameters.Add("@Sandipan", model.Sandipan);
-                        parameters.Add("@language", model.language);
-                        parameters.Add("@SandipanRemarksReason", model.SandipanRemarksReason);
-                        parameters.Add("@SandipanRemarks", model.SandipanRemarks);
-                        parameters.Add("@ReceiptCopyRequireOptions", model.ReceiptCopyRequireOptions);
-                        parameters.Add("@IsVisit", model.IsVisit);
-                        parameters.Add("@VisitYear", model.VisitYear);
-                        parameters.Add("@ForginNgCodeRefrence", model.ForginNgCodeRefrence);
-                        parameters.Add("@ChangesRemarks", model.ChangesRemarks);
-                        parameters.Add("@Remarks", model.Remarks);
+                            parameters.Add("@OffAdd1", model.P_Address1);
+                            parameters.Add("@OffAdd2", model.P_Address2);
+                            parameters.Add("@OffAdd3", model.P_Address3);
+                            parameters.Add("@PerCountry_Code", model.P_CountryID);
+                            parameters.Add("@PerState_Code", model.P_StateID);
+                            parameters.Add("@PerDistrict_Code", model.P_DistrictID);
+                            parameters.Add("@PerCity_Code", model.P_CityID);
+                            parameters.Add("@PerPinCode", model.P_PinCode);
 
-                        // Document Information
-                        parameters.Add("@Doc1", model.Doc1);
-                        parameters.Add("@Doc2", model.Doc2);
-                        parameters.Add("@Doc3", model.Doc3);
+                            parameters.Add("@PerPincode_Code", model.P_PinCode);
 
-                        
-                        connection.Execute("InsertDonorMaster", parameters, commandType: CommandType.StoredProcedure);
-                      
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle exceptions as needed
-                        ViewBag.emsg = "An error occurred during the transaction.";
-                        return View();
+                            parameters.Add("@IsSandipan", (model.IsSandipanSend ?? false) ? "Y" : "N");
+
+                            parameters.Add("@TotalAmount", model.ToatlDonation);
+                            parameters.Add("@user_name", model.UserName);
+
+                            parameters.Add("@IsSandipan_original", (model.IsSandipanSend ?? false) ? "Y" : "N");
+
+                            parameters.Add("@TotalAmount_original", model.ToatlDonation);
+                            parameters.Add("@Receipt_Copy", model.ReceiptCopyRequireOptions);
+                            parameters.Add("@care_of", model.CareOf);
+
+                            parameters.Add("@Remark", model.Remarks);
+
+                            parameters.Add("@SMS", model.IsMsgActive);
+                            parameters.Add("@Visit", (model.IsVisit ?? false) ? "Y" : "N");
+
+                            parameters.Add("@Visit_Year", model.VisitYear);
+                            parameters.Add("@Website", model.Website);
+                            parameters.Add("@Sandipan_Remark", model.SandipanRemarks);
+
+                            parameters.Add("@Entry_By", model.UserID);
+                            parameters.Add("@Lang", model.language);
+                            parameters.Add("@Sandipan_NoReason", model.SandipanRemarksReason);
+
+                            parameters.Add("@DATA_FLAG", model.DataFlag);
+
+                            parameters.Add("@Donor_Remark", model.Remarks);
+                            parameters.Add("@Cont_whatsApp", (model.IsWhatsAppActive ?? false) ? "Y" : "N");
+                            parameters.Add("@Cont_Email", (model.IsEmailActive ?? false) ? "Y" : "N");
+
+                            parameters.Add("@Cont_Letter", (model.IsLetterCommunicationActive ?? false) ? "Y" : "N");
+
+
+
+                            parameters.Add("@CreatedBy", model.UserName);
+                            parameters.Add("@MobileList", model.MobileList);
+                            parameters.Add("@IdentityList", model.IdentityList);
+
+
+                            connection.Execute("InsertDonorMaster", parameters, commandType: CommandType.StoredProcedure);
+
+
+
+
+                            if (MobileList != null)
+                            {
+                                foreach (var mobileNumber in MobileList)
+                                {
+                                    var mobileParams = new DynamicParameters();
+                                    mobileParams.Add("@REF_NO",null);
+                                    mobileParams.Add("@ReceiveHeadName", null);
+                                    mobileParams.Add("@DonorID", model.DonorID);
+                                    mobileParams.Add("@ContactType", mobileNumber.ContactType);
+                                    mobileParams.Add("@CountryCode", mobileNumber.CountryCode);
+                                    mobileParams.Add("@MobileNo", mobileNumber.ContactDetail);
+                                    mobileParams.Add("@DataFlag", model.DataFlag);
+                                    mobileParams.Add("@CreatedBy", model.UserID);
+                                    connection.Execute("InsertMultiMobileInDonationReceiveMaster", mobileParams, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+                            if (IdentityList != null)
+                            {
+                                foreach (var identity in IdentityList)
+                                {
+                                    var identityParams = new DynamicParameters();
+                                    identityParams.Add("@REF_NO", null);
+                                    identityParams.Add("@ReceiveHeadName",null);
+                                    identityParams.Add("@DonorID", model.DonorID);
+                                    identityParams.Add("@IdentityType", identity.IdentityType);
+                                    identityParams.Add("@IdentityNumber", identity.IdentityNumber);
+                                    identityParams.Add("@DataFlag", model.DataFlag);
+                                    identityParams.Add("@CreatedBy", model.UserID);
+
+                                    connection.Execute("InsertMultiIdentityInDonationReceiveMaster", identityParams, transaction, commandType: CommandType.StoredProcedure);
+                                }
+                            }
+
+
+
+
+                            transaction.Commit();
+
+                           
+                        }
+
+                        catch (Exception ex)
+                        {
+                            
+                            transaction.Rollback();
+                            
+
+                            return View();
+                        }
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 dynamic msg;
                 msg = new ExpandoObject();
                 msg.emsg = ex.Message;
-                return Ok(msg);               
+                return Ok(msg);
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
-            model.msg = "";
+
+         
+            model.msg = "Donor Created Successfully";
             return Ok(model);
         }
 

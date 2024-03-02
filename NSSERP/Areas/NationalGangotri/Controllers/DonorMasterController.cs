@@ -155,8 +155,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 IsEmailActive=model.IsEmailActive,
                 IsLetterCommunicationActive=model.IsLetterCommunicationActive,
                 IsSendoperationPhotoActive=model.IsSendoperationPhotoActive,
+                Website=model.Website,
 
-                MobileList=model.MobileList,
+                MobileList =model.MobileList,
                 IdentityList=model.IdentityList,
                 
                 Sandipan =model.Sandipan,

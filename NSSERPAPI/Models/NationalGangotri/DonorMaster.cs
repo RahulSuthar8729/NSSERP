@@ -5,15 +5,15 @@
         public string? msg { get; set; }
         public string? DataFlag { get; set; }
         public string? FinYear { get; set; }
-        public string? UserID { get; set; }
+        public int? UserID { get; set; }
         public string? UserName { get; set; }
         public bool? IsAnonymous { get; set; }
         public int? DonorID { get; set; }
         public string? onlineCustId { get; set; }
-        public string? GroupNGCode { get; set; }
+        public int? GroupNGCode { get; set; }
         public string? upiId { get; set; }
         public string? mailingNo { get; set; }
-        public string? referenceNo { get; set; }
+        public int? referenceNo { get; set; }
         public DateTime? dateOfEntry { get; set; }
         public string? DonorCat { get; set; }
         public bool? IsAppShreekaPurnVivranReceived { get; }
@@ -28,7 +28,7 @@
         public DateTime? DateOfAnniversary { get; set; }
         public string? Company { get; set; } = "";
         public string? YourCompany { get; set; } = "";
-        public string? BussinessOrJobType { get; set; } = "";
+        public int? BussinessOrJobType { get; set; }
 
         public string? Profession { get; set; } 
         public string? WorkingIn { get; set; } = "";
@@ -38,7 +38,7 @@
         public string? Address1 { get; set; } = "";
         public string? Address2 { get; set; } = "";
         public string? Address3 { get; set; } = "";
-        public string? PinCode { get; set; } = "";
+        public int? PinCode { get; set; }
         public int? CountryId { get; set; }
         public string? CountryName { get; set; } = "";
         public int? StateID { get; set; }
@@ -95,6 +95,7 @@
         public string? Doc1 { get; set; } = "";
         public string? Doc2 { get; set; } = "";
         public string? Doc3 { get; set; } = "";
+        public string? Website { get; set; } = "";
 
 
     }

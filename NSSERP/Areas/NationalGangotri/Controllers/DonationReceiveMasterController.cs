@@ -62,7 +62,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 else
                 {
                     Response.WriteAsJsonAsync(response);
-                    // Handle other error cases if needed
+                 
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
@@ -134,7 +134,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+                
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -165,7 +165,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+              
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -196,7 +196,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+               
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -206,37 +206,37 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             try
             {
-                // Construct the API endpoint URL with the pincode parameter
+       
                 string apiUrl = $"api/DonationReceiveMaster/GetSubHeadByHead?HeadID={HeadID}&DataFlag={DataFlag}&CurrencyId={CurrencyID}";
 
-                // Make a GET request to the API endpoint
+     
                 var response = await _apiClient.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Read the JSON content from the response
+                    
                     var json = await response.Content.ReadAsStringAsync();
 
                     var subHeadList = JsonConvert.DeserializeObject<List<SubHeadMaster>>(json);
 
 
-                    // Return JsonResult with structured data
+                 
                     return Json(new { data = subHeadList });
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // Handle the case where the resource was not found
+             
                     return NotFound();
                 }
                 else
                 {
-                    // Handle other error cases if needed
+               
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+         
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -246,34 +246,34 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             try
             {
-                // Construct the API endpoint URL with the pincode parameter
+          
                 string apiUrl = $"api/DonationReceiveMaster/GetQtyAmtBySubHead?YojnaID={Convert.ToInt32(YojnaID)}&DataFlag={DataFlag}&CurrencyId={CurrencyID}";
 
-                // Make a GET request to the API endpoint
+   
                 var response = await _apiClient.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Read the JSON content from the response
+                   
                     var json = await response.Content.ReadAsStringAsync();
 
-                    // Return JsonResult with structured data
+                 
                     return Json(new { data = json });
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // Handle the case where the resource was not found
+                  
                     return NotFound();
                 }
                 else
                 {
-                    // Handle other error cases if needed
+                  
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+                
                 return BadRequest("An error occurred while retrieving location details.");
             }
         } 
@@ -282,34 +282,34 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             try
             {
-                // Construct the API endpoint URL with the pincode parameter
+             
                 string apiUrl = $"api/DonationReceiveMaster/GetOperationAmountByQty?Qty={Convert.ToInt32(Qty)}&DataFlag={DataFlag}&CurrencyId={CurrencyID}";
 
-                // Make a GET request to the API endpoint
+              
                 var response = await _apiClient.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Read the JSON content from the response
+                
                     var json = await response.Content.ReadAsStringAsync();
 
-                    // Return JsonResult with structured data
+                    
                     return Content($"{{\"data\": {json}}}", "application/json");
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // Handle the case where the resource was not found
+                   
                     return NotFound();
                 }
                 else
                 {
-                    // Handle other error cases if needed
+                  
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+              
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -319,34 +319,34 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             try
             {
-                // Construct the API endpoint URL with the pincode parameter
+              
                 string apiUrl = $"api/Search/GetPersonbyProvisonal?receiptNo={receiptNo}&tp={tp}&DataFlag={dataflag}";
 
-                // Make a GET request to the API endpoint
+             
                 var response = await _apiClient.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Read the JSON content from the response
+                 
                     var json = await response.Content.ReadAsStringAsync();                    
 
-                    // Return JsonResult with structured data
+               
                     return Json(new { data = json });
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // Handle the case where the resource was not found
+                
                     return NotFound();
                 }
                 else
                 {
-                    // Handle other error cases if needed
+                   
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+                
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -356,34 +356,34 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         {
             try
             {
-                // Construct the API endpoint URL with the pincode parameter
+              
                 string apiUrl = $"api/DonationReceiveMaster/GetLocationDetailsByPinCode?pincode={pincode}";
 
-                // Make a GET request to the API endpoint
+                
                 var response = await _apiClient.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Read the JSON content from the response
+                    
                     var json = await response.Content.ReadAsStringAsync();
 
-                    // Return JsonResult instead of a raw JSON string
+                    
                     return Json(new { data = json });
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // Handle the case where the resource was not found
+                    
                     return NotFound();
                 }
                 else
                 {
-                    // Handle other error cases if needed
+                    
                     return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+              
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -414,7 +414,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+             
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -445,7 +445,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+              
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
@@ -648,7 +648,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
             catch (Exception ex)
             {
-                // Handle other exceptions, such as database connection issues
+             
                 ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
 
@@ -902,7 +902,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                         await model.DocCheque.CopyToAsync(stream);
                     }
 
-                    // Return the temporary path
                     return Json(new { uniqueFileName });
                 }
 

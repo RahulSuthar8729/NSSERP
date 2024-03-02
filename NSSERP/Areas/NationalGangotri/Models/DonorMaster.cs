@@ -111,5 +111,6 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string ForginNgCodeRefrence { get; set; } = "";
         public string ChangesRemarks { get; set; } = "";
         public string Remarks { get; set; } = "";
+        public string Website { get; set; } = "";
     }
 }
