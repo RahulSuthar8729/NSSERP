@@ -179,6 +179,21 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             {
                 return BadRequest("Error retrieving states.");
             }
+        }  
+        
+        [HttpGet]
+        public IActionResult GetCriticalPurpose()
+        {
+            try
+            {
+                var purpose = _dbFunctions.GetCriticalPurpose();
+
+                return Ok(purpose);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error retrieving states.");
+            }
         }
 
         [HttpGet]

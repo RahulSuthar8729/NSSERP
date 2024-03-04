@@ -241,6 +241,45 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetCriticalOperation()
+        {
+            try
+            {
+
+                string apiUrl = $"api/DonationReceiveMaster/GetCriticalPurpose";
+
+
+                var response = await _apiClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    //  return Json(new { data = subHeadList });
+
+                    return Content($"{{\"data\": {json}}}", "application/json");
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest("An error occurred while retrieving location details.");
+            }
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID, string DataFlag, string CurrencyID)
         {
@@ -256,7 +295,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 {
                    
                     var json = await response.Content.ReadAsStringAsync();
-
                  
                     return Json(new { data = json });
                 }

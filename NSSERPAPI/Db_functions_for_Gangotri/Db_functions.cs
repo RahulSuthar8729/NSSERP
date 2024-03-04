@@ -305,6 +305,16 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetSubHeads", commandType: CommandType.StoredProcedure);
             }
         }
+
+        public IEnumerable<dynamic> GetCriticalPurpose()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                return connection.Query<dynamic>("[GetCriticalPupose]", commandType: CommandType.StoredProcedure);
+            }
+        }
         public IEnumerable<dynamic> GetallCampaigns()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

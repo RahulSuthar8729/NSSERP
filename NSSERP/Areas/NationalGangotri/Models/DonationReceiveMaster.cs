@@ -72,6 +72,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string DistrictName { get; set; } = "";
         public int? CityID { get; set; }
         public string CityName { get; set; } = "";
+        public string CareOf { get; set; } = "";
 
         public bool? IfUpdationInAddress { get; set; }
         public bool? IsPermanentAddressDiff { get; set; }
@@ -105,6 +106,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public DateTime? ProvDate { get; set; }
 
         public string PersonName { get; set; } = "";
+        public  int? DonationboxNo { get; set; }
         public string EventName { get; set; } = "";
         public decimal Amount { get; set; }
         public decimal? TotalAmount { get; set; }
@@ -123,7 +125,8 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public bool? IsPatientsPhotoRequire { get; set; }
         public bool? IfDiffrentAddressForDispatch { get; set; }
         public string DifferentAddressToDispatch { get; set; } = "";
-
+        public int? MainDonorID { get; set; }
+        public string? NamePlate { get; set; }
         public int? SubHeadID { get; set; }
         public string SubHeadName { get; set; } = "";
         public string Instructions { get; set; } = "";

@@ -58,6 +58,8 @@
                         $('#donationForm :invalid').first().focus();
                     }
                 });
+
+
             });
         </script>
     }
@@ -766,6 +768,23 @@
                                 <input type="date" value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" id="DateOfBirth" asp-for="DateOfBirth" name="DateOfBirth">
                             </div>
                             <div class="form-group col-lg-3">
+                                <label for="Reference" class="mb-2">S/o/D/oW/o</label>
+                                <div class="input-group">
+
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select" id="PrefixToFullName" asp-for="PrefixToFullName" name="PrefixToFullName">
+                                            <option value="" selected disabled>Select</option>
+                                            <option value="S/o" @(Model != null && Model.PrefixToFullName == "S/o" ? "selected" : "")>S/o</option>
+                                            <option value="D/o" @(Model != null && Model.PrefixToFullName == "D/o" ? "selected" : "")>D/o</option>
+                                            <option value="W/o" @(Model != null && Model.PrefixToFullName == "W/o" ? "selected" : "")>W/o</option>
+
+                                        </select>
+                                    </div>
+                                    <input type="text" placeholder="Please enter Donor's Relation" value="@Model.RelationToFullName" oninput="convertToUpperCase(this)" class="form-control" id="RelationToFullName" name="RelationToFullName">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
                                 <label for="InMemory">In Memory/Occession</label>
                                 <textarea class="form-control" id="InMemory" name="InMemory" asp-for="InMemory" rows="1">@Model.InMemory</textarea>
                             </div>
@@ -1031,6 +1050,12 @@
                                         $('#CityName').val(selectedCityName);
                                     });
                                 </script>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Care Of (C/O)</label>
+                                <textarea class="form-control" name="CareOf" asp-for="CareOf" oninput="convertToUpperCase(this)" id="CareOf" rows="1">@Model.CareOf</textarea>
+                                <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
 
                             <div class="card-header text-center">
@@ -1475,7 +1500,7 @@
                                     <option value="RationCard">Ration Card</option>
                                     <option value="VoterID">Voter ID</option>
                                     <option value="TaxID">Tax Identification</option>
-                                    <!-- Add more identity types as needed -->
+
                                 </select>
                             </div>
 
@@ -1485,19 +1510,17 @@
                             </div>
                             <script>
                                 $(document).ready(function () {
-                                    // Add an event listener for identity type change
+
                                     $('#identityType').change(function () {
-                                        // Get the selected identity type
+
                                         var selectedIdentityType = $(this).val();
 
-                                        // Set the watermark text based on the selected identity type
                                         var watermarkText = getWatermarkText(selectedIdentityType);
 
-                                        // Apply the watermark to the identity number input
+
                                         $('#identityNumber').attr('placeholder', watermarkText);
                                     });
 
-                                    // Function to get watermark text based on identity type
                                     function getWatermarkText(identityType) {
                                         switch (identityType) {
                                             case 'Aadhar':
@@ -1544,9 +1567,6 @@
                         }
 
                         if (identityListJson) {
-
-                            console.log("Parsed Identity List:", identityListJson);
-
 
                             $.each(identityListJson, function (index, identity) {
 
@@ -1825,6 +1845,12 @@
                                     });
                                 });
                             </script>
+
+                            <div class="form-group col-lg-3">
+                                <label for="">Donation Box No.</label>
+                                <input class="form-control" value="@Model.DonationboxNo.GetValueOrDefault()" id="DonationboxNo" type="number" name="DonationboxNo" asp-for="DonationboxNo" />
+                            </div>
+
                         </div>
                     </div>
                 </fieldset>
@@ -1904,12 +1930,13 @@
                                             amountInput.required = true;
                                         }
 
-                                        // Simplify the condition for divbankdetails display
-                                        divbankdetails.style.display = selectedText === 'MATERIAL' || selectedText === 'CASH' ? 'none' : 'block';
 
-                                        if (selectedText === 'CHEQUE' || selectedText === 'PAY-IN-SLIP') {
+                                        divbankdetails.style.display = selectedText === 'MATERIAL' ? 'none' : 'block';
+
+                                        if (selectedText === 'CHEQUE' || selectedText === 'PAY-IN-SLIP' || selectedText === 'CASH' || selectedText === 'DD' || selectedText === 'MO' || selectedText === 'ONLINE') {
                                             divMultiCheque.style.display = 'block';
-                                            lbl_multiDoc.innerText = selectedText === 'CHEQUE' ? 'Attach Cheque Doc' : 'Attach Pay-In-Slip Doc';
+                                            lbl_multiDoc.innerText = selectedText === 'CHEQUE' ? 'Attach Cheque Doc' : selectedText === 'PAY-IN-SLIP' ? 'Attach PAY-IN-SLIP Doc' : 'Attach Doc';
+
                                         } else {
                                             divMultiCheque.style.display = 'none';
                                         }
@@ -1921,6 +1948,12 @@
                                             divordernumber.style.display = 'none';
                                             divordertype.style.display = 'none';
                                         }
+
+                                        document.getElementById('divbank').style.display = selectedText === 'CASH' ? 'none' : 'block';
+                                        document.getElementById('divchequedate').style.display = selectedText === 'CASH' ? 'none' : 'block';
+                                        document.getElementById('chequenumber').style.display = selectedText === 'CASH' ? 'none' : 'block';
+
+
                                     }
 
                                     // Call the function initially to set the initial state
@@ -2062,7 +2095,7 @@
 
                             <div id="divbankdetails" style="display:none;">
                                 <div class="row">
-                                    <div class="form-group col-lg-2">
+                                    <div id="divbank" class="form-group col-lg-2">
                                         <label for="bankName">Bank Name</label>
                                         <select class="form-control" name="BankID" id="BankID1" asp-for="BankID">
                                             <option value="" selected disabled>Select Bank</option>
@@ -2075,13 +2108,17 @@
                                             }
                                         </select>
                                     </div>
-                                    <div class="form-group col-lg-2">
+                                    <div id="divchequedate" class="form-group col-lg-2">
                                         <label for="chequedate">Cheque/Draft Date</label>
                                         <input class="form-control" id="chequedate" type="date" name="chequedate" />
                                     </div>
-                                    <div class="form-group col-lg-2">
-                                        <label for="cheuqueno">Cheque/Draft No</label>
-                                        <input class="form-control" id="cheuqueno" type="number" name="cheuqueno" />
+                                    <div id="chequenumber" class="form-group col-lg-1">
+                                        <label for="cheuqueno">Chq/Draft No</label>
+                                        <input class="form-control" id="cheuqueno" placeholder="Chq/Draft No" type="number" name="cheuqueno" />
+                                    </div>
+                                    <div class="form-group col-lg-1">
+                                        <label for="cheuqueno">BankID</label>
+                                        <input class="form-control" id="BankTransactionID" placeholder="BankID" type="number" name="BankTransactionID" />
                                     </div>
                                     <div class="form-group col-lg-2">
                                         <label for="depositBank">Deposit Bank</label>
@@ -2111,7 +2148,7 @@
 
                                     <div class="form-group col-lg-1">
                                         <br />
-                                        <button class="btn btn-primary" id="BtnAddBankDetails"><i class="fa fa-plus"></i>Add</button>
+                                        <button type="button" class="btn btn-primary" id="BtnAddBankDetails"><i class="fa fa-plus"></i>Add</button>
                                     </div>
                                     <input type="hidden" asp-for="BankDetailsList" name="BankDetailsList" id="hiddenBankDetails" />
                                 </div>
@@ -2186,6 +2223,7 @@
                                                 <th>Bank Name</th>
                                                 <th>Cheque/Draft Date</th>
                                                 <th>Cheque/Draft No.</th>
+                                                <th>Bank ID</th>
                                                 <th>Deposit Bank</th>
                                                 <th>Deposit Date</th>
                                                 <th>Currency</th>
@@ -2223,6 +2261,7 @@
                                                 BankName: bankDetails.BankName,
                                                 ChequeOrDraftDate: bankDetails.ChequeOrDraftDate,
                                                 ChequeOrDraftNo: bankDetails.ChequeOrDraftNo,
+                                                BankTransactionID: bankDetails.BankID,
                                                 DepositeBankName: bankDetails.DepositeBankName,
                                                 DepositeDate: bankDetails.DepositeDate,
                                                 CurrencyCode: bankDetails.CurrencyCode,
@@ -2236,7 +2275,7 @@
                                             OnModeladdBankDetailsRow(mappedBankDetails);
                                         });
 
-                                                                         after adding data
+
                                         $("#bankDetailsTable").show();
                                     }
 
@@ -2265,6 +2304,7 @@
                                             "<td>" + bankDetails.BankName + "</td>" +
                                             "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
                                             "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                            "<td>" + bankDetails.BankID + "</td>" +
                                             "<td>" + bankDetails.DepositeBankName + "</td>" +
                                             "<td>" + bankDetails.DepositeDate + "</td>" +
                                             "<td>" + bankDetails.CurrencyCode + "</td>" +
@@ -2288,6 +2328,7 @@
                                             "<td>" + bankDetails.BankName + "</td>" +
                                             "<td>" + bankDetails.ChequeOrDraftDate + "</td>" +
                                             "<td>" + bankDetails.ChequeOrDraftNo + "</td>" +
+                                            "<td>" + bankDetails.BankID + "</td>" +
                                             "<td>" + bankDetails.DepositeBankName + "</td>" +
                                             "<td>" + bankDetails.DepositeDate + "</td>" +
                                             "<td>" + bankDetails.CurrencyCode + "</td>" +
@@ -2325,6 +2366,7 @@
                                         var bankName = $("#BankID1 option:selected").text();
                                         var Cheuquedate = $("#chequedate").val();
                                         var Cheuqueno = $("#cheuqueno").val();
+                                        var BankID = $("#BankTransactionID").val();
                                         var depositBank = $("#BankID2 option:selected").text();
                                         var depositDate = $("#depositDate").val();
                                         var Currency = $("#CurrencyID option:selected").text();
@@ -2372,6 +2414,7 @@
                                             BankName: bankName,
                                             ChequeOrDraftDate: Cheuquedate,
                                             ChequeOrDraftNo: Cheuqueno,
+                                            BankID: BankID,
                                             DepositeBankName: depositBank,
                                             DepositeDate: depositDate,
                                             CurrencyCode: Currency,
@@ -2386,6 +2429,7 @@
                                             BankName: bankDetails.BankName,
                                             ChequeOrDraftDate: bankDetails.ChequeOrDraftDate,
                                             ChequeOrDraftNo: bankDetails.ChequeOrDraftNo,
+                                            BankID: bankDetails.BankID,
                                             DepositeBankName: bankDetails.DepositeBankName,
                                             DepositeDate: bankDetails.DepositeDate,
                                             CurrencyCode: bankDetails.CurrencyCode,
@@ -2398,12 +2442,12 @@
                                         addBankDetailsRow(mappedBankDetails);
 
                                         // Clear form fields
-                                        $("#BankID1, #chequedate, #cheuqueno, #BankID2, #depositDate").val("");
+                                        $("#BankID1, #chequedate, #cheuqueno,#BankTransactionID, #BankID2, #depositDate").val("");
                                         $("#BankID1, #BankID2").val('').trigger('change');
                                         $("input[name='pdcCheque1']").prop("checked", false);
 
                                         updateTotalAmount();
-                                                                         after adding data
+
                                         $("#bankDetailsTable").show();
                                     });
 
@@ -2435,12 +2479,13 @@
                                                 BankName: $(this).find("td:eq(1)").text(),
                                                 ChequeDate: $(this).find("td:eq(2)").text(),
                                                 ChequeNo: $(this).find("td:eq(3)").text(),
-                                                DepositBank: $(this).find("td:eq(4)").text(),
-                                                DepositDate: $(this).find("td:eq(5)").text(),
-                                                Currency: $(this).find("td:eq(6)").text(),
-                                                Amount: $(this).find("td:eq(7)").text(),
-                                                PdcCheque: $(this).find("td:eq(8)").text(),
-                                                TempDoc: $(this).find("td:eq(10)").text()
+                                                BankID: $(this).find("td:eq(4)").text(),
+                                                DepositBank: $(this).find("td:eq(5)").text(),
+                                                DepositDate: $(this).find("td:eq(6)").text(),
+                                                Currency: $(this).find("td:eq(7)").text(),
+                                                Amount: $(this).find("td:eq(8)").text(),
+                                                PdcCheque: $(this).find("td:eq(9)").text(),
+                                                TempDoc: $(this).find("td:eq(11)").text()
                                             };
 
                                             tableData.push(rowDatabankdetails);
@@ -2540,18 +2585,28 @@
                     <legend style="font-weight: bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#receiptDetailsContent" aria-expanded="false" aria-controls="receiptDetailsContent">
                             <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Receipt Details</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Purpose Details</span>
                         </button>
                     </legend>
 
                     <div id="receiptDetailsContent" class="nested-form-container collapse show">
                         <div class="row">
 
+                            <div id="divmainDonorID" class="form-group col-lg-2">
+                                <label for="">Main Donor ID</label>
+                                <input type="number" name="MainDonorID" placeholder="In Case Main Donor is Diff." value="@Model.MainDonorID" class="form-control" id="MainDonorID" asp-for="MainDonorID">
+                            </div>
+
+                            <div id="divNamePlateName" class="form-group col-lg-3" style="display:none;">
+                                <label for="">Name Plate Name</label>
+                                <input type="text" name="NamePlate" placeholder="Please Enter Desired Name Plate Name" oninput="convertToUpperCase(this)" value="@Model.NamePlate" class="form-control" id="NamePlate" asp-for="NamePlate">
+                            </div>
                             <script>
                                 $(document).ready(function () {
                                     $('#headInput').change(function () {
                                         var selectedHead = $(this).val();
                                         $('#DivBhojanmitiDate').toggle(selectedHead === '150');
+                                        $('#divNamePlateName').toggle(selectedHead === '162');
 
 
                                         var curid = $('#CurrencyID').val();
@@ -2583,8 +2638,6 @@
 
                             </script>
 
-
-
                             <script>
                                 $(document).ready(function () {
 
@@ -2594,6 +2647,10 @@
 
                                     });
                                     $('#autoQuantityInput').select2({
+                                        theme: 'classic',
+                                        width: '100%',
+
+                                    }); $('#CRITICALDISEASES').select2({
                                         theme: 'classic',
                                         width: '100%',
 
@@ -2830,6 +2887,50 @@
                                             <option value="0">Select Purpose</option>
                                         </select>
                                     </div>
+                                    <script>
+                                        $(document).ready(function () {
+                                            // On change event of subHeadInput
+                                            $('#subHeadInput').on('change', function () {
+                                                var selectedValue = $(this).val();
+
+                                                // Check if the selected value is in the specified list (340, 349, 350, 166)
+                                                if ($.inArray(selectedValue, ['340', '349', '350', '166']) !== -1) {
+                                                    // Show the div
+                                                    $('#divCriticalPurpose').show();
+
+                                                    $.ajax({
+                                                        type: 'GET',
+                                                        url: '/NationalGangotri/DonationReceiveMaster/GetCriticalOperation',
+                                                        dataType: 'json',
+                                                        success: function (data) {
+                                                            var dropdown = $('#CRITICALDISEASES');
+                                                            dropdown.empty();
+                                                            dropdown.append('<option value="0">Select</option>');
+
+                                                            // Add options for critical diseases
+                                                            $.each(data.data, function (index, item) {
+                                                                dropdown.append('<option value="' + item.VC_Code + '">' + item.CName + '</option>');
+                                                            });
+                                                        },
+                                                        error: function (error) {
+                                                            console.error('Error fetching critical diseases:', error);
+                                                        }
+                                                    });
+                                                } else {
+                                                    // Hide the div if the selected value is not in the specified list
+                                                    $('#divCriticalPurpose').hide();
+                                                }
+                                            });
+                                        });
+                                    </script>
+
+
+                                    <div id="divCriticalPurpose" style="display:none" class="form-group col-lg-2">
+                                        <label for="">Critical Diseases</label>
+                                        <select class="form-control" id="CRITICALDISEASES" name="CRITICAL DISEASES">
+                                            <option value="0">Select</option>
+                                        </select>
+                                    </div>
 
                                     <div class="form-group col-lg-1">
                                         <label for="autoQuantity">Quantity</label>
@@ -2872,6 +2973,7 @@
                                             <th>Purpose Amount</th>
                                             <th>Receive Amount</th>
                                             <th>Announce Amount</th>
+                                            <th></th>
                                             <th></th>
                                             <th>Action</th>
                                         </tr>
@@ -2923,6 +3025,7 @@
                                         var receiveAmount = parseFloat($("#receiveamount").val()) || 0;
                                         var totalDonation = parseFloat($("#hdnTotalAmount").val()) || 0;
                                         var bhojanDate = $("#bhojanMitiDate").val();
+                                        var CRITICALDISEASES = $("#CRITICALDISEASES option:selected").text();
 
 
                                         var currentTotal = getCurrentTotalAmount();
@@ -2954,7 +3057,7 @@
 
                                         receiveAmount = Math.max(0, receiveAmount);
 
-                                        addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate);
+                                        addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate, CRITICALDISEASES);
                                         clearInputFields();
                                         updateHiddenField();
                                         updateAnnounceTotal(announceAmount);
@@ -3029,25 +3132,26 @@
 
 
 
-                                    function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate) {
+                                    function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate, CRITICALDISEASES) {
                                         var newRowPurpose = `<tr>
-                                                                                                        <td>${head}</td>
-                                                                                                        <td>${purpose}</td>
-                                                                                                        <td>${quantity}</td>
-                                                                                                        <td>${amount.toFixed(2)}</td>
-                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                        <td>${announceAmount.toFixed(2)}</td>
-                                                                                                        <td>${bhojandate}</td>
-                                                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                    </tr>`;
+                                                                                                                                                                                                        <td>${head}</td>
+                                                                                                                                                                                                        <td>${purpose}</td>
+                                                                                                                                                                                                        <td>${quantity}</td>
+                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                        <td>${bhojandate}</td>
+                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
+                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         toggleTableVisibility();
                                     }
 
                                     function clearInputFields() {
-                                        $("#headInput,#subHeadInput,#autoQuantityInput,#announceamount,#bhojanMitiDate").val("");
-                                        $("#headInput, #subHeadInput, #autoQuantityInput").val(0).trigger('change');
+                                        $("#headInput,#subHeadInput,#autoQuantityInput,#announceamount,#bhojanMitiDate,#CRITICALDISEASES").val("");
+                                        $("#headInput, #subHeadInput, #autoQuantityInput,#CRITICALDISEASES").val(0).trigger('change');
                                     }
 
 
@@ -3064,7 +3168,8 @@
                                                 "Amount": columns.eq(3).text(),
                                                 "ReceiveAmount": columns.eq(4).text(),
                                                 "AnnounceAmount": columns.eq(5).text(),
-                                                "BhojanMitiDate": columns.eq(6).text()
+                                                "BhojanMitiDate": columns.eq(6).text(),
+                                                "CriticalPurpose": columns.eq(7).text()
                                             };
                                             data.push(item);
 
@@ -3494,8 +3599,6 @@
 
                         <div class="row">
 
-
-
                             <div class="form-group col-lg-4" style="display:none;" data-input-id="file2">
                                 <label for="file2">Attach Cheque</label>
 
@@ -3598,13 +3701,13 @@
                                 var totalAmount = parseFloat($("#hdnTotalAmount").val());
                                 var purposeTotalAmount = parseFloat($("#hdnPurposetotalamount").val());
 
-                                // Check if the totalAmount is neither less nor greater than purposeTotalAmount
+                               
                                 if (totalAmount === purposeTotalAmount) {
 
-                                    return true; // Allow form submission
+                                    return true; 
                                 } else {
                                     alert("Total Donation amount must be equal to the purpose total amount.");
-                                    return false; // Prevent form submission
+                                    return false; 
                                 }
                             }
                         </script>
@@ -3630,7 +3733,6 @@
                         <button type="submit" class="btn btn-success" style="@(isViewEnabled ? "display:none;" : "")">
                             <i class="fas fa-check"></i>@BtnName
                         </button>
-
 
                         <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = Model.ReceiveID })" class="btn btn-secondary">
                             <i class="fas fa-print"></i> Print
