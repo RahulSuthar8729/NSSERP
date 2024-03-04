@@ -16,6 +16,7 @@
         public decimal? AnnounceAmount { get; set; }
         public string? CreatedBy { get; set; }
         public string? HeadName { get; set; }
+        public string? criticalDisease { get; set; }
         public DateTime? BhojanMitiDate { get; set; }
     }
 }

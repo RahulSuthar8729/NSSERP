@@ -179,8 +179,8 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             {
                 return BadRequest("Error retrieving states.");
             }
-        }  
-        
+        }
+
         [HttpGet]
         public IActionResult GetCriticalPurpose()
         {
@@ -305,26 +305,19 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         [HttpPost]
         public IActionResult InsertData([FromBody] DonationReceiveMaster model)
         {
-            string mobileListJson = HttpContext.Request.Headers["MobileList"];
-            string identityListJson = HttpContext.Request.Headers["IdentityList"];
-            string bankDetailsListJson = HttpContext.Request.Headers["BankDetailsList"];
-            string receiptDetailsListJson = HttpContext.Request.Headers["receiptdetailslist"];
-            string announceDetailsListJson = HttpContext.Request.Headers["AnnounceDetsilsList"];
-            string donorInstructionJsonList = HttpContext.Request.Headers["donorInstructionjsonList"];
+
 
             int maxReceiveID = 0;
 
-            List<MobileDetails> MobileList = string.IsNullOrEmpty(mobileListJson) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(mobileListJson);
+            List<MobileDetails> MobileList = string.IsNullOrEmpty(model.MobileList) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(model.MobileList);
 
-            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(identityListJson) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(identityListJson);
+            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(model.IdentityList) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(model.IdentityList);
 
-            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(bankDetailsListJson) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(bankDetailsListJson);
+            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
 
-            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(receiptDetailsListJson) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(receiptDetailsListJson);
+            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(model.receiptdetailslist) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(model.receiptdetailslist);
 
-            List<AnnounceDetails> announcelist = string.IsNullOrEmpty(announceDetailsListJson) ? new List<AnnounceDetails>() : JsonConvert.DeserializeObject<List<AnnounceDetails>>(announceDetailsListJson);
-
-            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(donorInstructionJsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(donorInstructionJsonList);
+            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(model.donorInstructionjsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(model.donorInstructionjsonList);
 
 
             try
@@ -423,6 +416,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@CampaignID", model.CampaignID);
                             parameters.Add("@CampaignName", model.CampaignName);
                             parameters.Add("@DataFlag", model.DataFlag);
+                            parameters.Add("@careOf", model.CareOf);
+                            parameters.Add("@donationBoxNo", model.DonationboxNo);
+                            parameters.Add("@mainDonorID", model.MainDonorID);
+                            parameters.Add("@namePlatName", model.NamePlate);
 
 
 
@@ -519,6 +516,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     rparameters.Add("@CreatedOn", DateTime.Now);
                                     rparameters.Add("@CreatedBy", model.UserID);
                                     rparameters.Add("@BhojanMitiDate", receiptDetail.BhojanMitiDate);
+                                    rparameters.Add("@criticalDisease", receiptDetail.criticalDisease);
 
 
                                     connection.Execute("InsertDonationReceiveMultiHead", rparameters, transaction, commandType: CommandType.StoredProcedure);
@@ -542,30 +540,12 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 }
                             }
 
-
-                            if (announcelist != null)
-                            {
-                                foreach (var announce in announcelist)
-                                {
-                                    var Announcepara = new DynamicParameters();
-                                    Announcepara.Add("@REF_NO", maxReceiveID);
-                                    Announcepara.Add("@AnnunceID", announce.AnnounceId);
-                                    Announcepara.Add("@AnnouncerName", announce.AnnouncerName);
-                                    Announcepara.Add("@DueAmount", announce.DueAmount);
-                                    Announcepara.Add("@Date", announce.DueDate);
-                                    Announcepara.Add("@CreatedBy", model.UserID);
-
-                                    connection.Execute("InsertDonationReceiveAnnunceDue", Announcepara, transaction, commandType: CommandType.StoredProcedure);
-                                }
-                            }
                             transaction.Commit();
 
-                            //ViewBag.msg = "Receive ID:" + maxReceiveID + " is Generated Successfully";
                         }
 
                         catch (Exception ex)
                         {
-                            // If an exception occurs, roll back the transaction
                             transaction.Rollback();
                             ViewBag.emsg = "An error occurred during the transaction.";
 
@@ -580,7 +560,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                 msg = new ExpandoObject();
                 msg.emsg = ex.Message;
                 return Ok(msg);
-                ViewBag.emsg = $"An error occurred: {ex.Message}";
+
             }
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
@@ -601,25 +581,17 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         [HttpPost]
         public IActionResult UpdateData([FromBody] DonationReceiveMaster model)
         {
-            string mobileListJson = HttpContext.Request.Headers["MobileList"];
-            string identityListJson = HttpContext.Request.Headers["IdentityList"];
-            string bankDetailsListJson = HttpContext.Request.Headers["BankDetailsList"];
-            string receiptDetailsListJson = HttpContext.Request.Headers["receiptdetailslist"];
-            string announceDetailsListJson = HttpContext.Request.Headers["AnnounceDetsilsList"];
-            string donorInstructionJsonList = HttpContext.Request.Headers["donorInstructionjsonList"];
 
 
-            List<MobileDetails> MobileList = string.IsNullOrEmpty(mobileListJson) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(mobileListJson);
+            List<MobileDetails> MobileList = string.IsNullOrEmpty(model.MobileList) ? new List<MobileDetails>() : JsonConvert.DeserializeObject<List<MobileDetails>>(model.MobileList);
 
-            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(identityListJson) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(identityListJson);
+            List<IdentityDetails> IdentityList = string.IsNullOrEmpty(model.IdentityList) ? new List<IdentityDetails>() : JsonConvert.DeserializeObject<List<IdentityDetails>>(model.IdentityList);
 
-            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(bankDetailsListJson) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(bankDetailsListJson);
+            List<BankDetails> bankDetailslist = string.IsNullOrEmpty(model.BankDetailsList) ? new List<BankDetails>() : JsonConvert.DeserializeObject<List<BankDetails>>(model.BankDetailsList);
 
-            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(receiptDetailsListJson) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(receiptDetailsListJson);
+            List<ReceiptDetail> Receiptdetailslist = string.IsNullOrEmpty(model.receiptdetailslist) ? new List<ReceiptDetail>() : JsonConvert.DeserializeObject<List<ReceiptDetail>>(model.receiptdetailslist);
 
-            List<AnnounceDetails> announcelist = string.IsNullOrEmpty(announceDetailsListJson) ? new List<AnnounceDetails>() : JsonConvert.DeserializeObject<List<AnnounceDetails>>(announceDetailsListJson);
-
-            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(donorInstructionJsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(donorInstructionJsonList);
+            List<DonorInstructionList> donorInstructionLists = string.IsNullOrEmpty(model.donorInstructionjsonList) ? new List<DonorInstructionList>() : JsonConvert.DeserializeObject<List<DonorInstructionList>>(model.donorInstructionjsonList);
 
 
             try
@@ -718,6 +690,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                             parameters.Add("@CampaignID", model.CampaignID);
                             parameters.Add("@CampaignName", model.CampaignName);
                             parameters.Add("@DataFlag", model.DataFlag);
+                            parameters.Add("@careOf", model.CareOf);
+                            parameters.Add("@donationBoxNo", model.DonationboxNo);
+                            parameters.Add("@mainDonorID", model.MainDonorID);
+                            parameters.Add("@namePlatName", model.NamePlate);
 
                             connection.Execute("[UpdateDonationReceiveMaster]", parameters, transaction, commandType: CommandType.StoredProcedure);
 
@@ -819,7 +795,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                     rparameters.Add("@CreatedOn", DateTime.Now);
                                     rparameters.Add("@CreatedBy", model.UserID);
                                     rparameters.Add("@BhojanMitiDate", receiptDetail.BhojanMitiDate);
-
+                                    rparameters.Add("@criticalDisease", receiptDetail.criticalDisease);
 
                                     connection.Execute("InsertDonationReceiveMultiHead", rparameters, transaction, commandType: CommandType.StoredProcedure);
                                 }
@@ -846,24 +822,6 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                                 }
                             }
 
-                            connection.Execute("[DeleteDonationReceiveAnnunceDue]", new { REF_NO = model.ReceiveID }, transaction, commandType: CommandType.StoredProcedure);
-
-
-                            if (announcelist != null)
-                            {
-                                foreach (var announce in announcelist)
-                                {
-                                    var Announcepara = new DynamicParameters();
-                                    Announcepara.Add("@REF_NO", model.ReceiveID);
-                                    Announcepara.Add("@AnnunceID", announce.AnnounceId);
-                                    Announcepara.Add("@AnnouncerName", announce.AnnouncerName);
-                                    Announcepara.Add("@DueAmount", announce.DueAmount);
-                                    Announcepara.Add("@Date", announce.DueDate);
-                                    Announcepara.Add("@CreatedBy", model.UserID);
-
-                                    connection.Execute("InsertDonationReceiveAnnunceDue", Announcepara, transaction, commandType: CommandType.StoredProcedure);
-                                }
-                            }
 
                             transaction.Commit();
 

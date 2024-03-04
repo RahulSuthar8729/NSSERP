@@ -56,7 +56,7 @@
         public string? Address1 { get; set; }
         public string? Address2 { get; set; }
         public string? Address3 { get; set; }
-
+        public string? CareOf { get; set; }
         public string? PinCode { get; set; }
         public int? CountryId { get; set; }
         public string? CountryName { get; set; }
@@ -96,7 +96,7 @@
 
         public int? ProvNo { get; set; }
         public DateTime? ProvDate { get; set; }
-
+        public int? DonationboxNo { get; set; }
         public string? PersonName { get; set; }
         public string? EventName { get; set; }
         public int? OrderTypeID { get; set; }
@@ -111,6 +111,8 @@
         public bool? IsPatientsPhotoRequire { get; set; }
         public bool? IfDiffrentAddressForDispatch { get; set; }
         public string? DifferentAddressToDispatch { get; set; }
+        public int? MainDonorID { get; set; }
+        public string? NamePlate { get; set; }
         public int? SubHeadID { get; set; }
         public string? SubHeadName { get; set; }
         public string? Instructions { get; set; }
@@ -121,6 +123,10 @@
         public string? Doc3 { get; set; }
         public string? DonationDetails { get; set; }
 
-   
+        public string? MobileList { get; set; } = "";
+        public string? IdentityList { get; set; } = "";     
+        public string? BankDetailsList { get; set; }
+        public string? donorInstructionjsonList { get; set; }
+        public string? receiptdetailslist { get; set; }
     }
 }

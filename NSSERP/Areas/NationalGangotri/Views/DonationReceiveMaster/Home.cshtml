@@ -112,8 +112,6 @@
                                     $('#divReceiveHead').hide();
                                 }
                             }
-
-                            // Show/hide divReceiveHead based on checkbox state when the page loads
                             toggleDivBasedOnCheckboxState();
 
                             // Attach change event to the checkbox
@@ -774,9 +772,12 @@
                                     <div class="input-group-prepend">
                                         <select class="custom-select" id="PrefixToFullName" asp-for="PrefixToFullName" name="PrefixToFullName">
                                             <option value="" selected disabled>Select</option>
-                                            <option value="S/o" @(Model != null && Model.PrefixToFullName == "S/o" ? "selected" : "")>S/o</option>
-                                            <option value="D/o" @(Model != null && Model.PrefixToFullName == "D/o" ? "selected" : "")>D/o</option>
-                                            <option value="W/o" @(Model != null && Model.PrefixToFullName == "W/o" ? "selected" : "")>W/o</option>
+                                            <option value="S/O" @(Model != null && Model.PrefixToFullName == "S/O" ? "selected" : "")>S/o</option>
+                                            <option value="D/O" @(Model != null && Model.PrefixToFullName == "D/O" ? "selected" : "")>D/o</option>
+                                            <option value="W/O" @(Model != null && Model.PrefixToFullName == "W/O" ? "selected" : "")>W/o</option>
+                                            <option value="H/O" @(Model != null && Model.PrefixToFullName == "H/O" ? "selected" : "")>H/o</option>
+                                            <option value="M/O" @(Model != null && Model.PrefixToFullName == "M/O" ? "selected" : "")>M/o</option>
+                                            <option value="F/O" @(Model != null && Model.PrefixToFullName == "F/O" ? "selected" : "")>F/o</option>
 
                                         </select>
                                     </div>
@@ -1255,7 +1256,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="CityID">City</label>
-                                <select class="form-control" id="CityID2" name="CityID">
+                                <select class="form-control" id="CityID2" asp-for="P_CityID" name="P_CityID">
                                     <option selected disabled>Select City</option>
                                     @if (Model != null)
                                     {
@@ -1384,9 +1385,10 @@
                                             // Add a special class to identify rows from MobileListJson
                                             newRowmobilelist.addClass("json-data-row");
 
-                                            updateContactDetailsHiddenField();
+
                                             $("#contactDetailsTable tbody").append(newRowmobilelist);
 
+                                            updateContactDetailsHiddenField();
 
                                             $("#contactDetailsTable").css("visibility", "visible");
                                         });
@@ -2255,26 +2257,23 @@
                                     if (bankDetailsListJson && bankDetailsListJson.length > 0) {
                                         // Loop through each item in the JSON array
                                         $.each(bankDetailsListJson, function (index, bankDetails) {
-                                            // Map property names if needed
                                             var mappedBankDetails = {
                                                 DonationMode: bankDetails.DonationMode,
                                                 BankName: bankDetails.BankName,
                                                 ChequeOrDraftDate: bankDetails.ChequeOrDraftDate,
                                                 ChequeOrDraftNo: bankDetails.ChequeOrDraftNo,
-                                                BankTransactionID: bankDetails.BankID,
+                                                BankID: bankDetails.BankID,
                                                 DepositeBankName: bankDetails.DepositeBankName,
                                                 DepositeDate: bankDetails.DepositeDate,
                                                 CurrencyCode: bankDetails.CurrencyCode,
                                                 Amount: bankDetails.Amount,
                                                 IsPdcCheque1: bankDetails.IsPdcCheque1,
                                                 Doc: bankDetails.FileName
-                                                // Add more mappings as needed
+
                                             };
 
-                                            // Add a new row to the table
                                             OnModeladdBankDetailsRow(mappedBankDetails);
                                         });
-
 
                                         $("#bankDetailsTable").show();
                                     }
@@ -2282,11 +2281,10 @@
                                     function updateTotalAmount() {
                                         var totalAmount = 0;
 
-
                                         $("#bankDetailsTable tbody tr").each(function () {
-                                            // Get the amount from the "Amount" column in the current row
-                                            var amount = parseFloat($(this).find("td:eq(7)").text());
 
+                                            var amountText = $(this).find("td:eq(7)").text();
+                                            var amount = parseFloat(amountText.trim()) || 0.00;
 
                                             totalAmount += amount;
                                         });
@@ -2601,6 +2599,15 @@
                                 <label for="">Name Plate Name</label>
                                 <input type="text" name="NamePlate" placeholder="Please Enter Desired Name Plate Name" oninput="convertToUpperCase(this)" value="@Model.NamePlate" class="form-control" id="NamePlate" asp-for="NamePlate">
                             </div>
+                            <script>
+                                $(document).ready(function () {
+
+                                    if ('@Model.NamePlate' && '@Model.NamePlate'.trim() !== '') {
+
+                                        $('#divNamePlateName').show();
+                                    }
+                                });
+                            </script>
                             <script>
                                 $(document).ready(function () {
                                     $('#headInput').change(function () {
@@ -2928,7 +2935,6 @@
                                     <div id="divCriticalPurpose" style="display:none" class="form-group col-lg-2">
                                         <label for="">Critical Diseases</label>
                                         <select class="form-control" id="CRITICALDISEASES" name="CRITICAL DISEASES">
-                                            <option value="0">Select</option>
                                         </select>
                                     </div>
 
@@ -3011,7 +3017,7 @@
 
                                             var formattedDate = dateObject ? dateObject.toISOString().split('T')[0] : '';
 
-                                            addTableRow(item.HeadName, item.SubHeadName, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount, formattedDate);
+                                            addTableRow(item.HeadName, item.SubHeadName, item.Quantity, item.Amount, item.ReceiveAmount, item.AnnounceAmount, formattedDate, item.criticalDisease);
                                         });
                                         toggleTableVisibility();
                                         updateAnnounceTotal();
@@ -3059,7 +3065,6 @@
 
                                         addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojanDate, CRITICALDISEASES);
                                         clearInputFields();
-                                        updateHiddenField();
                                         updateAnnounceTotal(announceAmount);
                                         updateReceiveAmount(remainingAmount, receiveAmount);
                                     });
@@ -3134,18 +3139,19 @@
 
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate, CRITICALDISEASES) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                        <td>${head}</td>
-                                                                                                                                                                                                        <td>${purpose}</td>
-                                                                                                                                                                                                        <td>${quantity}</td>
-                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                        <td>${bhojandate}</td>
-                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
-                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                    </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                        <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td>${bhojandate}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
+                                                                                                                                                                                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
+                                        updateHiddenField();
                                         toggleTableVisibility();
                                     }
 
@@ -3169,7 +3175,7 @@
                                                 "ReceiveAmount": columns.eq(4).text(),
                                                 "AnnounceAmount": columns.eq(5).text(),
                                                 "BhojanMitiDate": columns.eq(6).text(),
-                                                "CriticalPurpose": columns.eq(7).text()
+                                                "criticalDisease": columns.eq(7).text()
                                             };
                                             data.push(item);
 
@@ -3701,13 +3707,13 @@
                                 var totalAmount = parseFloat($("#hdnTotalAmount").val());
                                 var purposeTotalAmount = parseFloat($("#hdnPurposetotalamount").val());
 
-                               
+
                                 if (totalAmount === purposeTotalAmount) {
 
-                                    return true; 
+                                    return true;
                                 } else {
                                     alert("Total Donation amount must be equal to the purpose total amount.");
-                                    return false; 
+                                    return false;
                                 }
                             }
                         </script>
