@@ -1,4 +1,4 @@
-﻿@model NSSERP.Areas.NationalGangotri.Models.DonationReceiveMasterDetails
+﻿@model NSSERP.Areas.NationalGangotri.Models.DonorMaster
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -150,206 +150,7 @@
                 </div>
             </div>
         </div>
-        <form id="detailsform" action="/NationalGangotri/DonationReceiveMaterDetails/Index" method="post">
-            <table style="font-size:smaller" class="table-responsive-lg col-lg-12">
-                <tr>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Post ID">Post ID</label>
-                                <input type="text" class="form-control" id="PostID" name="PostID">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Donator Name">Donator Name</label>
-                                <input type="text" class="form-control" value="@Model.FullName" id="FullName" name="FullName" asp-for="FullName">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Amount">Amount</label>
-                                <input type="text" class="form-control" value="@Model.TotalAmount" id="TotalAmount" asp="TotalAmount" name="TotalAmount">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Receive ID">Receive ID</label>
-                                <input type="text" class="form-control" value="@Model.ReceiveID" id="ReceiveID" name="ReceiveID" asp-for="ReceiveID">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Chq No.">Chq NO.</label>
-                                <input type="text" class="form-control" id="ChequeNo" asp-for="ChequeNo" name="ChequeNo">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Donation Mode">Donation Mode</label>
-                                <select id="PaymentMode" class="form-control" name="PaymentMode" asp-for="PaymentMode">
-                                    <option value="" selected disabled>Select Donation Mode</option>
-                                    @if (Model != null)
-                                    {
-                                        foreach (var paymentmode in Model.paymentModes)
-                                        {
-                                            <option value="@paymentmode.PaymentModeID" data-paymentmode="@paymentmode.PaymentModeName" @(Model.PaymentModeID == paymentmode.PaymentModeID ? "selected" : "")>@paymentmode.PaymentModeName</option>
-                                        }
-                                    }
-                                </select>
-                                <input type="hidden" id="hdnpaymentmode" name="PaymentModeName" asp-for="PaymentModeName" />
-                                <!-- Include a hidden field for PaymentModeID -->
-                                <input type="hidden" id="hdnpaymentmodeid" name="PaymentModeID" asp-for="PaymentModeID" />
-                            </div>
-                            <script>
-                                $(document).ready(function () {
-                                    var modelPaymentModeID = parseInt('@Model.PaymentModeID');
-                                    if (modelPaymentModeID) {
-                                        $("#PaymentMode").val(modelPaymentModeID);
-                                    }
-
-                                    // Attach the change event to update the hidden fields
-                                    $("#PaymentMode").change(function () {
-                                        var selectedOption = $(this).find("option:selected");
-                                        var paymentModeName = selectedOption.data("paymentmode");
-                                        var paymentModeID = selectedOption.val();
-
-                                        $("#hdnpaymentmode").val(paymentModeName);
-                                        $("#hdnpaymentmodeid").val(paymentModeID);
-                                    });
-                                });
-
-
-                                $(document).ready(function () {
-                                    var modelCityID = parseInt('@Model.CityID');
-                                    if (modelCityID) {
-                                        $("#CityID").val(modelCityID);
-                                    }
-
-                                    var modelStateID = parseInt('@Model.StateID');
-                                    if (modelStateID) {
-                                        $("#StateID").val(modelStateID);
-                                    }
-
-                                    // Attach the change event to update the hidden fields for City
-                                    $("#CityID").change(function () {
-                                        var selectedOption = $(this).find("option:selected");
-                                        var cityID = selectedOption.val();
-                                        var cityName = selectedOption.text();
-
-                                        $("#hdnCityID").val(cityID);
-
-                                    });
-
-                                    // Attach the change event to update the hidden fields for State
-                                    $("#StateID").change(function () {
-                                        var selectedOption = $(this).find("option:selected");
-                                        var stateID = selectedOption.val();
-                                        var stateName = selectedOption.text();
-
-                                        $("#hdnStateID").val(stateID);
-
-                                    });
-                                });
-
-                            </script>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="row">
-                            <label asp-for="CityID" class="control-label">City</label>
-                            <div class="form-group">
-                                <select id="CityID" asp-for="CityID" name="CityID" class="form-control">
-                                    <option value="0">Select City</option>
-                                    @foreach (var city in Model.CityMasterList)
-                                    {
-                                        <option value="@city.CityID">@city.CityName</option>
-                                    }
-                                </select>
-                                <input type="hidden" id="hdnCityName" name="CityName" asp-for="CityName" />
-                                <!-- Include a hidden field for CityID -->
-                                <input type="hidden" id="hdnCityID" name="CityID" asp-for="CityID" />
-                                <span asp-validation-for="CityID" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td>
-                        <div class="row">
-                            <label for="StateID">State</label>
-                            <div class="form-group">
-                                <select id="StateID" asp-for="StateID" name="StateID" class="form-control">
-                                    <option value="">Select State</option>
-                                    @foreach (var state in Model.statelist)
-                                    {
-                                        <option value="@state.StateID">@state.StateName</option>
-                                    }
-                                </select>
-                                <input type="hidden" id="hdnStateName" name="StateName" asp-for="StateName" />
-
-                                <input type="hidden" id="hdnStateID" name="StateID" asp-for="StateID" />
-                            </div>
-                        </div>
-                    </td>
-
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="">Material</label>
-                                <select class="form-control" id="Material" name="Material">
-                                    <option value="Select">Select</option>
-                                </select>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Prov.No.">Prov.No.</label>
-                                <input type="text" class="form-control" value="@Model.ProvNo" asp-for="ProvNo" id="ProvNo" name="ProvNo">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="Date">Date</label>
-                                <input type="date" asp-for="ReceiveDate" value="@Model.ProvNo" class="form-control" id="ReceiveDate" name="ReceiveDate">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="row">
-
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="IfDetailsNotComplete" value="true" id="detailsnot" @(Model.IfDetailsNotComplete.GetValueOrDefault() ? "checked" : "") />
-
-                                    <label class="form-check-label" for="Detailsnotcomplete">Details Not Complete</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Go...</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-            </table>
-
-        </form>
+   
     </div>
     <br />
     <div class="row">
@@ -360,25 +161,17 @@
                     <thead class="thead-dark">
                         <tr>
                             <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>RECEIVE ID</th>
-                            <th>RECEIVE BY</th>
-                            <th>ENTRY BY</th>
-                            <th>RECEIVE DATE</th>
-                            <th>PROV.NO.</th>
+                            <th></th>                        
+                            <th>DONOR ID</th>
+                            <th>DONOR CATEGORY BY</th>
+                            <th>GROUP NGCODE</th>
+                            <th>ONLINE CUSTID</th>
+                            <th>DATE OF ENTRY</th>
                             <th>DONNER NAME</th>
                             <th>ADDRESS</th>
-                            <th>CURRENCY</th>
-                            <th>AMOUNT</th>
-                            <th>PAYMENT MODE</th>
-                            <th>STATUS</th>
-                            <th>IF DETAILS NOT COMPLETE</th>
-
-                            @*     <th>IF UPDATION IN ADDRESS</th>
-
-                            <th>IF ANNOUNCE DUE IN FUTURE</th>
-                            <th>FORWARDED</th> *@
+                            <th>BUSSINESS OR JOB TYPE</th>
+                            <th>PROFESSION</th>
+                            <th>TOATL DONATION</th>                                    
                         </tr>
                     </thead>
 
@@ -389,56 +182,27 @@
                             {
                                 <tr>
                                     <td>
-                                        <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID,view=true })" title="View Details">
+                                        <a href="@Url.Action("Home", "DonorMaster", new { id = item.DonorID,view=true })" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("Home", "DonationReceiveMaster", new { id = item.ReceiveID,edit=true})" title="Edit ReceiveID">
+                                        <a href="@Url.Action("Home", "DonorMaster", new { id = item.DonorID,edit=true})" title="Edit Donor Details">
                                             <i style="color: orange;" class="fas fa-edit"></i>
                                         </a>
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("PrintProvisionalReceipt", "DonationReceiveMaster", new { refid = item.ReceiveID})" title="Print Provisional Receipt">
-                                            <i style="color: darkslategrey;" class="fas fa-print"></i>
-                                        </a>
-                                    </td>
+                                    </td>                              
 
-                                    <td>@item.ReceiveID</td>
-                                    <td>@item.ReceiveHeadName</td>
-                                    <td>@item.CreatedBy</td>
-                                    <td>@item.ReceiveDate.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
-                                    <td>@item.ProvNo</td>
-                                    <td>@item.FullName</td>
-                                    <td>@item.Address1</td>
-                                    <td>@item.CurrencyCode</td>
-                                    <td>@item.TotalAmount</td>
-                                    <td>@item.PaymentModeName</td>
-                                    <td>
-                                        @if (item.AppStatus == "BORT")
-                                        {
-                                            <a href="@Url.Action("Index", "BackOfficeReceiveIDTransaction", new { id = item.ReceiveID })" title="Verify">
-                                                <span class="text-danger">Pending At Back Office</span>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-warning">@item.AppStatus</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (item.IfDetailsNotComplete.GetValueOrDefault())
-                                        {
-                                            <span class="text-danger">Details Not Complete</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-success">Details Completed</span>
-                                        }
-                                    </td>
-                                    @*            <td>@(iatem.IfUpdationInAddress ? "Yes" : "No")</td>
-
-                            <td>@(item.IfAnnounceDueInFuture ? "Yes" : "No")</td> *@
+                                    <td>@item.DonorID</td>
+                                    <td>@item.DonorCat</td>
+                                    <td>@item.GroupNGCode</td>
+                                    <td>@item.onlineCustId</td>
+                                    <td>@item.dateOfEntry.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
+                                    <td>@item.FirstName @item.MiddleName @item.LastName</td>
+                                    <td>@item.CityName, @item.DistrictName, @item.StateName, @item.CountryName</td>
+                                    <td>@item.BussinessOrJobType</td>
+                                    <td>@item.Profession</td>
+                                    <td>@item.ToatlDonation</td>                              
+                                  
                                 </tr>
                             }
                         }

@@ -370,7 +370,7 @@
                                                     var newRowIdentity = $("<div class='form-group col-lg-3'>");
                                                     newRowIdentity.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
                                                     newRowIdentity.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                                    newRowIdentity.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+                                                    newRowIdentity.append("<button class='btn btn-danger btn-sm delete-row'>Delete</button>");
 
                                                     // Append the new row to the container
                                                     addedIdentities.append(newRowIdentity);
@@ -676,7 +676,7 @@
                                                 var newRowIdentity = $("<div class='form-group col-lg-3'>");
                                                 newRowIdentity.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
                                                 newRowIdentity.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                                newRowIdentity.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+                                                newRowIdentity.append("<button class='btn btn-danger btn-sm delete-row'>Delete</button>");
 
                                                 // Append the new row to the container
                                                 addedIdentities.append(newRowIdentity);
@@ -832,49 +832,47 @@
                             </div>
                             <script>
                                 $(document).ready(function () {
-                                    // Function to handle pin code change
+
                                     function handlePinCodeChange(enteredPinCode) {
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetLocationDetailsByPinCode',
                                             type: 'GET',
                                             data: { pincode: enteredPinCode },
                                             success: function (response) {
-                                                // Parse the nested JSON string inside the 'data' property
-                                                var jsonData = JSON.parse(response.data);
+                                                try {                                                   
+                                                    var jsonData = response.data;                                                    
+                                                    if (Array.isArray(jsonData) && jsonData.length > 0) {
+                                                       
+                                                        var locationData = jsonData[0];                                                        
+                                                        $('#CountryID').val(locationData.CountryID);
+                                                        //$("#CurrencyID").val(locationData.CountryID);
 
-                                                // Access the correct property names
-                                                $('#CountryID').val(jsonData.CountryID);
-                                                //$("#CurrencyID").val(jsonData.CountryID);
-                                                // Populate State dropdown
-                                                $('#StateID').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
+                                                     
+                                                        $('#StateID').empty().append('<option value="' + locationData.StateID + '">' + locationData.StateName + '</option>');
 
-                                                // Populate District dropdown
-                                                $('#DistrictID').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
+                                                        $('#DistrictID').empty().append('<option value="' + locationData.DistrictID + '">' + locationData.DistrictName + '</option>');
 
-                                                var selectedCountryCode = jsonData.CountryCode;
-
-                                                // Set the selected value in the dropdown based on text
-                                                $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
-
-
-                                                // If the value is not in the dropdown, set it to an empty string
-                                                if ($('#countryCode').val() == null) {
-                                                    $('#countryCode').val('');
-                                                }
-
-
-                                                var selectedCountry = jsonData.CountryID;
-
-                                                $("#CurrencyID option").each(function () {
-                                                    if ($(this).val() == selectedCountry) {
-                                                        $(this).prop("selected", true);
+                                                       
+                                                        var selectedCountryCode = locationData.CountryCode;
+                                                        $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
+                                                    
+                                                        if ($('#countryCode').val() == null) {
+                                                            $('#countryCode').val('');
+                                                        }
+                                                       
+                                                        var selectedCountry = locationData.CountryID;
+                                                        $("#CurrencyID option").each(function () {
+                                                            $(this).prop("selected", $(this).val() == selectedCountry);
+                                                        });
                                                     } else {
-                                                        $(this).prop("selected", false);
+                                                        console.error('Empty array in the JSON response.');
                                                     }
-                                                });
+                                                } catch (error) {
+                                                    console.error('Error parsing JSON response:', error);
+                                                }
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error);
+                                                console.log('AJAX request failed:', error);
                                             }
                                         });
                                     }
@@ -883,8 +881,6 @@
                                     if (initialPinCode) {
                                         handlePinCodeChange(initialPinCode);
                                     }
-
-                                    // Bind blur event for PinCode input
                                     $('#PinCode1').blur(function () {
                                         var enteredPinCode = $(this).val();
                                         handlePinCodeChange(enteredPinCode);
@@ -1129,29 +1125,38 @@
                             </div>
                             <script>
                                 $(document).ready(function () {
-                                    // Function to handle pin code change
                                     function handlePinCodeChange(enteredPinCode, countryID) {
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetLocationDetailsByPinCode',
                                             type: 'GET',
                                             data: { pinCode: enteredPinCode },
                                             success: function (response) {
-                                                // Parse the nested JSON string inside the 'data' property
-                                                var jsonData = JSON.parse(response.data);
+                                                try {
+                                                    // Parse the nested JSON string inside the 'data' property
+                                                    var jsonData = response.data;
 
-                                                // Populate Country dropdown
-                                                $('#CountryID2').val(jsonData.CountryID);
+                                                    // Check if jsonData is an array and has at least one object
+                                                    if (Array.isArray(jsonData) && jsonData.length > 0) {
+                                                        // Access the first object in the array
+                                                        var locationData = jsonData[0];
 
-                                                // Populate State dropdown
-                                                $('#StateID2').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
+                                                        // Populate Country dropdown
+                                                        $('#CountryID2').val(locationData.CountryID);
 
-                                                // Populate District dropdown
-                                                $('#DistrictID2').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
+                                                        // Populate State dropdown
+                                                        $('#StateID2').empty().append('<option value="' + locationData.StateID + '">' + locationData.StateName + '</option>');
 
-
+                                                        // Populate District dropdown
+                                                        $('#DistrictID2').empty().append('<option value="' + locationData.DistrictID + '">' + locationData.DistrictName + '</option>');
+                                                    } else {
+                                                        console.error('Invalid JSON response format or empty array.');
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Error parsing JSON response:', error);
+                                                }
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error);
+                                                console.log('AJAX request failed:', error);
                                             }
                                         });
                                     }
@@ -1413,7 +1418,7 @@
                                         } else if (ContactType === 'Mobile') {
                                             // Check if the country code is +91 (India)
                                             if (countryCode === '+91') {
-                                                contactDetailPattern = /^\d{10}$/; // 10 digits for India
+                                                contactDetailPattern = /^\d{10}$/;
                                             } else {
 
                                                 contactDetailPattern = /^\d+$/;
@@ -1590,7 +1595,7 @@
                                 var newRowidentityList = $("<div class='form-group col-lg-3'>");
                                 newRowidentityList.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
                                 newRowidentityList.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
-                                // newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+                                newRow.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
 
                                 $("#addedIdentities").append(newRowidentityList);
@@ -1656,15 +1661,10 @@
 
                         // Delete Identity button click event
                         $(document).on("click", ".delete-identity", function (event) {
-
                             event.preventDefault();
-
-
                             var parentDiv = $(this).closest(".form-group");
                             parentDiv.remove();
                             updateHiddenField();
-
-
                         });
                         function validateIdentity(identityType, identityNumber) {
                             // Validate based on identity type
@@ -1692,27 +1692,18 @@
 
 
                         function appendIdentityToContainer(identity) {
-
                             var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
-
-
                             existingIdentities.push(identity);
-
-
                             $("#identityDetails").val(JSON.stringify(existingIdentities));
-
 
                             var newRowidentitydetails = $("<div class='form-group col-lg-3'>");
                             newRowidentitydetails.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
-                            newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
-                            newRowidentitydetails.append("<input style='display:none'  id='" + identity.IdentityType + "' type='text' value='" + identity.DonorID + "' readonly />");
-                            newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "' type='text' value='" + identity.ReceiveHead + "' readonly />");
+                            newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "-number' type='text' value='" + identity.IdentityNumber + "' readonly />");
+                            newRowidentitydetails.append("<input style='display:none'  id='" + identity.IdentityType + "-donor' type='text' value='" + identity.DonorID + "' readonly />");
+                            newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "-receive' type='text' value='" + identity.ReceiveHead + "' readonly />");
                             newRowidentitydetails.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
-
                             $("#addedIdentities").append(newRowidentitydetails);
-
-
                             $("#addedIdentities").css("display", "flex");
                         }
 
@@ -2283,7 +2274,8 @@
 
                                         $("#bankDetailsTable tbody tr").each(function () {
 
-                                            var amountText = $(this).find("td:eq(7)").text();
+                                            var amountText = $(this).find("td:eq(8)").text();
+                                            console.log(amountText);
                                             var amount = parseFloat(amountText.trim()) || 0.00;
 
                                             totalAmount += amount;
@@ -3105,18 +3097,15 @@
 
 
 
-                                    tableBody.on("click", ".deleteBtn", function () {
+                                    tableBody.on("click", ".delete-row", function () {
                                         var announceAmount = parseFloat($(this).closest("tr").find("td:eq(5)").text()) || 0;
                                         $(this).closest("tr").remove();
 
                                         toggleTableVisibility();
-
-
                                         updateHiddenField();
-
-
                                         updateAnnounceTotal(-announceAmount);
                                     });
+
 
                                     $("#clearTableBtn").click(function () {
                                         tableBody.empty();
@@ -3139,16 +3128,16 @@
 
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate, CRITICALDISEASES) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td>${bhojandate}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
-                                                                                                                                                                                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm deleteBtn'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                                                                    </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                        <td>${bhojandate}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         updateHiddenField();
@@ -3312,58 +3301,54 @@
                                     var instructionTableBody = $("#instructionTable tbody");
                                     var jsonDataField = $("#jsonDatafordonorInstruction");
 
+                                    // Model bind code
                                     if (donorInstructionsListJson && donorInstructionsListJson.length > 0) {
                                         $.each(donorInstructionsListJson, function (index, item) {
                                             var newRowDonorInstruction = "<tr>" +
                                                 "<td>" + item.InstructionName + "<input type='hidden' name='SelectedInstructions' value='" + item.InstructionId + "' /></td>" +
                                                 "<td>" + item.Remarks + "</td>" +
-                                                // "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
+                                                "<td><button type='button' class='btn btn-danger delete-row'>Delete</button></td>" +
                                                 "</tr>";
                                             instructionTableBody.append(newRowDonorInstruction);
                                         });
                                         toggleTableVisibility();
                                     }
 
-
+                                    // Add button click event
                                     $("#addRowBtn").click(function () {
-
                                         var selectedInstructionId = $("#Instruction").val();
                                         var selectedInstructionName = $("#Instruction option:selected").text();
                                         var remarks = $("#remarks").val();
-
 
                                         if (selectedInstructionId === "0") {
                                             alert("Please select a Donor Instruction.");
                                             return;
                                         }
 
-
                                         var newRowDonorInstAdd = "<tr>" +
                                             "<td>" + selectedInstructionName + "<input type='hidden' name='SelectedInstructions' value='" + selectedInstructionId + "' /></td>" +
                                             "<td>" + remarks + "</td>" +
-                                            "<td><button type='button' class='btn btn-danger deleteRowBtn'>Delete</button></td>" +
+                                            "<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>" +
                                             "</tr>";
 
                                         instructionTableBody.append(newRowDonorInstAdd);
-
 
                                         updateHiddenField();
 
                                         $("#Instruction").val("0");
                                         $("#remarks").val("");
 
-
                                         toggleTableVisibility();
                                     });
 
-
-                                    instructionTableBody.on("click", ".deleteRowBtn", function () {
+                                    // Delete button click event
+                                    instructionTableBody.on("click", ".delete-row", function () {
                                         $(this).closest("tr").remove();
-
                                         updateHiddenField();
-
                                         toggleTableVisibility();
                                     });
+
+
 
                                     function updateHiddenField() {
                                         var data = [];

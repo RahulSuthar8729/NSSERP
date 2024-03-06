@@ -57,9 +57,6 @@ public class AccessController : Controller
 
                     if (count > 0)
                     {
-                        // Authentication successful
-
-                        // Fetch additional user information
                         string fullname = null;
                         string role = null;
                         string department = null;
@@ -74,7 +71,7 @@ public class AccessController : Controller
                             {
                                 if (reader.Read())
                                 {
-                                    // Read additional user information from the database
+                                   
                                     fullname = reader["Fullname"].ToString();
                                     role = reader["Role"].ToString();
                                     department = reader["Department"].ToString();
@@ -141,7 +138,7 @@ public class AccessController : Controller
 
 
 
-                        transaction.Commit(); // Commit the transaction if everything is successful
+                        transaction.Commit(); 
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -181,6 +178,7 @@ public class AccessController : Controller
             throw; // Rethrow the exception for further handling at a higher level
         }
     }
+
 
     private string GetClientIpAddress(HttpContext context)
     {

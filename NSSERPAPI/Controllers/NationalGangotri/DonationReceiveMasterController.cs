@@ -55,7 +55,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
-            firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
+            firstDetail.ordertypelist = _dbFunctions.GetOrderTypes();
             firstDetail.ReceiptBookTypeList = _dbFunctions.GetReceiptBookType();
             firstDetail.CityList = _dbFunctions.GetCity();
             // Set JSON properties
@@ -99,7 +99,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             firstDetail.ReceiveInEventList = _dbFunctions.GetEvents();
             firstDetail.campaignlist = _dbFunctions.GetallCampaigns();
             firstDetail.donorInstructionList = _dbFunctions.GetDonorINstructionsMaster();
-            firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
+            firstDetail.ordertypelist = _dbFunctions.GetOrderTypes();
             firstDetail.ReceiptBookTypeList = _dbFunctions.GetReceiptBookType();
             firstDetail.CityList = _dbFunctions.GetCity();
             // Set JSON properties
@@ -216,10 +216,10 @@ namespace NSSERPAPI.Controllers.NationalGangotri
         {
             try
             {
-                // Use your database connection logic here to retrieve districts based on the state ID
-                var districts = _dbFunctions.GetDistrictsByState(stateId); // Implement this method in your DbFunctions class
+                
+                var districts = _dbFunctions.GetDistrictsByState(stateId); 
 
-                // Return districts as JSON
+               
                 return Ok(districts);
             }
             catch (Exception ex)

@@ -42,7 +42,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
             }
             firstDetail.PersonDetails = _dbFunctions.GEtPersonDetails();
             firstDetail.EmployeeDetils = _dbFunctions.GetEmployeeDetils();
-            firstDetail.ordertypelist = _dbFunctions.GetORderTypes();
+            firstDetail.ordertypelist = _dbFunctions.GetOrderTypes();
             firstDetail.bankmasterlist = _dbFunctions.GetAllBankMasters();
             firstDetail.depositBankmaster = _dbFunctions.GetDepositBankMaster();
             firstDetail.paymentModeList = _dbFunctions.GetPaymentModes();

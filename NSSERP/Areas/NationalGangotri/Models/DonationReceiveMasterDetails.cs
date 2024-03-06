@@ -40,8 +40,6 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? ReceiveHeadName { get; set; }
         public string? CreatedBy { get; set; }
         public int? MaterialID { get; set; }
-
-
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int Draw { get; set; }

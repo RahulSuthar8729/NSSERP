@@ -98,7 +98,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="upiId">UPI ID:</label>
-                                <input type="text" readonly class="form-control" id="upiId" name="upiId">
+                                <input type="text"  class="form-control" id="upiId" name="upiId">
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -341,45 +341,52 @@
                                             type: 'GET',
                                             data: { pincode: enteredPinCode },
                                             success: function (response) {
-                                                // Parse the nested JSON string inside the 'data' property
-                                                var jsonData = JSON.parse(response.data);
+                                                try {
+                                                    // Parse the JSON response
+                                                    var jsonData = response.data;
 
-                                                // Access the correct property names
-                                                $('#CountryID').val(jsonData.CountryID);
-                                                //$("#CurrencyID").val(jsonData.CountryID);
-                                                // Populate State dropdown
-                                                $('#StateID').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
+                                                    // Check if jsonData is an array and has at least one object
+                                                    if (Array.isArray(jsonData) && jsonData.length > 0) {
+                                                        // Get the first object in the array
+                                                        var locationData = jsonData[0];
 
-                                                // Populate District dropdown
-                                                $('#DistrictID').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
+                                                        // Access the correct property names
+                                                        $('#CountryID').val(locationData.CountryID);
+                                                        //$("#CurrencyID").val(locationData.CountryID);
 
-                                                var selectedCountryCode = jsonData.CountryCode;
+                                                        // Populate State dropdown
+                                                        $('#StateID').empty().append('<option value="' + locationData.StateID + '">' + locationData.StateName + '</option>');
 
-                                                // Set the selected value in the dropdown based on text
-                                                $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
+                                                        // Populate District dropdown
+                                                        $('#DistrictID').empty().append('<option value="' + locationData.DistrictID + '">' + locationData.DistrictName + '</option>');
 
+                                                        // Set the selected value in the dropdown based on text
+                                                        var selectedCountryCode = locationData.CountryCode;
+                                                        $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
 
-                                                // If the value is not in the dropdown, set it to an empty string
-                                                if ($('#countryCode').val() == null) {
-                                                    $('#countryCode').val('');
-                                                }
+                                                        // If the value is not in the dropdown, set it to an empty string
+                                                        if ($('#countryCode').val() == null) {
+                                                            $('#countryCode').val('');
+                                                        }
 
-
-                                                var selectedCountry = jsonData.CountryID;
-
-                                                $("#CurrencyID option").each(function () {
-                                                    if ($(this).val() == selectedCountry) {
-                                                        $(this).prop("selected", true);
+                                                        // Set the selected value in the CurrencyID dropdown
+                                                        var selectedCountry = locationData.CountryID;
+                                                        $("#CurrencyID option").each(function () {
+                                                            $(this).prop("selected", $(this).val() == selectedCountry);
+                                                        });
                                                     } else {
-                                                        $(this).prop("selected", false);
+                                                        console.error('Empty array in the JSON response.');
                                                     }
-                                                });
+                                                } catch (error) {
+                                                    console.error('Error parsing JSON response:', error);
+                                                }
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error);
+                                                console.log('AJAX request failed:', error);
                                             }
                                         });
                                     }
+
 
                                     var initialPinCode = $('#PinCode1').val();
                                     if (initialPinCode) {
@@ -414,9 +421,17 @@
                                     $(document).ready(function () {
                                         // Function to set selected item and update hidden field
                                         function setSelectedCountry() {
-                                            var selectedCountryName = $("#CountryId").find("option:selected").data("countryname");
-                                            $("#country1hidden").val(selectedCountryName);
-                                            $('#countryCode').val($("#CountryId").val());
+                                            var selectedOption = $("#CountryId option:selected");
+                                            var selectedCountryName = selectedOption.data("countryname");
+
+                                            if (selectedCountryName !== undefined) {
+                                                $("#country1hidden").val(selectedCountryName);
+                                                $('#countryCode').val($("#CountryId").val());
+                                            } else {
+                                                // Handle the case when data-countryname is undefined
+                                                $("#country1hidden").val("");
+                                                $('#countryCode').val("");
+                                            }
                                         }
 
                                         // Attach change event to the dropdown
@@ -425,46 +440,22 @@
                                         });
 
                                         // Set the selected item based on model's CountryID when the page loads
-                                        var modelCountryID = parseInt('@Model.CountryId'); // Convert to number
-                                        // Convert to string for comparison
-                                        if (modelCountryID) {
+                                        var modelCountryID = parseInt('@(Model?.CountryId ?? 0)'); // Provide a fallback value
+                                        if (!isNaN(modelCountryID)) {
                                             $("#CountryID").val(modelCountryID);
                                             setSelectedCountry(); // Update the hidden field
                                         }
                                     });
                                 </script>
-                            </div>
 
+                            </div>                            
 
-                            <script>
-                                $(document).ready(function () {
-                                    // Set the initial state of the currency dropdown
-                                    updateCurrencyDropdown();
-
-                                    // Handle change event on the country dropdown
-                                    $("#CountryID").on("change", function () {
-                                        updateCurrencyDropdown();
-                                    });
-
-                                    function updateCurrencyDropdown() {
-                                        var selectedCountry = $('#CountryID').val();
-                                        $("#CurrencyID option").each(function () {
-                                            if ($(this).val() == selectedCountry) {
-                                                $(this).prop("selected", true);
-                                            } else {
-                                                $(this).prop("selected", false);
-                                            }
-                                        });
-                                    }
-                                });
-                            </script>
-
-                            <div class="form-group col-lg-3">
+                            <divx class="form-group col-lg-3">
                                 <label for="StateID">State<span style="color: red;">*</span></label>
                                 <select class="form-control" required asp-for="StateID" id="StateID" name="StateID">
                                     <option value="" selected disabled>Select State</option>
                                 </select>
-                            </div>
+                            </divx>
 
                             <script>
                                 $(document).ready(function () {
@@ -626,29 +617,38 @@
                             </div>
                             <script>
                                 $(document).ready(function () {
-                                    // Function to handle pin code change
                                     function handlePinCodeChange(enteredPinCode, countryID) {
                                         $.ajax({
                                             url: '/NationalGangotri/DonationReceiveMaster/GetLocationDetailsByPinCode',
                                             type: 'GET',
                                             data: { pinCode: enteredPinCode },
                                             success: function (response) {
-                                                // Parse the nested JSON string inside the 'data' property
-                                                var jsonData = JSON.parse(response.data);
+                                                try {
+                                                    // Parse the nested JSON string inside the 'data' property
+                                                    var jsonData = response.data;
 
-                                                // Populate Country dropdown
-                                                $('#CountryID2').val(jsonData.CountryID);
+                                                    // Check if jsonData is an array and has at least one object
+                                                    if (Array.isArray(jsonData) && jsonData.length > 0) {
+                                                        // Access the first object in the array
+                                                        var locationData = jsonData[0];
 
-                                                // Populate State dropdown
-                                                $('#StateID2').empty().append('<option value="' + jsonData.StateID + '">' + jsonData.StateName + '</option>');
+                                                        // Populate Country dropdown
+                                                        $('#CountryID2').val(locationData.CountryID);
 
-                                                // Populate District dropdown
-                                                $('#DistrictID2').empty().append('<option value="' + jsonData.DistrictID + '">' + jsonData.DistrictName + '</option>');
+                                                        // Populate State dropdown
+                                                        $('#StateID2').empty().append('<option value="' + locationData.StateID + '">' + locationData.StateName + '</option>');
 
-
+                                                        // Populate District dropdown
+                                                        $('#DistrictID2').empty().append('<option value="' + locationData.DistrictID + '">' + locationData.DistrictName + '</option>');
+                                                    } else {
+                                                        console.error('Invalid JSON response format or empty array.');
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Error parsing JSON response:', error);
+                                                }
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error);
+                                                console.log('AJAX request failed:', error);
                                             }
                                         });
                                     }
@@ -1292,10 +1292,10 @@
                                     Send Sandipan
                                 </label>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="Sandipan" value="yes"> Yes
+                                    <input type="radio" class="form-check-input" name="Sandipan" value="1"> Yes
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="Sandipan" value="no"> No
+                                    <input type="radio" class="form-check-input" name="Sandipan" value="0"> No
                                 </div>
                             </div>
 
@@ -1390,11 +1390,11 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Visit Year</label>
-                                <input class="form-control" id="VisitYear" type="text" name="VisitYear" />
+                                <input class="form-control" id="VisitYear" type="number" name="VisitYear" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">Forgin NgCode Refrence</label>
-                                <input class="form-control" id="ForginNgCodeRefrence" type="text" name="ForginNgCodeRefrence" />
+                                <input class="form-control" id="ForginNgCodeRefrence" type="number" name="ForginNgCodeRefrence" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="">If Changes then enter Reason </label>

@@ -11,489 +11,284 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
     public class Db_functions
     {
         private readonly string _connectionString;
+        private readonly DbEngineClass _dbEngine;
 
         public Db_functions(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("ConStr");
-        }
+            _dbEngine = new DbEngineClass(configuration);
+        }     
 
-        // Add this method to get countries
         public List<dynamic> GetCountries()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Execute stored procedure to get countries
-                var result = connection.Query("GetCountries", commandType: CommandType.StoredProcedure);
-                return result.AsList();
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetCountries");
+        }        
+        public List<dynamic> GetDonationReciveDetails()
+        {
+            return _dbEngine.ExecuteStoredProcedure("GetDonationReceiveDetails");
         }
 
-        public IEnumerable<dynamic> GetDonationReciveDetails()
+        public IEnumerable<dynamic> GetDonormasterDetailsList()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return connection.Query("GetDonationReceiveDetails", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("[GetDonorDetails]");
         }
-        public IEnumerable<dynamic> GetBankStatement(DateTime datefrom,DateTime dateTo)
+
+        public IEnumerable<dynamic> GetBankStatement(DateTime dateFrom, DateTime dateTo)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return connection.Query("[GetBankStatementOnSankalpSiddhiByDate]", new {DateFrom=datefrom,DateTo=dateTo}, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { DateFrom = dateFrom, DateTo = dateTo };
+            return _dbEngine.ExecuteStoredProcedure("[GetBankStatementOnSankalpSiddhiByDate]", parameters);
         }
         public List<dynamic> GetActiveCities()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Execute stored procedure to get active cities
-                return connection.Query("GetActiveCities", commandType: CommandType.StoredProcedure).AsList();
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetActiveCities");
         }
 
         public List<dynamic> GetReceiptBookType()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-           
-                return connection.Query("GetReceiptBookType", commandType: CommandType.StoredProcedure).AsList();
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetReceiptBookType");
         }
+
         public List<dynamic> GetPaymentModes()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var result = connection.Query("GetPaymentModes", commandType: CommandType.StoredProcedure);
-                return result.AsList();
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetPaymentModes");
         }
         public List<dynamic> GetStates()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Execute stored procedure to get states
-                return connection.Query("GetStates", commandType: CommandType.StoredProcedure).AsList();
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetStates");
         }
 
         public IEnumerable<dynamic> GetStatesByCountry(int countryId)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Use Dapper to call the stored procedure
-                return connection.Query<dynamic>("GetStatesByCountry", new { CountryID = countryId,DataFlag="" }, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { CountryID = countryId, DataFlag = "" };
+            return _dbEngine.ExecuteStoredProcedure("GetStatesByCountry", parameters);
         }
+
         public IEnumerable<dynamic> GetCity()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-            
-                return connection.Query<dynamic>("[GetCity]", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("[GetCity]");
         }
-        public IEnumerable<dynamic> GetBankByDataFlag(string DataFlag)
+
+        public IEnumerable<dynamic> GetBankByDataFlag(string dataFlag)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-              
-                return connection.Query<dynamic>("GetBankMasterByDataFlag", new { DataFlag = DataFlag }, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { DataFlag = dataFlag };
+            return _dbEngine.ExecuteStoredProcedure("GetBankMasterByDataFlag", parameters);
         }
+
         public IEnumerable<dynamic> GetDistrictsByState(int stateId)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return connection.Query<dynamic>("GetDistrictsByState", new { StateID = stateId }, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { StateID = stateId };
+            return _dbEngine.ExecuteStoredProcedure("GetDistrictsByState", parameters);
         }
         public IEnumerable<dynamic> GetCitiesByDistrictID(int districtId)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return connection.Query<dynamic>("GetCitiesByDistrictID", new { DistrictID = districtId }, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { DistrictID = districtId };
+            return _dbEngine.ExecuteStoredProcedure("GetCitiesByDistrictID", parameters);
         }
 
         public IEnumerable<dynamic> GetCurrencyListWithCountry()
         {
-            using (IDbConnection dbConnection = new SqlConnection(_connectionString))
-            {
-                dbConnection.Open();
-
-                var currencies = dbConnection.Query<dynamic, dynamic, dynamic>(
-              "GetCurrencyListWithCountry",
-              (currency, country) =>
-              {
-                  // Assuming "CountryID" is a property in the dynamic result
-                  ((IDictionary<string, object>)currency).Add("CountryMaster", country);
-                  return currency;
-              },
-              splitOn: "CountryID",
-              commandType: CommandType.StoredProcedure
-          );
-
-                return currencies;
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetCurrencyListWithCountry");
         }
+
         public dynamic GetLocationDetailsByPinCode(string pinCode)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var parameters = new { PinCode = pinCode };
-                return connection.QueryFirstOrDefault<dynamic>("GetLocationDetailsByPincode", parameters, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { PinCode = pinCode };
+            return _dbEngine.ExecuteStoredProcedure("GetLocationDetailsByPincode", parameters);
         }
+
         public IEnumerable<dynamic> GetAllBankMasters()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetAllBankMasters", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetAllBankMasters");
         }
-        public IEnumerable<dynamic> GetORderTypes()
+
+        public IEnumerable<dynamic> GetOrderTypes()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetOrderTypes", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetOrderTypes");
         }
+
         public IEnumerable<dynamic> GetEmployeeDetils()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetEmployeeDetails", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetEmployeeDetails");
         }
-        public IEnumerable<dynamic> GEtPersonDetails ()
+
+        public IEnumerable<dynamic> GEtPersonDetails()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetPersonDetails", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetPersonDetails");
         }
+
         public IEnumerable<dynamic> CurrencyList()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("[GetCurrencyForDonationReceiveMaster]", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("[GetCurrencyForDonationReceiveMaster]");
         }
+
         public IEnumerable<dynamic> GetDepositBankMaster()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetDepositeBankMaster", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetDepositeBankMaster");
         }
+
         public IEnumerable<dynamic> GetProvisionalReceiptbyId(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("[GetProvisionalReceiptbyId]", new { ReceiveID = id }, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { ReceiveID = id };
+            return _dbEngine.ExecuteStoredProcedure("[GetProvisionalReceiptbyId]", parameters);
         }
+
         public IEnumerable<dynamic> getHeads()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetHeads", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetHeads");
         }
+
         public IEnumerable<dynamic> getReceiveHeads()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetReceiveHeads", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetReceiveHeads");
         }
+
         public IEnumerable<dynamic> GetEvents()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetEvents", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetEvents");
         }
+
         public IEnumerable<dynamic> GetSubHeadByHead(int HeadID, string DataFlag, int CurrencyID)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { PurposeId = HeadID, DataFlag = DataFlag, CurrencyId = CurrencyID };
-                return connection.Query<dynamic>("[GetSubHeadByHeadid]", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { PurposeId = HeadID, DataFlag = DataFlag, CurrencyId = CurrencyID };
+            return _dbEngine.ExecuteStoredProcedure("[GetSubHeadByHeadid]", parameters);
         }
+
         public IEnumerable<dynamic> GetOperationAmountByQty(int Qty, string DataFlag, int CurrencyID)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { Qty = Qty, DataFlag = DataFlag, CurrencyID = CurrencyID };
-                return connection.Query<dynamic>("[GetOperationAmountBYQty]", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { Qty = Qty, DataFlag = DataFlag, CurrencyID = CurrencyID };
+            return _dbEngine.ExecuteStoredProcedure("[GetOperationAmountBYQty]", parameters);
         }
 
         public IEnumerable<dynamic> GetQtyAmtBySubHead(int yojnaid, string DataFlag, int CurrencyID)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { YojnaID = yojnaid, DataFlag = DataFlag, CurrencyID = CurrencyID };
-                return connection.Query<dynamic>("GetQtyAmtBySubHead", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { YojnaID = yojnaid, DataFlag = DataFlag, CurrencyID = CurrencyID };
+            return _dbEngine.ExecuteStoredProcedure("GetQtyAmtBySubHead", parameters);
         }
 
         public IEnumerable<dynamic> GetPersonNameByProvisonal(int ReceiptNo, string TP, string DataFlag)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { ReceiptNo = ReceiptNo, TP = TP, DataFlag = DataFlag };
-                return connection.Query<dynamic>("[GetPersonDetailsByProvisioanlNo]", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { ReceiptNo = ReceiptNo, TP = TP, DataFlag = DataFlag };
+            return _dbEngine.ExecuteStoredProcedure("[GetPersonDetailsByProvisioanlNo]", parameters);
         }
 
         public IEnumerable<dynamic> getSubHeads()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetSubHeads", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetSubHeads");
         }
 
         public IEnumerable<dynamic> GetCriticalPurpose()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("[GetCriticalPupose]", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("[GetCriticalPupose]");
         }
+
         public IEnumerable<dynamic> GetallCampaigns()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetAllCampaigns", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetAllCampaigns");
         }
+
         public IEnumerable<dynamic> GetDonorINstructionsMaster()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<dynamic>("GetDonorInstructions", commandType: CommandType.StoredProcedure);
-            }
+            return _dbEngine.ExecuteStoredProcedure("GetDonorInstructions");
         }
+
         public IEnumerable<dynamic> GetDonorInstructionsbyid(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_ID = ref_id };
-                return connection.Query<dynamic>("GetDonorInstructionsbyid", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { REF_ID = ref_id };
+            return _dbEngine.ExecuteStoredProcedure("GetDonorInstructionsbyid", parameters);
         }
+
         public IEnumerable<dynamic> GetCampaignsById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_ID = ref_id };
-                return connection.Query<dynamic>("GetCampaignById", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { REF_ID = ref_id };
+            return _dbEngine.ExecuteStoredProcedure("GetCampaignById", parameters);
         }
+
         public IEnumerable<dynamic> GetDonationReceiveMasterByReceiveID(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { ReceiveID = ref_id };
-                return connection.Query<dynamic>("GetDonationReceiveDetailsById", parameters, commandType: CommandType.StoredProcedure);
-
-            }
+            var parameters = new { ReceiveID = ref_id };
+            return _dbEngine.ExecuteStoredProcedure("GetDonationReceiveDetailsById", parameters);
         }
+
         public dynamic GetDataByDonorID(string donorid)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var parameters = new { DonorID = donorid };
-                return connection.QueryFirstOrDefault<dynamic>("GetDonationReceiveDataByDonorID", parameters, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { DonorID = donorid };
+            return _dbEngine.ExecuteStoredProcedure("GetDonationReceiveDataByDonorID", parameters);
         }
+
         public dynamic SearchDonorDetails(SearchDonorDetails model)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var parameters = new { SearchType=model.SearchType,SearchData=model.searchData };
-                return connection.QueryFirstOrDefault<dynamic>("[SearchDonorMasterDataByPara]", parameters, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
+            return _dbEngine.ExecuteStoredProcedure("[SearchDonorMasterDataByPara]", parameters);
         }
 
         public dynamic SearchDonorIdentityDetails(SearchDonorDetails model)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
-                return connection.QueryFirstOrDefault<dynamic>("[SearchDonorIdentityDetailsBYPara]", parameters, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
+            return _dbEngine.ExecuteStoredProcedure("[SearchDonorIdentityDetailsBYPara]", parameters);
         }
 
         public dynamic SearchDonorContactDetailsDetails(SearchDonorDetails model)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
-                return connection.QueryFirstOrDefault<dynamic>("[SearchDonorContactDetailsBYPara]", parameters, commandType: CommandType.StoredProcedure);
-            }
+            var parameters = new { SearchType = model.SearchType, SearchData = model.searchData };
+            return _dbEngine.ExecuteStoredProcedure("[SearchDonorContactDetailsBYPara]", parameters);
         }
+
         public string GetDonationReceiveMasterJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { ReceiveID = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveDetailsById", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { ReceiveID = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveDetailsById", parameters);
+            return JsonConvert.SerializeObject(result);
         }
+
         public string GetMovementMasterListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { ReceiveID = ref_id };
-                var result = connection.Query<dynamic>("[GetDmsMovementMasterByReceiveID]", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { ReceiveID = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("[GetDmsMovementMasterByReceiveID]", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetMobileListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_NO = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiMobilebyID", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { REF_NO = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiMobilebyID", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetIdentityListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_NO = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiIdentitybyID", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { REF_NO = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiIdentitybyID", parameters);
+            return JsonConvert.SerializeObject(result);
         }
-
         public string GetMobileListJsonByDonorID(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { DonorID = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiMobilebyID", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { DonorID = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiMobilebyID", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetIdentityListJsonByDonorID(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { DonorID = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiIdentitybyID", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { DonorID = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiIdentitybyID", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetBankDetailsListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_NO = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiBankById", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { REF_NO = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiBankById", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetReceiptsDetailsListJsonById(int ref_id)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@REF_NO", ref_id, DbType.Int32);
-                    var result = connection.Query<dynamic>("GetDonationReceiveMultiHeadbyId", parameters, commandType: CommandType.StoredProcedure);
-
-                    return JsonConvert.SerializeObject(result);
-                }
+                var parameters = new DynamicParameters();
+                parameters.Add("@REF_NO", ref_id, DbType.Int32);
+                var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiHeadbyId", parameters);
+                return JsonConvert.SerializeObject(result);
             }
             catch (Exception ex)
             {
@@ -505,51 +300,31 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
         public string GetDonorInstructionsListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_NO = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiDonorInstrucByid", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { REF_NO = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiDonorInstrucByid", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetAnnounceListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_NO = ref_id };
-                var result = connection.Query<dynamic>("GetDonationReceiveMultiAnnunceDueByid", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { REF_NO = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetDonationReceiveMultiAnnunceDueByid", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetLocationDetailsByPinCodeJson(string pinCode)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var parameters = new { PinCode = pinCode };
-                var result = connection.QueryFirstOrDefault<dynamic>("GetLocationDetailsByPincode", parameters, commandType: CommandType.StoredProcedure);
-
-                // Assuming you want to return JSON
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { PinCode = pinCode };
+            var result = _dbEngine.ExecuteStoredProcedure("GetLocationDetailsByPincode", parameters);
+            return JsonConvert.SerializeObject(result);
         }
 
         public string GetBORTDetailsListJsonById(int ref_id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var parameters = new { REF_NO = ref_id };
-                var result = connection.Query<dynamic>("GetBORTDetsilsByid", parameters, commandType: CommandType.StoredProcedure);
-                return JsonConvert.SerializeObject(result);
-            }
+            var parameters = new { REF_NO = ref_id };
+            var result = _dbEngine.ExecuteStoredProcedure("GetBORTDetsilsByid", parameters);
+            return JsonConvert.SerializeObject(result);
         }
-
         public IEnumerable<DonationReceiveDetailsWithParaModel> SearchDonationDetailsByPara(DonationReceiveDetailsWithParaModel model)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -622,6 +397,13 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
                 return connection.Query<dynamic>("GetDonorTypes", commandType: CommandType.StoredProcedure);
             }
         }
+
+        public IEnumerable<dynamic>GetDonorDataByID(int DonorID, string DataFlag)
+        {
+            var parameters = new { Ngcode = DonorID, DataFlag = DataFlag };
+            return _dbEngine.ExecuteStoredProcedure("[GetDonorDataById]", parameters);
+        }
+
         #endregion
 
 

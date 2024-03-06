@@ -213,7 +213,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetCriticalOperation()
         {
@@ -250,7 +249,6 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 return BadRequest("An error occurred while retrieving location details.");
             }
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetQtyAmtBySubHead(string YojnaID, string DataFlag, string CurrencyID)
@@ -377,8 +375,8 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
                     var json = await response.Content.ReadAsStringAsync();
 
-
-                    return Json(new { data = json });
+                    return Content($"{{\"data\": {json}}}", "application/json");
+                    //return Json(new { data = json });
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {

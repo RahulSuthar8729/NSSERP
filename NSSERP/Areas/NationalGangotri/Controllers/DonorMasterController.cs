@@ -47,9 +47,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Home(int id)
+        public async Task<IActionResult> Home(int id,string DataFlag)
         {
-            var response = await _apiClient.GetAsync($"api/DonorMaster/Home");
+            var response = await _apiClient.GetAsync($"api/DonorMaster/Home?DonorID={id}&DataFlag={User.FindFirst("DataFlag")?.Value}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -199,9 +199,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var modelget = await response.Content.ReadAsStringAsync();
-                    var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonorMaster>(modelget) : null;
-                    TempData["msg"] = modeldata.msg;
-                    return RedirectToAction("Index", "DonationReceiveMaterDetails", new { model = modeldata });
+                    //var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonorMaster>(modelget) : null;
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "DonorDetails", new { model = modelget });
                 }
 
                 else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -223,6 +223,9 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
             return View();
         }
+
+       
+
 
     }
 }
