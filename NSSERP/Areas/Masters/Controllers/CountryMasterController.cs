@@ -12,6 +12,9 @@ using System.Data.SqlClient;
 using Dapper;
 using System.Data;
 using System.Security.Claims;
+using System.Net;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace NSSERP.Areas.Masters.Controllers
 {
@@ -20,24 +23,50 @@ namespace NSSERP.Areas.Masters.Controllers
     public class CountryMasterController : Controller
     {
 
-        private readonly string _connectionString;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _apiClient;
+        public CountryMasterController(IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
 
-        public CountryMasterController(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("ConStr");
+            _webHostEnvironment = webHostEnvironment;
+            _apiClient = clientFactory.CreateClient("WebApi");
+            _httpClientFactory = clientFactory;
         }
 
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var response = await _apiClient.GetAsync($"api/CountryMaster/Index");
+
+            if (!response.IsSuccessStatusCode)
             {
-                connection.Open();
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
 
-                var query = "SELECT * FROM CountryMaster";
-                var countries = connection.Query<Countrys>(query);
-
-                return View(countries);
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
             }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<Countrys>(json) : null;
+            if (TempData.ContainsKey("msg"))
+            {
+                string messageFromFirstController = TempData["msg"] as string;
+                detail.msg = messageFromFirstController;
+                TempData.Remove("msg");
+            }
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
         }
 
         public IActionResult Create()
@@ -46,155 +75,121 @@ namespace NSSERP.Areas.Masters.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Countrys country)
+        public async Task<IActionResult> Create(Countrys model)
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
+                string apiUrl = string.Empty;
+                if (model.Country_Code != null)
+                    apiUrl = "api/CountryMaster/UpdateData";
+                else
+                    apiUrl = "api/CountryMaster/InsertData";
+
+
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    connection.Open();
-
-                    // Use DynamicParameters to define both input and output parameters
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@Country_Name", country.CountryName);
-                    parameters.Add("@Country_Code", country.CountryCode);
-                    parameters.Add("@Status", country.IsActive);
-                    parameters.Add("@CreatedBy", User.FindFirst(ClaimTypes.Name)?.Value);
-                    parameters.Add("@ResultMessage", dbType: DbType.String, direction: ParameterDirection.Output, size: 4000);
-
-                    // Execute the stored procedure with parameters
-                    connection.Execute("InsertNewCountry", parameters, commandType: CommandType.StoredProcedure);
-
-                    // Access the output parameter after the execution
-                    var resultMessage = parameters.Get<string>("@ResultMessage");
-
-                    if (!string.IsNullOrEmpty(resultMessage))
-                    {
-                        ViewBag.SuccessMessage = resultMessage;
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "An error occurred while creating the country.";
-                    }
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "CountryMaster", new { model = modelget });
                 }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "An error occurred while creating the country.";
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
 
             return View();
         }
 
 
-        public IActionResult Edit(string CountryId)
+        public async Task<IActionResult> Edit(string CountryId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var response = await _apiClient.GetAsync($"api/CountryMaster/GetCountrybyID?CountryId={CountryId}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                connection.Open();
-
-                var query = "SELECT * FROM CountryMaster WHERE CountryId = @CountryId";
-                var country = connection.QueryFirstOrDefault<Countrys>(query, new { CountryId = CountryId });
-
-                if (country == null)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return NotFound();
                 }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
 
-                return View(country);
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
             }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<Countrys>(json) : null;
+
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
+
         }
 
         [HttpPost]
-        public IActionResult Edit(Countrys country)
-        {
-
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    // Use DynamicParameters to define both input and output parameters
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@CountryId", country.CountryId);
-                    parameters.Add("@CountryName", country.CountryName);
-                    parameters.Add("@CountryCode", country.CountryCode);
-                    parameters.Add("@IsActive", country.IsActive);
-                    parameters.Add("@ResultMessage", dbType: DbType.String, direction: ParameterDirection.Output, size: 4000);
-
-                    // Execute the stored procedure with parameters
-                    connection.Execute("UpdateCountry", parameters, commandType: CommandType.StoredProcedure);
-
-                    // Access the output parameter after the execution
-                    var resultMessage = parameters.Get<string>("@ResultMessage");
-
-                    if (!string.IsNullOrEmpty(resultMessage))
-                    {
-                        ViewBag.SuccessMessage = resultMessage;
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "An error occurred while updating the country.";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = "An error occurred while updating the country.";
-            }
-
-
-            return View(country);
-        }
-
-
-        [HttpGet]
-        public IActionResult Delete(string countryId)
+        public async Task<IActionResult> Edit(Countrys model)
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
+                string apiUrl = string.Empty;
+                if (model.Country_Code != null)
+                    apiUrl = "api/CountryMaster/UpdateData";
+                else
+                    apiUrl = "api/CountryMaster/InsertData";
+
+
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    connection.Open();
-
-                    // Use DynamicParameters to define both input and output parameters
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@CountryId", countryId);
-                    parameters.Add("@ResultMessage", dbType: DbType.String, direction: ParameterDirection.Output, size: 4000);
-
-                    // Execute the stored procedure with parameters
-                    connection.Execute("DeleteCountry", parameters, commandType: CommandType.StoredProcedure);
-
-                    // Access the output parameter after the execution
-                    var resultMessage = parameters.Get<string>("@ResultMessage");
-
-                    if (!string.IsNullOrEmpty(resultMessage))
-                    {
-                        ViewBag.ErrorMessage = resultMessage;
-
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = resultMessage;
-                    }
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "CountryMaster", new { model = modelget });
                 }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-            }
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var query = "SELECT * FROM CountryMaster";
-                var countries = connection.Query<Countrys>(query);
-
-                return View("Index", countries);
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
 
+
+            return View(model);
         }
+        
 
     }
 }

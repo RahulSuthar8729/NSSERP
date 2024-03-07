@@ -4,13 +4,13 @@ namespace NSSERP.Areas.Masters.Models
 {
     public class Countrys
     {
-        [Key]
-        public int CountryId { get; set; }
-        public string? CountryName { get; set; }
-
-        public string? CountryCode { get; set; }
-
-        public char IsActive { get; set; }
-        public string CreatedBy { get; set; }
+        public string? msg { get; set; }
+        public IEnumerable<Countrys> masterDetails { get; set; }   
+        public decimal? Country_Code { get; set; }
+        public string? Country_Name { get; set; }
+        public decimal? Country_CallCode { get; set; }
+        public string? Status { get; set; }
+        public string? Data_Flag { get; set; } = "GANGOTRI";
+        public string? CreatedBy { get; set; }
     }
 }

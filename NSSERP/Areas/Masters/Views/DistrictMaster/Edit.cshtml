@@ -35,7 +35,7 @@
                         <option value="">Select Country</option>
                         @foreach (var country in Model.Countrys)
                         {
-                            <option value="@country.CountryId" @(Model.CountryID == country.CountryId ? "selected" : "")>@country.CountryName</option>
+                            <option value="@country.Country_Code" @(Model.CountryID == country.Country_Code ? "selected" : "")>@country.Country_Name</option>
                         }
                     </select>
                     <span asp-validation-for="CountryID" class="text-danger"></span>

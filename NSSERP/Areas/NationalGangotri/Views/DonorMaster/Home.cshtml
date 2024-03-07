@@ -86,13 +86,17 @@
                             </div>
 
                             <div class="form-group col-lg-3">
+                                <label for="">NgCode:</label>
+                                <input type="text" readonly value="@Model.DonorID" class="form-control" id="DonorID" name="DonorID">
+                            </div>
+                            <div class="form-group col-lg-3">
                                 <label for="groupNgCode">Group NgCode:</label>
-                                <input type="text" class="form-control" id="GroupNGCode" name="GroupNGCode">
+                                <input type="text" class="form-control" value="@Model.GroupNGCode" id="GroupNGCode" name="GroupNGCode">
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="onlineCustId">Online CustId:</label>
-                                <input type="text" class="form-control" id="onlineCustId" name="onlineCustId">
+                                <input type="text" class="form-control" value="@Model.onlineCustId" id="onlineCustId" name="onlineCustId">
                             </div>
 
 
@@ -412,7 +416,7 @@
                                     {
                                         @foreach (var country in Model.CountryList)
                                         {
-                                            <option value="@country.CountryId" data-countryname="@country.CountryName">@country.CountryName</option>
+                                            <option value="@country.Country_Code" data-countryname="@country.Country_Name">@country.Country_Name</option>
                                         }
                                     }
                                 </select>
@@ -678,7 +682,7 @@
                                     {
                                         @foreach (var country in Model.CountryList)
                                         {
-                                            <option value="@country.CountryId">@country.CountryName</option>
+                                            <option value="@country.Country_Code">@country.Country_Name</option>
                                         }
 
                                     }
@@ -908,7 +912,7 @@
                                             {
                                                 @foreach (var countrycode in Model.CountryList)
                                                 {
-                                                    <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
+                                                    <option value="@countrycode.Country_Code">@countrycode.Country_Name</option>
                                                 }
                                             }
                                         </select>
@@ -956,14 +960,41 @@
                                         }
                                     });
 
+                                    var mobileListJson = @Html.Raw(Model.MobileListJson);
+                             
+                                    if (!mobileListJson) {
+                                  
+                                        mobileListJson = @Html.Raw(JsonConvert.SerializeObject(Model.MobileListJson));
+                                    }
+
+                                    if (mobileListJson) {
+                                       
+                                        // Loop through each item in the JSON array
+                                        $.each(mobileListJson, function (index, item) {
+                                            // Add a new row to the table
+                                            var newRowmobilelist = $("<tr>");
+                                            newRowmobilelist.append("<td>" + item.ContactType + "</td>");
+                                            newRowmobilelist.append("<td>" + item.CountryCode + "</td>");
+                                            newRowmobilelist.append("<td>" + item.MobileNumber + "</td>");
+                                            newRowmobilelist.append("<td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>");
+
+                                            // Add a special class to identify rows from MobileListJson
+                                            newRowmobilelist.addClass("json-data-row");
+
+
+                                            $("#contactDetailsTable tbody").append(newRowmobilelist);
+
+                                            updateContactDetailsHiddenField();
+
+                                            $("#contactDetailsTable").css("visibility", "visible");
+                                        });
+                                    }
 
                                     $("#addDetail").on("click", function () {
                                         var ContactType = $("#contactType").val();
                                         var countryCode = $("#countryCode").find(':selected').text();
                                         var contactDetail = $("#contactDetail").val();
-                                        var ReceiveHeadName = $('#IsReceiveHeadDiffrent').is(':checked') ?
-                                            $("#ReceiveHeadName").find(':selected').text() :
-                                            "@UserDepartment";
+                                        var ReceiveHeadName = '';
 
                                         var contactDetailPattern;
 
@@ -976,10 +1007,10 @@
                                         } else if (ContactType === 'Mobile') {
                                             // Check if the country code is +91 (India)
                                             if (countryCode === '+91') {
-                                                contactDetailPattern = /^\d{10}$/; // 10 digits for India
+                                                contactDetailPattern = /^\d{10}$/;
                                             } else {
-                                                // For other countries, remove validation or add specific validation patterns
-                                                contactDetailPattern = /^\d+$/; // Example: Any number of digits
+
+                                                contactDetailPattern = /^\d+$/;
                                             }
 
                                             if (!contactDetailPattern.test(contactDetail)) {
@@ -987,7 +1018,7 @@
                                                 return;
                                             }
                                         } else {
-                                            // Add additional validation for other contact types if needed
+
                                         }
 
                                         var newRowContactDetails = $("<tr>");
@@ -1127,9 +1158,49 @@
 
                 <script>
                     $(document).ready(function () {
-                        var donorid = $("#DonorID").val();                   
+                        var donorid = $("#DonorID").val();
+                        var identityListJson = @Html.Raw(Model.IdentityListJson);
 
-                       
+
+                        if (!identityListJson) {
+
+                            identityListJson = @Html.Raw(JsonConvert.SerializeObject(Model.IdentityList));
+                        }
+
+                        if (identityListJson) {
+
+                            $.each(identityListJson, function (index, identity) {                                
+
+
+                                var type = identity.identityType;
+                                var number = identity.identityNumber;
+
+                                var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
+
+
+                                existingIdentities.push(identity);
+
+
+                                $("#identityDetails").val(JSON.stringify(existingIdentities));
+
+
+                                var newRowidentityList = $("<div class='form-group col-lg-3'>");
+                                newRowidentityList.append("<label for='" + identity.identityType + "'>" + identity.identityType + "</label>");
+                                newRowidentityList.append("<input class='form-control' id='" + identity.identityType + "' type='text' value='" + identity.identityNumber + "' readonly />");
+                                newRowidentityList.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
+
+
+                                $("#addedIdentities").append(newRowidentityList);
+
+
+                                $("#addedIdentities").css("display", "flex");
+                            });
+
+
+                            updateHiddenField(identityListJson);
+
+                            $("#addedIdentities").css("display", "flex");
+                        }
 
                         $("#addIdentity").on("click", function () {
                             // Get selected identity type and number
@@ -1142,13 +1213,9 @@
                             if (!isValid) {
                                 return;
                             }
-                            var ReceiveHeadName = '';
+                            
 
-                            if ($('#IsReceiveHeadDiffrent').is(':checked')) {
-                                ReceiveHeadName = $("#ReceiveHeadName").find(':selected').text();
-                            } else {
-                                ReceiveHeadName = "@UserDepartment";
-                            }
+                            
                             // Check if an identity of the same type already exists
                             var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
                             var existingIdentity = existingIdentities.find(function (identity) {
@@ -1165,7 +1232,7 @@
                                 IdentityType: selectedIdentityType,
                                 IdentityNumber: identityNumber,
                                 DonorID: donorid,
-                                ReceiveHead: ReceiveHeadName
+                                ReceiveHead: ''
                             };
 
                             // Append the new identity to the container
@@ -1182,23 +1249,11 @@
 
                         // Delete Identity button click event
                         $(document).on("click", ".delete-identity", function (event) {
-                            // Prevent the default action (e.g., form submission)
                             event.preventDefault();
-
-                            // Your existing delete logic here...
-
-                            // For example, you can get the parent div and remove it
                             var parentDiv = $(this).closest(".form-group");
                             parentDiv.remove();
-
-                            // Update the hidden field value with the updated identities
                             updateHiddenField();
-
-                            // Your existing logic to update the hidden input and other actions...
                         });
-
-                        // Function to validate identity number based on the selected identity type
-                        // Function to validate identity number based on the selected identity type
                         function validateIdentity(identityType, identityNumber) {
                             // Validate based on identity type
                             switch (identityType) {
@@ -1216,45 +1271,35 @@
                                         return false;
                                     }
                                     break;
-                                // Add more cases for other identity types if needed
+
                             }
 
-                            // Validation passed
                             return true;
                         }
 
 
-                        // Function to append an identity to the addedIdentities section
+
                         function appendIdentityToContainer(identity) {
-                            // Collect existing identities from the hidden field
                             var existingIdentities = JSON.parse($("#identityDetails").val() || '[]');
-
-                            // Add the new identity to the array
                             existingIdentities.push(identity);
-
-                            // Set the JSON stringified identities to the hidden input
                             $("#identityDetails").val(JSON.stringify(existingIdentities));
 
-                            // Create a new row for the added identity
                             var newRowidentitydetails = $("<div class='form-group col-lg-3'>");
                             newRowidentitydetails.append("<label for='" + identity.IdentityType + "'>" + identity.IdentityType + "</label>");
-                            newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "' type='text' value='" + identity.IdentityNumber + "' readonly />");
-                            newRowidentitydetails.append("<input style='display:none'  id='" + identity.IdentityType + "' type='text' value='" + identity.DonorID + "' readonly />");
-                            newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "' type='text' value='" + identity.ReceiveHead + "' readonly />");
+                            newRowidentitydetails.append("<input class='form-control' id='" + identity.IdentityType + "-number' type='text' value='" + identity.IdentityNumber + "' readonly />");
+                            newRowidentitydetails.append("<input style='display:none'  id='" + identity.IdentityType + "-donor' type='text' value='" + identity.DonorID + "' readonly />");
+                            newRowidentitydetails.append("<input  style='display:none' id='" + identity.IdentityType + "-receive' type='text' value='" + identity.ReceiveHead + "' readonly />");
                             newRowidentitydetails.append("<button class='btn btn-danger btn-sm delete-identity'>Delete</button>");
 
-                            // Append the new row to the container
                             $("#addedIdentities").append(newRowidentitydetails);
-
-                            // Show the added identities section
                             $("#addedIdentities").css("display", "flex");
                         }
 
-                        // Function to update the hidden field value with the current identities
+
                         function updateHiddenField() {
                             var currentIdentities = [];
 
-                            // Loop through each item in the addedIdentities section
+
                             $("#addedIdentities .form-group").each(function () {
                                 var identityType = $(this).find("label").text();
                                 var identityNumber = $(this).find("input").val();
@@ -1263,11 +1308,10 @@
                                     IdentityType: identityType,
                                     IdentityNumber: identityNumber,
                                     DonorID: donorid,
-                                    ReceiveHead: ReceiveHeadName
+                                    ReceiveHead: ''
                                 });
                             });
 
-                            // Update the hidden field value with the current identities
                             $("#identityDetails").val(JSON.stringify(currentIdentities));
                         }
                     });

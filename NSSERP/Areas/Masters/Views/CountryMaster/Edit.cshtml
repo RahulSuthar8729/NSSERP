@@ -22,29 +22,29 @@
                     <form asp-controller="CountryMaster" asp-action="Edit" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <!-- CountryId is a hidden field to pass the id of the country to be edited -->
-                        <input asp-for="CountryId" type="hidden" />
+                       
+                        <input name="Country_Code" value="@Model.Country_Code" type="hidden" />
 
                         <div class="form-group">
-                            <label asp-for="CountryName" class="control-label">Country Name</label>
-                            <input asp-for="CountryName" type="text" id="Countryname" name="Countryname" class="form-control" required value="@Model.CountryName" />
-                            <span asp-validation-for="CountryName" class="text-danger"></span>
+                            <label asp-for="Country_Name" class="control-label">Country Name</label>
+                            <input asp-for="Country_Name" type="text" value="@Model.Country_Name" id="Countryname" name="Country_Name" class="form-control" required />
+                            <span asp-validation-for="Country_Name" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="CountryCode" class="control-label">Country Code</label>
-                            <input asp-for="CountryCode" type="text" id="CountryCode" name="CountryCode" placeholder="e.g. +91" class="form-control" required value="@Model.CountryCode" />
-                            <span asp-validation-for="CountryCode" class="text-danger"></span>
+                            <label asp-for="Country_CallCode" class="control-label">Country Code</label>
+                            <input asp-for="Country_CallCode" value="@Model.Country_CallCode" type="text" id="CountryCode" name="Country_CallCode" placeholder="e.g. +91" class="form-control" required />
+                            <span asp-validation-for="Country_CallCode" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="IsActive" class="control-label">Is Active</label>
-                            <select asp-for="IsActive" id="IsActive" name="IsActive" class="form-control" required>
-                                <option value="Y" @(Model.IsActive.ToString() == "Y" ? "selected" : "")>Active</option>
-                                <option value="N" @(Model.IsActive.ToString() == "N" ? "selected" : "")>Inactive</option>
+                            <label asp-for="Status" class="control-label">Is Active</label>
+                            <select asp-for="Status" id="IsActive" name="Status" class="form-control" required>
+                                <option value="Y" @(Model.Status.ToString() == "Y" ? "selected" : "")>Active</option>
+                                <option value="N" @(Model.Status.ToString() == "N" ? "selected" : "")>Inactive</option>
                             </select>
                         </div>
-
+                       
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Save Changes</button>
                             <a href="/Masters/CountryMaster/Index" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>

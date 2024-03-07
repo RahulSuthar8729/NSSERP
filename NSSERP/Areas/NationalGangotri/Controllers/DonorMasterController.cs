@@ -94,7 +94,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             var requestData = new
             {
                
-
+                DonorID=model.DonorID,
                 FinYear = FinYear,
                 UserID = UserID,               
                 UserName = User.FindFirst(ClaimTypes.Name)?.Value,
@@ -184,22 +184,17 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 string requestBody = System.Text.Json.JsonSerializer.Serialize(requestData);
                 string apiUrl = string.Empty;
                 if (model.DonorID != null)
-                    apiUrl = "api/DonorMaster/InsertData";
+                    apiUrl = "api/DonorMaster/UpdateData";
                 else
                     apiUrl = "api/DonorMaster/InsertData";
 
 
                 var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-                requestContent.Headers.Add("MobileList", model.MobileList);
-                requestContent.Headers.Add("IdentityList", model.IdentityList);              
-                requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                 var response = await _apiClient.PostAsync(apiUrl, requestContent);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var modelget = await response.Content.ReadAsStringAsync();
-                    //var modeldata = modelget != null ? JsonConvert.DeserializeObject<DonorMaster>(modelget) : null;
+                    var modelget = await response.Content.ReadAsStringAsync();                  
                     TempData["msg"] = modelget;
                     return RedirectToAction("Index", "DonorDetails", new { model = modelget });
                 }
@@ -216,8 +211,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
 
             }
             catch (Exception ex)
-            {
-                // Handle other exceptions, such as database connection issues
+            {               
                 ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
 

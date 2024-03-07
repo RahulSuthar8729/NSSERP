@@ -41,7 +41,7 @@ namespace NSSERP.Areas.Masters.Controllers
     {
         pinCode.citys = new List<CityMaster> { city };
         pinCode.StateName = state?.StateName;
-        pinCode.CountryName = country?.CountryName;
+        pinCode.CountryName = country?.Country_Name;
         return pinCode;
     },
     splitOn: "CityID,StateID,CountryID", // Adjust these based on your actual column names

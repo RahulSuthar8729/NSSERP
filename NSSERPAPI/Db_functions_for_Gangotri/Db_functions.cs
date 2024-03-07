@@ -407,5 +407,18 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         #endregion
 
 
+        #region Masters
+        public IEnumerable<dynamic> GetCountryList()
+        {            
+            return _dbEngine.ExecuteStoredProcedure("GetCountryDetails");
+        }
+        public IEnumerable<dynamic> GetCountryByID(int id)
+        {
+            var parameters = new { CountryId = id};
+            return _dbEngine.ExecuteStoredProcedure("[GetCountryById]", parameters);
+        }
+        #endregion
+
+
     }
 }

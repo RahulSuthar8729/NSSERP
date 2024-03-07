@@ -899,7 +899,7 @@
                                     {
                                         @foreach (var country in Model.CountryList)
                                         {
-                                            <option value="@country.CountryId" data-countryname="@country.CountryName">@country.CountryName</option>
+                                            <option value="@country.Country_Code" data-countryname="@country.Country_Code">@country.Country_Name</option>
                                         }
                                     }
                                 </select>
@@ -1186,7 +1186,7 @@
                                     {
                                         @foreach (var country in Model.CountryList)
                                         {
-                                            <option value="@country.CountryId">@country.CountryName</option>
+                                            <option value="@country.Country_Code">@country.Country_Name</option>
                                         }
 
                                     }
@@ -1321,7 +1321,7 @@
                                             {
                                                 @foreach (var countrycode in Model.CountryList)
                                                 {
-                                                    <option value="@countrycode.CountryId">@countrycode.CountryCode</option>
+                                                    <option value="@countrycode.Country_Code">+@countrycode.Country_CallCode</option>
                                                 }
                                             }
                                         </select>
@@ -1370,8 +1370,7 @@
                                     });
 
                                     var mobileListJson = @Html.Raw(Model.MobileListJson);
-
-                                    // If MobileListJson is null, use data from the model directly
+                                   
                                     if (!mobileListJson) {
                                         // Use data from the model
                                         mobileListJson = @Html.Raw(JsonConvert.SerializeObject(Model.MobileList));
