@@ -18,27 +18,25 @@
     <form asp-action="Edit" method="post" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="StateName">State Name:</label>
-            <input type="hidden" name="StateID" value="@Model.StateID" />
-            <input type="text" class="form-control" name="StateName" value="@Model.StateName" required />
-        </div><input type="hidden" asp-for="PincodeID" />
+            <input type="hidden" name="State_Code" value="@Model.State_Code" />
+            <input type="text" class="form-control" name="State_Name" value="@Model.State_Name" required />
+        </div>
 
         <div class="form-group">
             <label for="CountryID">Country:</label>
-            <select class="form-control" name="CountryID" required>
+            <select class="form-control" name="Country_Code" required>
                 <option value="" selected disabled>Select Country</option>
-                @foreach (var country in ViewBag.Countries)
+                @if (Model != null)
                 {
-                    <option value="@country.CountryId" @(country.CountryId == Model.CountryId ? "selected" : "")>@country.CountryName</option>
+                    @foreach (var country in Model.masterDetails)
+                    {
+                        <option value="@country.Country_Code" @(country.Country_Code = Model.Country_Code) ? "selected" : "" )>@country.Country_Name</option>
+                    }
                 }
+                
             </select>
         </div>
-        <div class="form-group">
-            <label for="IsActive">Is Active:</label>
-            <select class="form-control" name="IsActive" required>
-                <option value="Y" @(Model.IsActive == 'Y' ? "selected" : "")>Active</option>
-                <option value="N" @(Model.IsActive == 'N' ? "selected" : "")>Inactive</option>
-            </select>
-        </div>
+ 
         <button type="submit" class="btn btn-primary mt-3">Update</button>
     </form>
 </div>

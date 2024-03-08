@@ -13,6 +13,9 @@ using Dapper;
 using System.Data;
 using System.Security.Claims;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Net;
+using System.Text;
 
 namespace NSSERP.Areas.Masters.Controllers
 {
@@ -20,314 +23,196 @@ namespace NSSERP.Areas.Masters.Controllers
     [Area("Masters")]
     public class DistrictMasterController : Controller
     {
-        private readonly string _connectionString;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _apiClient;
+        public DistrictMasterController(IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
 
-        public DistrictMasterController(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("ConStr");
+            _webHostEnvironment = webHostEnvironment;
+            _apiClient = clientFactory.CreateClient("WebApi");
+            _httpClientFactory = clientFactory;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var Districts = GetDistrictwithcountryandState();
-            return View(Districts);
-        }
-        public IActionResult Create()
-        {
-            var Districtmodel = new DistrictMaster
+            var response = await _apiClient.GetAsync($"api/DistrictMaster/Index?DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                Countrys = GetCountries(),
-                States = GetStates(),
-                //Citys = GetActiveCities()
-            };
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
 
-            return View(Districtmodel);
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<DistrictMaster>(json) : null;
+            if (TempData.ContainsKey("msg"))
+            {
+                string messageFromFirstController = TempData["msg"] as string;
+                detail.msg = messageFromFirstController;
+                TempData.Remove("msg");
+            }
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var response = await _apiClient.GetAsync($"api/DistrictMaster/Index?DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
+
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<DistrictMaster>(json) : null;
+
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
+
+
         }
 
         [HttpPost]
-        public IActionResult Create(DistrictMaster district)
+        public async Task<IActionResult> Create(DistrictMaster model)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
+                string apiUrl = string.Empty;
+                if (model.District_Code != null)
+                    apiUrl = "api/DistrictMaster/UpdateData";
+                else
+                    apiUrl = "api/DistrictMaster/InsertData";
+
+
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    connection.Open();
-
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@DistrictName", district.DistrictName);
-                   // parameters.Add("@CityID", district.CityID);
-                    parameters.Add("@StateID", district.StateID);
-                    parameters.Add("@CountryID", district.CountryID);
-                    parameters.Add("@IsActive", district.IsActive);
-                    parameters.Add("@CreatedBy", User.FindFirst(ClaimTypes.Name)?.Value);
-                    parameters.Add("@ResultCode", dbType: DbType.Int32, direction: ParameterDirection.Output);
-
-                    connection.Execute("InsertDistrict", parameters, commandType: CommandType.StoredProcedure);
-
-                    int resultCode = parameters.Get<int>("@ResultCode");
-
-                    var districtModel = new DistrictMaster
-                    {
-                        Countrys = GetCountries(),
-                        States = GetStates(),
-                       // Citys = GetActiveCities()
-                    };
-
-                    if (resultCode == 1)
-                    {
-                        ViewBag.msg = "District Inserted Successfully";
-                        return View(districtModel);
-                    }
-                    else if (resultCode == 0)
-                    {
-                        ViewBag.emsg = "Error While Insert";
-                        return View(districtModel);
-                    }
-                    else if (resultCode == -1)
-                    {
-                        ViewBag.emsg = "District already exists";
-                        return View(districtModel);
-                    }
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "DistrictMaster", new { model = modelget });
                 }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
             }
             catch (Exception ex)
             {
-                // Handle errors, log, or show a user-friendly message
-                ViewBag.ErrorMessage = ex.Message;
-                var districtModel = new DistrictMaster
-                {
-                    Countrys = GetCountries(),
-                    States = GetStates(),
-                    //Citys = GetActiveCities()
-                };
-
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
+
             return View();
         }
 
-        public IActionResult Edit(int id)
+
+        public async Task<IActionResult> Edit(string id)
         {
+            var response = await _apiClient.GetAsync($"api/DistrictMaster/GetDistrictById?id={id}&DataFlag={User.FindFirst("DataFlag")?.Value}");
 
-            var districtMaster = GetDistrictById(id);
-
-            if (districtMaster == null)
+            if (!response.IsSuccessStatusCode)
             {
-                return NotFound(); // or handle accordingly
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
+
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
             }
 
-            var editModel = new DistrictMaster
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<DistrictMaster>(json) : null;
+
+            if (detail == null)
             {
-                DistrictID = districtMaster.DistrictID,
-                DistrictName = districtMaster.DistrictName,
-                CountryID = districtMaster.CountryID,
-                StateID = districtMaster.StateID,
-                CityID = districtMaster.CityID,
-                IsActive = districtMaster.IsActive
-            };
-            editModel.Countrys = GetCountries();
-            editModel.States = GetStates();
-            editModel.Citys = GetActiveCities();
-            return View(editModel);
+                return NotFound();
+            }
+
+            return View(detail);
 
         }
 
         [HttpPost]
-        public IActionResult Edit(DistrictMaster model)
+        public async Task<IActionResult> Edit(DistrictMaster model)
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
+                string apiUrl = string.Empty;
+                if (model.District_Code != null)
+                    apiUrl = "api/DistrictMaster/UpdateData";
+                else
+                    apiUrl = "api/DistrictMaster/InsertData";
+
+
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    connection.Open();
-
-                    // Add an output parameter to indicate success or failure
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@DistrictID", model.DistrictID);
-                    parameters.Add("@DistrictName", model.DistrictName);
-                    parameters.Add("@CountryID", model.CountryID);
-                    parameters.Add("@StateID", model.StateID);
-                  //  parameters.Add("@CityID", model.CityID);  // Add CityID parameter
-                    parameters.Add("@IsActive", model.IsActive);
-                    parameters.Add("@@CreatedBy", User.FindFirst(ClaimTypes.Name)?.Value);
-                    parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
-
-                    // Execute stored procedure to update district using Dapper
-                    connection.Execute("UpdateDistrict", parameters, commandType: CommandType.StoredProcedure);
-
-                    int result = parameters.Get<int>("@Result");
-
-                    if (result == 1)
-                    {
-                        var updatedDistrict = GetDistrictById(model.DistrictID);
-                        updatedDistrict.Countrys = GetCountries();
-                        updatedDistrict.States = GetStates();
-                       // updatedDistrict.Citys = GetActiveCities();  // Add a method to get cities
-
-                        ViewBag.msg = "District updated successfully.";
-                        return View(updatedDistrict); // Return the view with the updated data
-                    }
-                    else if (result == -1)
-                    {
-                        // Another district with the same name, country, state, and city already exists
-                        ViewBag.emsg = "Another district with the same name, country, state, and city already exists.";
-                    }
-                    else
-                    {
-                        // Other failure, handle accordingly
-                        ViewBag.emsg = "Failed to update the district.";
-                    }
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "DistrictMaster", new { model = modelget });
                 }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
             }
             catch (Exception ex)
             {
-                // Handle errors, log, or show a user-friendly message
-                ViewBag.ErrorMessage = ex.Message;
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
 
-            // If ModelState is not valid or an error occurred, reload the view with the model
-            model.Countrys = GetCountries();
-            model.States = GetStates();
-           // model.Citys = GetActiveCities();
 
             return View(model);
-        }
-
-        // In your Controller
-
-        [HttpGet]
-        public IActionResult DeleteDistrict(int id)
-        {
-            bool isDeleted = DeleteDistrictbyid(id);
-
-            // Set TempData based on the result of the Delete operation
-            if (isDeleted)
-            {
-                ViewBag.msg = "District deleted successfully.";
-            }
-            else
-            {
-                ViewBag.emsg = "Failed to delete the district.";
-            }
-            return RedirectToAction("Index");
-        }
-
-        private bool DeleteDistrictbyid(int id)
-        {
-            bool msg;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("DeleteDistrictProcedure", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@DistrictID", id);
-
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        if (rowsAffected >= 0)
-                        {
-                            ViewBag.SuccessMessage = "Deleted Successfully";
-                            msg = true;
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Error While Deleting";
-                            msg = false;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions, log, or show a user-friendly message
-                ViewBag.ErrorMessage = "An error occurred: " + ex.Message;
-                msg = false;
-            }
-
-            return msg;
-        }
-
-        [HttpGet]
-        public IActionResult GetStatesByCountryJson(int countryId)
-        {
-            var states = GetStatesByCountry(countryId);
-            return Json(states);
-        }
-        private IEnumerable<StateMaster> GetStatesByCountry(int countryId)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Use Dapper to call the stored procedure
-                return connection.Query<StateMaster>("GetStatesByCountry", new { CountryID = countryId }, commandType: CommandType.StoredProcedure);
-            }
-        }
-
-        public IActionResult GetCityInJSon(int stateId)
-        {
-            var cities = GetCitiesbyStateID(stateId);
-            return Json(cities);
-        }
-        private IEnumerable<CityMaster> GetCitiesbyStateID(int stateId)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return connection.Query<CityMaster>("GetCitiesByState", new { StateID = stateId }, commandType: CommandType.StoredProcedure);
-            }
-        }
-
-        private IEnumerable<DistrictMaster> GetDistrictwithcountryandState()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return connection.Query<DistrictMaster>("GetDistrictsWithCountryAndState", commandType: CommandType.StoredProcedure);
-            }
-        }
-
-        private DistrictMaster GetDistrictById(int districtId)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Adjust your SQL query to retrieve district by ID
-                return connection.QueryFirstOrDefault<DistrictMaster>("SELECT * FROM DistrictMaster WHERE DistrictID = @DistrictID", new { DistrictID = districtId });
-            }
-        }
-        private List<Countrys> GetCountries()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Execute stored procedure to get countries
-                return connection.Query<Countrys>("GetCountries", commandType: CommandType.StoredProcedure).AsList();
-            }
-        }
-        private List<StateMaster> GetStates()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Execute stored procedure to get states
-                return connection.Query<StateMaster>("GetStates", commandType: CommandType.StoredProcedure).AsList();
-            }
-        }
-        private List<CityMaster> GetActiveCities()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                // Execute stored procedure to get active cities
-                return connection.Query<CityMaster>("GetActiveCities", commandType: CommandType.StoredProcedure).AsList();
-            }
         }
 
     }

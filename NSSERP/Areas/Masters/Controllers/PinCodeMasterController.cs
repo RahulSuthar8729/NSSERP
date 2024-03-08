@@ -40,7 +40,7 @@ namespace NSSERP.Areas.Masters.Controllers
     (pinCode, city, state, country) =>
     {
         pinCode.citys = new List<CityMaster> { city };
-        pinCode.StateName = state?.StateName;
+        pinCode.StateName = state?.State_Name;
         pinCode.CountryName = country?.Country_Name;
         return pinCode;
     },

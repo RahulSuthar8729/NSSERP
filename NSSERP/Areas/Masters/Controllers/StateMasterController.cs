@@ -1,12 +1,15 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NSSERP.Areas.Masters.Models;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.Metrics;
+using System.Net;
 using System.Security.Claims;
+using System.Text;
 
 namespace NSSERP.Areas.Masters.Controllers
 {
@@ -15,264 +18,199 @@ namespace NSSERP.Areas.Masters.Controllers
     public class StateMasterController : Controller
     {
 
-        private readonly string _connectionString;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _apiClient;
+        public StateMasterController(IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
 
-        public StateMasterController(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("ConStr");
+            _webHostEnvironment = webHostEnvironment;
+            _apiClient = clientFactory.CreateClient("WebApi");
+            _httpClientFactory = clientFactory;
         }
 
-        public IActionResult Index()
-
+        public async Task<IActionResult> Index()
         {
-            if (TempData.ContainsKey("SuccessMessage"))
-            {
-                ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            }
-            else if (TempData.ContainsKey("ErrorMessage"))
-            {
-                ViewBag.ErrorMessage = TempData["ErrorMessage"];
-            }
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();               
-                var states = connection.Query<StateMaster, Countrys, StateMaster>(
-                    "GetStatesWithCountries",
-                    (state, country) =>
-                    {
-                        state.CountryMaster = country;
-                        return state;
-                    },
-                    splitOn: "CountryId",
-                    commandType: CommandType.StoredProcedure
-                );
+            var response = await _apiClient.GetAsync($"api/StateMaster/Index?DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
 
-                return View(states);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
+
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
             }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<StateMaster>(json) : null;
+            if (TempData.ContainsKey("msg"))
+            {
+                string messageFromFirstController = TempData["msg"] as string;
+                detail.msg = messageFromFirstController;
+                TempData.Remove("msg");
+            }
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var response = await _apiClient.GetAsync($"api/CountryMaster/Index");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
+
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<StateMaster>(json) : null;
+
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
+
 
         }
-        public IActionResult Create()
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(StateMaster model)
         {
-            ViewBag.Countries = GetCountries();
+            try
+            {
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
+                string apiUrl = string.Empty;
+                if (model.State_Code != null)
+                    apiUrl = "api/StateMaster/UpdateData";
+                else
+                    apiUrl = "api/StateMaster/InsertData";
+
+
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "StateMaster", new { model = modelget });
+                }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
+            }
+
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Create(StateMaster state)
+
+        public async Task<IActionResult> Edit(string CountryId)
         {
-            bool isSuccess = InsertState(state);
+            var response = await _apiClient.GetAsync($"api/StateMaster/GetStateById?id={CountryId}&DataFlag={User.FindFirst("DataFlag")?.Value}");
 
-            if (isSuccess)
+            if (!response.IsSuccessStatusCode)
             {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Response.WriteAsJsonAsync(response);
 
-            }
-            else
-            {
-                // Handle the case where insertion was not successful
-                ModelState.AddModelError(string.Empty, "Failed to insert the state.");
-            }
-
-            ViewBag.Countries = GetCountries();
-
-            return View(state);
-        }
-
-        public IActionResult Edit(int id)
-        {
-            // Fetch the state by ID
-            var state = GetStateById(id);
-
-            if (state == null)
-            {
-                return NotFound(); // or handle accordingly
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
             }
 
-            ViewBag.Countries = GetCountries();
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = json != null ? JsonConvert.DeserializeObject<StateMaster>(json) : null;
 
-            // Render the edit view with the pre-filled data
-            return View("Edit", state);
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail);
+
         }
 
         [HttpPost]
-        public IActionResult Edit(StateMaster state)
-        {
-            bool isSuccess = UpdateState(state);
-
-            if (isSuccess)
-            {
-
-
-            }
-            else
-            {
-
-            }
-
-
-            ViewBag.Countries = GetCountries();
-            return View(state);
-        }
-
-        [HttpGet]
-        public IActionResult Delete(int id)
-        {
-            bool isDeleted = DeleteState(id);
-
-            // Set TempData based on the result of the Delete operation
-            if (isDeleted)
-            {
-                TempData["SuccessMessage"] = "State deleted successfully.";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Failed to delete the state.";
-            }
-            return RedirectToAction("Index");
-        }
-
-        public List<Countrys> GetCountries()
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var countries = connection.Query<Countrys>("GetCountries", commandType: CommandType.StoredProcedure);
-                return countries.ToList();
-            }
-        }
-
-
-        private StateMaster GetStateById(int id)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM StateMaster WHERE StateID = @id", connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new StateMaster
-                            {
-                                StateID = Convert.ToInt32(reader["StateID"]),
-                                StateName = reader["StateName"].ToString(),
-                                IsActive = Convert.ToChar(reader["IsActive"]),
-                                CreatedBy = reader["CreatedBy"].ToString(),
-                                CountryId = reader["CountryID"] is DBNull ? null : (int?)reader["CountryID"]
-                            };
-                        }
-                        return null;
-                    }
-                }
-            }
-        }
-
-        private bool InsertState(StateMaster state)
+        public async Task<IActionResult> Edit(StateMaster model)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
+                string apiUrl = string.Empty;
+                if (model.Country_Code != null)
+                    apiUrl = "api/StateMaster/UpdateData";
+                else
+                    apiUrl = "api/StateMaster/InsertData";
+
+
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await _apiClient.PostAsync(apiUrl, requestContent);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    connection.Open();
-
-                    var parameters = new
-                    {
-                        StateName = state.StateName,
-                        IsActive = state.IsActive,
-                        CreatedBy = User.FindFirst(ClaimTypes.Name)?.Value,
-                        CountryID = state.CountryId,
-                        StateID = 0 // Initialize the output parameter
-                    };
-
-                    // Add the output parameter to the Dapper DynamicParameters
-                    var dynamicParameters = new DynamicParameters(parameters);
-                    dynamicParameters.Add("StateID", dbType: DbType.Int32, direction: ParameterDirection.Output);
-
-                    connection.Execute("InsertState", dynamicParameters, commandType: CommandType.StoredProcedure);
-
-                    int insertedStateID = dynamicParameters.Get<int>("StateID");
-                    if (insertedStateID > 0)
-                    {
-                        ViewBag.SuccessMessage = "Successfully Inserted";
-                    }
-                    else if (insertedStateID == -1)
-                    {
-                        ViewBag.ErrorMessage = "State Already Exists";
-                    }
-                    return insertedStateID > 0; // If insertedStateID > 0, the insertion was successful
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "StateMaster", new { model = modelget });
                 }
+
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
-                return false;
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
             }
+
+
+            return View(model);
         }
 
-
-        private bool UpdateState(StateMaster state)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    var parameters = new
-                    {
-                        StateID = state.StateID,
-                        StateName = state.StateName,
-                        IsActive = state.IsActive,
-                        CreatedBy = User.FindFirst(ClaimTypes.Name)?.Value,
-                        CountryID = state.CountryId ?? (object)DBNull.Value
-                    };
-
-                    var affectedRows = connection.Execute("UpdateStateProcedure", parameters, commandType: CommandType.StoredProcedure);
-                    if (affectedRows > 0)
-                    {
-                        ViewBag.SuccessMessage = "State Update Successfully";
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "Error While Updating";
-                    }
-                    return affectedRows > 0; // If affectedRows > 0, the update was successful
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception
-                return false;
-            }
-        }
-
-
-        private bool DeleteState(int id)
-        {
-            bool msg;
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("DELETE FROM StateMaster WHERE StateID = @id", connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-
-                    int a = command.ExecuteNonQuery();
-                    if (a > 0)
-                    {
-                        ViewBag.SuccessMessage = "Deleted Successfully";
-                        msg = true;
-
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "Error While Deleting";
-                        msg = false;
-                    }
-                }
-            }
-            return msg;
-        }
     }
 }

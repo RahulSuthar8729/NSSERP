@@ -44,7 +44,7 @@
                         <option value="">Select State</option>
                         @foreach (var state in Model.States)
                         {
-                            <option value="@state.StateID" @(Model.StateID == state.StateID ? "selected" : "")>@state.StateName</option>
+                            <option value="@state.State_Code" @(Model.StateID == state.State_Code ? "selected" : "")>@state.State_Name</option>
                         }
                     </select>
                     <span asp-validation-for="StateID" class="text-danger"></span>
@@ -82,7 +82,7 @@
                         <option value="" selected disabled>Select District</option>
                         @foreach (var state in Model.Districts)
                         {
-                            <option value="@state.DistrictID" @(Model.DistrictID == state.StateID ? "selected" : "")>@state.DistrictName</option>
+                            <option value="@state.District_Code" @(Model.DistrictID == state.District_Code ? "selected" : "")>@state.District_Name</option>
                         }
                     </select>
                 </div>

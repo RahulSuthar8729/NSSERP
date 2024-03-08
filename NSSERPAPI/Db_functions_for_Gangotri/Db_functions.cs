@@ -56,7 +56,6 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         {
             return _dbEngine.ExecuteStoredProcedure("GetStates");
         }
-
         public IEnumerable<dynamic> GetStatesByCountry(int countryId)
         {
             var parameters = new { CountryID = countryId, DataFlag = "" };
@@ -407,7 +406,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         #endregion
 
 
-        #region Masters
+        #region Country Master
         public IEnumerable<dynamic> GetCountryList()
         {            
             return _dbEngine.ExecuteStoredProcedure("GetCountryDetails");
@@ -417,6 +416,34 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             var parameters = new { CountryId = id};
             return _dbEngine.ExecuteStoredProcedure("[GetCountryById]", parameters);
         }
+        #endregion
+
+
+        #region StateMaster
+        public IEnumerable<dynamic> GetStateDetailList(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("GetStateDetails", new {DataFlag=DataFlag });
+        }
+
+        public IEnumerable<dynamic> GetStateById(int id,string DataFlag)
+        {
+            var parameters = new { StateId = id ,DataFlag=DataFlag};
+            return _dbEngine.ExecuteStoredProcedure("[GetStateById]", parameters);
+        }
+        #endregion
+
+
+        #region District Master
+        public IEnumerable<dynamic> GetDistrictDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetDistrictDetails]", new { DataFlag = DataFlag });
+        }
+        public IEnumerable<dynamic> GetDistrictById(int id, string DataFlag)
+        {
+            var parameters = new { DistrictId = id, DataFlag = DataFlag };
+            return _dbEngine.ExecuteStoredProcedure("[GetDistrictById]", parameters);
+        }
+
         #endregion
 
 

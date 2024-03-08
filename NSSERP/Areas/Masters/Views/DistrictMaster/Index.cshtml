@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NSSERP.Areas.Masters.Models.DistrictMaster>
+﻿@model NSSERP.Areas.Masters.Models.DistrictMaster
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,11 +14,12 @@
 
     <script>
         $(document).ready(function () {
-            $('#stateTable').DataTable();
+            $('#indextable').DataTable();
         });
     </script>
 }
 <div class="card">
+
     <div class="card-header">
         <div class="row">
             <div class="col text-left">
@@ -40,59 +41,49 @@
     </div>
 
     <div class="card-body">
-        <table id="stateTable" class="table table-hover table-bordered">
+        @if (Model.msg != null)
+        {
+            ViewBag.msg = Model.msg;
+        }
+        <table id="indextable" class="table table-hover table-bordered">
             <thead class="thead-dark">
                 <tr>
                     <th>District</th>
                     <th>State</th>
-                    <th>Country</th>
-                    <th>Is Active</th>
+                    <th>Country</th>                    
                     <th>Action</th>
                 </tr>
             </thead>
-            <!-- ... (your existing HTML code) ... -->
-
+           
             <tbody>
-                @foreach (var district in Model)
+                @if (Model != null)
                 {
-                    <tr>
-                        <td>@district.DistrictName</td>
-                        <td>@district.StateName</td>
-                        <td>
-                            @if (district.CountryName != null)
-                            {
-                                @district.CountryName
-                            }
-                            else
-                            {
-                                <span class="text-muted">N/A</span>
-                            }
-                        </td>
-                        <td>
-                            @if (district.IsActive == 'Y')
-                            {
-                                <span class="text-success">Active</span>
-                            }
-                            else if (district.IsActive == 'N')
-                            {
-                                <span class="text-danger">Inactive</span>
-                            }
-                            else
-                            {
-                                <span class="text-muted">N/A</span>
-                            }
-                        </td>
-                        <td>
-                            <a href="/Masters/DistrictMaster/Edit/@district.DistrictID" title="Edit"><i class="fas fa-edit btn btn-primary"></i></a> |
-                            <a href="/Masters/DistrictMaster/DeleteDistrict?id=@district.DistrictID" title="Delete" >
-                                <i class="fas fa-trash-alt btn btn-danger"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
+                    @foreach (var district in Model.masterDetails)
+                    {
+                        <tr>
+                            <td>@district.District_Name</td>
+                            <td>@district.State_Name</td>
+                            <td>
+                                @if (district.Country_Name != null)
+                                {
+                                    @district.Country_Name
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
 
-          
+                            <td>
+                                <a href="/Masters/DistrictMaster/Edit/@district.District_Code" title="Edit"><i class="fas fa-edit btn btn-primary"></i></a> |
+                                <a href="/Masters/DistrictMaster/DeleteDistrict?id=@district.District_Code" title="Delete">
+                                    <i class="fas fa-trash-alt btn btn-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>         
 
         </table>
        

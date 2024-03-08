@@ -23,13 +23,13 @@
             <form asp-action="Create" method="post" class="mt-3">
                 <div class="form-group">
                     <label for="DistrictName">District Name:</label>
-                    <input type="text" class="form-control" name="DistrictName" required />
+                    <input type="text" class="form-control" value="@Model.District_Name" name="District_Name" required />
                 </div>
                 <div class="form-group">
                     <label for="CountryID">Country:</label>
-                    <select class="form-control"  required id="CountryID" name="CountryID">
-                        <option value="@Model.CountryID" selected disabled>Select Country</option>
-                        @foreach (var country in Model.Countrys)
+                    <select class="form-control" required id="Country_Code" name="Country_Code">
+                        <option value="@Model.Country_Code" selected disabled>Select Country</option>
+                        @foreach (var country in Model.CountryList)
                         {
                             <option value="@country.Country_Code">@country.Country_Name</option>
                         }
@@ -37,31 +37,15 @@
                 </div>
                 <div class="form-group">
                     <label  for="StateID">State:</label>
-                    <select id="StateID" class="form-control" required name="StateID">
-                        <option value="@Model.StateID" selected disabled>Select State</option>
-                        @foreach (var state in Model.States)
+                    <select id="State_Code" class="form-control" required name="State_Code">
+                        <option value="@Model.State_Code" selected disabled>Select State</option>
+                        @foreach (var state in Model.StateList)
                         {
-                            <option value="@state.StateID">@state.StateName</option>
+                            <option value="@state.State_Code">@state.State_Name</option>
                         }
                     </select>
-                </div>
-               @*  <div class="form-group">
-                    <label for="CityID">City:</label>
-                    <select id="CityID" class="form-control" required name="CityID">
-                        <option value="" selected disabled>Select City</option>
-                        @foreach (var city in Model.Citys)
-                        {
-                            <option value="@city.CityID">@city.CityName</option>
-                        }
-                    </select>
-                </div> *@
-                <div class="form-group">
-                    <label for="IsActive">Is Active:</label>
-                    <select class="form-control" name="IsActive">
-                        <option value="Y">Active</option>
-                        <option value="N">Inactive</option>
-                    </select>
-                </div>
+                </div>          
+              
                 <button type="submit" class="btn btn-primary">Create</button>
             </form>
         </div>
@@ -80,8 +64,7 @@
 
                     $('#StateID').empty();
                     $('#StateID').append('<option value="">Select State</option>');
-
-                    // Use camelCase when accessing properties
+                    
                     $.each(data, function (index, state) {
                         $('#StateID').append('<option value="' + state.stateID + '">' + state.stateName + '</option>');
                     });

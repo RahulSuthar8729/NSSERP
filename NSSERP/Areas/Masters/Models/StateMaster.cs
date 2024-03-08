@@ -5,17 +5,18 @@ namespace NSSERP.Areas.Masters.Models
 {
     public class StateMaster
     {
-        [Key]
-        public int StateID { get; set; }
-
-        
-        public string StateName { get; set; }
-        public char IsActive { get; set; }
-        public string CreatedBy { get; set; }
-
+        public string? msg { get; set; }
+        public IEnumerable<StateMaster> masterDetails { get; set; }  
+        public string? Short_Name { get; set; }
        
-        public int? CountryId { get; set; }
+        public int? State_Code { get; set; }
 
-        public Countrys CountryMaster { get; set; }
+        public string? State_Name { get; set; }
+
+        public int? Country_Code { get; set; }
+        public string? Country_Name { get; set; }
+
+        public string? Data_FLag { get; set; } = "GANGOTRI";
+
     }
 }

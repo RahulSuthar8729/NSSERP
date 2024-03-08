@@ -306,11 +306,11 @@
                                     <option value="">Select State</option>
                                     @foreach (var state in Model.statelist)
                                     {
-                                        <option value="@state.StateID">@state.StateName</option>
+                                        <option value="@state.State_Code">@state.State_Name</option>
                                     }
                                 </select>
                                 <input type="hidden" id="hdnStateName" name="StateName" asp-for="StateName" />
-                                <!-- Include a hidden field for StateID -->
+                             
                                 <input type="hidden" id="hdnStateID" name="StateID" asp-for="StateID" />
                             </div>
                         </div>
