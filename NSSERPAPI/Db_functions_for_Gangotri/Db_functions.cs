@@ -388,13 +388,14 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
         #region DonorMaster
         public IEnumerable<dynamic> GetDonorTypes()
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
+        {           
+            return _dbEngine.ExecuteStoredProcedure("GetDonorTypes");          
+            
+        }
 
-                return connection.Query<dynamic>("GetDonorTypes", commandType: CommandType.StoredProcedure);
-            }
+        public IEnumerable<dynamic> GetDonorBussinussType(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("GetDonorBusinessDetails", new { DataFlag=DataFlag});
         }
 
         public IEnumerable<dynamic>GetDonorDataByID(int DonorID, string DataFlag)
@@ -446,6 +447,48 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
         #endregion
 
+        #region City Master
+        public IEnumerable<dynamic> GetCityDetsils(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetCityDetails]", new { DataFlag=DataFlag});
+        }
+        public IEnumerable<dynamic> GetCityById(int id, string DataFlag)
+        {
+            var parameters = new { CityId = id, DataFlag = DataFlag };
+            return _dbEngine.ExecuteStoredProcedure("[GetCityById]", parameters);
+        }
 
+        #endregion
+
+
+
+        #region Purpose Master
+        public IEnumerable<dynamic> GetPurposeDetails (string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPurposeDetails]", new { DataFlag = DataFlag });
+        }    
+        public IEnumerable<dynamic> GetPurposeById(int id,string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPurposeById]", new { PurposeId=id, DataFlag = DataFlag });
+        }
+
+        #endregion
+
+        #region Purpose Yojana Master
+
+        public IEnumerable<dynamic> GetPurposeYojanaDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPurposeYojnaDetails]", new { DataFlag = DataFlag });
+        }
+        public IEnumerable<dynamic> GetPurposeYojanaById(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPurposeYojnaById]", new { YojnaId = id, DataFlag = DataFlag });
+        }  
+        public IEnumerable<dynamic> GetCurrencyDetails()
+        {
+            return _dbEngine.ExecuteStoredProcedure("GetCurrencyDetails");
+        }
+
+        #endregion
     }
 }

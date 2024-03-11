@@ -72,7 +72,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             {
                 return NotFound();
             }
-
+            detail.dateOfEntry = DateTime.Today;
             return View(detail);
 
         }

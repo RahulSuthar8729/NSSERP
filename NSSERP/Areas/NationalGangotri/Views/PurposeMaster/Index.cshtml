@@ -1,4 +1,4 @@
-﻿@model NSSERP.Areas.NationalGangotri.Models.DonorMaster
+﻿@using NSSERP.Areas.Masters.Models
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -27,21 +27,8 @@
 
         <script>
             $(document).ready(function () {
-                $('#CityID').select2();
-
-                $('#StateID').select2();
-                $('#tableDetails').DataTable({
-                    "order": [[3, "desc"]],
-                    "paging": true, // Enable pagination
-                    "lengthMenu": [10, 25, 50, 75, 100], // Set custom page lengths
-                    "searching": true, // Enable searching
-                    "info": true, // Enable table information display
-                    "responsive": true, // Enable responsive design
-                    "columnDefs": [
-                        { "targets": [0, 1], "orderable": false } // Disable sorting for the first column (icons)
-                    ]
-
-                });
+          
+                $('#tableDetails').DataTable();
 
             });
 
@@ -135,7 +122,7 @@
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 mb-3 mb-md-0">
                     <h5 class="mb-0">
-                        <span style="color:#1cb8a1">DONOR</span>
+                        <span style="color:#1cb8a1">PURPOSE</span>
                         <span style="color:#28166f">DETAILS</span>
                     </h5>
                 </div>
@@ -145,80 +132,64 @@
                     </h5>
                 </div>
                 <div class="col-12 col-md-3 text-md-right">
-                    <a href="/Nationalgangotri/DonorMaster/Home" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a>
+                    <a href="/Nationalgangotri/PurposeMaster/Home" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a>
                     <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning ml-2"><i class="fas fa-arrow-left"></i> Back</a>
                 </div>
             </div>
         </div>
-   
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-12">
-            <div class="table-container">
-                <table id="tableDetails" class="table table-hover table-bordered">
+        <br />
+        <div class="row">
+           
+            <div class="col-12">
+                <div class="table-container">
+                    <table id="tableDetails" class="table table-hover table-bordered">
 
-                    <thead class="thead-dark">
-                        <tr>
-                            <th></th>
-                            <th></th>                        
-                            <th>NGCODE</th>
-                            <th>DONOR CATEGORY BY</th>
-                            <th>GROUP NGCODE</th>
-                            <th>ONLINE CUSTID</th>
-                            <th>DATE OF ENTRY</th>
-                            <th>DONNER NAME</th>
-                            <th>ADDRESS</th>
-                            <th>BUSSINESS OR JOB TYPE</th>
-                            <th>PROFESSION</th>
-                            <th>TOATL DONATION</th>                                    
-                        </tr>
-                    </thead>
+                        <thead class="thead-dark">
+                            <tr>
 
-                    <tbody>
-                        @if (Model != null)
-                        {
-                            foreach (var item in Model.masterDetails)
+                                <th></th>
+                                <th></th>
+                                <th>PURPOSE ID</th>
+                                <th>PURPOSE NAME</th>
+                                <th>WEBSITE FRONT END ORDER</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model != null)
                             {
-                                <tr>
-                                    <td>
-                                        <a href="@Url.Action("Home", "DonorMaster", new { id = item.DonorID,view=true })" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("Home", "DonorMaster", new { id = item.DonorID,edit=true})" title="Edit Donor Details">
-                                            <i style="color: orange;" class="fas fa-edit"></i>
-                                        </a>
-                                    </td>                              
+                                foreach (var item in Model.masterDetails)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="@Url.Action("Home", "PurposeMaster", new { id = item.Purpose_id,view=true })" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Home", "PurposeMaster", new { id = item.Purpose_id,edit=true})" title="Edit">
+                                                <i style="color: orange;" class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
 
-                                    <td>@item.DonorID</td>
-                                    <td>@item.DonorCat</td>
-                                    <td>@item.GroupNGCode</td>
-                                    <td>@item.onlineCustId</td>
-                                    <td>@item.dateOfEntry.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
-                                    <td>@item.FirstName @item.MiddleName @item.LastName</td>
-                                    <td>@item.CityName, @item.DistrictName, @item.StateName, @item.CountryName</td>
-                                    <td>@item.BussinessOrJobType</td>
-                                    <td>@item.Profession</td>
-                                    <td>@item.ToatlDonation</td>                              
-                                  
-                                </tr>
+                                        <td>@item.Purpose_id</td>
+                                        <td>@item.Purpose</td>
+                                        <td>@item.From_end_Order</td>
+
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
 
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
 
 </body>
 </html>
-
-
 

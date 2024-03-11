@@ -18,7 +18,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? upiId { get; set; }
         public string? mailingNo { get; set; }
         public string? referenceNo { get; set; }
-        public DateTime? dateOfEntry { get; set; }
+        public DateTime? dateOfEntry { get; set; } = DateTime.Today;
         public string? DonorCat { get; set; }
         public bool? IsAppShreekaPurnVivranReceived { get; }
 
@@ -33,12 +33,13 @@ namespace NSSERP.Areas.NationalGangotri.Models
         public string? Company { get; set; } = "";
         public string? YourCompany { get; set; } = "";
         public string? BussinessOrJobType { get; set; } = "";
-        public IEnumerable<BussinessType> bussinessTypesList { get; set; }
+        public IEnumerable<BussinessType> bussinessTypesList { get; set; } 
         public class BussinessType()
         {
             public int b_id { get; set; }         
             public string b_type { get; set;}
         }
+      
         public string? Profession { get; set; } = "";
         public string? WorkingIn { get; set; } = "";
         public string? Designation { get; set; } = "";

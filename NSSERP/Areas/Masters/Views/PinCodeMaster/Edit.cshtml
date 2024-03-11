@@ -31,7 +31,7 @@
                         <option value="">Select City</option>
                         @foreach (var city in Model.citys)
                         {
-                            <option value="@city.CityID" @(city.CityID == Model.CityID ? "selected" : "")>@city.CityName</option>
+                            <option value="@city.City_Code" @(city.City_Code == Model.CityID ? "selected" : "")>@city.City_Name</option>
                            
                         }
                     </select>

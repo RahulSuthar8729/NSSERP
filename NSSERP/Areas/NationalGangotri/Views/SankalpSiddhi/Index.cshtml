@@ -287,7 +287,7 @@
                                     <option value="">Select City</option>
                                     @foreach (var city in Model.CityMasterList)
                                     {
-                                        <option value="@city.CityID">@city.CityName</option>
+                                        <option value="@city.City_Code">@city.City_Name</option>
                                     }
                                 </select>
                                 <input type="hidden" id="hdnCityName" name="CityName" asp-for="CityName" />

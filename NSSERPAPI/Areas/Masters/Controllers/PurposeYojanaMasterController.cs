@@ -1,106 +1,57 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NSSERPAPI.Areas.Masters.Models;
 using NSSERPAPI.Db_functions_for_Gangotri;
+using System.Data;
 using System.Data.SqlClient;
 using System.Dynamic;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.JavaScript;
-using Newtonsoft.Json.Linq;
-using System.Data;
-using NSSERPAPI.Models.NationalGangotri;
-using System.Globalization;
-using System.Security.Claims;
-using System.Reflection;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-
-namespace NSSERPAPI.Controllers.NationalGangotri
+namespace NSSERPAPI.Areas.Masters.Controllers
 {
     [ApiController]
+    [Area("Masters")]
     [Route("api/[controller]/[action]")]
-    public class DonorMasterController : Controller
+    public class PurposeYojanaMasterController : Controller
     {
         private readonly Db_functions _dbFunctions;
         private readonly string _connectionString;
-        public DonorMasterController(Db_functions dbFunctions, IConfiguration configuration)
+        public PurposeYojanaMasterController(Db_functions dbFunctions, IConfiguration configuration)
         {
             _dbFunctions = dbFunctions ?? throw new ArgumentNullException(nameof(dbFunctions));
             _connectionString = configuration.GetConnectionString("ConStr");
         }
+        [HttpGet]
+        public IActionResult Index(string DataFlag)
+        {
+            var result = _dbFunctions.GetPurposeYojanaDetails(DataFlag);
+            dynamic firstDetail;
+            firstDetail = new ExpandoObject();
+            firstDetail.masterDetails = result;
+            return Ok(firstDetail);
+        }
 
         [HttpGet]
-        public IActionResult Home(string DonorID, string DataFlag)
+        public IActionResult Home(string id, string DataFlag)
         {
-            int ngcode=Convert.ToInt32(DonorID);
-            var details = _dbFunctions.GetDonorDataByID(ngcode, DataFlag);
+            var result = _dbFunctions.GetPurposeYojanaById(Convert.ToInt32(id), DataFlag);
             dynamic firstDetail;
 
-            if (details != null && details.Any())
+            if (result != null && result.Any())
             {
-                firstDetail = details.First();
+                firstDetail = result.First();
             }
             else
             {
                 firstDetail = new ExpandoObject();
-            }           
-            firstDetail.CountryList = _dbFunctions.GetCountries();
-            firstDetail.CityList = _dbFunctions.GetCity();
-            firstDetail.DonorTypes = _dbFunctions.GetDonorTypes();
-            firstDetail.bussinessTypesList = _dbFunctions.GetDonorBussinussType(DataFlag);
-            firstDetail.MobileListJson = _dbFunctions.GetMobileListJsonByDonorID(ngcode);
-            firstDetail.IdentityListJson = _dbFunctions.GetIdentityListJsonByDonorID(ngcode);
+            }
+            firstDetail.HeadList = _dbFunctions.getHeads();
+            firstDetail.CurrencyList = _dbFunctions.GetCurrencyDetails();
 
             return Ok(firstDetail);
-
-           
-        }      
-
-        [HttpPost]
-        public IActionResult InsertData([FromBody] DonorMaster model)
-        {           
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    try
-                    {
-                        connection.Open();
-
-                        var parameters = new DynamicParameters();
-                        parameters.Add("@DonorPersonalInfo", JsonConvert.SerializeObject(model));
-                        parameters.Add("@MobileList", model.MobileList);
-                        parameters.Add("@IdentityList", model.IdentityList);
-
-                        parameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
-
-                        connection.Execute("InsertDonorMaster", parameters, commandType: CommandType.StoredProcedure);
-
-                        var result = parameters.Get<string>("@returnResult");
-
-                        string msg = result;
-                        return Ok(msg);
-                    }
-                    catch (Exception ex)
-                    {
-                       
-                        return View();
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {  
-                return Ok(ex.Message);              
-            }
-         
-           
-           
         }
-
         [HttpPost]
-        public IActionResult UpdateData([FromBody] DonorMaster model)
+        public IActionResult InsertData([FromBody] CombinedPurposeYojanaandCurrencyMaster model)
         {
 
             try
@@ -112,15 +63,12 @@ namespace NSSERPAPI.Controllers.NationalGangotri
                         connection.Open();
 
                         var parameters = new DynamicParameters();
-                        parameters.Add("@DonorPersonalInfo", JsonConvert.SerializeObject(model));
-                        parameters.Add("@MobileList", model.MobileList);
-                        parameters.Add("@IdentityList", model.IdentityList);
-                        parameters.Add("@ngcode", model.DonorID);
-                        parameters.Add("@DataFlag", model.DataFlag);
+                        parameters.Add("@PurposeYojnaInfo", JsonConvert.SerializeObject(model.PurposeYojanaMaster));
+                        parameters.Add("@YojnaCurrencyInfo",model.PurposeYojanaCurrencyMaster.CurrencyData);
 
                         parameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
 
-                        connection.Execute("[UpdateDonorMaster]", parameters, commandType: CommandType.StoredProcedure);
+                        connection.Execute("[InsertPurposeYojnaMaster]", parameters, commandType: CommandType.StoredProcedure);
 
                         var result = parameters.Get<string>("@returnResult");
 
@@ -144,6 +92,47 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
         }
 
+        [HttpPost]
+        public IActionResult UpdateData([FromBody] CombinedPurposeYojanaandCurrencyMaster model)
+        {
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+
+                        var parameters = new DynamicParameters();
+                        parameters.Add("@PurposeYojnaInfo", JsonConvert.SerializeObject(model.PurposeYojanaMaster));
+                        parameters.Add("@YojnaCurrencyInfo", model.PurposeYojanaCurrencyMaster.CurrencyData);
+                        parameters.Add("@YojnaId", model.PurposeYojanaMaster.Yojna_ID);
+                        parameters.Add("@DataFlag", model.PurposeYojanaMaster.DATA_FLAG);
+                        parameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+
+                        connection.Execute("[UpdatePurposeYojnaMaster]", parameters, commandType: CommandType.StoredProcedure);
+
+                        var result = parameters.Get<string>("@returnResult");
+
+                        string msg = result;
+                        return Ok(msg);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        return View();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+
+
+
+        }
     }
 }
-

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NSSERP.Areas.Masters.Models.CityMaster>
+﻿@model NSSERP.Areas.Masters.Models.CityMaster
 
 @{
     ViewData["Title"] = "City Index";
@@ -29,49 +29,37 @@
     </div>
 
     <div class="card-body">
+        @if (Model.msg != null)
+        {
+            ViewBag.msg = Model.msg;
+        }
         <table class="table table-hover table-bordered" id="cityTable">
             <thead class="thead-dark">
                 <tr>
-                    <th>City Name</th>
-                    <th>Country</th>
-                    <th>State</th>
-                    <th>District</th>
-                    <th>Is Active</th>
+                    <th>City Name</th>               
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var city in Model)
+                @if (Model != null)
                 {
-                    <tr>
-                        <td>@city.CityName</td>
-                        <td>@city.CountryName</td>
-                        <td>@city.StateName</td>
-                        <td>@city.DistrictName</td>
-                        <td>
-                            @if (city.IsActive == 'Y')
-                            {
-                                <span class="text-success">Active</span>
-                            }
-                            else if (city.IsActive == 'N')
-                            {
-                                <span class="text-danger">Inactive</span>
-                            }
-                            else
-                            {
-                                <span class="text-muted">N/A</span>
-                            }
-                        </td>
-                        <td>
-                            <a href="/Masters/CityMaster/Edit?cityId=@city.CityID" title="Edit">
-                                <i class="fas fa-edit btn btn-primary"></i>
-                            </a>
-                            <a onclick="confirmDelete('@city.CityID')" title="Delete">
-                                <i class="fas fa-trash-alt btn btn-danger"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
+
+
+                    @foreach (var city in Model.masterDetails)
+                    {
+                        <tr>
+                            <td>@city.City_Name</td>
+
+                            <td>
+                                <a href="/Masters/CityMaster/Edit?id=@city.City_Code" title="Edit">
+                                    <i class="fas fa-edit btn btn-primary"></i>
+                                </a>
+                                <a onclick="confirmDelete('@city.City_Code')" title="Delete">
+                                    <i class="fas fa-trash-alt btn btn-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }}
             </tbody>
         </table>
     </div>

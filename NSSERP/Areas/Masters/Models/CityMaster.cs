@@ -2,22 +2,14 @@
 {
     public class CityMaster
     {
-        public int CityID { get; set; }
-        public string CityName { get; set; }
-        public int? StateID { get; set; }
-        public int? CountryID { get; set; }
-        public int DistrictID { get; set; }
-        public string DistrictName { get; set; }
-        public char IsActive { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string CreatedBy { get; set; }
-        public string CountryName { get; set; }
-        public string StateName { get; set; }
-        public List<Countrys> Countries { get; set; }
-        public List<StateMaster> States { get; set; }
-        public List<DistrictMaster> Districts { get; set; }
-        public IEnumerable<Countrys> CountriesList { get; set; }
-        public IEnumerable<StateMaster> StatesList { get; set; }
-     
+        public string? msg { get; set; }
+        public IEnumerable<CityMaster> masterDetails { get; set; }
+
+        public int? City_Code { get; set; }
+        public string? City_Name { get; set; }
+        public string? CreatedBy { get; set; }
+        
+        public string? Data_Flag { get; set; } = "GANGOTRI";
+
     }
 }

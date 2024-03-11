@@ -1,4 +1,4 @@
-﻿@model NSSERP.Areas.Masters.Models.CityMaster
+﻿@model NSSERP.Areas.Masters.Models.DistrictMaster
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,7 +24,7 @@
                 <label for="CityID">City:</label>
                 <select id="CityID" class="form-control" required name="CityID">
                 <option value="" selected disabled>Select City</option>
-                @foreach (var city in Model.Countries)
+                @foreach (var city in Model.masterDetails)
                 {
                 <option value="@city.Country_Code">@city.Country_Name</option>
                 }

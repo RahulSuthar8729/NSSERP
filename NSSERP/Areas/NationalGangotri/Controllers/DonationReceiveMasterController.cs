@@ -32,17 +32,13 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
     [Authorize]
     [Area("NationalGangotri")]
     public class DonationReceiveMasterController : Controller
-    {
-        private readonly string _connectionString;
-        private readonly DbClass _dbFunctions;
+    {   
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _apiClient;
-        public DonationReceiveMasterController(DbClass dbFunctions, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
+        public DonationReceiveMasterController( IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
 
-        {
-            _dbFunctions = dbFunctions;
-            _connectionString = configuration.GetConnectionString("ConStr");
+        {            
             _webHostEnvironment = webHostEnvironment;
             _apiClient = clientFactory.CreateClient("WebApi");
             _httpClientFactory = clientFactory;
