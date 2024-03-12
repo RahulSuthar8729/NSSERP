@@ -5,7 +5,9 @@ using System.Data.SqlClient;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using NSSERPAPI.Models;
 using NSSERPAPI.Models.NationalGangotri;
+using NSSERPAPI.Models.ReceiptDispatch;
 namespace NSSERPAPI.Db_functions_for_Gangotri
 {
     public class Db_functions
@@ -17,12 +19,12 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         {
             _connectionString = configuration.GetConnectionString("ConStr");
             _dbEngine = new DbEngineClass(configuration);
-        }     
+        }
 
         public List<dynamic> GetCountries()
         {
             return _dbEngine.ExecuteStoredProcedure("GetCountries");
-        }        
+        }
         public List<dynamic> GetDonationReciveDetails()
         {
             return _dbEngine.ExecuteStoredProcedure("GetDonationReceiveDetails");
@@ -388,17 +390,17 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
         #region DonorMaster
         public IEnumerable<dynamic> GetDonorTypes()
-        {           
-            return _dbEngine.ExecuteStoredProcedure("GetDonorTypes");          
-            
+        {
+            return _dbEngine.ExecuteStoredProcedure("GetDonorTypes");
+
         }
 
         public IEnumerable<dynamic> GetDonorBussinussType(string DataFlag)
         {
-            return _dbEngine.ExecuteStoredProcedure("GetDonorBusinessDetails", new { DataFlag=DataFlag});
+            return _dbEngine.ExecuteStoredProcedure("GetDonorBusinessDetails", new { DataFlag = DataFlag });
         }
 
-        public IEnumerable<dynamic>GetDonorDataByID(int DonorID, string DataFlag)
+        public IEnumerable<dynamic> GetDonorDataByID(int DonorID, string DataFlag)
         {
             var parameters = new { Ngcode = DonorID, DataFlag = DataFlag };
             return _dbEngine.ExecuteStoredProcedure("[GetDonorDataById]", parameters);
@@ -409,12 +411,12 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
         #region Country Master
         public IEnumerable<dynamic> GetCountryList()
-        {            
+        {
             return _dbEngine.ExecuteStoredProcedure("GetCountryDetails");
         }
         public IEnumerable<dynamic> GetCountryByID(int id)
         {
-            var parameters = new { CountryId = id};
+            var parameters = new { CountryId = id };
             return _dbEngine.ExecuteStoredProcedure("[GetCountryById]", parameters);
         }
         #endregion
@@ -423,12 +425,12 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         #region StateMaster
         public IEnumerable<dynamic> GetStateDetailList(string DataFlag)
         {
-            return _dbEngine.ExecuteStoredProcedure("GetStateDetails", new {DataFlag=DataFlag });
+            return _dbEngine.ExecuteStoredProcedure("GetStateDetails", new { DataFlag = DataFlag });
         }
 
-        public IEnumerable<dynamic> GetStateById(int id,string DataFlag)
+        public IEnumerable<dynamic> GetStateById(int id, string DataFlag)
         {
-            var parameters = new { StateId = id ,DataFlag=DataFlag};
+            var parameters = new { StateId = id, DataFlag = DataFlag };
             return _dbEngine.ExecuteStoredProcedure("[GetStateById]", parameters);
         }
         #endregion
@@ -450,7 +452,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         #region City Master
         public IEnumerable<dynamic> GetCityDetsils(string DataFlag)
         {
-            return _dbEngine.ExecuteStoredProcedure("[GetCityDetails]", new { DataFlag=DataFlag});
+            return _dbEngine.ExecuteStoredProcedure("[GetCityDetails]", new { DataFlag = DataFlag });
         }
         public IEnumerable<dynamic> GetCityById(int id, string DataFlag)
         {
@@ -463,13 +465,13 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
 
         #region Purpose Master
-        public IEnumerable<dynamic> GetPurposeDetails (string DataFlag)
+        public IEnumerable<dynamic> GetPurposeDetails(string DataFlag)
         {
             return _dbEngine.ExecuteStoredProcedure("[GetPurposeDetails]", new { DataFlag = DataFlag });
-        }    
-        public IEnumerable<dynamic> GetPurposeById(int id,string DataFlag)
+        }
+        public IEnumerable<dynamic> GetPurposeById(int id, string DataFlag)
         {
-            return _dbEngine.ExecuteStoredProcedure("[GetPurposeById]", new { PurposeId=id, DataFlag = DataFlag });
+            return _dbEngine.ExecuteStoredProcedure("[GetPurposeById]", new { PurposeId = id, DataFlag = DataFlag });
         }
 
         #endregion
@@ -483,12 +485,58 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         public IEnumerable<dynamic> GetPurposeYojanaById(int id, string DataFlag)
         {
             return _dbEngine.ExecuteStoredProcedure("[GetPurposeYojnaById]", new { YojnaId = id, DataFlag = DataFlag });
-        }  
+        }
         public IEnumerable<dynamic> GetCurrencyDetails()
         {
             return _dbEngine.ExecuteStoredProcedure("GetCurrencyDetails");
         }
 
         #endregion
+
+        #region Subject Master    
+
+        public IEnumerable<dynamic> GetSubjectDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetSubjectDetails]", new { DataFlag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> GetSubjectById(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetSubjectById]", new { subjectid = id, dataflag = DataFlag });
+        }
+
+
+        #endregion
+
+        #region PostType Master    
+
+        public IEnumerable<dynamic> GetPostTypeDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPostTypeDetails]");
+        }
+
+        public IEnumerable<dynamic> GetPostTypeById(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPostTypeById]", new { posttypeid = id, dataflag = DataFlag });
+        }
+
+
+        #endregion
+
+        #region Courier Master    
+
+        public IEnumerable<dynamic> GetCourierMasterDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetCourierDetails]");
+        }
+
+        public IEnumerable<dynamic> GetCourierMasterById(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetCourierById]", new { courierid = id, dataflag = DataFlag });
+        }
+
+
+        #endregion
+
     }
 }

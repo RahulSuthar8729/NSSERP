@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using NSSERPAPI.Models.NationalGangotri;
+
 namespace NSSERPAPI
 {
     public class DbEngineClass
@@ -16,16 +16,60 @@ namespace NSSERPAPI
         {
             _connectionString = configuration.GetConnectionString("ConStr");
         }
+
         public List<dynamic> ExecuteStoredProcedure(string storedProcedureName, object parameters = null)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-
                 var result = connection.Query(storedProcedureName, parameters, commandType: CommandType.StoredProcedure);
                 return result.AsList();
             }
         }
 
+        public string ExecuteInsertStoredProcedure(string storedProcedureName, object parameters = null)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var dynamicParameters = new DynamicParameters();
+                    dynamicParameters.Add("@paramData", JsonConvert.SerializeObject(parameters));
+                    dynamicParameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+
+                    connection.Execute(storedProcedureName, dynamicParameters, commandType: CommandType.StoredProcedure);
+
+                    return dynamicParameters.Get<string>("@returnResult");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        public string ExecuteUpdateStoredProcedure(string storedProcedureName,object id ,object parameters = null)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var dynamicParameters = new DynamicParameters();
+                    dynamicParameters.Add("@paramData", JsonConvert.SerializeObject(parameters));
+                    dynamicParameters.Add("@Id", id);
+                    dynamicParameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+
+                    connection.Execute(storedProcedureName, dynamicParameters, commandType: CommandType.StoredProcedure);
+
+                    return dynamicParameters.Get<string>("@returnResult");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
     }
 }

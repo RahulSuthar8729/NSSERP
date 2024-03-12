@@ -37,9 +37,9 @@
                 input.value = input.value.toUpperCase();
             }
         </script>
-       
+
     }
-    
+
 </head>
 <body>
     <div class="card">
@@ -93,13 +93,13 @@
                                     <option value="0">Select Head</option>
                                     @if (Model.Item1 != null)
                                     {
-                                        @foreach (var heads in Model.Item1.HeadList)
+                                        @foreach (var head in Model.Item1.HeadList)
                                         {
-                                            <option value="@heads.Purpose_ID">@heads.Purpose</option>
+                                            <option value="@head.Purpose_ID" @(head.Purpose_ID == Model.Item1.Purpose_ID ? "selected" : "")>@head.Purpose</option>
                                         }
-
                                     }
                                 </select>
+
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Yojana Name<span style="color: red;">*</span></label>
@@ -108,61 +108,59 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Donor Count</label>
-                                <input type="text" name="PurposeYojanaMaster.Donor_Count" class="form-control" />
+                                <input type="text" value="@Model.Item1.Donor_Count" name="PurposeYojanaMaster.Donor_Count" class="form-control" />
                                 <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Amount</label>
-                                <input type="number" name="PurposeYojanaMaster.Yojna_Amount" class="form-control" />
+                                <input type="number" value="@Model.Item1.Yojna_Amount" name="PurposeYojanaMaster.Yojna_Amount" class="form-control" />
                                 <div style="color:#1cb8a1;font-weight:bold"></div>
                             </div>
                             <br />
                             <div class="form-group col-lg-3">
                                 <label>Status</label>
                                 <div class="form-check">
-                                    <input type="radio" id="active" name="PurposeYojanaMaster.Status" value="A" checked>
+                                    <input type="radio" id="active" name="PurposeYojanaMaster.Status" value="A" @(Model.Item1.Status.ToString() == "A" ? "checked" : "")>
                                     <label for="active">Active</label>
 
-                                    <input type="radio" id="inactive" name="PurposeYojanaMaster.Status" value="E">
+                                    <input type="radio" id="inactive" name="PurposeYojanaMaster.Status" value="E" @(Model.Item1.Status.ToString() == "E" ? "checked" : "")>
                                     <label for="inactive">Inactive</label>
                                 </div>
-                               
-
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="forOperation" name="PurposeYojanaMaster.FOR_OPERATION" value="true">
+                                    <input type="checkbox" class="form-check-input" id="forOperation" name="PurposeYojanaMaster.FOR_OPERATION" value="Y" @(Model.Item1.FOR_OPERATION.ToString() == "Y" ? "checked" : "")>
                                     <label class="form-check-label" for="forOperation">For Operation</label>
                                 </div>
 
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="operationPhoto" name="PurposeYojanaMaster.OPERATION_PHOTO" value="true">
+                                    <input type="checkbox" class="form-check-input" id="operationPhoto" name="PurposeYojanaMaster.OPERATION_PHOTO" value="Y" @(Model.Item1.OPERATION_PHOTO.ToString() == "Y" ? "checked" : "")>
                                     <label class="form-check-label" for="operationPhoto">Operation Photo</label>
                                 </div>
-
                             </div>
+
 
 
                             <div class="form-group col-lg-3">
                                 <label>Order</label>
-                                <input type="text" value="" name="PurposeYojanaMaster.Ord_Yojna" class="form-control" />
+                                <input type="text" value="@Model.Item1.Ord" name="PurposeYojanaMaster.Ord" class="form-control" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Order</label>
-                                <input type="text" value="" name="PurposeYojanaMaster.Ord_Yojna" class="form-control" />
+                                <input type="text" value="@Model.Item1.Ord_Yojna" name="PurposeYojanaMaster.Ord_Yojna" class="form-control" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Start Limit</label>
-                                <input type="text" value="" name="PurposeYojanaMaster.Start_Limit" class="form-control" />
+                                <input type="text" value="@Model.Item1.Start_Limit" name="PurposeYojanaMaster.Start_Limit" class="form-control" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Counter</label>
-                                <input type="text" value="" name="PurposeYojanaMaster.Qty" class="form-control" />
+                                <input type="text" value="@Model.Item1.Qty" name="PurposeYojanaMaster.Qty" class="form-control" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Refrence No.</label>
-                                <input type="text" value="" name="PurposeYojanaMaster.Ref_No" class="form-control" />
+                                <input type="text" value="@Model.Item1.Ref_No" name="PurposeYojanaMaster.Ref_No" class="form-control" />
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Old</label>
@@ -208,7 +206,7 @@
                                                 <label for="amount_@item.Currency_id">Amount:</label>
                                                 <input name="CurrencyAmounts[@item.Currency_id].Amount" id="amount_@item.Currency_id" class="form-control" type="number" value="@item.Amount" />
                                                 <input name="CurrencyIDs[@item.Currency_id].Currency_id" id="currencyid_@item.Currency_id" class="form-control" type="hidden" value="@item.Currency_id" />
-                                               
+
                                             </td>
                                             <td style="display:none">
                                                 <input type="hidden" id="hiddenPurposeId" name="PurposeYojanaCurrencyMaster.Purpose_id" value="@Model.Item1.Purpose_ID" />
@@ -218,7 +216,7 @@
                                 }
                             </tbody>
                         </table>
-                       
+
                         <input type="hidden" id="CurrencyData" name="PurposeYojanaCurrencyMaster.CurrencyData" />
                         <script>
                             $(document).ready(function () {
@@ -229,23 +227,23 @@
 
                                     $('#countryTable tbody tr').each(function () {
                                         var currencyId = $(this).find('[name^="CurrencyIDs["][name$=".Currency_id"]').val();
-                                        var amount = $(this).find('[name^="CurrencyAmounts["][name$=".Amount"]').val(); 
+                                        var amount = $(this).find('[name^="CurrencyAmounts["][name$=".Amount"]').val();
 
                                         var currencyObject = {
-                                            Purpose_id: $('#hiddenPurposeId').val(),
+                                            Purpose_ID: $('#hiddenPurposeId').val(),
                                             Currency_id: currencyId,
                                             Amount: amount,
                                             DATA_FLAG: 'GANGOTRI'
                                         };
 
-                                       
+
                                         currencyData.push(currencyObject);
                                     });
 
-                                
+
                                     $('#CurrencyData').val(JSON.stringify(currencyData));
 
-                                 
+
                                     $(this).closest('form').submit();
                                 });
                             });
@@ -259,8 +257,8 @@
                                 });
                             });
                         </script>
-                        </div>
-                        </fieldset>
+                    </div>
+                </fieldset>
 
                 <br />
                 <div class="container-lg">

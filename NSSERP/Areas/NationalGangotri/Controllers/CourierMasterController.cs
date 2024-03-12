@@ -7,25 +7,25 @@ using System.Text;
 
 namespace NSSERP.Areas.NationalGangotri.Controllers
 {
-    [Authorize]
     [Area("NationalGangotri")]
-    public class PostTypeMasterController : Controller
+    [Authorize]
+    public class CourierMasterController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _apiClient;
-        public PostTypeMasterController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
+        public CourierMasterController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
 
         {
             _webHostEnvironment = webHostEnvironment;
             _apiClient = clientFactory.CreateClient("WebApi");
             _httpClientFactory = clientFactory;
         }
-
+   
         [HttpGet]
         public async Task<IActionResult> Home(int id)
         {
-            var response = await _apiClient.GetAsync($"api/PostTypeMaster/Home?id={id}&DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
+            var response = await _apiClient.GetAsync($"api/CourierMaster/Home?id={id}&DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -42,7 +42,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var detail = json != null ? JsonConvert.DeserializeObject<PostTypeMaster>(json) : null;
+            var detail = json != null ? JsonConvert.DeserializeObject<CourierMaster>(json) : null;
 
             if (detail == null)
             {
@@ -54,17 +54,17 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Home(PostTypeMaster model)
+        public async Task<IActionResult> Home(CourierMaster model)
         {
 
             try
             {
                 string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
                 string apiUrl = string.Empty;
-                if (model.Post_Type_ID != null)
-                    apiUrl = "api/PostTypeMaster/UpdateData";
+                if (model.Courier_Id != null)
+                    apiUrl = "api/CourierMaster/UpdateData";
                 else
-                    apiUrl = "api/PostTypeMaster/InsertData";
+                    apiUrl = "api/CourierMaster/InsertData";
 
 
                 var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
@@ -75,7 +75,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
                 {
                     var modelget = await response.Content.ReadAsStringAsync();
                     TempData["msg"] = modelget;
-                    return RedirectToAction("Index", "PostTypeMaster", new { model = modelget });
+                    return RedirectToAction("Index", "CourierMaster", new { model = modelget });
                 }
 
                 else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -101,7 +101,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _apiClient.GetAsync($"api/PostTypeMaster/Index?DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
+            var response = await _apiClient.GetAsync($"api/CourierMaster/Index?DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -118,7 +118,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var detail = json != null ? JsonConvert.DeserializeObject<PostTypeMaster>(json) : null;
+            var detail = json != null ? JsonConvert.DeserializeObject<CourierMaster>(json) : null;
             if (TempData.ContainsKey("msg"))
             {
                 string messageFromFirstController = TempData["msg"] as string;
