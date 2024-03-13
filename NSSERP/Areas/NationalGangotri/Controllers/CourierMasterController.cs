@@ -21,7 +21,7 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             _apiClient = clientFactory.CreateClient("WebApi");
             _httpClientFactory = clientFactory;
         }
-   
+
         [HttpGet]
         public async Task<IActionResult> Home(int id)
         {

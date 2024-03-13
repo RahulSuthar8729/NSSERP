@@ -49,7 +49,7 @@ namespace NSSERPAPI.Areas.Masters.Controllers
 
             try
             {
-                var result = _dbEngine.ExecuteInsertStoredProcedure("[InsertPostTypeMaster]", model);
+                var result = _dbEngine.ExecuteInsertStoredProcedure("InsertCourierMaster", model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace NSSERPAPI.Areas.Masters.Controllers
 
             try
             {
-                var result = _dbEngine.ExecuteUpdateStoredProcedure("[UpdatePostTypeMaster]", model.Courier_Id, model);
+                var result = _dbEngine.ExecuteUpdateStoredProcedure("UpdateCourierMaster", model.courier_id, model);
                 return Ok(result);
             }
             catch (Exception ex)

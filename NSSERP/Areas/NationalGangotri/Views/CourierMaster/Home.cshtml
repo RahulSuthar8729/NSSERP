@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="col text-left">
                     <h5>
-                        <span style="color:#1cb8a1">POST TYPE</span>
+                        <span style="color:#1cb8a1">COURIER</span>
                         <span style="color:#28166f">MASTER</span>
                     </h5>
                 </div>
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form id="formdata" action="/NationalGangotri/PostTypeMaster/Home" method="post">
+            <form id="formdata" action="/NationalGangotri/CourierMaster/Home" method="post">
                 @Html.AntiForgeryToken()
 
                 <fieldset id="fieldset" class="show border rounded p-3">
@@ -80,145 +80,171 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="Courier_Name" class="form-label"></label>
-                                    <input asp-for="Courier_Name" class="form-control" />
+                                    <label name="Courier_Name" class="form-label">Courier Code</label>
+                                    <input name="Courier_Id" readonly value="@Model.Courier_Id" class="form-control" />
                                     <span asp-validation-for="Courier_Name" class="text-danger"></span>
                                 </div>
                             </div>
+
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="Courier_Address" class="form-label"></label>
-                                    <input asp-for="Courier_Address" class="form-control" />
-                                    <span asp-validation-for="Courier_Address" class="text-danger"></span>
+                                    <label name="Courier_Name" class="form-label"><span style="color: red;">*</span>Courier Name</label>
+                                    <input name="Courier_Name" required value="@Model.Courier_Name" class="form-control" />
+                                    <span asp-validation-for="Courier_Name" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="Courier_Phone" class="form-label"></label>
-                                    <input asp-for="Courier_Phone" class="form-control" />
-                                    <span asp-validation-for="Courier_Phone" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="Courier_Mobile" class="form-label"></label>
-                                    <input asp-for="Courier_Mobile" class="form-control" />
-                                    <span asp-validation-for="Courier_Mobile" class="text-danger"></span>
-                                </div>
-                            </div>
+
+
                         </div>
+
+
+                    </div>
+
+
+                </fieldset>
+
+                <fieldset id="fieldset2" class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#fieldsetcontent2" aria-expanded="false" aria-controls="fieldsetcontent2">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Local Address Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="fieldsetcontent2" class="nested-form-container collapse show">
+
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="Courier_Email" class="form-label"></label>
-                                    <input asp-for="Courier_Email" class="form-control" />
-                                    <span asp-validation-for="Courier_Email" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="Courier_Fax" class="form-label"></label>
-                                    <input asp-for="Courier_Fax" class="form-control" />
-                                    <span asp-validation-for="Courier_Fax" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="Courier_Person" class="form-label"></label>
-                                    <input asp-for="Courier_Person" class="form-control" />
+                                    <label name="Courier_Person" class="form-label">Contact Person</label>
+                                    <input name="Courier_Person" value="@Model.Courier_Person" class="form-control" />
                                     <span asp-validation-for="Courier_Person" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="C_Address" class="form-label"></label>
-                                    <input asp-for="C_Address" class="form-control" />
-                                    <span asp-validation-for="C_Address" class="text-danger"></span>
+                                    <label name="Courier_Address" class="form-label">Address</label>
+                                    <textarea name="Courier_Address" rows="1" class="form-control">@Model.Courier_Address</textarea>
+
+                                    <span asp-validation-for="Courier_Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label name="Courier_Phone" class="form-label">Phone No.</label>
+                                    <input name="Courier_Phone" value="@Model.Courier_Phone" class="form-control" />
+                                    <span asp-validation-for="Courier_Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label name="Courier_Mobile" class="form-label">Mobile No</label>
+                                    <input name="Courier_Mobile" value="@Model.Courier_Mobile" class="form-control" />
+                                    <span asp-validation-for="Courier_Mobile" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label name="Courier_Email" class="form-label">Email-ID</label>
+                                    <input name="Courier_Email" @Model.Courier_Email class="form-control" />
+                                    <span asp-validation-for="Courier_Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label name="Courier_Fax" class="form-label">Fax No.</label>
+                                    <input name="Courier_Fax" value="@Model.Courier_Fax" class="form-control" />
+                                    <span asp-validation-for="Courier_Fax" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+                </fieldset>
+
+
+                <fieldset id="fieldset3" class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#fieldsetcontent3" aria-expanded="false" aria-controls="fieldsetcontent3">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Corporate Address Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="fieldsetcontent3" class="nested-form-container collapse show">
+
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="C_Phone" class="form-label"></label>
-                                    <input asp-for="C_Phone" class="form-control" />
-                                    <span asp-validation-for="C_Phone" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="C_Mobile" class="form-label"></label>
-                                    <input asp-for="C_Mobile" class="form-control" />
-                                    <span asp-validation-for="C_Mobile" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="C_Email" class="form-label"></label>
-                                    <input asp-for="C_Email" class="form-control" />
-                                    <span asp-validation-for="C_Email" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="C_Fax" class="form-label"></label>
-                                    <input asp-for="C_Fax" class="form-control" />
-                                    <span asp-validation-for="C_Fax" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label asp-for="C_Person" class="form-label"></label>
-                                    <input asp-for="C_Person" class="form-control" />
+                                    <label name="C_Person" class="form-label">Contact Person</label>
+                                    <input name="C_Person" value="@Model.C_Person" class="form-control" />
                                     <span asp-validation-for="C_Person" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="C_State_Code" class="form-label"></label>
-                                    <input asp-for="C_State_Code" class="form-control" />
-                                    <span asp-validation-for="C_State_Code" class="text-danger"></span>
+                                    <label name="C_Address" class="form-label">Address</label>
+                                    <textarea name="C_Address" rows="1" class="form-control">@Model.C_Address</textarea>
+                                    <span asp-validation-for="C_Address" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="Data_Flag" class="form-label"></label>
-                                    <input asp-for="Data_Flag" class="form-control" />
-                                    <span asp-validation-for="Data_Flag" class="text-danger"></span>
+                                    <label name="C_Phone" class="form-label">Phone No.</label>
+                                    <input name="C_Phone" value="@Model.C_Phone" class="form-control" />
+                                    <span asp-validation-for="C_Phone" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="Fy_Id" class="form-label"></label>
-                                    <input asp-for="Fy_Id" class="form-control" />
-                                    <span asp-validation-for="Fy_Id" class="text-danger"></span>
+                                    <label name="C_Mobile" class="form-label">Mobile No.</label>
+                                    <input name="C_Mobile" value="@Model.C_Mobile" class="form-control" />
+                                    <span asp-validation-for="C_Mobile" class="text-danger"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label asp-for="C_Active" class="form-label"></label>
-                                    <input asp-for="C_Active" class="form-control" />
+                                    <label name="C_Email" class="form-label">Email-ID</label>
+                                    <input name="C_Email" value="@Model.C_Email" class="form-control" />
+                                    <span asp-validation-for="C_Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label name="C_Fax" class="form-label">Fax No.</label>
+                                    <input name="C_Fax" value="@Model.C_Fax" class="form-control" />
+                                    <span asp-validation-for="C_Fax" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <div class="form-check">
+                                        <input name="C_Active" type="checkbox" value="true" class="form-check-input" id="activeCheckbox" @(Model.C_Active.GetValueOrDefault() ? "checked" : "") />
+                                        <label class="form-check-label" for="activeCheckbox">Active</label>
+                                    </div>
+                                    <input name="C_Active" type="hidden" value="false" />
                                     <span asp-validation-for="C_Active" class="text-danger"></span>
                                 </div>
                             </div>
+
+
+
                             <div class="col-lg-9">
                                 <div class="form-group">
-                                    <label asp-for="Tracking_Link" class="form-label"></label>
-                                    <input asp-for="Tracking_Link" class="form-control" />
+                                    <label name="Tracking_Link" class="form-label">Tracking Link</label>
+                                    <input name="Tracking_Link" value="@Model.Tracking_Link" class="form-control" />
                                     <span asp-validation-for="Tracking_Link" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
-                       
- 
-                        </div>
-                  
 
+
+
+                    </div>
                 </fieldset>
+
 
                 <br />
                 <div class="container-lg">

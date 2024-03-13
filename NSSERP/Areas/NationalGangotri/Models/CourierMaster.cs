@@ -4,7 +4,7 @@ namespace NSSERP.Areas.NationalGangotri.Models
 {
     public class CourierMaster
     {
-        public IEnumerable<SubjectMaster> masterDetails { get; set; }
+        public IEnumerable<CourierMaster> masterDetails { get; set; }
         public string? msg { get; set; }
         public int? Courier_Id { get; set; }
 

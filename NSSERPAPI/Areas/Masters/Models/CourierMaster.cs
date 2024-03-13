@@ -4,24 +4,24 @@ namespace NSSERPAPI.Areas.Masters.Models
 {
     public class CourierMaster
     {
-        public int? Courier_Id { get; set; }
-        public string? Courier_Name { get; set; }
-        public string? Courier_Address { get; set; }
-        public string? Courier_Phone { get; set; }      
-        public string? Courier_Mobile { get; set; }       
-        public string? Courier_Email { get; set; }        
-        public string? Courier_Fax { get; set; }
-        public string? Courier_Person { get; set; }
-        public string? C_Address { get; set; }
-        public string? C_Phone { get; set; }       
-        public string? C_Mobile { get; set; }        
-        public string? C_Email { get; set; }        
-        public string? C_Fax { get; set; }      
-        public string? C_Person { get; set; }       
-        public string? C_State_Code { get; set; }
-        public string? Data_Flag { get; set; }
-        public int? Fy_Id { get; set; }
-        public bool? C_Active { get; set; }        
-        public string? Tracking_Link { get; set; }
+        public int? courier_id { get; set; }
+        public string? courier_name { get; set; }
+        public string? courier_address { get; set; }
+        public string? courier_phone { get; set; }      
+        public string? courier_mobile { get; set; }       
+        public string? courier_email { get; set; }        
+        public string? courier_fax { get; set; }
+        public string? courier_person { get; set; }
+        public string? c_address { get; set; }
+        public string? c_phone { get; set; }       
+        public string? c_mobile { get; set; }        
+        public string? c_email { get; set; }        
+        public string? c_fax { get; set; }      
+        public string? c_person { get; set; }       
+        public string? c_state_code { get; set; }
+        public string? data_flag { get; set; }
+        public int? fy_id { get; set; }
+        public bool? c_active { get; set; }        
+        public string? tracking_link { get; set; }
     }
 }
