@@ -524,7 +524,6 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         #endregion
 
         #region Courier Master    
-
         public IEnumerable<dynamic> GetCourierMasterDetails(string DataFlag)
         {
             return _dbEngine.ExecuteStoredProcedure("[GetCourierDetails]");
@@ -535,6 +534,29 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             return _dbEngine.ExecuteStoredProcedure("[GetCourierById]", new { courierid = id, dataflag = DataFlag });
         }
 
+        #endregion
+
+
+        #region Receipt Book Master    
+        public IEnumerable<dynamic> GetReceiptBookSeriesDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookSeriesDetails]", new { DataFlag=DataFlag});
+        }
+
+        public IEnumerable<dynamic> GetReceiptBookSeriesMasterByID(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookSeriesById]", new { SeriesCode = id, dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> getPersoncatdetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("getpersoncategorydetails", new { DataFlag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> getPersoncatMasterbyId(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[getpersoncategorybyid]", new { code = id, dataflag = DataFlag });
+        }
 
         #endregion
 

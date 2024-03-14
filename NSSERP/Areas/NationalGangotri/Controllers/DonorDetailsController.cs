@@ -12,24 +12,18 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
     [Area("NationalGangotri")]
     public class DonorDetailsController : Controller
     {
-        private readonly string _connectionString;
-        private readonly DbClass _dbFunctions;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+
         private readonly HttpClient _apiClient;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<DonationReceiveMaterDetailsController> _logger;
 
         public DonorDetailsController(DbClass dbFunctions, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory httpClientFactory, ILogger<DonationReceiveMaterDetailsController> logger)
         {
-            _dbFunctions = dbFunctions;
-            _connectionString = configuration.GetConnectionString("ConStr");
-            _webHostEnvironment = webHostEnvironment;
+
             _apiClient = httpClientFactory.CreateClient("WebApi");
-            _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 
-        [HttpGet]    
+        [HttpGet]
         public async Task<IActionResult> Index(DonorMaster model)
         {
             try
@@ -65,12 +59,11 @@ namespace NSSERP.Areas.NationalGangotri.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.StackTrace);
-             
+
             }
 
             return View(new DonorMaster());
         }
-
 
     }
 }
