@@ -1,7 +1,13 @@
-﻿namespace NSSERPAPI.Areas.ReceiptBook.Models
+﻿using NSSERP.Areas.Masters.Models;
+using static NSSERP.Areas.NationalGangotri.Models.BackOfficeModel;
+using static NSSERP.Areas.NationalGangotri.Models.DonorMaster;
+
+namespace NSSERP.Areas.ReceiptBook.Models
 {
     public class PersonMaster
     {
+        public IEnumerable<PersonMaster> masterDetails { get; set; }
+        public string? msg { get; set; }
         public int? person_id { get; set; }
         public string? person_name { get; set; }
         public string? address { get; set; }
@@ -20,7 +26,7 @@
         public DateTime? to_doe { get; set; }
         public int? city { get; set; }
         public int? file_count { get; set; }
-        public string? scan_files { get; set; }
+        public string scan_files { get; set; }
         public int? ngcode { get; set; }
         public string? phresi { get; set; }
         public string? phoffice { get; set; }
@@ -37,11 +43,14 @@
         public int? state { get; set; }
         public int? district { get; set; }
         public int? pincode { get; set; }
-        public string? data_flag { get; set; }
-        public int? fy_id { get; set; }
+        public string? data_flag { get; set; } = "GANGOTRI";
+        public int? fy_id { get; set; } = 0;
         public int? last_call_id { get; set; }
         public DateTime? active_status_doe { get; set; }
-
-
+        public List<EmployeMaster> EmployeeDetils { get; set; }
+        public List<PersonCatMaster> PersonCatDetails { get; set; }
+        public IEnumerable<BussinessType> bussinessTypesList { get; set; }
+        public List<Countrys> CountryList { get; set; }
+        public IEnumerable<Citys> CityList { get; set; }
     }
 }

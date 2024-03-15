@@ -7,11 +7,11 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class PersonMasterController : Controller
+    public class ReceiptBookRRSMasterController : Controller
     {
         private readonly Db_functions _dbFunctions;
         private readonly DbEngineClass _dbEngine;
-        public PersonMasterController(Db_functions dbFunctions, IConfiguration configuration)
+        public ReceiptBookRRSMasterController(Db_functions dbFunctions, IConfiguration configuration)
         {
             _dbFunctions = dbFunctions ?? throw new ArgumentNullException(nameof(dbFunctions));
             _dbEngine = new DbEngineClass(configuration);
@@ -19,7 +19,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
         [HttpGet]
         public IActionResult Index(string DataFlag)
         {
-            var result = _dbFunctions.getPersondetails(DataFlag);
+            var result = _dbFunctions.getReceiptBookRRSdetails(DataFlag);
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
             firstDetail.masterDetails = result;
@@ -29,7 +29,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
         [HttpGet]
         public IActionResult Home(string id, string DataFlag)
         {
-            var result = _dbFunctions.getPersonMasterbyId(Convert.ToInt32(id), DataFlag);
+            var result = _dbFunctions.getReceiptBookRRSMasterbyId(Convert.ToInt32(id), DataFlag);
             dynamic firstDetail;
 
             if (result != null && result.Any())
@@ -39,20 +39,17 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             else
             {
                 firstDetail = new ExpandoObject();
-            }
-            firstDetail.CountryList = _dbFunctions.GetCountries();
-            firstDetail.CityList = _dbFunctions.GetCity();           
-            firstDetail.bussinessTypesList = _dbFunctions.GetDonorBussinussType(DataFlag);
+            }            
             firstDetail.EmployeeDetils = _dbFunctions.GetEmployeeDetils();
-            firstDetail.PersonCatDetails=_dbFunctions.getPersoncatdetails(DataFlag);
+            firstDetail.PersonCatDetails = _dbFunctions.getPersoncatdetails(DataFlag);
             return Ok(firstDetail);
         }
         [HttpPost]
-        public IActionResult InsertData([FromBody] PersonMaster model)
+        public IActionResult InsertData([FromBody] ReceiptBookRRSMaster model)
         {
             try
             {
-                var result = _dbEngine.ExecuteInsertStoredProcedure("[InsertPersonMaster]", model);
+                var result = _dbEngine.ExecuteInsertStoredProcedure("[InsertReceiptBookRRSMaster]", model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -62,12 +59,12 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateData([FromBody] PersonMaster model)
+        public IActionResult UpdateData([FromBody] ReceiptBookRRSMaster model)
         {
 
             try
             {
-                var result = _dbEngine.ExecuteUpdateStoredProcedure("[updatepersonmaster]", model.person_id, model);
+                var result = _dbEngine.ExecuteUpdateStoredProcedure("[updateReceiptBookRRSMaster]", model.book_rrs_no, model);
                 return Ok(result);
             }
             catch (Exception ex)

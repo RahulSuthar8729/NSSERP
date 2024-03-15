@@ -558,6 +558,25 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
             return _dbEngine.ExecuteStoredProcedure("[getpersoncategorybyid]", new { code = id, dataflag = DataFlag });
         }
 
+        public IEnumerable<dynamic> getPersondetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPersonDetails]", new { dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> getPersonMasterbyId(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetPersonMasterById]", new { personid = id, dataflag = DataFlag });
+        }
+        public IEnumerable<dynamic> getReceiptBookRRSdetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookRRSDetails]", new { dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> getReceiptBookRRSMasterbyId(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookRRSDetailsById]", new { book_rrs_no = id, dataflag = DataFlag });
+        }
+
         #endregion
 
     }
