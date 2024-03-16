@@ -1,0 +1,244 @@
+﻿@using System.Security.Claims;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.IO;
+@model NSSERP.Areas.ReceiptBook.Models.ReceiptBookRRSMaster;
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var UserDepartment = User.FindFirst("Department")?.Value;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <style>
+        .card-header.sticky-top {
+            background-color: #fff;
+            z-index: 1000;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+    @section scripts {
+        <script>
+            function convertToUpperCase(input) {
+                input.value = input.value.toUpperCase();
+            }
+        </script>
+
+    }
+</head>
+<body>
+    <div class="card">
+        @if (Model.msg != null || Model.msg != "")
+        {
+            ViewBag.msg = Model.msg;
+        }
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">RECEIPT BOOK</span>
+                        <span style="color:#28166f">RRS MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="formdata" action="/ReceiptBook/ReceiptBookRRSMaster/Home" method="post">
+                @Html.AntiForgeryToken()
+
+                <fieldset id="fieldset" class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#fieldsetcontent" aria-expanded="false" aria-controls="fieldsetcontent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Receipt Book RRS Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="fieldsetcontent" class="nested-form-container collapse show">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label>Book RRS No.</label>
+                                <input class="form-control" readonly name="book_rrs_no" oninput="convertToUpperCase(this)" type="text" value="@Model.book_rrs_no">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>RRS Date</label>
+                                <input class="form-control" name="rrs_date" type="date" value="@((Model.rrs_date ?? DateTime.Now).ToString("yyyy-MM-dd"))">
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Issue Authority</label>
+                                <select id="RbType" class="form-control" name="issue_authority" asp-for="issue_authority">
+                                    <option value="KAULACHARYA JI" selected>KAULACHARYA JI</option>
+                                    <option value="PRASHANT JI">PRASHANT JI</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label>No. Of Books</label>
+                                <input class="form-control" name="receipt_book_no" type="number" value="@Model.receipt_book_no">
+                                <input class="form-control" name="receipt_book_no" type="hidden" value="@Model.receipt_book_no">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Receipt Type</label><br />
+                                <label><input type="radio" name="receiptbook_type" value="Indian" @(Model.receiptbook_type == "Indian" ? "checked" : "")> Indian</label><br />
+                                <label><input type="radio" name="receiptbook_type" value="Foreign" @(Model.receiptbook_type == "Foreign" ? "checked" : "")> Foreign</label>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label>Remarks</label>
+                                <input class="form-control" name="remark" type="text" value="@Model.remark">
+
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Receipt Type</label><br />
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="receipt_book_type" id="FCRA" value="FCRA" @(Model.receipt_book_type == "FCRA" ? "checked" : "")>
+                                    <label class="form-check-label" for="FCRA">
+                                        FCRA
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="receipt_book_type" id="Provisional" value="Provisional" @(Model.receipt_book_type == "Provisional" ? "checked" : "")>
+                                    <label class="form-check-label" for="Provisional">
+                                        Provisional
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="receipt_book_type" id="DonationBox" value="DonationBox" @(Model.receipt_book_type == "DonationBox" ? "checked" : "")>
+                                    <label class="form-check-label" for="DonationBox">
+                                        Donation Box
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-lg-3">
+                                <label>Person Name</label>
+                                <select class="form-control" name="person_id" id="Person">
+                                    <option value="">Select</option>
+                                    @if (Model.PersonDetails != null)
+                                    {
+                                        @foreach (var order in Model.PersonDetails)
+                                        {
+                                            <option value="@order.person_id" data-currencycode="@order.person_name" @(Model.person_id == order.person_id ? "selected" : "")>@order.person_name</option>
+                                        }
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label>For</label><br />
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="eventRadio" value="E" @(Model.type == 'E' ? "checked" : "")>
+                                    <label class="form-check-label" for="eventRadio">Event</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="otherRadio" value="O" @(Model.type == 'O' ? "checked" : "")>
+                                    <label class="form-check-label" for="otherRadio">Other</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label>Event Name</label>
+                                <select class="form-control" name="event" id="event" @(Model.type.ToString() != "E" ? "disabled" : "")>
+                                    <option value="">Select</option>
+                                    @if (Model.ReceiveInEventList != null)
+                                    {
+                                        foreach (var eventlist in Model.ReceiveInEventList)
+                                        {
+                                            <option value="@eventlist.P_ID" data-eventname="@eventlist.NAME_ENG" @(Model.@event != null && Model.@event == eventlist.P_ID ? "selected" : "")>@eventlist.NAME_ENG</option>
+                                        }
+                                    }
+                                </select>
+
+
+                            </div>                            
+                            <script>
+                                $(document).ready(function () {
+                                   
+                                    if ($('input[name="type"]:checked').val() !== 'E') {
+                                        $('#event').prop('disabled', true);
+                                    }
+
+                                    
+                                    $('input[name="type"]').change(function () {
+                                        if ($(this).val() === 'E') {
+                                            $('#event').prop('disabled', false);
+                                        } else {
+                                           
+                                            $('#event').prop('disabled', true);
+                                            $('#event').val($('#event option:eq(0)').val());
+                                        }
+                                    });
+                                });
+                            </script>
+
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <br />
+                <div class="container-lg">
+                    <div class="text-center">
+
+                        @{
+                            string BtnName = string.Empty;
+                            string viewParam = Context.Request.Query["view"];
+                            bool isViewEnabled = !string.IsNullOrEmpty(viewParam) && viewParam.ToLower() == "true";
+
+                            string editParam = Context.Request.Query["edit"];
+                            bool isEditEnabled = !string.IsNullOrEmpty(editParam) && editParam.ToLower() == "true";
+
+                            if (isEditEnabled)
+                            {
+                                BtnName = "Update";
+                            }
+                            else
+                            {
+                                BtnName = "Submit";
+                            }
+                        }
+
+                        <button type="submit" class="btn btn-success" style="@(isViewEnabled ? "display:none;" : "")">
+                            <i class="fas fa-check"></i>@BtnName
+                        </button>
+
+                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

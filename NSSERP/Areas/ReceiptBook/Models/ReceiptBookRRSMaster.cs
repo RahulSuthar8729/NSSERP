@@ -1,4 +1,6 @@
-﻿namespace NSSERP.Areas.ReceiptBook.Models
+﻿using NSSERP.Areas.NationalGangotri.Models;
+
+namespace NSSERP.Areas.ReceiptBook.Models
 {
     public class ReceiptBookRRSMaster
     {
@@ -15,7 +17,7 @@
         public int? user_id { get; set; }
         public string? remark { get; set; }
         public int? issue_hod { get; set; }
-        public char? sanction_flg { get; set; }
+        public char? sanction_flg { get; set; } = 'P';
         public string? remark_hod { get; set; }
         public int? sanction_user_id { get; set; }
         public string? sanction_user_name { get; set; }
@@ -30,5 +32,8 @@
         public string? data_flag { get; set; } = "GANGOTRI";
         public int? fy_id { get; set; } = 0;
         public string? receipt_book_type { get; set; }
+        public List<PersonMaster> PersonDetails { get; set; }
+        public IEnumerable<EProgramMaster> ReceiveInEventList { get; set; }
+
     }
 }

@@ -538,6 +538,11 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
 
         #region Receipt Book Master    
+        public IEnumerable<dynamic> GetEProgramDetils(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[getEventDetails]", new { DataFlag = DataFlag });
+        }
+
         public IEnumerable<dynamic> GetReceiptBookSeriesDetails(string DataFlag)
         {
             return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookSeriesDetails]", new { DataFlag=DataFlag});

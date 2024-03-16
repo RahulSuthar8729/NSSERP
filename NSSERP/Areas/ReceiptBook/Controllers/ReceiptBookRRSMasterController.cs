@@ -61,7 +61,7 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
             {
                 string requestBody = System.Text.Json.JsonSerializer.Serialize(model);
                 string apiUrl = string.Empty;
-                if (model.person_id != null)
+                if (model.book_rrs_no != null)
                     apiUrl = "api/ReceiptBookRRSMaster/UpdateData";
                 else
                     apiUrl = "api/ReceiptBookRRSMaster/InsertData";

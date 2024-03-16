@@ -1,0 +1,213 @@
+﻿@model NSSERP.Areas.ReceiptBook.Models.ReceiptBookRRSMaster
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    @section scripts {
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Select2 CSS and JS -->
+
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        <!-- DataTables CSS and JS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                $('#tableDetails').DataTable();
+
+            });
+
+        </script>
+
+    }
+    <style>
+        /* Add your custom styles here */
+        body {
+            padding: 20px;
+            background-color: #f8f9fa; /* Set a background color */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Add horizontal scroll for small screens */
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%; /* Adjust the width as needed */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            background-color: #fff; /* Set a white background */
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #fff;
+                background-color: #28166f;
+            }
+
+            /* Add custom zoom-in effect on hover for tabs */
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #1cb8a1, #008081);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            .nav-link:hover::before {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+    </style>
+    <style>
+        .card-header.sticky-top {
+            background-color: #fff; /* Set a background color for the sticky header */
+            z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
+            border-bottom: 1px solid #dee2e6; /* Add a border to separate it from the content */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        @if (Model.msg != null)
+        {
+            ViewBag.msg = Model.msg;
+        }
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <h5 class="mb-0">
+                        <span style="color:#1cb8a1">Receipt Book RRS</span>
+                        <span style="color:#28166f">DETAILS</span>
+                    </h5>
+                </div>
+                <div class="col-12 col-md-3 mb-3 mb-md-0 text-left">
+                    <h5 class="mb-0">
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-12 col-md-3 text-md-right">
+                    <a href="/ReceiptBook/ReceiptBookRRSMaster/Home" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a>
+                    <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning ml-2"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+
+            <div class="col-12">
+                <div class="table-container">
+                    <table id="tableDetails" class="table table-hover table-bordered">
+
+                        <thead class="thead-dark">
+                            <tr>
+
+                                <th></th>
+                                <th></th>
+                                <th>BOOK RSS NO.</th>
+                                <th>RRS DATE</th>
+                                <th>PERSON ID</th>
+                                <th>PERSON NAME</th>
+                                <th>NO. OF BOOKS</th>
+                                <th>ISSUE</th>
+                                <th>NOT USED</th>
+                                <th>SANCTION</th>
+                                <th>REMARKS</th>
+                                <th>HOD REMARKS</th>
+                                <th>TYPE</th>
+                                <th>ISSUE AUTHORITY</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.masterDetails)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="@Url.Action("Home", "ReceiptBookRRSMaster", new { id = item.book_rrs_no,view=true })" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Home", "ReceiptBookRRSMaster", new { id = item.book_rrs_no,edit=true})" title="Edit">
+                                                <i style="color: orange;" class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+
+                                        <td>@item.book_rrs_no</td>
+                                        <td>@item.rrs_date</td>
+                                        <td>@item.person_id</td>
+                                        <td>@item.person_id</td>
+                                        <td>@item.receipt_book_no</td>
+                                        <td>@item.issue_hod</td>
+                                        <td>@item.receipt_used</td>
+                                        <td>@item.sanction_flg</td>
+                                        <td>@item.remark</td>
+                                        <td>@item.remark_hod</td>
+                                        <td>@item.receiptbook_type</td>
+                                        <td>@item.issue_authority</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+
+</body>
+</html>
+

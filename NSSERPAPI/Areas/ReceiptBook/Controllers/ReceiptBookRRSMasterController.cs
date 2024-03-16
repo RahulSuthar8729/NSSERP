@@ -40,8 +40,8 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             {
                 firstDetail = new ExpandoObject();
             }            
-            firstDetail.EmployeeDetils = _dbFunctions.GetEmployeeDetils();
-            firstDetail.PersonCatDetails = _dbFunctions.getPersoncatdetails(DataFlag);
+            firstDetail.PersonDetails = _dbFunctions.getPersondetails(DataFlag);
+            firstDetail.ReceiveInEventList = _dbFunctions.GetEProgramDetils(DataFlag);
             return Ok(firstDetail);
         }
         [HttpPost]
@@ -49,7 +49,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
         {
             try
             {
-                var result = _dbEngine.ExecuteInsertStoredProcedure("[InsertReceiptBookRRSMaster]", model);
+                var result = _dbEngine.ExecuteInsertStoredProcedure("[InsertReceiptBookRRS]", model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
 
             try
             {
-                var result = _dbEngine.ExecuteUpdateStoredProcedure("[updateReceiptBookRRSMaster]", model.book_rrs_no, model);
+                var result = _dbEngine.ExecuteUpdateStoredProcedure("[UpdateReceiptBookRRS]", model.book_rrs_no, model);
                 return Ok(result);
             }
             catch (Exception ex)
