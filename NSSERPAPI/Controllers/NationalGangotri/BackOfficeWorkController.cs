@@ -117,9 +117,7 @@ namespace NSSERPAPI.Controllers.NationalGangotri
 
                         catch (Exception)
                         {
-                            // If an exception occurs, roll back the transaction
                             transaction.Rollback();
-
                         }
                     }
                 }

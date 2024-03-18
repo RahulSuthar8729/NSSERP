@@ -84,7 +84,7 @@
                     </h5>
                 </div>
                 <div class="col-2 text-right">
-                    <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                    <a title="Go Back Home" href="/NationalGangotri/DonationReceiveMaterDetails" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
                 </div>
             </div>
         </div>
@@ -839,27 +839,27 @@
                                             type: 'GET',
                                             data: { pincode: enteredPinCode },
                                             success: function (response) {
-                                                try {                                                   
-                                                    var jsonData = response.data;                                                    
+                                                try {
+                                                    var jsonData = response.data;
                                                     if (Array.isArray(jsonData) && jsonData.length > 0) {
-                                                       
-                                                        var locationData = jsonData[0];                                                        
+
+                                                        var locationData = jsonData[0];
                                                         $('#CountryID').val(locationData.CountryID);
                                                         //$("#CurrencyID").val(locationData.CountryID);
 
-                                                     
+
                                                         $('#StateID').empty().append('<option value="' + locationData.StateID + '">' + locationData.StateName + '</option>');
 
                                                         $('#DistrictID').empty().append('<option value="' + locationData.DistrictID + '">' + locationData.DistrictName + '</option>');
 
-                                                       
+
                                                         var selectedCountryCode = locationData.CountryCode;
                                                         $('#countryCode option:contains("' + selectedCountryCode + '")').prop('selected', true);
-                                                    
+
                                                         if ($('#countryCode').val() == null) {
                                                             $('#countryCode').val('');
                                                         }
-                                                       
+
                                                         var selectedCountry = locationData.CountryID;
                                                         $("#CurrencyID option").each(function () {
                                                             $(this).prop("selected", $(this).val() == selectedCountry);
@@ -1370,7 +1370,7 @@
                                     });
 
                                     var mobileListJson = @Html.Raw(Model.MobileListJson);
-                                   
+
                                     if (!mobileListJson) {
                                         // Use data from the model
                                         mobileListJson = @Html.Raw(JsonConvert.SerializeObject(Model.MobileList));
@@ -3127,16 +3127,16 @@
 
                                     function addTableRow(head, purpose, quantity, amount, receiveAmount, announceAmount, bhojandate, CRITICALDISEASES) {
                                         var newRowPurpose = `<tr>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${head}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${purpose}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${quantity}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                        <td>${bhojandate}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>
-                                                                                                                                                                                                                                                                                                                                                                                                    </tr>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${head}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${purpose}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${quantity}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${amount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${receiveAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${announceAmount.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${bhojandate}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td>${CRITICALDISEASES}</td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <td><button class='btn btn-danger btn-sm delete-row'>Delete</button></td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </tr>`;
 
                                         tableBody.append(newRowPurpose);
                                         updateHiddenField();
@@ -3728,7 +3728,7 @@
                             <i class="fas fa-print"></i> Print
                         </a>  <button type="reset" class="btn btn-warning"><i class="fas fa-undo"></i> CIT</button>
                         <button type="reset" class="btn btn-danger">Cancel</button>
-                        <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a title="Go Back Home" href="/NationalGangotri/DonationReceiveMaterDetails" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </div>
 

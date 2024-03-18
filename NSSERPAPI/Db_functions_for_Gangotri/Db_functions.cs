@@ -114,7 +114,7 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
 
         public IEnumerable<dynamic> GEtPersonDetails()
         {
-            return _dbEngine.ExecuteStoredProcedure("GetPersonDetails");
+            return _dbEngine.ExecuteStoredProcedure("GetPersonDetails", new { dataflag="GANGOTRI"});
         }
 
         public IEnumerable<dynamic> CurrencyList()
@@ -580,6 +580,26 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         public IEnumerable<dynamic> getReceiptBookRRSMasterbyId(int id, string DataFlag)
         {
             return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookRRSDetailsById]", new { book_rrs_no = id, dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> GetReceiptBookPrintingDetais(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookPrintingDetails]", new { dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> GetReceiptBookPrintingBYId(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookPrintingById]", new { @ReceiptBookNo = id, dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> GetReceiptBookIssueDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookIssueDetails]", new { dataflag = DataFlag });
+        }
+
+        public IEnumerable<dynamic> GetReceiptBookIssuebyId(int id, string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookIssuebyId]", new { ReceiptBookIssueNo = id, dataflag = DataFlag });
         }
 
         #endregion
