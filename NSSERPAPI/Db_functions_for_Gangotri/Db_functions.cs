@@ -600,8 +600,24 @@ namespace NSSERPAPI.Db_functions_for_Gangotri
         public IEnumerable<dynamic> GetReceiptBookIssuebyId(int id, string DataFlag)
         {
             return _dbEngine.ExecuteStoredProcedure("[GetReceiptBookIssuebyId]", new { ReceiptBookIssueNo = id, dataflag = DataFlag });
+        } 
+        public IEnumerable<dynamic> GetReceiptCancellationDetails(string DataFlag)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptCancellationDetails]", new { dataflag = DataFlag });
         }
 
+        public IEnumerable<dynamic> GetReceiptCancellationById(int id, string DataFlag,string Tp)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptCancellationById]", new { ReceiptBookNo = id, dataflag = DataFlag,TP= Tp});
+        }
+        public IEnumerable<dynamic> GetReceiptCancellationmasterById(int id, string DataFlag, string Tp)
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptCancellationMasterByID]", new { ReceiptBookNo = id, dataflag = DataFlag, TP = Tp });
+        }
+        public IEnumerable<dynamic> GetReceiptCancellation_master_Reasons()
+        {
+            return _dbEngine.ExecuteStoredProcedure("[GetReceiptCancelMaster]");
+        }
         #endregion
 
     }

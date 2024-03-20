@@ -1006,14 +1006,14 @@
                                             data: { stateId: selectedStateId },
                                             success: function (response) {
                                                 var districtData = JSON.parse(response.data);
-                                                // Clear and populate district dropdown with retrieved districts
+                                               
                                                 $('#DistrictID').empty().append('<option value="" selected disabled>Select District</option>');
                                                 $.each(districtData, function (index, district) {
                                                     $('#DistrictID').append('<option value="' + district.DistrictID + '">' + district.DistrictName + '</option>');
                                                 });
                                             },
                                             error: function (xhr, status, error) {
-                                                console.log(error); // Handle errors if any
+                                                console.log(error); 
                                             }
                                         });
 
@@ -1041,7 +1041,7 @@
                                 <input type="hidden" id="CityName" name="CityName" />
 
                                 <script>
-                                    // Add a change event listener to the select element using jQuery
+                                   
                                     $('#CityID').change(function () {
                                         var selectedCityName = $(this).find('option:selected').text();
                                         $('#CityName').val(selectedCityName);
@@ -1173,7 +1173,7 @@
                                         handlePinCodeChange(enteredPinCode2);
                                     });
 
-                                    // Write additional logic here for the change events if needed
+                              
                                 });
 
                             </script>

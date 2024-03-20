@@ -1,0 +1,330 @@
+﻿@using System.Security.Claims;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.IO;
+@using NSSERP.Areas.ReceiptBook.Models
+@model ReceiptBookCancellation
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var UserDepartment = User.FindFirst("Department")?.Value;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS and JS -->
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+    <style>
+        .card-header.sticky-top {
+            background-color: #fff;
+            z-index: 1000;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+    @section scripts {
+        <script>
+            function convertToUpperCase(input) {
+                input.value = input.value.toUpperCase();
+            }
+            $(document).ready(function () {
+                $('#tableDetails').DataTable();
+            });
+        </script>
+
+
+    }
+</head>
+<body>
+    <div class="card">
+        @if (Model.msg != null || Model.msg != "")
+        {
+            ViewBag.msg = Model.msg;
+        }
+        <div class="card-header">
+            <div class="row">
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">RECEIPT BOOK</span>
+                        <span style="color:#28166f">CANCELLATION MASTER</span>
+                    </h5>
+                </div>
+                <div class="col text-left">
+                    <h5>
+                        <span style="color:#1cb8a1">INDIAN GANGOTRI</span>
+                    </h5>
+                </div>
+                <div class="col-2 text-right">
+                    <a title="Go Back Home" href="/ReceiptBook/ReceiptBookCancellation/Index" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="formdata" action="/ReceiptBook/ReceiptBookCancellation/Home" method="post">
+                @Html.AntiForgeryToken()
+
+                <fieldset id="fieldset" class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#fieldsetcontent" aria-expanded="false" aria-controls="fieldsetcontent">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">ReceiptBook Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="fieldsetcontent" class="nested-form-container collapse show">
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label>Book ID</label>
+                                <input class="form-control" id="bookid" readonly name="receipt_book_no" type="text" value="@Model.receipt_book_no">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label>Person Name</label>
+                                <select  class="form-control" name="PersonId" id="Person">
+                                    <option value="">Select</option>
+                                    @if (Model.PersonDetails != null)
+                                    {
+                                        @foreach (var order in Model.PersonDetails)
+                                        {
+                                            <option value="@order.person_id" data-currencycode="@order.person_name" @(Model.PersonId == order.person_id ? "selected" : "")>@order.person_name</option>
+                                        }
+                                    }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-2">
+                                <label>Reason For Cancellation</label>
+                                <textarea readonly class="form-control" name="Remark" rows="2" cols="50"></textarea>
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Receipt From</label>
+                                <input class="form-control" readonly name="receipt_from" type="number" value="@Model.receipt_from">
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Receipt To</label>
+                                <input class="form-control" readonly name="receipt_to" type="number" value="@Model.receipt_to">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Balance Receipt</label>
+                                <input class="form-control" readonly type="number" value="0">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label>Total Cancelled</label>
+                                <input class="form-control" name="ReceiptUsed" value="" readonly type="text">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>TP</label>
+                                <input class="form-control" id="tp" name="TP" value="@Model.TP" readonly type="text">
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <div class="form-check">   
+                                    <input class="form-check-input" id="postcheque" name="PostChq" type="checkbox" value="Y" @(Model.PostChq == "Y" ? "checked" : "") />
+
+                                    <label class="form-check-label" for="postcheque">Post Dated Cheque</label>
+                                </div>
+                            </div>
+
+                        </div>                      
+                    </div>
+
+                </fieldset>
+
+                <fieldset id="fieldset2" class="show border rounded p-3">
+                    <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
+                        <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#fieldsetcontent2" aria-expanded="false" aria-controls="fieldsetcontent2">
+                            <span id="collapseIcon" class="">&#43;</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">List Details</span>
+                        </button>
+                    </legend>
+
+                    <div id="fieldsetcontent2" class="nested-form-container collapse show">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-container">
+                                    <table id="tableDetails" class="table table-hover table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Check For Save</th>
+                                                <th>Cancel</th>
+                                                <th>Block</th>
+                                                <th>Provisional Receipt No.</th>
+                                                <th>Donation Receipt No.</th>
+                                                <th>Reason</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null)
+                                            {
+                                                foreach (var item in Model.ReceiptBookCancellationListMasterByIds)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <input id="ifSave" type="checkbox" class="form-check save-checkbox" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="checkbox" class="form-check cancel-checkbox" value="Y" @(item != null && item.CancelFlag == "Y" ? "checked" : "") />
+                                                        </td>
+                                                        <td>
+                                                            <input type="checkbox" class="form-check block-checkbox" value="Y" @(item != null && item.Block == "Y" ? "checked" : "") />
+                                                        </td>
+                                                        <td>@(item != null ? item.Receipt_No : "")</td>
+                                                        <td>@(item != null ? item.Don_Receipt_No : "")</td>
+                                                        <td>
+                                                            <select class="form-control reason-select" name="Reason">
+                                                                <option value="">Select Reason</option>
+                                                                @if (Model.CancellationReasonsList != null)
+                                                                {
+                                                                    foreach (var reason in Model.CancellationReasonsList)
+                                                                    {
+                                                                        <option value="@reason.Id" @(item.Cancel_Remark_Id == reason.Id ? "selected" : "")>@reason.Name</option>
+                                                                    }
+                                                                }
+                                                                }
+                                                            </select>
+                                                            <select class="form-control sadhak-select" name="Sadhak">
+                                                                <option value="">Select Sadhak Name</option>
+                                                                @if (Model.EmployeeDetils != null)
+                                                                {
+                                                                    foreach (var reason in Model.EmployeeDetils)
+                                                                    {
+                                                                        <option value="@reason.EmpID" @(item.Sadhak == reason.EmpName ? "selected" : "")>@reason.EmpName</option>
+                                                                    }
+                                                                }
+                                                                }
+                                                            </select>
+                                                            <textarea placeholder="Enter Reason" class="form-control remark-textarea" name="Remark" rows="2" cols="50">@item.Cancel_Remark</textarea>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <input type="hidden" id="hdnCancellationJson" name="CancellationJson" />
+                                <script>
+                                    $(document).ready(function () {
+                                        // Listen for changes in the checkboxes with class save-checkbox
+                                        $('.save-checkbox').change(function () {
+                                            if ($(this).is(':checked')) {
+                                                // If checkbox is checked, add the row data to hidden field
+                                                addRowData($(this));
+                                            } else {
+                                                // If checkbox is unchecked, remove the corresponding row data from hidden field
+                                                removeRowData($(this));
+                                            }
+                                        });
+
+                                        // Function to add row data to hidden field
+                                        function addRowData(checkbox) {
+                                            var row = checkbox.closest('tr');
+                                            var receiptNo = row.find('td:eq(3)').text();
+                                            var cancel = row.find('td:eq(1)').find('input[type="checkbox"]').prop('checked');
+                                            var block = row.find('td:eq(2)').find('input[type="checkbox"]').prop('checked');                                        
+                                           
+                                            var reason = row.find('select[name="Reason"]').val();
+                                            var sadhak = row.find('select[name="Sadhak"]').val();
+                                            var remark = row.find('textarea[name="Remark"]').val();
+                                            var dataFlag = "GANGOTRI";
+                                            var fyid = "0";
+                                            var cancelFlag = cancel ? "Y" : "N";
+                                            var blockFlag = block ? "Y" : "N";
+
+                                            var rowData = {
+                                                Book_Id: $('#bookid').val(),
+                                                Receipt_No: receiptNo,
+                                                TP:$('#tp').val(),
+                                                cancelFlag: cancelFlag,
+                                                Block: blockFlag,
+                                                Cancel_Reason: reason,                                                
+                                                Cancel_Remark: reason,
+                                                Cancel_Remark_Id: reason,
+                                                Sadhak: sadhak,
+                                                Data_Flag: dataFlag,
+                                                FY_ID: fyid
+                                            };
+
+                                            var currentValue = $('#hdnCancellationJson').val();
+                                            var parsedData = JSON.parse(currentValue || "[]");
+                                            parsedData.push(rowData);
+                                            $('#hdnCancellationJson').val(JSON.stringify(parsedData));
+                                        }
+
+                                        // Function to remove row data from hidden field
+                                        function removeRowData(checkbox) {
+                                            var row = checkbox.closest('tr');
+                                            var receiptNo = row.find('td:eq(3)').text();
+
+                                            var currentValue = $('#hdnCancellationJson').val();
+                                            var parsedData = JSON.parse(currentValue || "[]");
+                                            var filteredData = parsedData.filter(function (item) {
+                                                return item.ReceiptNo !== receiptNo;
+                                            });
+                                            $('#hdnCancellationJson').val(JSON.stringify(filteredData));
+                                        }
+                                    });
+                                </script>
+                                
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>                <br />
+                <div class="container-lg">
+                    <div class="text-center">
+
+                        @{
+                            string BtnName = string.Empty;
+                            string viewParam = Context.Request.Query["view"];
+                            bool isViewEnabled = !string.IsNullOrEmpty(viewParam) && viewParam.ToLower() == "true";
+
+                            string editParam = Context.Request.Query["edit"];
+                            bool isEditEnabled = !string.IsNullOrEmpty(editParam) && editParam.ToLower() == "true";
+
+                            if (isEditEnabled)
+                            {
+                                BtnName = "Update";
+                            }
+                            else
+                            {
+                                BtnName = "Submit";
+                            }
+                        }
+
+                        <button type="submit" class="btn btn-success" style="@(isViewEnabled ? "display:none;" : "")">
+                            <i class="fas fa-check"></i>@BtnName
+                        </button>
+
+                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <a title="Go Back Home" href="/ReceiptBook/ReceiptBookCancellation/Index" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
+
+</body>
+</html>
+
+
+
+

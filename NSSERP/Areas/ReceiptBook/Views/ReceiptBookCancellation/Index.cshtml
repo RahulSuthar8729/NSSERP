@@ -1,4 +1,4 @@
-﻿@model NSSERP.Areas.ReceiptBook.Models.ReceiptBookIssue
+﻿@model NSSERP.Areas.ReceiptBook.Models.ReceiptbookCancellationDetails
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -105,9 +105,9 @@
     </style>
     <style>
         .card-header.sticky-top {
-            background-color: #fff;
-            z-index: 1000;
-            border-bottom: 1px solid #dee2e6;
+            background-color: #fff; /* Set a background color for the sticky header */
+            z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
+            border-bottom: 1px solid #dee2e6; /* Add a border to separate it from the content */
         }
     </style>
 </head>
@@ -122,7 +122,7 @@
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 mb-3 mb-md-0">
                     <h5 class="mb-0">
-                        <span style="color:#1cb8a1">RECEIPT BOOK ISSUE</span>
+                        <span style="color:#1cb8a1">RECEIPT CANCELLATION</span>
                         <span style="color:#28166f">DETAILS</span>
                     </h5>
                 </div>
@@ -132,13 +132,14 @@
                     </h5>
                 </div>
                 <div class="col-12 col-md-3 text-md-right">
-                    <a href="/ReceiptBook/ReceiptBookIssue/Home" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a>
+                    @* <a href="/ReceiptBook/ReceiptBookCancellation/Home" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ADD</a> *@
                     <a title="Go Back Home" href="/Gangotri/Home" class="btn btn-warning ml-2"><i class="fas fa-arrow-left"></i> Back</a>
                 </div>
             </div>
         </div>
         <br />
         <div class="row">
+
             <div class="col-12">
                 <div class="table-container">
                     <table id="tableDetails" class="table table-hover table-bordered">
@@ -147,22 +148,13 @@
                             <tr>
 
                                 <th></th>
-                                <th>BOOK ISSUE NO.</th>
-                                <th>ISSUE DATE</th>
-                                <th>PERSON ID</th>
-                                <th>PERSON NAME</th>
-                                <th>RECEIPT BOOK NO.</th>
+                                <th></th>
+                                <th>RECEIPT BOOK NO</th>
+                                <th>PRINT DATE</th>
                                 <th>RECEIPT FROM</th>
                                 <th>RECEIPT TO</th>
-                                <th>SUBMITTED</th>
-                                <th>RECEIPT USED</th>
-                                <th>EVENT</th>
-                                <th>REMARK</th>
-                                <th>TYPE</th>
-                                <th>ISSUE AUTHORITY</th>
-                                <th>PATIENT ID</th>
-                                <th>DISPATCH NO</th>
-
+                                <th>RECEIPT BOOK TYPE</th>                               
+                              
                             </tr>
                         </thead>
 
@@ -173,26 +165,20 @@
                                 {
                                     <tr>
                                         <td>
-                                            <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no,view=true })" title="View Details">
+                                            <a href="@Url.Action("Home", "ReceiptBookCancellation", new { id = item.receipt_book_no,view=true })" title="View Details">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
-
-                                        <td>@item.book_issue_no</td>
-                                        <td>@item.IssueDate</td>
-                                        <td>@item.IssueDate</td>
-                                        <td>@item.PersonId</td>
-                                        <td>@item.RRSNo</td>
-                                        <td>@item.ProvReceiptFrom</td>
-                                        <td>@item.ProvReceiptTo</td>
-                                        <td>@item.Submitted</td>
-                                        <td>@item.ReceiptUsed</td>
-                                        <td>@item.Event</td>
-                                        <td>@item.Remark</td>
-                                        <td>@item.ReceiptBookType</td>
-                                        <td>@item.IssueAuthority</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>
+                                            <a href="@Url.Action("Home", "ReceiptBookCancellation", new { id = item.receipt_book_no,tp=item.TP,edit=true})" title="Edit">
+                                                <i style="color: orange;" class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                        <td>@item.receipt_book_no</td>
+                                        <td>@item.date_print.GetValueOrDefault().ToShortDateString()</td>
+                                        <td>@item.receipt_from</td>
+                                        <td>@item.receipt_to</td>
+                                        <td>@item.TP</td>
 
                                     </tr>
                                 }
@@ -203,9 +189,6 @@
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
 
 </body>

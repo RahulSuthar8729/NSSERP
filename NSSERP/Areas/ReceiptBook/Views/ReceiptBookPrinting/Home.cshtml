@@ -98,7 +98,7 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="tp">Type</label>
-                                <select required class="form-control" name="tp" id="tp">
+                                <select required class="form-control" name="receiptbook_type" id="tp">
                                     <option value="0">Select</option>
                                     @if (Model.ReceiptBookTypeList != null)
                                     {
@@ -134,42 +134,26 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label>Receipt Book Type</label>
+                          
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="receiptbook_type" id="radio1" value="80G" @(Model.receiptbook_type == "80G" ? "checked" : "")>
-                                    <label class="form-check-label" for="radio1">
-                                        80G
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="receiptbook_type" id="radio2" value="35AC" @(Model.receiptbook_type == "35AC" ? "checked" : "")>
-                                    <label class="form-check-label" for="radio2">
-                                        35AC
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="receiptbook_type" id="radio3" value="FCRA" @(Model.receiptbook_type == "FCRA" ? "checked" : "")>
+                                    <input class="form-check-input" type="radio" name="tp" id="radio3" value="FCRA" @(Model.receiptbook_type == "FCRA" ? "checked" : "")>
                                     <label class="form-check-label" for="radio3">
                                         FCRA
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="receiptbook_type" id="radio4" value="Provisional" @(Model.receiptbook_type == "Provisional" ? "checked" : "")>
+                                    <input class="form-check-input" type="radio" name="tp" id="radio4" value="P" @(Model.receiptbook_type == "P" ? "checked" : "")>
                                     <label class="form-check-label" for="radio4">
                                         Provisional
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="receiptbook_type" id="radio5" value="Donationbox" @(Model.receiptbook_type == "Donationbox" ? "checked" : "")>
+                                    <input class="form-check-input" type="radio" name="tp" id="radio5" value="Donationbox" @(Model.receiptbook_type == "Donationbox" ? "checked" : "")>
                                     <label class="form-check-label" for="radio5">
                                         Donation Box
                                     </label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="receiptbook_type" id="radio6" value="General" @(Model.receiptbook_type == "General" ? "checked" : "")>
-                                    <label class="form-check-label" for="radio6">
-                                        General
-                                    </label>
-                                </div>
+                               
                             </div>
 
 
