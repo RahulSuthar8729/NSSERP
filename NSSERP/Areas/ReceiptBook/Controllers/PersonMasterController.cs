@@ -14,12 +14,13 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _apiClient;
-        public PersonMasterController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient)
-
+        private readonly UploadDocsFunction _UploadDocs;
+        public PersonMasterController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IHttpClientFactory clientFactory, HttpClient httpClient, UploadDocsFunction uploadDocsFunction)
         {
             _webHostEnvironment = webHostEnvironment;
             _apiClient = clientFactory.CreateClient("WebApi");
             _httpClientFactory = clientFactory;
+            _UploadDocs = uploadDocsFunction;
         }
 
         [HttpGet]
@@ -131,5 +132,52 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
             return View(detail);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> Index(PersonMaster model, int id)
+        {
+            try
+            {
+                if (model.DocUpload != null && model.DocUpload.Any())
+                {
+                    var fileNames = await _UploadDocs.SaveFilesAsync(model.DocUpload,"DocPerson");
+                    model.Docs = string.Join(",", fileNames);
+                }
+
+                var requestData = new
+                {
+                    Id = id,
+                    FilePath = "",
+                    FileName = model.Docs,
+                    DataFlag = User.FindFirst("DataFlag")?.Value,
+                    FileType = model.SelectedDocumentType,
+                    FYID = 0
+                };
+
+                var response = await _apiClient.PostAsJsonAsync("api/PersonMaster/InsertFileInfo", requestData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "PersonMaster", new { model = modelget });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
+            }
+
+            return View();
+        }
+
+       
     }
 }

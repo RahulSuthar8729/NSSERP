@@ -57,6 +57,7 @@ builder.Services.AddHttpClient("WebApi", client =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     // Add any other headers or configurations if needed
 });
+builder.Services.AddScoped<UploadDocsFunction>();
 //builder.Services.AddScoped<WebApiService>();
 //builder.Services.AddScoped<IWebApiService, WebApiService>();
 

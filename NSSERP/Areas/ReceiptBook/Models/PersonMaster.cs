@@ -7,6 +7,9 @@ namespace NSSERP.Areas.ReceiptBook.Models
     public class PersonMaster
     {
         public IEnumerable<PersonMaster> masterDetails { get; set; }
+        public List<IFormFile> DocUpload { get; set; }
+        public string? Docs { get; set; } = "";
+        public string? SelectedDocumentType { get; set; } = "";
         public string? msg { get; set; }
         public int? person_id { get; set; }
         public string? person_name { get; set; }

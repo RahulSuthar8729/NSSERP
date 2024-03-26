@@ -11,20 +11,7 @@
     <title>@ViewData["Title"]</title>
 
     @section scripts {
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <!-- Select2 CSS and JS -->
-
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-        <!-- DataTables CSS and JS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
-        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-
+       
         <script>
             $(document).ready(function () {
 
@@ -142,11 +129,12 @@
 
             <div class="col-12">
                 <div class="table-container">
-                    <table id="tableDetails" class="table table-hover table-bordered">
+                    <table id="tableDetails" class="table table-hover">
 
                         <thead class="thead-dark">
                             <tr>
 
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th>PERSON ID</th>
@@ -163,22 +151,49 @@
                         </thead>
 
                         <tbody>
-                            @if (Model != null)
+                            @if (Model.masterDetails != null)
                             {
                                 foreach (var item in Model.masterDetails)
                                 {
                                     <tr>
                                         <td>
-                                            <a href="@Url.Action("Home", "PersonMaster", new { id = item.person_id,view=true })" title="View Details">
+                                            <a href="@Url.Action("Home", "PersonMaster", new { id = item.person_id, view = true })" title="View Details">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Home", "PersonMaster", new { id = item.person_id,edit=true})" title="Edit">
+                                            <a href="@Url.Action("Home", "PersonMaster", new { id = item.person_id, edit = true })" title="Edit">
                                                 <i style="color: orange;" class="fas fa-edit"></i>
                                             </a>
                                         </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Docs))
+                                            {
+                                                <label for="file1">Attached Documents</label>
+                                                var fileNames = item.Docs.Split(',').Select(x => x.Trim()).ToList();
+                                                for (int i = 0; i < fileNames.Count; i++)
+                                                {
+                                                    var simplifiedFileName = $"File {i + 1}";
+                                                    <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <form method="post" action="@Url.Action("Index", "PersonMaster", new { id = item.person_id })" enctype="multipart/form-data">
+                                                    <select class="form-control" id="documentType" name="DocumentType">
+                                                        <option value="0">Select</option>
+                                                        <option value="Photo">Photo</option>
+                                                        <option value="Security Cheque">Security Cheque</option>
+                                                        <option value="Id Proof">Id Proof</option>
+                                                    </select>
+                                                    <label data-browse="Browse">Attach Documents</label>
+                                                    <input type="file" name="DocUpload" multiple id="file1" accept="image/*,application/pdf">
 
+                                                    <input type="hidden" name="SelectedDocumentType" id="selectedDocumentType" value="">
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm" id="uploadBtn">Upload</button>
+                                                </form>
+                                            }
+                                        </td>
                                         <td>@item.person_id</td>
                                         <td>@item.person_name</td>
                                         <td>@item.address,@item.address2,@item.address3</td>
@@ -192,16 +207,31 @@
                                 }
                             }
                         </tbody>
-                    </table>
 
+                    </table>
+                    <script>
+                        $(document).ready(function () {
+                            $("#uploadBtn").click(function () {
+                                var selectedValue = $("#documentType").val();
+                                $("#selectedDocumentType").val(selectedValue);                               
+                                $("#uploadForm").submit();
+                            });
+                        });
+
+                        $(document).ready(function () {
+
+                            $(document).on('click', '.view-btn', function () {
+                                var fileName = $(this).data('file-name');
+                                window.open('/DocPerson/' + fileName, '_blank');
+                            });
+                        });
+                    </script>
+
+              
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
-
+       
 </body>
 </html>
 

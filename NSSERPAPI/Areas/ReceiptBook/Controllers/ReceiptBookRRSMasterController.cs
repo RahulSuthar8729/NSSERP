@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using NSSERPAPI.Areas.ReceiptBook.Models;
 using NSSERPAPI.Db_functions_for_Gangotri;
+using System.Data;
+using System.Data.SqlClient;
 using System.Dynamic;
 
 namespace NSSERPAPI.Areas.ReceiptBook.Controllers
@@ -11,10 +14,12 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
     {
         private readonly Db_functions _dbFunctions;
         private readonly DbEngineClass _dbEngine;
+        private readonly string _connectionString;
         public ReceiptBookRRSMasterController(Db_functions dbFunctions, IConfiguration configuration)
         {
             _dbFunctions = dbFunctions ?? throw new ArgumentNullException(nameof(dbFunctions));
             _dbEngine = new DbEngineClass(configuration);
+            _connectionString = configuration.GetConnectionString("ConStr");
         }
         [HttpGet]
         public IActionResult Index(string DataFlag)
@@ -39,7 +44,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             else
             {
                 firstDetail = new ExpandoObject();
-            }            
+            }
             firstDetail.PersonDetails = _dbFunctions.getPersondetails(DataFlag);
             firstDetail.ReceiveInEventList = _dbFunctions.GetEProgramDetils(DataFlag);
             return Ok(firstDetail);
@@ -66,6 +71,35 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             {
                 var result = _dbEngine.ExecuteUpdateStoredProcedure("[UpdateReceiptBookRRS]", model.book_rrs_no, model);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+
+        }
+
+        [HttpGet]
+        public IActionResult Discard(string id, string DataFlag)
+        {
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@RRSNO", Convert.ToInt32(id));
+                    parameters.Add("@DataFlag", DataFlag);
+                    parameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                    connection.Execute("[ReceiptBookRRSDiscard]", parameters, commandType: CommandType.StoredProcedure);
+
+                    string result = parameters.Get<string>("@returnResult");
+
+
+                    return Ok(result);
+                }
             }
             catch (Exception ex)
             {

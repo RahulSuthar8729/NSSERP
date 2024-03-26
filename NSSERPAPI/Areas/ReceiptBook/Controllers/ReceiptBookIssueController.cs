@@ -28,6 +28,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             dynamic firstDetail;
             firstDetail = new ExpandoObject();
             firstDetail.masterDetails = result;
+            firstDetail.PersonDetails = _dbFunctions.GEtPersonDetails();
             return Ok(firstDetail);
         }
 
@@ -105,6 +106,70 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult InsertFileInfo([FromBody] InsertDocFileInfo model)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
 
+                    var parameters = new DynamicParameters();
+                  
+                    parameters.Add("@IssueCode", model.Id);
+                    parameters.Add("@FilePath", model.FilePath);
+                    parameters.Add("@FileName", model.FileName);
+                    parameters.Add("@DataFlag", model.DataFlag);
+                    parameters.Add("@FYID", model.FYID);
+                    parameters.Add("@ReturnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50); 
+
+                    connection.Execute("[InsertReceiptIssueFile]", parameters, commandType: CommandType.StoredProcedure);
+
+
+                    string result = parameters.Get<string>("@ReturnResult");
+
+
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        public IActionResult DepartmentSubmit(string id, string DataFlag,string subByValue,string chkSubValue)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@ISNO",id);
+                    parameters.Add("@DataFlag",DataFlag);
+                    parameters.Add("@SubBy",subByValue);
+                    parameters.Add("@ChkSub", chkSubValue);
+                
+                    parameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+
+                    connection.Execute("[ReceiptBookDeptSubmit]", parameters, commandType: CommandType.StoredProcedure);
+
+
+                    string result = parameters.Get<string>("@returnResult");
+
+
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
     }
 }

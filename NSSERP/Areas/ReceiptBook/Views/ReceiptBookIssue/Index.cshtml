@@ -11,20 +11,7 @@
     <title>@ViewData["Title"]</title>
 
     @section scripts {
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <!-- Select2 CSS and JS -->
-
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-        <!-- DataTables CSS and JS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
-        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-
+       
         <script>
             $(document).ready(function () {
 
@@ -137,77 +124,141 @@
                 </div>
             </div>
         </div>
+
         <br />
-        <div class="row">
-            <div class="col-12">
-                <div class="table-container">
-                    <table id="tableDetails" class="table table-hover table-bordered">
+     
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-container">
+                        <table id="tableDetails" class="table table-hover">
 
-                        <thead class="thead-dark">
-                            <tr>
+                            <thead class="thead-dark">
+                                <tr>
 
-                                <th></th>
-                                <th>BOOK ISSUE NO.</th>
-                                <th>ISSUE DATE</th>
-                                <th>PERSON ID</th>
-                                <th>PERSON NAME</th>
-                                <th>RECEIPT BOOK NO.</th>
-                                <th>RECEIPT FROM</th>
-                                <th>RECEIPT TO</th>
-                                <th>SUBMITTED</th>
-                                <th>RECEIPT USED</th>
-                                <th>EVENT</th>
-                                <th>REMARK</th>
-                                <th>TYPE</th>
-                                <th>ISSUE AUTHORITY</th>
-                                <th>PATIENT ID</th>
-                                <th>DISPATCH NO</th>
+                                    <th></th>
+                                    <th></th>
+                                <th>DEPT.SUBMIT</th>
+                                    <th>BOOK ISSUE NO.</th>
+                                    <th>ISSUE DATE</th>
+                                    <th>PERSON ID</th>
+                                    <th>PERSON NAME</th>
+                                    <th>RECEIPT BOOK NO.</th>
+                                    <th>RECEIPT FROM</th>
+                                    <th>RECEIPT TO</th>
+                                    <th>SUBMITTED</th>
+                                    <th>RECEIPT USED</th>
+                                    <th>EVENT</th>
+                                    <th>REMARK</th>
+                                    <th>TYPE</th>
+                                    <th>ISSUE AUTHORITY</th>
+                                    <th>PATIENT ID</th>
+                                    <th>DISPATCH NO</th>
 
-                            </tr>
-                        </thead>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            @if (Model != null)
-                            {
-                                foreach (var item in Model.masterDetails)
+                            <tbody>
+                                @if (Model != null)
                                 {
-                                    <tr>
+                                    foreach (var item in Model.masterDetails)
+                                    {
+                                        <tr>
+                                           
+                                            <td>
+                                                <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no,view=true })" title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(Model.Docs))
+                                                {
+                                                    <label for="file1">Attached Documents</label>
+                                                    var fileNames = Model.Docs.Split(',').Select(x => x.Trim()).ToList();
+                                                    for (int i = 0; i < fileNames.Count; i++)
+                                                    {
+                                                        var simplifiedFileName = $"File {i + 1}";
+                                                        <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <form method="post" action="@Url.Action("Index", "ReceiptBookIssue", new { id = item.book_issue_no})" enctype="multipart/form-data">
+                                                        <label data-browse="Browse">Attach Documents</label>
+                                                        <input type="file" name="DocUpload" multiple id="file1" accept="image/*,application/pdf">
+                                                        <button type="submit" class="btn btn-outline-primary btn-sm">Upload</button>
+                                                    </form>
+                                                }
+                                            </td>
                                         <td>
-                                            <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no,view=true })" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
+                                            <textarea placeholder="Submit By" class="form-control" name="SubBy" rows="1" cols="50">@item.SubBy</textarea>
+                                            <input type="checkbox" value="Y" name="ChkSub" @(item.ChkSub == "Y" ? "checked" : "") onchange="submitData('@item.book_issue_no', this.checked)" />
                                         </td>
+                                            <td>@item.book_issue_no</td>
+                                            <td>@item.IssueDate.GetValueOrDefault().ToShortDateString()</td>                                            
+                                            <td>@item.PersonId</td>
+                                            <td>@item.PersonId
+                                            <select class="form-control" name="RefPersonid" id="RefPersonid">
+                                                <option value="">Select</option>
+                                                @if (Model.PersonDetails != null)
+                                                {
+                                                    @foreach (var order in Model.PersonDetails)
+                                                    {
+                                                        <option value="@order.person_id" data-currencycode="@order.person_name" @(Model.PersonId == order.person_id ? "selected" : "")>@order.person_name</option>
+                                                    }
+                                                }
+                                                }
+                                            </select>
+                                            <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no })" title="Transfer This Book">
+                                                <i style="font-size:small" class="fas fa-person-walking-arrow-right">Transfer</i>
+                                            </a>
+                                            </td>
+                                            <td>@item.RRSNo</td>
+                                            <td>@item.ProvReceiptFrom</td>
+                                            <td>@item.ProvReceiptTo</td>
+                                            <td>@item.Submitted</td>
+                                            <td>@item.ReceiptUsed</td>
+                                            <td>@item.Event</td>
+                                            <td>@item.Remark</td>
+                                            <td>@item.ReceiptBookType</td>
+                                            <td>@item.IssueAuthority</td>
+                                            <td></td>
+                                            <td></td>
 
-                                        <td>@item.book_issue_no</td>
-                                        <td>@item.IssueDate</td>
-                                        <td>@item.IssueDate</td>
-                                        <td>@item.PersonId</td>
-                                        <td>@item.RRSNo</td>
-                                        <td>@item.ProvReceiptFrom</td>
-                                        <td>@item.ProvReceiptTo</td>
-                                        <td>@item.Submitted</td>
-                                        <td>@item.ReceiptUsed</td>
-                                        <td>@item.Event</td>
-                                        <td>@item.Remark</td>
-                                        <td>@item.ReceiptBookType</td>
-                                        <td>@item.IssueAuthority</td>
-                                        <td></td>
-                                        <td></td>
-
-                                    </tr>
+                                        </tr>
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    <script>
+                        function submitData(bookIssueNo) {
+                            var subByValue = $('textarea[name="SubBy"]').val();
+                            var isChecked = $('input[name="checkboxName"]').is(':checked');
+                            var chkSubValue = isChecked ? "Y" : "N";
 
+                            if (isChecked) {                                
+                                $.ajax({
+                                    type: "Get",
+                                    url: "/ReceiptBook/ReceiptBookIssue/DepartmentSubmit",
+                                    data: { subByValue: subByValue, chkSubValue: chkSubValue, id: bookIssueNo },
+                                    success: function (response) {
+                                       
+                                        console.log(response);
+                                    },
+                                    error: function (xhr, status, error) {
+                                       
+                                        console.log(error);
+                                    }
+                                });
+                            }
+                        }
+                    </script>
+
+                    </div>
                 </div>
             </div>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..."></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="..."></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..."></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="..." crossorigin="anonymous" />
-
+     
+    </div>
+  
 </body>
 </html>
 

@@ -6,6 +6,7 @@ namespace NSSERP.Areas.ReceiptBook.Models
     {
         public IEnumerable<ReceiptBookRRSMaster> masterDetails { get; set; }
         public string? msg { get; set; }
+        public string? emsg { get; set; }
         public int? book_rrs_no { get; set; }
         public int? person_id { get; set; }
         public DateTime? rrs_date { get; set; }

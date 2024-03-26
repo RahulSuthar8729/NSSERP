@@ -131,5 +131,40 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
             return View(detail);
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Discard(int id)
+        {
+           
+            try
+            {
+                var response = await _apiClient.GetAsync($"api/ReceiptBookRRSMaster/Discard?id={id}&DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}");                
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "ReceiptBookRRSMaster", new { model = modelget });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
+            }
+
+            return View();
+
+        }
     }
 }

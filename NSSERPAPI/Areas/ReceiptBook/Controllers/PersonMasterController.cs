@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using NSSERPAPI.Areas.ReceiptBook.Models;
 using NSSERPAPI.Db_functions_for_Gangotri;
+using System.Data;
+using System.Data.SqlClient;
 using System.Dynamic;
 
 namespace NSSERPAPI.Areas.ReceiptBook.Controllers
@@ -11,10 +14,12 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
     {
         private readonly Db_functions _dbFunctions;
         private readonly DbEngineClass _dbEngine;
+        private readonly string _connectionString;
         public PersonMasterController(Db_functions dbFunctions, IConfiguration configuration)
         {
             _dbFunctions = dbFunctions ?? throw new ArgumentNullException(nameof(dbFunctions));
             _dbEngine = new DbEngineClass(configuration);
+            _connectionString = configuration.GetConnectionString("ConStr");
         }
         [HttpGet]
         public IActionResult Index(string DataFlag)
@@ -75,6 +80,40 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
                 return Ok(ex.Message);
             }
 
+        }
+
+        [HttpPost]
+        public IActionResult InsertFileInfo([FromBody] InsertDocFileInfo model)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@PERSON_CODE", model.Id);
+                    parameters.Add("@FILE_PATH", model.FilePath);
+                    parameters.Add("@FILE_NAME", model.FileName);
+                    parameters.Add("@DATA_FLAG", model.DataFlag);
+                    parameters.Add("@FY_ID", model.FYID);
+                    parameters.Add("@FILE_TYPE", model.FileType);
+                    parameters.Add("@ReturnResult", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+
+                    connection.Execute("[InsertPersonFile]", parameters, commandType: CommandType.StoredProcedure);
+
+
+                    string result = parameters.Get<string>("@ReturnResult");
+
+
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
         }
     }
 }

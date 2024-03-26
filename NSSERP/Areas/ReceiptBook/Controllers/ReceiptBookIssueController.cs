@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NSSERP.Areas.ReceiptBook.Models;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace NSSERP.Areas.ReceiptBook.Controllers
@@ -131,5 +132,107 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
             return View(detail);
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(ReceiptBookIssue model, int id)
+        {
+            try
+            {
+                if (model.DocUpload != null && model.DocUpload.Any())
+                {
+                    var fileNames = await SaveFilesAsync(model.DocUpload);
+                    model.Docs = string.Join(",", fileNames);
+                }
+
+                var requestData = new
+                {
+                    Id = id,
+                    FilePath = "",
+                    FileName = model.Docs,
+                    DataFlag = User.FindFirst("DataFlag")?.Value,
+                    FYID = 0
+                };
+
+                var response = await _apiClient.PostAsJsonAsync("api/ReceiptBookIssue/InsertFileInfo", requestData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "ReceiptBookIssue", new { model = modelget });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
+            }
+
+            return View();
+        }
+
+        private async Task<List<string>> SaveFilesAsync(List<IFormFile> files)
+        {
+            var fileNames = new List<string>();
+
+            var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "DocReceiptBook");
+            Directory.CreateDirectory(folderPath);
+
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(folderPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    fileNames.Add(fileName);
+                }
+            }
+
+            return fileNames;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DepartmentSubmit(string subByValue, string chkSubValue,int id)
+        {
+            try
+            {
+                var response = await _apiClient.GetAsync($"api/ReceiptBookIssue/DepartmentSubmit?id={id}&DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}&subByValue={subByValue}&chkSubValue={chkSubValue}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    TempData["msg"] = modelget;
+                    return RedirectToAction("Index", "ReceiptBookIssue", new { model = modelget });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.emsg = $"An error occurred: {ex.Message}";
+            }
+
+            return View();
+        }
+
     }
 }

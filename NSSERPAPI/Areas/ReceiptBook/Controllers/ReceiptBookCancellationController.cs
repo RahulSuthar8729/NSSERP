@@ -31,6 +31,7 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
             firstDetail = new ExpandoObject();
             firstDetail.masterDetails = result;
             return Ok(firstDetail);
+
         }
 
 

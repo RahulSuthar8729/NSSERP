@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bootstrap" Version="5.3.2" />
+    <PackageReference Include="bootstrap" Version="5.3.3" />
     <PackageReference Include="Dapper" Version="2.1.28" />
     <PackageReference Include="EPPlus" Version="7.0.8" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
@@ -85,6 +85,8 @@
     <PackageReference Include="Selenium.WebDriver" Version="4.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="Toaster" Version="2.1.10716" />
+    <PackageReference Include="toastr" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -92,10 +94,189 @@
     <Folder Include="Areas\PostReceive\Models\" />
     <Folder Include="Areas\Searching\Models\" />
     <Folder Include="Theme\" />
+    <Folder Include="wwwroot\DocReceiptBook\" />
+    <Folder Include="wwwroot\DocPerson\" />
     <Folder Include="wwwroot\TempDocDonationReceive\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bootstrap.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bulma.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.bulma.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.dataTables.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.foundation.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.foundation.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.jqueryui.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.semanticui.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\autoFill.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\dataTables.autoFill.js" />
+    <None Include="wwwroot\DataTables\AutoFill-2.7.0\js\dataTables.autoFill.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\css\common.scss" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\css\mixins.scss" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bootstrap.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bulma.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.bulma.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.colVis.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.colVis.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.dataTables.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.foundation.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.foundation.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.html5.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.html5.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.jqueryui.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.print.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.print.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.semanticui.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\buttons.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\dataTables.buttons.js" />
+    <None Include="wwwroot\DataTables\Buttons-3.0.1\js\dataTables.buttons.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bulma.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.bulma.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.dataTables.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.foundation.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.foundation.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.jqueryui.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.min.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.semanticui.js" />
+    <None Include="wwwroot\DataTables\DataTables-2.0.2\js\dataTables.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\DateTime-1.5.2\js\dataTables.dateTime.js" />
+    <None Include="wwwroot\DataTables\DateTime-1.5.2\js\dataTables.dateTime.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\dataTables.fixedColumns.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\dataTables.fixedColumns.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bootstrap.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bulma.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.bulma.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.dataTables.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.foundation.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.foundation.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.jqueryui.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.semanticui.js" />
+    <None Include="wwwroot\DataTables\FixedColumns-5.0.0\js\fixedColumns.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\dataTables.fixedHeader.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\dataTables.fixedHeader.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bootstrap.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bulma.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.bulma.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.dataTables.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.foundation.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.foundation.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.jqueryui.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.semanticui.js" />
+    <None Include="wwwroot\DataTables\FixedHeader-4.0.1\js\fixedHeader.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\JSZip-3.10.1\jszip.js" />
+    <None Include="wwwroot\DataTables\JSZip-3.10.1\jszip.min.js" />
+    <None Include="wwwroot\DataTables\pdfmake-0.2.7\pdfmake.js" />
+    <None Include="wwwroot\DataTables\pdfmake-0.2.7\pdfmake.min.js" />
+    <None Include="wwwroot\DataTables\pdfmake-0.2.7\vfs_fonts.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\dataTables.responsive.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\dataTables.responsive.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bootstrap.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bulma.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.bulma.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.dataTables.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.foundation.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.foundation.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.jqueryui.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.semanticui.js" />
+    <None Include="wwwroot\DataTables\Responsive-3.0.0\js\responsive.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\dataTables.scroller.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\dataTables.scroller.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bootstrap.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bulma.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.bulma.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.dataTables.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.foundation.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.foundation.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.jqueryui.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.semanticui.js" />
+    <None Include="wwwroot\DataTables\Scroller-2.4.1\js\scroller.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\dataTables.searchBuilder.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\dataTables.searchBuilder.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bootstrap.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bulma.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.bulma.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.dataTables.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.foundation.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.foundation.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.jqueryui.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.semanticui.js" />
+    <None Include="wwwroot\DataTables\SearchBuilder-1.7.0\js\searchBuilder.semanticui.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\dataTables.searchPanes.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\dataTables.searchPanes.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bootstrap.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bootstrap.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bootstrap4.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bootstrap4.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bootstrap5.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bootstrap5.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bulma.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.bulma.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.dataTables.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.dataTables.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.foundation.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.foundation.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.jqueryui.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.jqueryui.min.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.semanticui.js" />
+    <None Include="wwwroot\DataTables\SearchPanes-2.3.0\js\searchPanes.semanticui.min.js" />
     <None Include="wwwroot\SearchableDrop\docsupport\init.js" />
     <None Include="wwwroot\SearchableDrop\docsupport\init.proto.js" />
     <None Include="wwwroot\SearchableDrop\docsupport\jquery-1.12.4.min.js" />

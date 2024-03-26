@@ -25,7 +25,11 @@ namespace NSSERP.Areas.ReceiptBook.Models
         public string? Cancel_Remark { get; set; }
         public int? Cancel_Remark_Id { get; set; }
         public int? Cancel_SubRemark_Id { get; set; }
-        public string? Sadhak { get; set; }
-        
+        public int? Sadhak { get; set; }
+        public string? Receive_Id { get; set; }
+        public string? DonationDate { get; set; }
+        public string? Recno { get; set; }
+        public string? PostId { get; set; }
+
     }
 }
