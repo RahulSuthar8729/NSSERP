@@ -16,8 +16,11 @@ namespace NSSERP.Areas.ReceiptBook.Models
         public int? ProvReceiptFrom { get; set; }
         public int? ProvReceiptTo { get; set; }
         public int? RRSNo { get; set; }
+        public int? Receipt_Book_No { get; set; }
         public int? book_issue_no { get; set; }
         public int? PersonId { get; set; }
+        public int? PID { get; set; }
+        public string? Person_Name { get; set; }
         public int? PersonCatCode { get; set; }
         public DateTime? SubmitDate { get; set; }
         public int? ReceiptBookNoFrom { get; set; }

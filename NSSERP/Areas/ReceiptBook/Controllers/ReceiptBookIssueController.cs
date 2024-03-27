@@ -205,11 +205,52 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DepartmentSubmit(string subByValue, string chkSubValue,int id)
+        public async Task<IActionResult> DepartmentSubmit(string subByValue, string chkSubValue, int id)
         {
             try
             {
                 var response = await _apiClient.GetAsync($"api/ReceiptBookIssue/DepartmentSubmit?id={id}&DataFlag={User.FindFirst("DataFlag")?.Value.ToString()}&subByValue={subByValue}&chkSubValue={chkSubValue}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var modelget = await response.Content.ReadAsStringAsync();
+                    return Json(new { success = true, message = modelget });
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return Json(new { success = false, message = "Resource not found" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = $"Error: {response.ReasonPhrase}" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"An error occurred: {ex.Message}" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TransferPerson(ReceiptBookIssue model, int id, int OldPId, int BookId, int PNoFrom, int PNoTo, string TP)
+        {
+            try
+            {
+
+                var requestData = new
+                {
+                    ISNO = id,
+                    PID = model.RefPersonid,
+                    OldPId = OldPId,
+                    UserId = User.FindFirst("UserID")?.Value,
+                    DataFlag = User.FindFirst("DataFlag")?.Value,
+                    BookId = BookId,
+                    PNoFrom = PNoFrom,
+                    PNoTo = PNoTo,
+                    TP = TP
+                };
+
+                var response = await _apiClient.PostAsJsonAsync("api/ReceiptBookIssue/TransferPerson", requestData);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -233,6 +274,7 @@ namespace NSSERP.Areas.ReceiptBook.Controllers
 
             return View();
         }
+
 
     }
 }

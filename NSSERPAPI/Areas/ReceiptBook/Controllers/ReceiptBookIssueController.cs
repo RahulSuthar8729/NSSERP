@@ -171,5 +171,45 @@ namespace NSSERPAPI.Areas.ReceiptBook.Controllers
                 return Ok(ex.Message);
             }
         }
+
+
+        [HttpPost]
+        public IActionResult TransferPerson([FromBody] ReceiptBookTransferPerson model)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@ISNO", model.ISNO); 
+                    parameters.Add("@PID", model.PID); 
+                    parameters.Add("@OldPId", model.OldPId);
+                    parameters.Add("@UserId", model.UserId);
+                    parameters.Add("@DataFlag", model.DataFlag); 
+                    parameters.Add("@BookId", model.BookId); 
+                    parameters.Add("@PNoFrom", model.PNoFrom); 
+                    parameters.Add("@PNoTo", model.PNoTo); 
+                    parameters.Add("@TP", model.TP);
+                    parameters.Add("@returnResult", dbType: DbType.String, direction: ParameterDirection.Output,size:250);
+
+                    connection.Execute("[ReceiptBookTransfer]", parameters, commandType: CommandType.StoredProcedure);
+
+
+                    string result = parameters.Get<string>("@returnResult");
+
+
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+
     }
 }

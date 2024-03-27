@@ -203,10 +203,10 @@
                                 </select>
                             </div>
                             <div class="form-group col-lg-3">
-                             
+
                                 <div class="form-check">
-                                    <input id="p_book_rrs_no" class="form-check-input" name="Event" type="checkbox" value="@Model.Event">
-                                    <label class="form-check-label" for="p_book_rrs_no">event detail</label>
+                                    <input id="p_book_rrs_no" class="form-check-input" name="Event" type="checkbox" value="Y" @(Model.Event == "Y" ? "checked" : "")>
+                                    <label class="form-check-label" for="p_book_rrs_no">Event Detail</label>
                                 </div>
                             </div>
 
@@ -216,12 +216,28 @@
                     </div>
 
                 </fieldset>
+                <script>
+                    $(document).ready(function () {
+                        toggleFieldset(); // Call the toggleFieldset function when the document is ready
+                        $('#p_book_rrs_no').change(toggleFieldset); // Bind the toggleFieldset function to the change event of the checkbox
+                    });
 
-                <fieldset id="fieldset2" class="show border rounded p-3">
+                    function toggleFieldset() {
+                        var checkbox = $('#p_book_rrs_no');
+                        var fieldset = $('#fieldset2');
+
+                        if (checkbox.is(':checked') && checkbox.val() == "Y") {
+                            fieldset.show();
+                        } else {
+                            fieldset.hide();
+                        }
+                    }
+                </script>
+                <fieldset id="fieldset2" class="border rounded p-3" style="display:none;">
                     <legend style="font-weight:bold;" class="d-flex justify-content-between align-items-center text-left">
                         <button class="btn btn-link collapse-icon" type="button" data-toggle="collapse" data-target="#fieldsetcontent2" aria-expanded="false" aria-controls="fieldsetcontent2">
-                            <span id="collapseIcon" class="">&#43;</span>
-                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;font-weight:bold;">Event Details</span>
+                            <span id="collapseIcon" class="">+</span>
+                            <span style="font-size: larger;color:#1cb8a1;font-weight:bold;">Event Details</span>
                         </button>
                     </legend>
 

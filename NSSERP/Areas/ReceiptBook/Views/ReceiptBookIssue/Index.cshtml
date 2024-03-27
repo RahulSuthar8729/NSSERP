@@ -130,128 +130,134 @@
             <div class="row">
                 <div class="col-12">
                     <div class="table-container">
-                        <table id="tableDetails" class="table table-hover">
-
-                            <thead class="thead-dark">
-                                <tr>
-
-                                    <th></th>
-                                    <th></th>
+                    <table id="tableDetails" class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th></th>
                                 <th>DEPT.SUBMIT</th>
-                                    <th>BOOK ISSUE NO.</th>
-                                    <th>ISSUE DATE</th>
-                                    <th>PERSON ID</th>
-                                    <th>PERSON NAME</th>
-                                    <th>RECEIPT BOOK NO.</th>
-                                    <th>RECEIPT FROM</th>
-                                    <th>RECEIPT TO</th>
-                                    <th>SUBMITTED</th>
-                                    <th>RECEIPT USED</th>
-                                    <th>EVENT</th>
-                                    <th>REMARK</th>
-                                    <th>TYPE</th>
-                                    <th>ISSUE AUTHORITY</th>
-                                    <th>PATIENT ID</th>
-                                    <th>DISPATCH NO</th>
-
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                @if (Model != null)
+                                <th>BOOK ISSUE NO.</th>
+                                <th>ISSUE DATE</th>
+                                <th>PERSON ID</th>
+                                <th>PERSON NAME</th>
+                                <th>RECEIPT BOOK NO.</th>
+                                <th>RECEIPT FROM</th>
+                                <th>RECEIPT TO</th>
+                                <th>SUBMITTED</th>
+                                <th>RECEIPT USED</th>
+                                <th>EVENT</th>
+                                <th>REMARK</th>
+                                <th>TYPE</th>
+                                <th>ISSUE AUTHORITY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.masterDetails)
                                 {
-                                    foreach (var item in Model.masterDetails)
-                                    {
-                                        <tr>
-                                           
-                                            <td>
-                                                <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no,view=true })" title="View Details">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                @if (!string.IsNullOrEmpty(Model.Docs))
+                                    <tr>
+                                        <td>
+                                            <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no,view=true })" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(Model.Docs))
+                                            {
+                                                <label for="file1">Attached Documents</label>
+                                                var fileNames = Model.Docs.Split(',').Select(x => x.Trim()).ToList();
+                                                for (int i = 0; i < fileNames.Count; i++)
                                                 {
-                                                    <label for="file1">Attached Documents</label>
-                                                    var fileNames = Model.Docs.Split(',').Select(x => x.Trim()).ToList();
-                                                    for (int i = 0; i < fileNames.Count; i++)
-                                                    {
-                                                        var simplifiedFileName = $"File {i + 1}";
-                                                        <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
-                                                    }
+                                                    var simplifiedFileName = $"File {i + 1}";
+                                                    <div><a class="btn btn-outline-primary view-btn" data-file-name="@fileNames[i]"><i class="fa fa-eye"></i>View @simplifiedFileName</a></div>
                                                 }
-                                                else
-                                                {
-                                                    <form method="post" action="@Url.Action("Index", "ReceiptBookIssue", new { id = item.book_issue_no})" enctype="multipart/form-data">
-                                                        <label data-browse="Browse">Attach Documents</label>
-                                                        <input type="file" name="DocUpload" multiple id="file1" accept="image/*,application/pdf">
-                                                        <button type="submit" class="btn btn-outline-primary btn-sm">Upload</button>
-                                                    </form>
-                                                }
-                                            </td>
+                                            }
+                                            else
+                                            {
+                                                <form method="post" action="@Url.Action("Index", "ReceiptBookIssue", new { id = item.book_issue_no})" enctype="multipart/form-data">
+                                                    <label data-browse="Browse">Attach Documents</label>
+                                                    <input type="file" name="DocUpload" multiple id="file1" accept="image/*,application/pdf">
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm">Upload</button>
+                                                </form>
+                                            }
+                                        </td>
                                         <td>
                                             <textarea placeholder="Submit By" class="form-control" name="SubBy" rows="1" cols="50">@item.SubBy</textarea>
-                                            <input type="checkbox" value="Y" name="ChkSub" @(item.ChkSub == "Y" ? "checked" : "") onchange="submitData('@item.book_issue_no', this.checked)" />
+                                            <input type="checkbox" value="Y" class="chksubmit" name="ChkSub" @(item.ChkSub == "Y" ? "checked" : "") />
                                         </td>
-                                            <td>@item.book_issue_no</td>
-                                            <td>@item.IssueDate.GetValueOrDefault().ToShortDateString()</td>                                            
-                                            <td>@item.PersonId</td>
-                                            <td>@item.PersonId
-                                            <select class="form-control" name="RefPersonid" id="RefPersonid">
-                                                <option value="">Select</option>
-                                                @if (Model.PersonDetails != null)
-                                                {
-                                                    @foreach (var order in Model.PersonDetails)
+                                        <td>@item.book_issue_no</td>
+                                        <td>@item.IssueDate.GetValueOrDefault().ToShortDateString()</td>
+                                        <td>@item.PID</td>
+                                        <td>
+                                            <form method="post" action="@Url.Action("TransferPerson", "ReceiptBookIssue", new { id = item.book_issue_no,OldPId=item.PID,BookId=item.Receipt_Book_No,PNoFrom=item.ProvReceiptFrom,PNoTo=item.ProvReceiptTo,TP=item.ReceiptBookType})">
+                                                @item.Person_Name
+                                                <select class="form-control" name="RefPersonid" id="RefPersonid">
+                                                    <option value="">Select</option>
+                                                    @if (Model.PersonDetails != null)
                                                     {
-                                                        <option value="@order.person_id" data-currencycode="@order.person_name" @(Model.PersonId == order.person_id ? "selected" : "")>@order.person_name</option>
+                                                        @foreach (var order in Model.PersonDetails)
+                                                        {
+                                                            <option value="@order.person_id" data-currencycode="@order.person_name" @(Model.PersonId == order.person_id ? "selected" : "")>@order.person_name</option>
+                                                        }
                                                     }
-                                                }
-                                                }
-                                            </select>
-                                            <a href="@Url.Action("Home", "ReceiptBookIssue", new { id = item.book_issue_no })" title="Transfer This Book">
-                                                <i style="font-size:small" class="fas fa-person-walking-arrow-right">Transfer</i>
-                                            </a>
-                                            </td>
-                                            <td>@item.RRSNo</td>
-                                            <td>@item.ProvReceiptFrom</td>
-                                            <td>@item.ProvReceiptTo</td>
-                                            <td>@item.Submitted</td>
-                                            <td>@item.ReceiptUsed</td>
-                                            <td>@item.Event</td>
-                                            <td>@item.Remark</td>
-                                            <td>@item.ReceiptBookType</td>
-                                            <td>@item.IssueAuthority</td>
-                                            <td></td>
-                                            <td></td>
-
-                                        </tr>
-                                    }
+                                                </select>
+                                                <button type="submit" class="fas fa-person-walking-arrow-right">Transfer</button>
+                                            </form>
+                                        </td>
+                                        <td>@item.Receipt_Book_No</td>
+                                        <td>@item.ProvReceiptFrom</td>
+                                        <td>@item.ProvReceiptTo</td>
+                                        <td>@item.Submitted</td>
+                                        <td>@item.ReceiptUsed</td>
+                                        <td>@item.Event</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.ReceiptBookType</td>
+                                        <td>@item.IssueAuthority</td>
+                                    </tr>
                                 }
-                            </tbody>
-                        </table>
+                            }
+                        </tbody>
+                    </table>
+
                     <script>
-                        function submitData(bookIssueNo) {
+                        $(document).ready(function () {
+                            $('.chksubmit').change(function () {
+                                var isChecked = $(this).is(':checked');
+                                var bookIssueNo = $(this).closest('tr').find('.book_issue_no').text();
+                                console.log(isChecked);
+                                submitData(bookIssueNo, isChecked);
+                            });
+                        });
+
+                        function submitData(bookIssueNo, isChecked) {
                             var subByValue = $('textarea[name="SubBy"]').val();
-                            var isChecked = $('input[name="checkboxName"]').is(':checked');
                             var chkSubValue = isChecked ? "Y" : "N";
 
-                            if (isChecked) {                                
+                            if (isChecked) {
                                 $.ajax({
-                                    type: "Get",
+                                    type: "GET",
                                     url: "/ReceiptBook/ReceiptBookIssue/DepartmentSubmit",
                                     data: { subByValue: subByValue, chkSubValue: chkSubValue, id: bookIssueNo },
+                                    dataType: "json", 
                                     success: function (response) {
-                                       
-                                        console.log(response);
+                                        if (response.success) {
+                                            
+                                            alert(response.message);
+                                        } else {
+                                           
+                                            console.error(response.message);
+                                        }
                                     },
                                     error: function (xhr, status, error) {
-                                       
-                                        console.log(error);
+                                        console.error("AJAX request failed:", error);
                                     }
                                 });
+
                             }
                         }
                     </script>
+
 
                     </div>
                 </div>
